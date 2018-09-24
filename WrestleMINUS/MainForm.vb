@@ -1,10 +1,10 @@
 ﻿Imports System.IO   'Files
 Imports System.Text 'Text Encoding 
 Imports Ionic.Zlib  'zlib decompress
-Imports Pfim        'https://github.com/nickbabcock/Pfim
 Imports System.Drawing
 Imports System.Drawing.Imaging
 Imports System.Runtime.InteropServices
+Imports System.Environment 'appdata
 
 
 
@@ -20,6 +20,23 @@ Public Class MainForm
         End If
         If My.Settings.ExeLocation = "" Then
             SelectHomeDirectory()
+        End If
+        If My.Settings.TexConvPath = "" Then 'Locate the texture conversion exe
+
+            Dim convertpath As String = Path.GetDirectoryName(Application.ExecutablePath) &
+                       Path.DirectorySeparatorChar & "texconv.exe"
+            If File.Exists(convertpath) Then
+                If MessageBox.Show("Would you like to move the texture conversion exe to Appdata?" & vbNewLine & "(Recommended)", "Move tool to appdata?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    Dim AppDataStorage As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
+                    FolderCheck(AppDataStorage)
+                    File.Move(convertpath, AppDataStorage & Path.DirectorySeparatorChar & "texconv.exe")
+                    My.Settings.TexConvPath = AppDataStorage & Path.DirectorySeparatorChar & "texconv.exe"
+                Else
+                    My.Settings.TexConvPath = convertpath
+                End If
+            Else
+                MessageBox.Show("texconv.exe not found!  Picture view will raise errors")
+            End If
         End If
         HexViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         TextViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
@@ -37,6 +54,10 @@ Public Class MainForm
         If TabControl1.TabPages.Contains(NIBJView) Then
             TabControl1.TabPages.Remove(NIBJView)
         End If
+        If TabControl1.TabPages.Contains(PictureView) Then
+            TabControl1.TabPages.Remove(PictureView)
+        End If
+        CreatedImages = New List(Of String)
         If CheckCommands() Then
             LoadParameters()
         Else
@@ -75,6 +96,17 @@ Public Class MainForm
     End Function
     Private Sub MainForm_DragDrop(sender As Object, e As DragEventArgs) Handles MyBase.DragDrop
 
+    End Sub
+#End Region
+#Region "General Tools"
+    Private Sub FolderCheck(FolderPath As String)
+        If Directory.Exists(FolderPath) = False Then
+            Directory.CreateDirectory(FolderPath)
+        End If
+    End Sub
+    Private Sub MoveAllItems(ByVal fromPath As String, ByVal toPath As String)
+        My.Computer.FileSystem.CopyDirectory(fromPath, toPath, True)
+        My.Computer.FileSystem.DeleteDirectory(fromPath, FileIO.DeleteDirectoryOption.DeleteAllContents)
     End Sub
 #End Region
 #Region "File Handlers"
@@ -354,6 +386,8 @@ Public Class MainForm
             Return PackageType.NIBJ
         ElseIf FirstFour.Contains("STG") Then
             Return PackageType.ShowInfo
+        ElseIf FirstFour.Contains("DDS") Then
+            Return PackageType.DDS
         Else
             'dds check
             Dim DDSCheck As String = ""
@@ -478,8 +512,8 @@ Public Class MainForm
                 'StringView
                 If Not TabControl1.TabPages.Contains(StringView) Then
                     TabControl1.TabPages.Add(StringView)
-                    FillStringView(TreeView1.SelectedNode)
                 End If
+                FillStringView(TreeView1.SelectedNode)
             Else
                 If TabControl1.TabPages.Contains(StringView) Then
                     TabControl1.TabPages.Remove(StringView)
@@ -489,8 +523,8 @@ Public Class MainForm
                 'StringView
                 If Not TabControl1.TabPages.Contains(MiscView) Then
                     TabControl1.TabPages.Add(MiscView)
-                    FillMiscView(TreeView1.SelectedNode)
                 End If
+                FillMiscView(TreeView1.SelectedNode)
             Else
                 If TabControl1.TabPages.Contains(MiscView) Then
                     TabControl1.TabPages.Remove(MiscView)
@@ -500,8 +534,8 @@ Public Class MainForm
                 'StringView
                 If Not TabControl1.TabPages.Contains(ShowView) Then
                     TabControl1.TabPages.Add(ShowView)
-                    FillShowView(TreeView1.SelectedNode)
                 End If
+                FillShowView(TreeView1.SelectedNode)
             Else
                 If TabControl1.TabPages.Contains(ShowView) Then
                     TabControl1.TabPages.Remove(ShowView)
@@ -511,8 +545,8 @@ Public Class MainForm
                 'StringView
                 If Not TabControl1.TabPages.Contains(NIBJView) Then
                     TabControl1.TabPages.Add(NIBJView)
-                    FillNIBJView(TreeView1.SelectedNode)
                 End If
+                FillNIBJView(TreeView1.SelectedNode)
             Else
                 If TabControl1.TabPages.Contains(NIBJView) Then
                     TabControl1.TabPages.Remove(NIBJView)
@@ -522,11 +556,12 @@ Public Class MainForm
                 'StringView
                 If Not TabControl1.TabPages.Contains(PictureView) Then
                     TabControl1.TabPages.Add(PictureView)
-                    LoadPicture(TreeView1.SelectedNode)
                 End If
+                LoadPicture(TreeView1.SelectedNode)
             Else
                 If TabControl1.TabPages.Contains(PictureView) Then
                     TabControl1.TabPages.Remove(PictureView)
+                    DeleteCurrentImage()
                 End If
             End If
         End If
@@ -1122,6 +1157,7 @@ Public Class MainForm
     End Sub
 #End Region
 #Region "Picture View Controls"
+    Dim CreatedImages As List(Of String)
     Sub LoadPicture(SelectedData As TreeNode)
         Dim NodeTag As NodeProperties = New NodeProperties
         NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
@@ -1139,57 +1175,33 @@ Public Class MainForm
             Array.Copy(FileBytes, NodeTag.Index, PictureBytes, 0, NodeTag.length)
         End If
         Dim ImageStream As MemoryStream = New MemoryStream(PictureBytes)
-        Dim tempconfig As PfimConfig = New PfimConfig
         Dim TempName As String = Path.GetTempFileName
         TempName += ".dds"
-        MessageBox.Show(TempName)
         File.WriteAllBytes(TempName, PictureBytes)
-        'Dim testclass As DirectXTexNet.TexHelperImpl = New DirectXTexNet.TexHelperImpl
-
-        'testclass.LoadFromDDSFile(TempName, Nothing)
-        Dim DDSFile = Pfim.Pfim.FromFile(TempName)
-        Dim TempFormat As PixelFormat
-        Select Case (DDSFile.Format)
-            Case Pfim.ImageFormat.Rgb24
-                TempFormat = PixelFormat.Format24bppRgb
-                Exit Select
-            Case Pfim.ImageFormat.Rgba32
-                TempFormat = PixelFormat.Format32bppArgb
-                Exit Select
-            Case Pfim.ImageFormat.R5g5b5
-                TempFormat = PixelFormat.Format16bppRgb555
-                Exit Select
-            Case Pfim.ImageFormat.R5g6b5
-                TempFormat = PixelFormat.Format16bppRgb565
-                Exit Select
-            Case Pfim.ImageFormat.R5g5b5a1
-                TempFormat = PixelFormat.Format16bppArgb1555
-                Exit Select
-            Case Pfim.ImageFormat.Rgb8
-                TempFormat = PixelFormat.Format8bppIndexed
-                Exit Select
-            Case Else
-                Dim msg As String = $"{DDSFile.Format} is not recognized for Bitmap on Windows Forms. " +
-                               "You'd need to write a conversion function to convert the data to known format"
-                Dim caption As String = "Unrecognized format"
-                MessageBox.Show(msg, caption, MessageBoxButtons.OK)
-        End Select
-
-        Dim ms As New MemoryStream(DDSFile.Data)
-        PictureBox1.Image = Image.FromStream(ms)
+        Process.Start(My.Settings.TexConvPath, " -ft bmp " & TempName).WaitForExit()
+        Dim TempBMP As String = Path.GetDirectoryName(My.Settings.TexConvPath) &
+                                Path.DirectorySeparatorChar &
+                                Path.GetFileNameWithoutExtension(TempName) & ".BMP"
+        If File.Exists(TempBMP) Then
+            PictureBox1.Image = Image.FromFile(TempBMP)
+        Else
+            MessageBox.Show("Error creating bitmap image.")
+        End If
+        CreatedImages.Add(TempBMP)
         File.Delete(TempName)
-        'Try
-        'Dim structSize As Integer = Marshal.SizeOf(TypeOf (DDSFile.Data)
-        'Dim bitmappointer As IntPtr = Marshal.AllocHGlobal(DDSFile.Data.Length)
-        'For i As Integer = 0 To DDSFile.Data.Length - 1
-        'Marshal.StructureToPtr(DDSFile.Data(i), bitmappointer + i, True)
-        'Next
-        'Dim DrawnBitmat As Bitmap = New Bitmap(DDSFile.Width, DDSFile.Height, DDSFile.Stride, TempFormat, bitmappointer)
-        'PictureBox1.Image = DrawnBitmat
-        'Marshal.FreeHGlobal(bitmappointer)
-        'Catch ex As Exception
-        'MessageBox.Show(ex.Message)
-        'End Try
+    End Sub
+    Sub DeleteCurrentImage()
+        PictureBox1.Image = Nothing
+        For Each CurrentImage As String In CreatedImages
+            Try
+                If File.Exists(CurrentImage) Then
+                    File.Delete(CurrentImage)
+                End If
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+            End Try
+        Next
+        CreatedImages.Clear()
     End Sub
 
 #End Region

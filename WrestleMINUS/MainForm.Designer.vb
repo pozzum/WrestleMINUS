@@ -122,18 +122,18 @@ Partial Class MainForm
         Me.J = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripShowView = New System.Windows.Forms.MenuStrip()
         Me.ShowViewType = New System.Windows.Forms.ToolStripComboBox()
-        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.NIBJView = New System.Windows.Forms.TabPage()
-        Me.MenuStripNIBJView = New System.Windows.Forms.MenuStrip()
         Me.DataGridNIBJView = New System.Windows.Forms.DataGridView()
+        Me.MenuStripNIBJView = New System.Windows.Forms.MenuStrip()
         Me.NIBJViewType = New System.Windows.Forms.ToolStripComboBox()
         Me.FileAttributesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PictureView = New System.Windows.Forms.TabPage()
-        Me.MenuStripPictureView = New System.Windows.Forms.MenuStrip()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.MenuStripPictureView = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -155,11 +155,11 @@ Partial Class MainForm
         CType(Me.DataGridShowView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripShowView.SuspendLayout()
         Me.NIBJView.SuspendLayout()
-        Me.MenuStripNIBJView.SuspendLayout()
         CType(Me.DataGridNIBJView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MenuStripNIBJView.SuspendLayout()
         Me.PictureView.SuspendLayout()
-        Me.MenuStripPictureView.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MenuStripPictureView.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -904,15 +904,6 @@ Partial Class MainForm
         Me.ShowViewType.Name = "ShowViewType"
         Me.ShowViewType.Size = New System.Drawing.Size(121, 23)
         '
-        'ContextMenuStrip1
-        '
-        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(61, 4)
-        '
-        'OpenFileDialog1
-        '
-        Me.OpenFileDialog1.FileName = "OpenFileDialog1"
-        '
         'NIBJView
         '
         Me.NIBJView.Controls.Add(Me.DataGridNIBJView)
@@ -925,15 +916,6 @@ Partial Class MainForm
         Me.NIBJView.Text = "NIBJView"
         Me.NIBJView.UseVisualStyleBackColor = True
         '
-        'MenuStripNIBJView
-        '
-        Me.MenuStripNIBJView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NIBJViewType, Me.FileAttributesToolStripMenuItem})
-        Me.MenuStripNIBJView.Location = New System.Drawing.Point(3, 3)
-        Me.MenuStripNIBJView.Name = "MenuStripNIBJView"
-        Me.MenuStripNIBJView.Size = New System.Drawing.Size(656, 27)
-        Me.MenuStripNIBJView.TabIndex = 0
-        Me.MenuStripNIBJView.Text = "MenuStrip2"
-        '
         'DataGridNIBJView
         '
         Me.DataGridNIBJView.AllowUserToAddRows = False
@@ -945,6 +927,15 @@ Partial Class MainForm
         Me.DataGridNIBJView.RowHeadersWidth = 60
         Me.DataGridNIBJView.Size = New System.Drawing.Size(656, 391)
         Me.DataGridNIBJView.TabIndex = 2
+        '
+        'MenuStripNIBJView
+        '
+        Me.MenuStripNIBJView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NIBJViewType, Me.FileAttributesToolStripMenuItem})
+        Me.MenuStripNIBJView.Location = New System.Drawing.Point(3, 3)
+        Me.MenuStripNIBJView.Name = "MenuStripNIBJView"
+        Me.MenuStripNIBJView.Size = New System.Drawing.Size(656, 27)
+        Me.MenuStripNIBJView.TabIndex = 0
+        Me.MenuStripNIBJView.Text = "MenuStrip2"
         '
         'NIBJViewType
         '
@@ -970,6 +961,16 @@ Partial Class MainForm
         Me.PictureView.Text = "Picture View"
         Me.PictureView.UseVisualStyleBackColor = True
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 27)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(656, 394)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 1
+        Me.PictureBox1.TabStop = False
+        '
         'MenuStripPictureView
         '
         Me.MenuStripPictureView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
@@ -979,20 +980,20 @@ Partial Class MainForm
         Me.MenuStripPictureView.TabIndex = 0
         Me.MenuStripPictureView.Text = "MenuStrip2"
         '
-        'PictureBox1
-        '
-        Me.PictureBox1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.PictureBox1.Location = New System.Drawing.Point(3, 27)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(656, 394)
-        Me.PictureBox1.TabIndex = 1
-        Me.PictureBox1.TabStop = False
-        '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
         Me.ToolStripMenuItem1.Size = New System.Drawing.Size(22, 20)
         Me.ToolStripMenuItem1.Text = " "
+        '
+        'ContextMenuStrip1
+        '
+        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(61, 4)
+        '
+        'OpenFileDialog1
+        '
+        Me.OpenFileDialog1.FileName = "OpenFileDialog1"
         '
         'MainForm
         '
@@ -1041,14 +1042,14 @@ Partial Class MainForm
         Me.MenuStripShowView.PerformLayout()
         Me.NIBJView.ResumeLayout(False)
         Me.NIBJView.PerformLayout()
+        CType(Me.DataGridNIBJView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStripNIBJView.ResumeLayout(False)
         Me.MenuStripNIBJView.PerformLayout()
-        CType(Me.DataGridNIBJView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.PictureView.ResumeLayout(False)
         Me.PictureView.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStripPictureView.ResumeLayout(False)
         Me.MenuStripPictureView.PerformLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
