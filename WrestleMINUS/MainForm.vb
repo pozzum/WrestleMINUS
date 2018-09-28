@@ -1,6 +1,9 @@
 ﻿Imports System.IO   'Files
 Imports System.Text 'Text Encoding 
 Imports Ionic.Zlib  'zlib decompress
+'http://www.codeplex.com/DotNetZip
+
+'http://forum.xentax.com/viewtopic.php?f=32&t=9972
 Imports System.Drawing
 Imports System.Drawing.Imaging
 Imports System.Runtime.InteropServices
@@ -13,6 +16,17 @@ Public Class MainForm
 #Region "Main Form Functions"
 
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        SettingsCheck()
+        HideTabs()
+
+        CreatedImages = New List(Of String)
+        If CheckCommands() Then
+            LoadParameters()
+        Else
+            LoadHome()
+        End If
+    End Sub
+    Sub SettingsCheck()
         If My.Settings.UpgradeRequired = True Then
             My.Settings.Upgrade()
             My.Settings.UpgradeRequired = False
@@ -22,7 +36,6 @@ Public Class MainForm
             SelectHomeDirectory()
         End If
         If My.Settings.TexConvPath = "" Then 'Locate the texture conversion exe
-
             Dim convertpath As String = Path.GetDirectoryName(Application.ExecutablePath) &
                        Path.DirectorySeparatorChar & "texconv.exe"
             If File.Exists(convertpath) Then
@@ -38,10 +51,66 @@ Public Class MainForm
                 MessageBox.Show("texconv.exe not found!  Picture view will raise errors")
             End If
         End If
+        If My.Settings.RADVideoToolPath = "" Then
+            My.Settings.RADVideoToolPath = "Not Installed"
+            Dim AllDrives As DriveInfo() = DriveInfo.GetDrives()
+            For Each Drive As DriveInfo In AllDrives
+                MessageBox.Show(Drive.Name & "Program Files (x86)\RADVideo\radvideo.exe")
+                If (Drive.IsReady = True) Then
+                    If File.Exists(Drive.Name & "Program Files (x86)\RADVideo\radvideo.exe") Then
+                        My.Settings.RADVideoToolPath = Drive.Name & "Program Files (x86)\RADVideo\binkplay.exe"
+                        Exit For
+                    ElseIf File.Exists(Drive.Name & "Program Files\RADVideo\radvideo.exe") Then
+                        My.Settings.RADVideoToolPath = Drive.Name & "Program Files\RADVideo\binkplay.exe"
+                        Exit For
+                    End If
+                End If
+            Next
+        End If
+        If My.Settings.UnrrbpePath = "" Then
+            My.Settings.UnrrbpePath = "Not Installed"
+            If MessageBox.Show("Would you like to navigate to ""unrrbpe.exe""" & vbNewLine &
+                            "this would be in any ""X-Packer"" install folder.",
+                               "BPE Decompresser",
+                               MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                Dim UnrrbpeOpenDialog As New OpenFileDialog With {.FileName = "unrrbpe.exe", .Title = "Select unrrbpe.exe"}
+                If UnrrbpeOpenDialog.ShowDialog = DialogResult.OK Then
+                    If Path.GetFileName(UnrrbpeOpenDialog.FileName) = "unrrbpe.exe" Then
+                        If MessageBox.Show("Would you like create a copy of this to the appdata?",
+                                           "Copy File?",
+                                           MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                            Dim AppDataStorage As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
+                            FolderCheck(AppDataStorage)
+                            File.Copy(UnrrbpeOpenDialog.FileName, AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe")
+                            My.Settings.UnrrbpePath = AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe"
+                        Else
+                            My.Settings.UnrrbpePath = UnrrbpeOpenDialog.FileName
+                        End If
+                    Else
+                        MessageBox.Show(Path.GetFileName(UnrrbpeOpenDialog.FileName))
+                        MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                    End If
+                End If
+            Else
+                MessageBox.Show("Download link can be found in the options menu.")
+            End If
+        End If
         HexViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         TextViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         MiscViewType.SelectedIndex = My.Settings.MiscModeIndex
         ShowViewType.SelectedIndex = My.Settings.ShowModeIndex
+        If IsNothing(My.Settings.StringReferences) Then
+            My.Settings.StringReferences = New ArrayList(&H100000)
+            My.Settings.StringReferences.Add(New String("String Not Read"))
+            My.Settings.StringReferences.AddRange(New String(&H100000 - 1) {})
+        End If
+        If IsNothing(My.Settings.PacReferences) Then
+            My.Settings.PacReferences = New ArrayList(&H500)
+            My.Settings.PacReferences.Add(New String("Pacs Not Read"))
+            My.Settings.PacReferences.AddRange(New String(&H500 - 1) {})
+        End If
+    End Sub
+    Sub HideTabs()
         If TabControl1.TabPages.Contains(StringView) Then
             TabControl1.TabPages.Remove(StringView)
         End If
@@ -57,11 +126,20 @@ Public Class MainForm
         If TabControl1.TabPages.Contains(PictureView) Then
             TabControl1.TabPages.Remove(PictureView)
         End If
-        CreatedImages = New List(Of String)
-        If CheckCommands() Then
-            LoadParameters()
-        Else
-            LoadHome()
+        If TabControl1.TabPages.Contains(ObjectView) Then
+            TabControl1.TabPages.Remove(ObjectView)
+        End If
+        If TabControl1.TabPages.Contains(AttireView) Then
+            TabControl1.TabPages.Remove(AttireView)
+        End If
+        If TabControl1.TabPages.Contains(MuscleView) Then
+            TabControl1.TabPages.Remove(MuscleView)
+        End If
+        If TabControl1.TabPages.Contains(MaskView) Then
+            TabControl1.TabPages.Remove(MaskView)
+        End If
+        If TabControl1.TabPages.Contains(ObjArrayView) Then
+            TabControl1.TabPages.Remove(ObjArrayView)
         End If
     End Sub
     Private Sub SelectHomeDirectory()
@@ -94,8 +172,21 @@ Public Class MainForm
         Next
         Return parameters
     End Function
+    Private Sub MainForm_DragEnter(sender As Object, e As DragEventArgs) Handles MyBase.DragEnter
+        If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
+            e.Effect = DragDropEffects.All
+        Else
+            e.Effect = DragDropEffects.None
+        End If
+    End Sub
     Private Sub MainForm_DragDrop(sender As Object, e As DragEventArgs) Handles MyBase.DragDrop
-
+        Dim s() As String = e.Data.GetData("FileDrop", False)
+        SelectedFiles = s
+        LoadParameters()
+        'Dim i As Integer
+        'For i = 0 To s.Length - 1
+        'ListBox1.Items.Add(s(i))
+        'Next i
     End Sub
 #End Region
 #Region "General Tools"
@@ -108,12 +199,18 @@ Public Class MainForm
         My.Computer.FileSystem.CopyDirectory(fromPath, toPath, True)
         My.Computer.FileSystem.DeleteDirectory(fromPath, FileIO.DeleteDirectoryOption.DeleteAllContents)
     End Sub
+    Private Function EndianReverse(Source As Byte(), Optional Index As Integer = 0, Optional Length As Integer = 4)
+        Dim ReturnedArray As Byte() = New Byte(Length - 1) {}
+        Array.Copy(Source, Index, ReturnedArray, 0, Length)
+        Array.Reverse(ReturnedArray)
+        Return ReturnedArray
+    End Function
 #End Region
 #Region "File Handlers"
     Public Class NodeProperties
         Public FileType As PackageType = PackageType.Unchecked
-        Public Index As Long
-        Public length As Long
+        Public Index As UInt64
+        Public length As UInt64
         Public StoredData As Byte()
     End Class
     Public Enum PackageType
@@ -126,6 +223,7 @@ Public Class MainForm
         EPAC
         PACH
         ZLIB
+        BPE
         TextureLibrary
         StringFile
         YOBJ
@@ -134,6 +232,14 @@ Public Class MainForm
         ArenaInfo
         ShowInfo
         NIBJ
+        bk2
+        CostumeFile
+        MuscleFile
+        MaskFile
+        YOBJArray
+        OFOP
+        YANMPack
+        YANM
     End Enum
     Dim ActiveReader As BinaryReader
     Dim ActiveFile As String = ""
@@ -143,6 +249,7 @@ Public Class MainForm
         NodeTag.Index = CType(HostNode.Tag, NodeProperties).Index
         NodeTag.length = CType(HostNode.Tag, NodeProperties).length
         NodeTag.StoredData = CType(HostNode.Tag, NodeProperties).StoredData
+        'TO DO Add better memory array handler that will probably remove like 100 linees of code...
         If Not SkipReader Then
             ActiveReader = New BinaryReader(File.Open(HostNode.ToolTipText, FileMode.Open, FileAccess.Read))
         End If
@@ -177,31 +284,44 @@ Public Class MainForm
                 HostNode.Nodes.Add(TempNode)
             Next
         ElseIf NodeTag.FileType = PackageType.SHDC Then
-            ActiveReader.BaseStream.Seek(NodeTag.Index + &H1C, SeekOrigin.Begin)
-            Dim TempHeaderStart As Integer = ActiveReader.ReadUInt32
-            Dim TempHeaderLength As Integer = ActiveReader.ReadUInt32
-            Dim PachPartsCount As Integer = (TempHeaderLength / &H10) '1 index
-            'Dim TempNodes As List(Of TreeNode) = New List(Of TreeNode)
-            For i As Integer = 0 To PachPartsCount - 1
-                ActiveReader.BaseStream.Seek(NodeTag.Index + TempHeaderStart + (i * &H10), SeekOrigin.Begin)
-                Dim PartName As String = Hex(ActiveReader.ReadUInt32)
-                'MessageBox.Show(PartName)
-                Dim TempNode As TreeNode = New TreeNode(PartName)
-                TempNode.ToolTipText = HostNode.ToolTipText
-                Dim TempNodeProps As NodeProperties = New NodeProperties
-                TempNodeProps.Index = NodeTag.Index + ActiveReader.ReadUInt32()
-                TempNodeProps.length = ActiveReader.ReadUInt64
-                TempNodeProps.StoredData = New Byte() {}
-                TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index)
-                TempNode.Tag = TempNodeProps
-                HostNode.Nodes.Add(TempNode)
-            Next
-            'For i As Integer = 0 To TempNodes.Count - 1
-            'CheckFile(TempNodes(i))
-            'Next
-            'For i As Integer = 0 To TempNodes.Count - 1
-            'HostNode.Nodes.Add(TempNodes(i))
-            'Next
+            If NodeTag.StoredData.Length > 0 Then
+                'ActiveReader.BaseStream.Seek(NodeTag.Index + &H1C, SeekOrigin.Begin)
+                Dim TempHeaderStart As Integer = BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + &H1C)
+                Dim TempHeaderLength As Integer = BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + &H20)
+                Dim PachPartsCount As Integer = (TempHeaderLength / &H10) '1 index
+                For i As Integer = 0 To PachPartsCount - 1
+                    Dim PartName As String = Hex(BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + TempHeaderStart + (i * &H10)))
+                    'MessageBox.Show(PartName)
+                    Dim TempNode As TreeNode = New TreeNode(PartName)
+                    TempNode.ToolTipText = HostNode.ToolTipText
+                    Dim TempNodeProps As NodeProperties = New NodeProperties
+                    TempNodeProps.Index = BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + TempHeaderStart + (i * &H10) + &H4)
+                    TempNodeProps.length = BitConverter.ToUInt64(NodeTag.StoredData, NodeTag.Index + TempHeaderStart + (i * &H10) + &H8)
+                    TempNodeProps.StoredData = NodeTag.StoredData
+                    TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, NodeTag.StoredData)
+                    TempNode.Tag = TempNodeProps
+                    HostNode.Nodes.Add(TempNode)
+                Next
+            Else
+                ActiveReader.BaseStream.Seek(NodeTag.Index + &H1C, SeekOrigin.Begin)
+                Dim TempHeaderStart As Integer = ActiveReader.ReadUInt32
+                Dim TempHeaderLength As Integer = ActiveReader.ReadUInt32
+                Dim PachPartsCount As Integer = (TempHeaderLength / &H10) '1 index
+                For i As Integer = 0 To PachPartsCount - 1
+                    ActiveReader.BaseStream.Seek(NodeTag.Index + TempHeaderStart + (i * &H10), SeekOrigin.Begin)
+                    Dim PartName As String = Hex(ActiveReader.ReadUInt32)
+                    'MessageBox.Show(PartName)
+                    Dim TempNode As TreeNode = New TreeNode(PartName)
+                    TempNode.ToolTipText = HostNode.ToolTipText
+                    Dim TempNodeProps As NodeProperties = New NodeProperties
+                    TempNodeProps.Index = NodeTag.Index + ActiveReader.ReadUInt32()
+                    TempNodeProps.length = ActiveReader.ReadUInt64
+                    TempNodeProps.StoredData = New Byte() {}
+                    TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index)
+                    TempNode.Tag = TempNodeProps
+                    HostNode.Nodes.Add(TempNode)
+                Next
+            End If
         ElseIf NodeTag.FileType = PackageType.EPK8 Then
             ActiveReader.BaseStream.Seek(&H4, SeekOrigin.Begin)
             Dim HeaderLength As Integer = ActiveReader.ReadUInt32()
@@ -272,26 +392,45 @@ Public Class MainForm
                 HostNode.Nodes.Add(DirectoryTreeNode)
             Loop
         ElseIf NodeTag.FileType = PackageType.PACH Then
-            ActiveReader.BaseStream.Seek(NodeTag.Index + &H4, SeekOrigin.Begin)
-            Dim Partcount As Integer = ActiveReader.ReadUInt32
-            For i As Integer = 0 To Partcount - 1
-                ActiveReader.BaseStream.Seek(NodeTag.Index + &H8 + (i * &HC), SeekOrigin.Begin)
-                Dim PartName As String = Hex(ActiveReader.ReadUInt32)
-                Dim TempNode As TreeNode = New TreeNode(PartName)
-                TempNode.ToolTipText = HostNode.ToolTipText
-                Dim TempNodeProps As NodeProperties = New NodeProperties
-                TempNodeProps.Index = NodeTag.Index + ActiveReader.ReadUInt32() + &H8 + Partcount * &HC
-                TempNodeProps.length = ActiveReader.ReadUInt32()
-                TempNodeProps.StoredData = New Byte() {}
-                TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index)
-                TempNode.Tag = TempNodeProps
-                HostNode.Nodes.Add(TempNode)
-            Next
+            If NodeTag.StoredData.Length > 0 Then
+                Dim Partcount As Integer = BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + 4)
+                For i As Integer = 0 To Partcount - 1
+                    Dim PartName As String = Hex(BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + &H8 + (i * &HC)))
+                    Dim TempNode As TreeNode = New TreeNode(PartName)
+                    TempNode.ToolTipText = HostNode.ToolTipText
+                    Dim TempNodeProps As NodeProperties = New NodeProperties
+                    TempNodeProps.Index = NodeTag.Index + BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + &HC + (i * &HC)) + &H8 + Partcount * &HC
+                    TempNodeProps.length = BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + &H10 + (i * &HC))
+                    TempNodeProps.StoredData = NodeTag.StoredData
+                    TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, NodeTag.StoredData)
+                    TempNode.Tag = TempNodeProps
+                    HostNode.Nodes.Add(TempNode)
+                Next
+            Else
+                ActiveReader.BaseStream.Seek(NodeTag.Index + &H4, SeekOrigin.Begin)
+                Dim Partcount As Integer = ActiveReader.ReadUInt32
+                For i As Integer = 0 To Partcount - 1
+                    ActiveReader.BaseStream.Seek(NodeTag.Index + &H8 + (i * &HC), SeekOrigin.Begin)
+                    Dim PartName As String = Hex(ActiveReader.ReadUInt32)
+                    Dim TempNode As TreeNode = New TreeNode(PartName)
+                    TempNode.ToolTipText = HostNode.ToolTipText
+                    Dim TempNodeProps As NodeProperties = New NodeProperties
+                    TempNodeProps.Index = NodeTag.Index + ActiveReader.ReadUInt32() + &H8 + Partcount * &HC
+                    TempNodeProps.length = ActiveReader.ReadUInt32()
+                    TempNodeProps.StoredData = New Byte() {}
+                    TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index)
+                    TempNode.Tag = TempNodeProps
+                    HostNode.Nodes.Add(TempNode)
+                Next
+            End If
         ElseIf NodeTag.FileType = PackageType.ZLIB Then
-            ActiveReader.BaseStream.Seek(0, SeekOrigin.Begin)
-            Dim FileBytes As Byte() = ActiveReader.ReadBytes(ActiveReader.BaseStream.Length)
             Dim ZlibBytes As Byte() = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, NodeTag.Index, ZlibBytes, 0, NodeTag.length)
+            If NodeTag.StoredData.Length > 0 Then
+                Array.Copy(NodeTag.StoredData, CInt(NodeTag.Index), ZlibBytes, 0, CInt(NodeTag.length))
+            Else
+                ActiveReader.BaseStream.Seek(NodeTag.length, SeekOrigin.Begin)
+                ZlibBytes = ActiveReader.ReadBytes(NodeTag.length)
+            End If
             Dim align As Byte() = New Byte(3) {}
             Array.Copy(ZlibBytes, 4, align, 0, 4)
             Dim compressed As Byte() = New Byte(3) {}
@@ -299,9 +438,16 @@ Public Class MainForm
             Dim uncompressed As Byte() = New Byte(3) {}
             Array.Copy(ZlibBytes, 12, uncompressed, 0, 4)
             Dim input As Byte() = New Byte(BitConverter.ToInt32(compressed, 0)) {}
-            Array.Copy(ZlibBytes, 16, input, 0, NodeTag.length - 16)
+            Array.Copy(ZlibBytes, 16, input, 0, CInt(NodeTag.length - 16))
             Dim output As Byte() = New Byte(BitConverter.ToInt32(uncompressed, 0)) {}
-            output = ZlibStream.UncompressBuffer(input)
+            Try
+                output = ZlibStream.UncompressBuffer(input)
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+                NodeTag.FileType = PackageType.Unknown
+                HostNode.Tag = NodeTag
+                Exit Sub
+            End Try
             Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
             TempNode.ToolTipText = HostNode.ToolTipText
             Dim TempNodeProps As NodeProperties = New NodeProperties
@@ -312,10 +458,39 @@ Public Class MainForm
             TempNodeProps.StoredData = output
             TempNode.Tag = TempNodeProps
             HostNode.Nodes.Add(TempNode)
-        ElseIf NodeTag.FileType = PackageType.YOBJ Then
-            'To Be Added
+        ElseIf NodeTag.FileType = PackageType.BPE Then
+            Dim CompressedBytes As Byte() = New Byte(NodeTag.length) {}
+            If NodeTag.StoredData.Length > 0 Then
+                Array.Copy(NodeTag.StoredData, CInt(NodeTag.Index), CompressedBytes, 0, CInt(NodeTag.length))
+            Else
+                ActiveReader.BaseStream.Seek(NodeTag.Index, SeekOrigin.Begin)
+                CompressedBytes = ActiveReader.ReadBytes(NodeTag.length)
+            End If
+            Dim UncompressedLength As Integer = BitConverter.ToUInt32(CompressedBytes, &HC)
+            Dim UncompressedBytes As Byte() = New Byte(UncompressedLength) {}
+            Try
+                Dim TempInput As String = Path.GetTempFileName
+                Dim TempOutput As String = Path.GetTempFileName
+                File.WriteAllBytes(TempInput, CompressedBytes)
+                Process.Start(My.Settings.UnrrbpePath, TempInput & " " & TempOutput).WaitForExit()
+                UncompressedBytes = File.ReadAllBytes(TempOutput)
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+                NodeTag.FileType = PackageType.Unknown
+                HostNode.Tag = NodeTag
+                Exit Sub
+            End Try
+            Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
+            TempNode.ToolTipText = HostNode.ToolTipText
+            Dim TempNodeProps As NodeProperties = New NodeProperties
+            TempNodeProps.Index = 0
+            TempNodeProps.length = UncompressedBytes.Length
+            TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, UncompressedBytes)
+            'MessageBox.Show(output.Length)
+            TempNodeProps.StoredData = UncompressedBytes
+            TempNode.Tag = TempNodeProps
+            HostNode.Nodes.Add(TempNode)
         ElseIf NodeTag.FileType = PackageType.TextureLibrary Then
-            'To Be Added
             If NodeTag.StoredData.Length > 0 Then
                 Dim TextureCount As Integer = NodeTag.StoredData(0)
                 For i As Integer = 0 To TextureCount - 1
@@ -348,9 +523,90 @@ Public Class MainForm
                     HostNode.Nodes.Add(TempNode)
                 Next
             End If
+        ElseIf NodeTag.FileType = PackageType.YOBJ Then
+            'To Be Added
+        ElseIf NodeTag.FileType = PackageType.TextureLibrary Then
+            If NodeTag.StoredData.Length > 0 Then
+                Dim TextureCount As Integer = NodeTag.StoredData(0)
+                For i As Integer = 0 To TextureCount - 1
+                    Dim ImageName As String = Encoding.Default.GetChars(NodeTag.StoredData, i * &H20 + &H10, &H10)
+                    Dim TempNode As TreeNode = New TreeNode(ImageName)
+                    TempNode.ToolTipText = HostNode.ToolTipText
+                    Dim TempNodeProps As NodeProperties = New NodeProperties
+                    TempNodeProps.FileType = PackageType.DDS
+                    TempNodeProps.length = BitConverter.ToUInt32(NodeTag.StoredData, i * &H20 + &H10 + &H14)
+                    TempNodeProps.Index = BitConverter.ToUInt64(NodeTag.StoredData, i * &H20 + &H10 + &H18)
+                    TempNodeProps.StoredData = NodeTag.StoredData
+                    TempNode.Tag = TempNodeProps
+                    HostNode.Nodes.Add(TempNode)
+                Next
+            Else
+                ActiveReader.BaseStream.Seek(NodeTag.Index, SeekOrigin.Begin)
+                Dim TextureCount As Integer = ActiveReader.ReadByte
+                ActiveReader.BaseStream.Seek(NodeTag.Index & &H10, SeekOrigin.Begin)
+                For i As Integer = 0 To TextureCount - 1
+                    Dim ImageName As String = ActiveReader.ReadChars(&H10)
+                    Dim TempNode As TreeNode = New TreeNode(ImageName)
+                    TempNode.ToolTipText = HostNode.ToolTipText
+                    Dim TempNodeProps As NodeProperties = New NodeProperties
+                    TempNodeProps.FileType = PackageType.DDS
+                    ActiveReader.BaseStream.Seek(&H4, SeekOrigin.Current)
+                    TempNodeProps.length = ActiveReader.ReadUInt32
+                    TempNodeProps.Index = ActiveReader.ReadUInt64
+                    TempNodeProps.StoredData = New Byte() {}
+                    TempNode.Tag = TempNodeProps
+                    HostNode.Nodes.Add(TempNode)
+                Next
+            End If
+        ElseIf NodeTag.FileType = PackageType.YANMPack Then
+            Dim YANMPackBytes As Byte() = New Byte(NodeTag.length) {}
+            If NodeTag.StoredData.Length > 0 Then
+                Array.Copy(NodeTag.StoredData, CInt(NodeTag.Index), YANMPackBytes, 0, CInt(NodeTag.length))
+            Else
+                ActiveReader.BaseStream.Seek(NodeTag.Index, SeekOrigin.Begin)
+                YANMPackBytes = ActiveReader.ReadBytes(NodeTag.length)
+            End If
+            'we have to reverse 
+            Dim HeaderLength As UInt32 = BitConverter.ToUInt32(EndianReverse(YANMPackBytes), 0) + &H20
+            MessageBox.Show(HeaderLength)
+            Dim YANMLength As UInt32 = BitConverter.ToUInt32(EndianReverse(YANMPackBytes, 3), 0)
+            MessageBox.Show(YANMLength)
+            Dim HeadIndex As Integer = 0
+            Dim partcount As Integer = 0
+            Do While HeadIndex < HeaderLength
+                If HeadIndex = 0 Then
+                    HeadIndex = &H70
+                End If
+                'getting the part name
+                Dim PartName As String = Encoding.ASCII.GetString(YANMPackBytes, HeadIndex + 4, 8)
+                MessageBox.Show(PartName)
+                Dim TempNode As TreeNode = New TreeNode(PartName)
+                TempNode.ToolTipText = HostNode.ToolTipText
+                Dim TempNodeProps As NodeProperties = New NodeProperties
+                TempNodeProps.FileType = PackageType.YANM
+                'getting the start offset
+                TempNodeProps.Index = (BitConverter.ToUInt32(EndianReverse(YANMPackBytes, HeadIndex + &H24), 0)) + HeaderLength + HostNode.Index
+                MessageBox.Show(PartName)
+                'Get the file Length
+                If HeadIndex + &H20 + &H28 < HeaderLength Then
+                    TempNodeProps.length = (BitConverter.ToUInt32(EndianReverse(YANMPackBytes, HeadIndex + &H24 + &H28), 0)) + HeaderLength - TempNodeProps.Index
+                Else
+                    TempNodeProps.length = YANMLength - TempNodeProps.Index + HeaderLength
+                End If
+                MessageBox.Show(TempNodeProps.length)
+                TempNodeProps.StoredData = NodeTag.StoredData
+                'add to list box
+                TempNode.Tag = TempNodeProps
+                HostNode.Nodes.Add(TempNode)
+                partcount = partcount + 1
+                HeadIndex = HeadIndex + &H28
+            Loop
         ElseIf NodeTag.FileType = PackageType.StringFile Then
             'Do nothing
         ElseIf NodeTag.FileType = PackageType.Unknown Then
+            'Do nothing
+        ElseIf NodeTag.FileType = PackageType.DDS Then
+            'Do Nothing
         End If
         HostNode.Tag = NodeTag
 
@@ -364,9 +620,14 @@ Public Class MainForm
         End If
         If ByteArray Is Nothing Then
             ActiveReader.BaseStream.Seek(Index, SeekOrigin.Begin)
-            FirstFour = ActiveReader.ReadChars(4)
+            Try
+                FirstFour = ActiveReader.ReadChars(4)
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+                Return PackageType.Unknown
+            End Try
         Else
-            FirstFour = Encoding.Default.GetChars(ByteArray, 0, 4)
+            FirstFour = Encoding.Default.GetChars(ByteArray, Index, 4)
         End If
         If FirstFour = "HSPC" Then
             Return PackageType.HSPC
@@ -380,68 +641,144 @@ Public Class MainForm
             Return PackageType.EPAC
         ElseIf FirstFour = "ZLIB" Then
             Return PackageType.ZLIB
-        ElseIf FirstFour = "YOBJ" Then
+        ElseIf FirstFour = "YOBJ" OrElse
+            FirstFour = "JBOY" Then
             Return PackageType.YOBJ
         ElseIf FirstFour = "NIBJ" Then
             Return PackageType.NIBJ
+        ElseIf FirstFour = "0FOP" Then
+            Return PackageType.OFOP
+        ElseIf FirstFour = "YANM" Then
+            Return PackageType.YANM
         ElseIf FirstFour.Contains("STG") Then
             Return PackageType.ShowInfo
         ElseIf FirstFour.Contains("DDS") Then
-            Return PackageType.DDS
+            Return PackageType.DDS 'KB2
+        ElseIf FirstFour.Contains("KB2") Then
+            Return PackageType.bk2
+        ElseIf FirstFour.Contains("COS") Then
+            Return PackageType.CostumeFile
+        ElseIf FirstFour.Contains("BPE") Then
+            Return PackageType.BPE
+        ElseIf FirstFour.Contains("ê¡Y") Then
+            Return PackageType.YOBJArray
         Else
+            Dim ArenaCheck As String = ""
+            If ByteArray Is Nothing Then
+                ActiveReader.BaseStream.Seek(Index + &H10, SeekOrigin.Begin)
+                ArenaCheck = Encoding.Default.GetChars(ActiveReader.ReadBytes(4))
+            Else
+                ArenaCheck = Encoding.Default.GetChars(ByteArray, Index + &H10, 4)
+            End If
+            If ArenaCheck = "aren" Then
+                Return PackageType.ArenaInfo
+            End If
+            'mask file check
+            Dim MaskCheck As String = ""
+            If ByteArray Is Nothing Then
+                ActiveReader.BaseStream.Seek(Index + &H14, SeekOrigin.Begin)
+                MaskCheck = Encoding.Default.GetChars(ActiveReader.ReadBytes(6))
+            Else
+                MaskCheck = Encoding.Default.GetChars(ByteArray, Index + &H14, 6)
+            End If
+            If MaskCheck = "M_Head" OrElse
+               MaskCheck = "M_Body" Then
+                Return PackageType.MaskFile
+            End If
+            'muscle file check
+            Dim MuscleCheck As String = ""
+            If ByteArray Is Nothing Then
+                ActiveReader.BaseStream.Seek(Index + &H18, SeekOrigin.Begin)
+                MuscleCheck = Encoding.Default.GetChars(ActiveReader.ReadBytes(3))
+            Else
+                MuscleCheck = Encoding.Default.GetChars(ByteArray, Index + &H18, 3)
+            End If
+            If MuscleCheck = "yM_" Then
+                Return PackageType.MuscleFile
+            End If
             'dds check
             Dim DDSCheck As String = ""
             If ByteArray Is Nothing Then
                 ActiveReader.BaseStream.Seek(Index + &H20, SeekOrigin.Begin)
-                DDSCheck = ActiveReader.ReadChars(3)
+                DDSCheck = Encoding.Default.GetChars(ActiveReader.ReadBytes(3))
 
             Else
-                DDSCheck = Encoding.Default.GetChars(ByteArray, &H20, 3)
+                DDSCheck = Encoding.Default.GetChars(ByteArray, Index + &H20, 3)
             End If
-            If DDSCheck = "dds" Then
+            If DDSCheck.ToLower = "dds" Then
                 Return PackageType.TextureLibrary
             End If
-            Dim MiscCheck As String = ""
+            'dds check
+            Dim YANMCheck As String = ""
             If ByteArray Is Nothing Then
-                ActiveReader.BaseStream.Seek(Index + &H10, SeekOrigin.Begin)
-                MiscCheck = ActiveReader.ReadChars(4)
+                ActiveReader.BaseStream.Seek(Index + &H24, SeekOrigin.Begin)
+                YANMCheck = Encoding.Default.GetChars(ActiveReader.ReadBytes(4))
+
             Else
-                MiscCheck = Encoding.Default.GetChars(ByteArray, &H10, 4)
+                YANMCheck = Encoding.Default.GetChars(ByteArray, Index + &H24, 4)
             End If
-            If MiscCheck = "aren" Then
-                Return PackageType.ArenaInfo
+            If YANMCheck.ToLower = "root" Then
+                Return PackageType.YANMPack
             End If
             'String File Test
-            Dim StringTest As UInt32
-            If ByteArray Is Nothing Then
-                ActiveReader.BaseStream.Seek(Index, SeekOrigin.Begin)
-                StringTest = ActiveReader.ReadUInt32
-            Else
-                StringTest = BitConverter.ToUInt32(ByteArray, 0)
-            End If
-            If StringTest = 0 Then
-                Return PackageType.StringFile
+            If ActiveFile.ToLower.Contains("string") Then
+                Dim StringTest As UInt32
+                If ByteArray Is Nothing Then
+                    If Not Index >= ActiveReader.BaseStream.Length - 4 Then
+                        ActiveReader.BaseStream.Seek(Index, SeekOrigin.Begin)
+
+                        StringTest = ActiveReader.ReadUInt32
+
+                    End If
+                Else
+                    StringTest = BitConverter.ToUInt32(ByteArray, Index + 0)
+                End If
+                If StringTest = 0 Then
+                    Return PackageType.StringFile
+                End If
             End If
             Return PackageType.Unknown
         End If
     End Function
 #End Region
 #Region "Menu Strip"
-    Dim SelectedFile As String
+    Dim SelectedFiles() As String
     Private Sub LoadHomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoadHomeToolStripMenuItem.Click
         LoadHome()
     End Sub
     Private Sub OpenToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenToolStripMenuItem.Click
         If OpenFileDialog1.ShowDialog = DialogResult.OK Then
-            SelectedFile = OpenFileDialog1.FileName
+            SelectedFiles = OpenFileDialog1.FileNames
             LoadParameters()
         End If
+    End Sub
+    Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
+        Application.Exit()
     End Sub
 #End Region
 #Region "TreeView Population"
     Sub LoadParameters()
         TreeView1.Nodes.Clear()
         ProgressBar1.Value = 0
+        If SelectedFiles.Length = 1 Then
+            CurrentViewToolStripMenuItem.Text = "Current View: " & Path.GetFileName(SelectedFiles(0))
+        Else
+            CurrentViewToolStripMenuItem.Text = "Current View: Multiple Files"
+        End If
+        For i As Integer = 0 To SelectedFiles.Length - 1
+            If Not SelectedFiles(i) = "" Then
+
+                Dim TempNode As TreeNode = TreeView1.Nodes.Add(Path.GetFileName(SelectedFiles(i)))
+                TempNode.ToolTipText = SelectedFiles(i)
+                TempNode.StateImageIndex = 0
+                Dim TempNodeProps As NodeProperties = New NodeProperties
+                TempNodeProps.FileType = PackageType.Unchecked
+                TempNodeProps.StoredData = New Byte() {}
+                TempNode.Tag = TempNodeProps
+                CheckFile(TempNode)
+                ActiveReader.Close()
+            End If
+        Next
     End Sub
     Sub LoadHome()
         TreeView1.Nodes.Clear()
@@ -508,6 +845,8 @@ Public Class MainForm
             AddHexText(TreeView1.SelectedNode)
             TextViewFileName.Text = TreeView1.SelectedNode.Text
             AddText(TreeView1.SelectedNode)
+            'TO DO I'll change this to a match case at some point I swear
+            'TO DO add to an extenral function so I can create a crawler.
             If CType(e.Node.Tag, NodeProperties).FileType = PackageType.StringFile Then
                 'StringView
                 If Not TabControl1.TabPages.Contains(StringView) Then
@@ -564,9 +903,140 @@ Public Class MainForm
                     DeleteCurrentImage()
                 End If
             End If
+            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.YOBJ Then
+                'StringView
+                If Not TabControl1.TabPages.Contains(ObjectView) Then
+                    TabControl1.TabPages.Add(ObjectView)
+                End If
+                'LoadPicture(TreeView1.SelectedNode)
+            Else
+                If TabControl1.TabPages.Contains(ObjectView) Then
+                    TabControl1.TabPages.Remove(ObjectView)
+
+                End If
+            End If
+            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.CostumeFile Then
+                If Not TabControl1.TabPages.Contains(AttireView) Then
+                    TabControl1.TabPages.Add(AttireView)
+                End If
+                LoadAttires(TreeView1.SelectedNode)
+            Else
+                If TabControl1.TabPages.Contains(AttireView) Then
+                    TabControl1.TabPages.Remove(AttireView)
+                End If
+            End If
+            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.MuscleFile Then
+                If Not TabControl1.TabPages.Contains(MuscleView) Then
+                    TabControl1.TabPages.Add(MuscleView)
+                End If
+                LoadMuscles(TreeView1.SelectedNode)
+            Else
+            End If
+            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.MaskFile Then
+                If Not TabControl1.TabPages.Contains(MaskView) Then
+                    TabControl1.TabPages.Add(MaskView)
+                End If
+                LoadMask(TreeView1.SelectedNode)
+            Else
+                If TabControl1.TabPages.Contains(MaskView) Then
+                    TabControl1.TabPages.Remove(MaskView)
+                End If
+            End If
+            'ObjArrayView
+            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.YOBJArray Then
+                If Not TabControl1.TabPages.Contains(ObjArrayView) Then
+                    TabControl1.TabPages.Add(ObjArrayView)
+                End If
+                LoadObjectArray(TreeView1.SelectedNode)
+            Else
+                If TabControl1.TabPages.Contains(ObjArrayView) Then
+                    TabControl1.TabPages.Remove(ObjArrayView)
+                End If
+            End If
         End If
     End Sub
 
+#End Region
+#Region "Context Menu Strip"
+    Private Sub TreeView1_NodeMouseClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles TreeView1.NodeMouseClick
+        If Not e.Button = MouseButtons.Right Then
+            Exit Sub
+        End If
+        TreeView1.SelectedNode = e.Node
+        Dim NodeTag As NodeProperties = New NodeProperties
+        NodeTag.FileType = CType(e.Node.Tag, NodeProperties).FileType
+        NodeTag.Index = CType(e.Node.Tag, NodeProperties).Index
+        NodeTag.length = CType(e.Node.Tag, NodeProperties).length
+        NodeTag.StoredData = CType(e.Node.Tag, NodeProperties).StoredData
+        Dim ShownOptions As Integer = 2
+        If NodeTag.Index > 0 OrElse
+                   NodeTag.StoredData.Length > 0 Then
+            ExtractToolStripMenuItem.Visible = True
+            InjectToolStripMenuItem.Visible = True
+        Else
+            ExtractToolStripMenuItem.Visible = False
+            InjectToolStripMenuItem.Visible = False
+            ShownOptions -= 1
+        End If
+        If NodeTag.FileType = PackageType.bk2 AndAlso My.Settings.RADVideoToolPath <> "Not Installed" Then
+            OpenToolStripMenuItem1.Visible = True
+        Else
+            OpenToolStripMenuItem1.Visible = False
+            ShownOptions -= 1
+        End If
+
+        If ShownOptions > 0 Then
+            TreeViewContext.Show(TreeView1, New Point(e.X, e.Y))
+        End If
+    End Sub
+    Private Sub ExtractToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExtractToolStripMenuItem.Click
+        Dim filepath As String = TreeView1.SelectedNode.ToolTipText
+        Dim NodeTag As NodeProperties = New NodeProperties
+        NodeTag.FileType = CType(TreeView1.SelectedNode.Tag, NodeProperties).FileType
+        NodeTag.Index = CType(TreeView1.SelectedNode.Tag, NodeProperties).Index
+        NodeTag.length = CType(TreeView1.SelectedNode.Tag, NodeProperties).length
+        NodeTag.StoredData = CType(TreeView1.SelectedNode.Tag, NodeProperties).StoredData
+        SaveFileDialog1.InitialDirectory = Path.GetDirectoryName(filepath)
+        SaveFileDialog1.FileName = TreeView1.SelectedNode.Text & "." & NodeTag.FileType.ToString
+        If SaveFileDialog1.ShowDialog() = DialogResult.OK Then
+            Dim ExtractByte As Byte()
+            If NodeTag.StoredData.Length > 0 Then
+                Dim FileBytes As Byte() = NodeTag.StoredData
+                ExtractByte = New Byte(NodeTag.length - 1) {}
+                Array.Copy(FileBytes, CInt(NodeTag.Index), ExtractByte, 0, CInt(NodeTag.length))
+            Else
+                Dim FileBytes As Byte() = File.ReadAllBytes(filepath)
+                ExtractByte = New Byte(NodeTag.length - 1) {}
+                Array.Copy(FileBytes, CInt(NodeTag.Index), ExtractByte, 0, CInt(NodeTag.length))
+            End If
+            File.WriteAllBytes(SaveFileDialog1.FileName, ExtractByte)
+        End If
+    End Sub
+    Private Sub OpenToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles OpenToolStripMenuItem1.Click
+        'Currently Only Opens Bink Files
+        Dim filepath As String = TreeView1.SelectedNode.ToolTipText
+        Dim NodeTag As NodeProperties = New NodeProperties
+        NodeTag.FileType = CType(TreeView1.SelectedNode.Tag, NodeProperties).FileType
+        NodeTag.Index = CType(TreeView1.SelectedNode.Tag, NodeProperties).Index
+        NodeTag.length = CType(TreeView1.SelectedNode.Tag, NodeProperties).length
+        NodeTag.StoredData = CType(TreeView1.SelectedNode.Tag, NodeProperties).StoredData
+
+        Dim TronBytes As Byte()
+        If NodeTag.StoredData.Length > 0 Then
+            Dim FileBytes As Byte() = NodeTag.StoredData
+            TronBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), TronBytes, 0, CInt(NodeTag.length))
+        Else
+            Dim FileBytes As Byte() = File.ReadAllBytes(filepath)
+            TronBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), TronBytes, 0, CInt(NodeTag.length))
+        End If
+        filepath = Path.GetTempFileName
+
+        File.WriteAllBytes(filepath, TronBytes)
+
+        Process.Start(My.Settings.RADVideoToolPath, filepath)
+    End Sub
 #End Region
 #Region "Hex View Controls"
     Sub AddHexText(SelectedFilePath As TreeNode)
@@ -592,9 +1062,9 @@ Public Class MainForm
             End If
             Dim ByteString As String = ""
             If HexLength < &H1000 Then
-                ByteString = (BitConverter.ToString(Filebytes, NodeTag.Index, HexLength).Replace("-", " "))
+                ByteString = (BitConverter.ToString(Filebytes, CInt(NodeTag.Index), HexLength).Replace("-", " "))
             Else
-                ByteString = (BitConverter.ToString(Filebytes, NodeTag.Index, &H1000).Replace("-", " "))
+                ByteString = (BitConverter.ToString(Filebytes, CInt(NodeTag.Index), &H1000).Replace("-", " "))
             End If
             'SelectedFilePath = SelectedFilePath.Replace(vbCr, "").Replace(vbLf, "")
             Dim builder As New StringBuilder(ByteString)
@@ -683,42 +1153,47 @@ Public Class MainForm
 
 #End Region
 #Region "String View Controls"
-    Dim StringList(&H100000) As String
+    'Dim StringList(&H100000) As String
     Sub FillStringView(SelectedData As TreeNode)
-        DataGridStringView.Rows.Clear()
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
-        NodeTag.Index = CType(SelectedData.Tag, NodeProperties).Index
-        NodeTag.length = CType(SelectedData.Tag, NodeProperties).length
-        NodeTag.StoredData = CType(SelectedData.Tag, NodeProperties).StoredData
-        Dim StringBytes As Byte()
-        If NodeTag.StoredData.Length > 0 Then
-            StringBytes = NodeTag.StoredData
-        Else
-            Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
-            StringBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, NodeTag.Index, StringBytes, 0, NodeTag.length)
-        End If
-        Dim StringCount As Integer = BitConverter.ToInt32(StringBytes, 4)
-        StringCountToolStripMenuItem.Text = "String Count: " & StringCount
-        ProgressBar1.Maximum = StringCount
-        ProgressBar1.Value = 0
-        'Get Data On the Pach parts
-        Dim StringFileOffset(Int16.MaxValue) As Integer
-        Dim StringFileLength(Int16.MaxValue) As Integer
-        Dim StringFileReference(Int16.MaxValue) As Integer
-        For j As Integer = 0 To StringCount - 1
-            StringFileOffset(j) = BitConverter.ToInt32(StringBytes, 8 + j * 12 + 0)
-            StringFileLength(j) = BitConverter.ToInt32(StringBytes, 8 + j * 12 + 4)
-            StringFileReference(j) = BitConverter.ToInt32(StringBytes, 8 + j * 12 + 8)
-            'Trim all 00 chars so the strings don't end abrubtly in future manipulation
-            StringList(StringFileReference(j)) = Encoding.Default.GetString(StringBytes, StringFileOffset(j), StringFileLength(j)).TrimEnd(Chr(0))
-            DataGridStringView.Rows.Add(Hex(StringFileReference(j)),
-                                        StringList(StringFileReference(j)),
-                                        StringFileLength(j).ToString)
-            ProgressBar1.Value = j
-        Next
-
+        Dim Testing As String = ""
+        Try
+            DataGridStringView.Rows.Clear()
+            Dim NodeTag As NodeProperties = New NodeProperties
+            NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
+            NodeTag.Index = CType(SelectedData.Tag, NodeProperties).Index
+            NodeTag.length = CType(SelectedData.Tag, NodeProperties).length
+            NodeTag.StoredData = CType(SelectedData.Tag, NodeProperties).StoredData
+            Dim StringBytes As Byte()
+            If NodeTag.StoredData.Length > 0 Then
+                StringBytes = NodeTag.StoredData
+            Else
+                Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
+                StringBytes = New Byte(NodeTag.length - 1) {}
+                Array.Copy(FileBytes, CInt(NodeTag.Index), StringBytes, 0, CInt(NodeTag.length))
+            End If
+            Dim StringCount As Integer = BitConverter.ToInt32(StringBytes, 4)
+            StringCountToolStripMenuItem.Text = "String Count: " & StringCount
+            ProgressBar1.Maximum = StringCount
+            ProgressBar1.Value = 0
+            'Get Data On the Pach parts
+            Dim StringFileOffset(Int16.MaxValue) As Integer
+            Dim StringFileLength(Int16.MaxValue) As Integer
+            Dim StringFileReference(Int16.MaxValue) As Integer
+            For j As Integer = 0 To StringCount - 1
+                StringFileOffset(j) = BitConverter.ToInt32(StringBytes, 8 + j * 12 + 0)
+                StringFileLength(j) = BitConverter.ToInt32(StringBytes, 8 + j * 12 + 4)
+                StringFileReference(j) = BitConverter.ToInt32(StringBytes, 8 + j * 12 + 8)
+                Testing = StringFileReference(j)
+                'Trim all 00 chars so the strings don't end abrubtly in future manipulation
+                My.Settings.StringReferences.Item(StringFileReference(j)) = Encoding.Default.GetString(StringBytes, StringFileOffset(j), StringFileLength(j)).TrimEnd(Chr(0))
+                DataGridStringView.Rows.Add(Hex(StringFileReference(j)),
+                                            My.Settings.StringReferences.Item(StringFileReference(j)),
+                                            StringFileLength(j).ToString)
+                ProgressBar1.Value = j
+            Next
+        Catch ex As Exception
+            MessageBox.Show(ex.Message & vbNewLine & Testing)
+        End Try
     End Sub
 #End Region
 #Region "Misc View Controls"
@@ -736,11 +1211,11 @@ Public Class MainForm
         If NodeTag.StoredData.Length > 0 Then
             Dim FileBytes As Byte() = NodeTag.StoredData
             MiscBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, NodeTag.Index, MiscBytes, 0, NodeTag.length)
+            Array.Copy(FileBytes, CInt(NodeTag.Index), MiscBytes, 0, CInt(NodeTag.length))
         Else
             Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
             MiscBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, NodeTag.Index, MiscBytes, 0, NodeTag.length)
+            Array.Copy(FileBytes, CInt(NodeTag.Index), MiscBytes, 0, CInt(NodeTag.length))
         End If
         Dim ArenaCount As Integer = BitConverter.ToInt32(MiscBytes, 0)
         For i As Integer = 0 To ArenaCount - 1
@@ -1043,11 +1518,11 @@ Public Class MainForm
         If NodeTag.StoredData.Length > 0 Then
             Dim FileBytes As Byte() = NodeTag.StoredData
             ShowBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, NodeTag.Index, ShowBytes, 0, NodeTag.length)
+            Array.Copy(FileBytes, CInt(NodeTag.Index), ShowBytes, 0, CInt(NodeTag.length))
         Else
             Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
             ShowBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, NodeTag.Index, ShowBytes, 0, NodeTag.length)
+            Array.Copy(FileBytes, CInt(NodeTag.Index), ShowBytes, 0, CInt(NodeTag.length))
         End If
         Dim FileLength As Integer = ShowBytes.Length
         Dim index As Integer = 0
@@ -1128,11 +1603,11 @@ Public Class MainForm
         If NodeTag.StoredData.Length > 0 Then
             Dim FileBytes As Byte() = NodeTag.StoredData
             NIJBBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, NodeTag.Index, NIJBBytes, 0, NodeTag.length)
+            Array.Copy(FileBytes, CInt(NodeTag.Index), NIJBBytes, 0, CInt(NodeTag.length))
         Else
             Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
             NIJBBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, NodeTag.Index, NIJBBytes, 0, NodeTag.length)
+            Array.Copy(FileBytes, CInt(NodeTag.Index), NIJBBytes, 0, CInt(NodeTag.length))
         End If
         Dim LightCount As Integer = BitConverter.ToInt32(NIJBBytes, &H8)
         Dim ShowCount As Integer = BitConverter.ToInt32(NIJBBytes, &HC)
@@ -1168,11 +1643,11 @@ Public Class MainForm
         If NodeTag.StoredData.Length > 0 Then
             Dim FileBytes As Byte() = NodeTag.StoredData
             PictureBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, NodeTag.Index, PictureBytes, 0, NodeTag.length)
+            Array.Copy(FileBytes, CInt(NodeTag.Index), PictureBytes, 0, CInt(NodeTag.length))
         Else
             Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
             PictureBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, NodeTag.Index, PictureBytes, 0, NodeTag.length)
+            Array.Copy(FileBytes, CInt(NodeTag.Index), PictureBytes, 0, CInt(NodeTag.length))
         End If
         Dim ImageStream As MemoryStream = New MemoryStream(PictureBytes)
         Dim TempName As String = Path.GetTempFileName
@@ -1183,7 +1658,11 @@ Public Class MainForm
                                 Path.DirectorySeparatorChar &
                                 Path.GetFileNameWithoutExtension(TempName) & ".BMP"
         If File.Exists(TempBMP) Then
-            PictureBox1.Image = Image.FromFile(TempBMP)
+            Dim tempimage As Image
+            Using TempObject = New Bitmap(TempBMP)
+                tempimage = New Bitmap(TempObject)
+            End Using
+            PictureBox2.Image = tempimage
         Else
             MessageBox.Show("Error creating bitmap image.")
         End If
@@ -1191,7 +1670,7 @@ Public Class MainForm
         File.Delete(TempName)
     End Sub
     Sub DeleteCurrentImage()
-        PictureBox1.Image = Nothing
+        PictureBox2.Image = Nothing
         For Each CurrentImage As String In CreatedImages
             Try
                 If File.Exists(CurrentImage) Then
@@ -1203,6 +1682,358 @@ Public Class MainForm
         Next
         CreatedImages.Clear()
     End Sub
-
 #End Region
+#Region "Attire Editor View"
+    Sub LoadAttires(SelectedData As TreeNode)
+        Dim StringRead As Boolean = False
+        If Not My.Settings.StringReferences(0) = "String Not Read" Then
+            StringRead = True
+        End If
+        StringLoadedToolStripMenuItem.Text = "String Loaded: " & StringRead.ToString
+        Dim PacsRead As Boolean = False
+        If Not My.Settings.PacReferences(0) = "Pacs Not Read" Then
+            PacsRead = True
+        End If
+        PacsLoadedToolStripMenuItem.Text = "Pacs Loaded: " & PacsRead.ToString
+        Dim NodeTag As NodeProperties = New NodeProperties
+        NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
+        NodeTag.Index = CType(SelectedData.Tag, NodeProperties).Index
+        NodeTag.length = CType(SelectedData.Tag, NodeProperties).length
+        NodeTag.StoredData = CType(SelectedData.Tag, NodeProperties).StoredData
+        Dim AttireBytes As Byte()
+        If NodeTag.StoredData.Length > 0 Then
+            Dim FileBytes As Byte() = NodeTag.StoredData
+            AttireBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), AttireBytes, 0, CInt(NodeTag.length))
+        Else
+            Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
+            AttireBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), AttireBytes, 0, CInt(NodeTag.length))
+        End If
+        Dim WrestlerCount As Integer = BitConverter.ToInt32(AttireBytes, &H8)
+        Dim AttireCol As DataGridViewColumnCollection = DataGridAttireView.Columns
+        Dim WrestlerPacs(WrestlerCount - 1) As Integer
+        Dim AttireCount(WrestlerCount - 1) As Integer
+        Dim AttireNames((WrestlerCount) * 10 - 1) As Integer
+        Dim AttireEnabled((WrestlerCount) * 10 - 1) As Boolean
+        Dim AttireManager((WrestlerCount) * 10 - 1) As Boolean
+        For i As Integer = 0 To WrestlerCount - 1
+            WrestlerPacs(i) = BitConverter.ToUInt32(AttireBytes, &HC + &HA8 * i)
+            AttireCount(i) = BitConverter.ToUInt32(AttireBytes, &H10 + &HA8 * i)
+            For K As Integer = 0 To 9
+                AttireNames(i * 10 + K) = BitConverter.ToUInt32(AttireBytes, &H14 + &HA8 * i + &H10 * K)
+                'MessageBox.Show()
+                AttireEnabled(i * 10 + K) = (BitConverter.ToUInt32(AttireBytes, &H18 + &HA8 * i + &H10 * K) = &HFFFFFFFF)
+                AttireManager(i * 10 + K) = (AttireBytes(&H20 + &HA8 * i + &H10 * K) = &H2)
+            Next
+        Next
+        If StringRead Then 'True
+            If PacsRead Then 'Strings and Pacs Read
+            Else 'Strings Read Only
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Pach", .HeaderText = "Pach"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Count", .HeaderText = "Count"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire0Ref", .HeaderText = "Default Attire"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire0String", .HeaderText = "Name"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire0Enabled", .HeaderText = "Enabled"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire0Manager", .HeaderText = "Manager"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire1Ref", .HeaderText = "Attire 1"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire1String", .HeaderText = "Name"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire1Enabled", .HeaderText = "Enabled"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire1Manager", .HeaderText = "Manager"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire2Ref", .HeaderText = "Attire 2"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire2String", .HeaderText = "Name"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire2Enabled", .HeaderText = "Enabled"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire2Manager", .HeaderText = "Manager"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire3Ref", .HeaderText = "Attire 3"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire3String", .HeaderText = "Name"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire3Enabled", .HeaderText = "Enabled"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire3Manager", .HeaderText = "Manager"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire4Ref", .HeaderText = "Attire 4"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire4String", .HeaderText = "Name"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire4Enabled", .HeaderText = "Enabled"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire4Manager", .HeaderText = "Manager"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire5Ref", .HeaderText = "Attire 5"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire5String", .HeaderText = "Name"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire5Enabled", .HeaderText = "Enabled"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir5Manager", .HeaderText = "Manager"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire6Ref", .HeaderText = "Attire 6"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire6String", .HeaderText = "Name"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire6Enabled", .HeaderText = "Enabled"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir6Manager", .HeaderText = "Manager"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire7Ref", .HeaderText = "Attire 7"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire7String", .HeaderText = "Name"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire7Enabled", .HeaderText = "Enabled"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir7Manager", .HeaderText = "Manager"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire8Ref", .HeaderText = "Attire 8"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire8String", .HeaderText = "Name"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire8Enabled", .HeaderText = "Enabled"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir8Manager", .HeaderText = "Manager"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire9Ref", .HeaderText = "Attire 9"})
+                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire9String", .HeaderText = "Name"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire9Enabled", .HeaderText = "Enabled"})
+                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir9Manager", .HeaderText = "Manager"})
+                For i As Integer = 0 To WrestlerCount - 1
+                    DataGridAttireView.Rows.Add(WrestlerPacs(i), AttireCount(i),
+                                               Hex(AttireNames(i * 10 + 0)), My.Settings.StringReferences(AttireNames(i * 10 + 0)), AttireEnabled(i * 10 + 0), AttireManager(i * 10 + 0),
+                                                Hex(AttireNames(i * 10 + 1)), My.Settings.StringReferences(AttireNames(i * 10 + 1)), AttireEnabled(i * 10 + 1), AttireManager(i * 10 + 1),
+                                                Hex(AttireNames(i * 10 + 2)), My.Settings.StringReferences(AttireNames(i * 10 + 2)), AttireEnabled(i * 10 + 2), AttireManager(i * 10 + 2),
+                                                Hex(AttireNames(i * 10 + 3)), My.Settings.StringReferences(AttireNames(i * 10 + 3)), AttireEnabled(i * 10 + 3), AttireManager(i * 10 + 3),
+                                                Hex(AttireNames(i * 10 + 4)), My.Settings.StringReferences(AttireNames(i * 10 + 4)), AttireEnabled(i * 10 + 4), AttireManager(i * 10 + 4),
+                                                Hex(AttireNames(i * 10 + 5)), My.Settings.StringReferences(AttireNames(i * 10 + 5)), AttireEnabled(i * 10 + 5), AttireManager(i * 10 + 5),
+                                                Hex(AttireNames(i * 10 + 6)), My.Settings.StringReferences(AttireNames(i * 10 + 6)), AttireEnabled(i * 10 + 6), AttireManager(i * 10 + 6),
+                                                Hex(AttireNames(i * 10 + 7)), My.Settings.StringReferences(AttireNames(i * 10 + 7)), AttireEnabled(i * 10 + 7), AttireManager(i * 10 + 7),
+                                                Hex(AttireNames(i * 10 + 8)), My.Settings.StringReferences(AttireNames(i * 10 + 8)), AttireEnabled(i * 10 + 8), AttireManager(i * 10 + 8),
+                                                Hex(AttireNames(i * 10 + 9)), My.Settings.StringReferences(AttireNames(i * 10 + 9)), AttireEnabled(i * 10 + 9), AttireManager(i * 10 + 9))
+                Next
+            End If
+        Else 'Pacs Read Only can't do much
+            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Pach", .HeaderText = "Pach"})
+            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Count", .HeaderText = "Count"})
+            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire0String", .HeaderText = "Default Attire"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire0Enabled", .HeaderText = "Enabled"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire0Manager", .HeaderText = "Manager"})
+            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire1String", .HeaderText = "Attire 1"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire1Enabled", .HeaderText = "Enabled"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire1Manager", .HeaderText = "Manager"})
+            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire2String", .HeaderText = "Attire 2"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire2Enabled", .HeaderText = "Enabled"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire2Manager", .HeaderText = "Manager"})
+            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire3String", .HeaderText = "Attire 3"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire3Enabled", .HeaderText = "Enabled"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire3Manager", .HeaderText = "Manager"})
+            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire4String", .HeaderText = "Attire 4"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire4Enabled", .HeaderText = "Enabled"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire4Manager", .HeaderText = "Manager"})
+            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire5String", .HeaderText = "Attire 5"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire5Enabled", .HeaderText = "Enabled"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir5Manager", .HeaderText = "Manager"})
+            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire6String", .HeaderText = "Attire 6"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire6Enabled", .HeaderText = "Enabled"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir6Manager", .HeaderText = "Manager"})
+            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire7String", .HeaderText = "Attire 7"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire7Enabled", .HeaderText = "Enabled"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir7Manager", .HeaderText = "Manager"})
+            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire8String", .HeaderText = "Attire 8"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire8Enabled", .HeaderText = "Enabled"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir8Manager", .HeaderText = "Manager"})
+            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire9String", .HeaderText = "Attire 9"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire9Enabled", .HeaderText = "Enabled"})
+            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir9Manager", .HeaderText = "Manager"})
+            For i As Integer = 0 To WrestlerCount - 1
+                DataGridAttireView.Rows.Add(WrestlerPacs(i), AttireCount(i),
+                                           Hex(AttireNames(i * 10 + 0)), AttireEnabled(i * 10 + 0), AttireManager(i * 10 + 0),
+                                            Hex(AttireNames(i * 10 + 1)), AttireEnabled(i * 10 + 1), AttireManager(i * 10 + 1),
+                                            Hex(AttireNames(i * 10 + 2)), AttireEnabled(i * 10 + 2), AttireManager(i * 10 + 2),
+                                            Hex(AttireNames(i * 10 + 3)), AttireEnabled(i * 10 + 3), AttireManager(i * 10 + 3),
+                                            Hex(AttireNames(i * 10 + 4)), AttireEnabled(i * 10 + 4), AttireManager(i * 10 + 4),
+                                            Hex(AttireNames(i * 10 + 5)), AttireEnabled(i * 10 + 5), AttireManager(i * 10 + 5),
+                                            Hex(AttireNames(i * 10 + 6)), AttireEnabled(i * 10 + 6), AttireManager(i * 10 + 6),
+                                            Hex(AttireNames(i * 10 + 7)), AttireEnabled(i * 10 + 7), AttireManager(i * 10 + 7),
+                                            Hex(AttireNames(i * 10 + 8)), AttireEnabled(i * 10 + 8), AttireManager(i * 10 + 8),
+                                            Hex(AttireNames(i * 10 + 9)), AttireEnabled(i * 10 + 9), AttireManager(i * 10 + 9))
+            Next
+        End If
+
+    End Sub
+#End Region
+#Region "Muscle View Controls"
+    Sub LoadMuscles(SelectedData As TreeNode)
+
+        Dim NodeTag As NodeProperties = New NodeProperties
+        NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
+        NodeTag.Index = CType(SelectedData.Tag, NodeProperties).Index
+        NodeTag.length = CType(SelectedData.Tag, NodeProperties).length
+        NodeTag.StoredData = CType(SelectedData.Tag, NodeProperties).StoredData
+        Dim MuscleBytes As Byte()
+        If NodeTag.StoredData.Length > 0 Then
+            Dim FileBytes As Byte() = NodeTag.StoredData
+            MuscleBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), MuscleBytes, 0, CInt(NodeTag.length))
+        Else
+            Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
+            MuscleBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), MuscleBytes, 0, CInt(NodeTag.length))
+        End If
+
+        If DataGridMuscleView.ColumnCount = 0 Then
+            DataGridMuscleView.Columns.Add("Name", "Name")
+            DataGridMuscleView.Columns.Add("Number1", Path.GetFileNameWithoutExtension(SelectedData.ToolTipText))
+        Else
+            DataGridMuscleView.Columns.Add("Number" & DataGridMuscleView.ColumnCount, Path.GetFileNameWithoutExtension(SelectedData.ToolTipText))
+        End If
+        'MessageBox.Show(fileLength)
+        Dim MuscleCount As Integer = BitConverter.ToInt32(MuscleBytes, &HC)
+        Dim ActiveIndex As Long = &H14
+        For i As Integer = 0 To MuscleCount - 1
+            Dim MuscleName As String = Encoding.ASCII.GetString(MuscleBytes, ActiveIndex + 4, &H20)
+            ActiveIndex = ActiveIndex + BitConverter.ToInt32(MuscleBytes, ActiveIndex)
+            If DataGridMuscleView.ColumnCount = 2 Then
+                DataGridMuscleView.Rows.Add(MuscleName, i)
+            Else
+                'MessageBox.Show(getrow(MuscleName))
+                DataGridMuscleView(DataGridMuscleView.ColumnCount - 1, GetMuscleRow(MuscleName)).Value = i
+            End If
+            'DataGridView1.Rows.Item(i - 1).HeaderCell.Value = i
+        Next
+
+    End Sub
+    Function GetMuscleRow(MuscleName As String)
+        For i As Integer = 0 To DataGridMuscleView.RowCount - 1
+            'MessageBox.Show(i)
+            'MessageBox.Show(DataGridView1(0, i).Value)
+            If DataGridMuscleView(0, i).Value = MuscleName Then
+                Return i
+            End If
+        Next
+        Return -1
+    End Function
+
+    Private Sub CloseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseToolStripMenuItem.Click
+        If TabControl1.TabPages.Contains(MuscleView) Then
+            TabControl1.SelectedIndex = 0
+            TabControl1.TabPages.Remove(MuscleView)
+
+        End If
+    End Sub
+#End Region
+#Region "Mask View Controls"
+    Sub LoadMask(SelectedData As TreeNode)
+        Dim NodeTag As NodeProperties = New NodeProperties
+        NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
+        NodeTag.Index = CType(SelectedData.Tag, NodeProperties).Index
+        NodeTag.length = CType(SelectedData.Tag, NodeProperties).length
+        NodeTag.StoredData = CType(SelectedData.Tag, NodeProperties).StoredData
+        Dim MaskBytes As Byte()
+        If NodeTag.StoredData.Length > 0 Then
+            Dim FileBytes As Byte() = NodeTag.StoredData
+            MaskBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), MaskBytes, 0, CInt(NodeTag.length))
+        Else
+            Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
+            MaskBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), MaskBytes, 0, CInt(NodeTag.length))
+        End If
+        DataGridMaskView.Rows.Clear()
+        Dim MaskHeader As Integer = BitConverter.ToInt32(MaskBytes, &H4) ' should be C
+        If Not MaskHeader = &HC Then
+            MessageBox.Show("Unkown error with CE header")
+            Exit Sub
+        End If
+        Dim ActiveIndex As Long = MaskHeader
+        Dim ContainerCount As Integer = BitConverter.ToInt32(MaskBytes, &H8) ' Should be 2
+        If ContainerCount = 0 Then
+            MessageBox.Show("CE contains no masks")
+            Exit Sub
+        End If
+        Dim current_mask As String
+        '-
+        'First we have to process each container, these are the M_Head and M_Body containers
+        '-
+        For i As Integer = 0 To ContainerCount - 1 'process each mask individuallt head then body
+            Dim mask_header_length As Integer = BitConverter.ToInt32(MaskBytes, ActiveIndex) ' should start as offset &hC, should also be &H4c
+            current_mask = System.Text.Encoding.ASCII.GetString(MaskBytes, ActiveIndex + &H8, 6)
+            'BitConverter.ToString(mask_array, active_offset + &H8)
+            Dim MaskLength As Integer = BitConverter.ToInt32(MaskBytes, ActiveIndex + &H4) ' should be &h4c if mask masks no objects
+            Dim MaskedParts As Integer = BitConverter.ToInt32(MaskBytes, ActiveIndex + &H48)
+            If Not MaskedParts = 0 Then
+                '-
+                'Now if the container contains masked parts we have to start processing those masked parts
+                '-
+                ActiveIndex += mask_header_length
+                For j As Integer = 0 To MaskedParts - 1
+                    Dim MaskedPartHeaderLength As Integer = BitConverter.ToInt32(MaskBytes, ActiveIndex)
+                    If Not MaskedPartHeaderLength = &H10 Then
+                        MessageBox.Show("Error with Mask Header")
+                        Exit Sub
+                    End If
+                    Dim TotalPartHeaderLength As Integer = BitConverter.ToInt32(MaskBytes, ActiveIndex + 4)
+                    Dim PartNumber As Integer = BitConverter.ToInt32(MaskBytes, ActiveIndex + 8)
+                    Dim MasksOnPart As Integer = BitConverter.ToInt32(MaskBytes, ActiveIndex + &HC) 'should be 1 always from what I've seen
+                    If MasksOnPart = 0 Then
+                        DataGridMaskView.Rows.Add(current_mask & "_" & PartNumber & "_1", "nil", "nil")
+                        ActiveIndex += TotalPartHeaderLength
+                    Else
+                        '-
+                        'For some reason they seem to have the capability of containing more than 1 set of mask arrays so this is just an extra layer of precaution
+                        'This next for should only run once for every CE I've looked at
+                        '-
+                        ActiveIndex += MaskedPartHeaderLength
+                        For k As Integer = 0 To MasksOnPart - 1
+                            Dim TrueMaskHeaderLength As Integer = BitConverter.ToInt32(MaskBytes, ActiveIndex)
+                            If Not TrueMaskHeaderLength = &H10 Then
+                                MessageBox.Show("Error with Mask Header")
+                                Exit Sub
+                            End If
+                            Dim TrueMaskTotalLength As Integer = BitConverter.ToInt32(MaskBytes, ActiveIndex + 4)
+                            Dim TrueMaskNumber As Integer = BitConverter.ToInt32(MaskBytes, ActiveIndex + 8)
+                            Dim TrueMaskCount As Integer = BitConverter.ToInt32(MaskBytes, ActiveIndex + &HC)
+                            If MasksOnPart = 0 Then
+                                DataGridMaskView.Rows.Add(current_mask & "_" & PartNumber & "_" & TrueMaskNumber, "nil", "nil")
+                                ActiveIndex += TrueMaskTotalLength
+                            Else
+                                '-
+                                'Now to handle the true sets of masks each set is 8 bytes
+                                '-
+                                ActiveIndex += TrueMaskHeaderLength
+                                For L As Integer = 0 To TrueMaskCount - 1
+                                    'I only want the first line to have the part name
+                                    If L = 0 Then
+                                        DataGridMaskView.Rows.Add(current_mask & "_" & PartNumber & "_" & TrueMaskNumber,
+                                                               BitConverter.ToInt32(MaskBytes, ActiveIndex),
+                                                               BitConverter.ToInt32(MaskBytes, ActiveIndex + 4))
+                                        ActiveIndex += 8
+                                    Else
+                                        DataGridMaskView.Rows.Add("",
+                                                                BitConverter.ToInt32(MaskBytes, ActiveIndex),
+                                                                BitConverter.ToInt32(MaskBytes, ActiveIndex + 4))
+                                        ActiveIndex += 8
+                                    End If
+                                Next
+                            End If
+                        Next
+                    End If
+                Next
+            Else
+                DataGridMaskView.Rows.Add(current_mask & "_0_0", "nil", "nil")
+                ActiveIndex += MaskLength
+            End If
+        Next
+    End Sub
+#End Region
+#Region "Object Array Controls"
+    Sub LoadObjectArray(SelectedData As TreeNode)
+        Dim NodeTag As NodeProperties = New NodeProperties
+        NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
+        NodeTag.Index = CType(SelectedData.Tag, NodeProperties).Index
+        NodeTag.length = CType(SelectedData.Tag, NodeProperties).length
+        NodeTag.StoredData = CType(SelectedData.Tag, NodeProperties).StoredData
+        Dim ObjArrayBytes As Byte()
+        If NodeTag.StoredData.Length > 0 Then
+            Dim FileBytes As Byte() = NodeTag.StoredData
+            ObjArrayBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), ObjArrayBytes, 0, CInt(NodeTag.length))
+        Else
+            Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
+            ObjArrayBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), ObjArrayBytes, 0, CInt(NodeTag.length))
+        End If
+        Dim ChairCount As Integer = BitConverter.ToInt32(ObjArrayBytes, &HC)
+        DataGridObjArrayView.Rows.Clear()
+        For i As Integer = 0 To ChairCount - 1
+            DataGridObjArrayView.Rows.Add(
+            BitConverter.ToInt32(ObjArrayBytes, &H24 + i * 8), 'Number
+            BitConverter.ToBoolean(ObjArrayBytes, &H20 + i * 8), 'Enabled
+            Encoding.ASCII.GetString(ObjArrayBytes, &H20 + ChairCount * 8 + i * &H30, &H10), 'Chair Name
+            BitConverter.ToSingle(ObjArrayBytes, &H30 + ChairCount * 8 + i * &H30), 'X Float
+            BitConverter.ToSingle(ObjArrayBytes, &H34 + ChairCount * 8 + i * &H30), 'Y Float
+            BitConverter.ToSingle(ObjArrayBytes, &H38 + ChairCount * 8 + i * &H30), 'Z Float
+            BitConverter.ToSingle(ObjArrayBytes, &H3C + ChairCount * 8 + i * &H30), 'RX Float
+            BitConverter.ToSingle(ObjArrayBytes, &H40 + ChairCount * 8 + i * &H30), 'RY Float
+            BitConverter.ToSingle(ObjArrayBytes, &H44 + ChairCount * 8 + i * &H30), 'RZ Float
+            BitConverter.ToInt32(ObjArrayBytes, &H48 + ChairCount * 8 + i * &H30), 'D1 Decimal
+            BitConverter.ToInt32(ObjArrayBytes, &H4C + ChairCount * 8 + i * &H30)) 'D2 Decimal 
+        Next
+    End Sub
+#End Region
+
 End Class

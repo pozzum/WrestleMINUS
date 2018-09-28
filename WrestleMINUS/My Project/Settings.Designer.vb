@@ -125,6 +125,52 @@ Namespace My
                 Me("TexConvPath") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property RADVideoToolPath() As String
+            Get
+                Return CType(Me("RADVideoToolPath"),String)
+            End Get
+            Set
+                Me("RADVideoToolPath") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+        Public Property StringReferences() As Global.system.collections.arraylist
+            Get
+                Return CType(Me("StringReferences"),Global.system.collections.arraylist)
+            End Get
+            Set
+                Me("StringReferences") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+        Public Property PacReferences() As Global.system.collections.arraylist
+            Get
+                Return CType(Me("PacReferences"),Global.system.collections.arraylist)
+            End Get
+            Set
+                Me("PacReferences") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property UnrrbpePath() As String
+            Get
+                Return CType(Me("UnrrbpePath"),String)
+            End Get
+            Set
+                Me("UnrrbpePath") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
