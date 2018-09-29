@@ -101,6 +101,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="NumericUpDownColumn.vb" />
+    <Compile Include="OnlineVersion.vb" />
     <Compile Include="yukes_bpe.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -128,9 +129,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="W-.ico" />
-    <Content Include="YukesBPE.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

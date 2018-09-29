@@ -160,8 +160,10 @@ Partial Class MainForm
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.TreeViewContext = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ExtractToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExtractToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InjectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CrawlToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -207,8 +209,6 @@ Partial Class MainForm
         Me.NumericUpDownColumn7 = New WrestleMINUS.NumericUpDownColumn()
         Me.NumericUpDownColumn8 = New WrestleMINUS.NumericUpDownColumn()
         Me.NumericUpDownColumn9 = New WrestleMINUS.NumericUpDownColumn()
-        Me.InjectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CrawlToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -382,30 +382,30 @@ Partial Class MainForm
         'ContentsToolStripMenuItem
         '
         Me.ContentsToolStripMenuItem.Name = "ContentsToolStripMenuItem"
-        Me.ContentsToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
+        Me.ContentsToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ContentsToolStripMenuItem.Text = "&Contents"
         '
         'IndexToolStripMenuItem
         '
         Me.IndexToolStripMenuItem.Name = "IndexToolStripMenuItem"
-        Me.IndexToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
+        Me.IndexToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.IndexToolStripMenuItem.Text = "&Index"
         '
         'SearchToolStripMenuItem
         '
         Me.SearchToolStripMenuItem.Name = "SearchToolStripMenuItem"
-        Me.SearchToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
+        Me.SearchToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.SearchToolStripMenuItem.Text = "&Search"
         '
         'toolStripSeparator5
         '
         Me.toolStripSeparator5.Name = "toolStripSeparator5"
-        Me.toolStripSeparator5.Size = New System.Drawing.Size(119, 6)
+        Me.toolStripSeparator5.Size = New System.Drawing.Size(149, 6)
         '
         'AboutToolStripMenuItem
         '
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.AboutToolStripMenuItem.Text = "&About..."
         '
         'SplitContainer1
@@ -1312,19 +1312,31 @@ Partial Class MainForm
         '
         Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem1, Me.ExtractToolStripMenuItem, Me.InjectToolStripMenuItem, Me.CrawlToolStripMenuItem})
         Me.TreeViewContext.Name = "TreeViewContext"
-        Me.TreeViewContext.Size = New System.Drawing.Size(153, 114)
-        '
-        'ExtractToolStripMenuItem
-        '
-        Me.ExtractToolStripMenuItem.Name = "ExtractToolStripMenuItem"
-        Me.ExtractToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.ExtractToolStripMenuItem.Text = "Extract"
+        Me.TreeViewContext.Size = New System.Drawing.Size(110, 92)
         '
         'OpenToolStripMenuItem1
         '
         Me.OpenToolStripMenuItem1.Name = "OpenToolStripMenuItem1"
-        Me.OpenToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
+        Me.OpenToolStripMenuItem1.Size = New System.Drawing.Size(109, 22)
         Me.OpenToolStripMenuItem1.Text = "Open"
+        '
+        'ExtractToolStripMenuItem
+        '
+        Me.ExtractToolStripMenuItem.Name = "ExtractToolStripMenuItem"
+        Me.ExtractToolStripMenuItem.Size = New System.Drawing.Size(109, 22)
+        Me.ExtractToolStripMenuItem.Text = "Extract"
+        '
+        'InjectToolStripMenuItem
+        '
+        Me.InjectToolStripMenuItem.Name = "InjectToolStripMenuItem"
+        Me.InjectToolStripMenuItem.Size = New System.Drawing.Size(109, 22)
+        Me.InjectToolStripMenuItem.Text = "Inject"
+        '
+        'CrawlToolStripMenuItem
+        '
+        Me.CrawlToolStripMenuItem.Name = "CrawlToolStripMenuItem"
+        Me.CrawlToolStripMenuItem.Size = New System.Drawing.Size(109, 22)
+        Me.CrawlToolStripMenuItem.Text = "Crawl"
         '
         'DataGridViewTextBoxColumn1
         '
@@ -1611,18 +1623,6 @@ Partial Class MainForm
         Me.NumericUpDownColumn9.Name = "NumericUpDownColumn9"
         Me.NumericUpDownColumn9.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.NumericUpDownColumn9.Width = 27
-        '
-        'InjectToolStripMenuItem
-        '
-        Me.InjectToolStripMenuItem.Name = "InjectToolStripMenuItem"
-        Me.InjectToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.InjectToolStripMenuItem.Text = "Inject"
-        '
-        'CrawlToolStripMenuItem
-        '
-        Me.CrawlToolStripMenuItem.Name = "CrawlToolStripMenuItem"
-        Me.CrawlToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.CrawlToolStripMenuItem.Text = "Crawl"
         '
         'MainForm
         '

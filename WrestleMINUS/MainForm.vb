@@ -8,6 +8,7 @@ Imports System.Drawing
 Imports System.Drawing.Imaging
 Imports System.Runtime.InteropServices
 Imports System.Environment 'appdata
+Imports System.Threading 'Multithreading
 
 
 
@@ -16,9 +17,9 @@ Public Class MainForm
 #Region "Main Form Functions"
 
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        CheckUpdate()
         SettingsCheck()
         HideTabs()
-
         CreatedImages = New List(Of String)
         If CheckCommands() Then
             LoadParameters()
@@ -141,6 +142,11 @@ Public Class MainForm
         If TabControl1.TabPages.Contains(ObjArrayView) Then
             TabControl1.TabPages.Remove(ObjArrayView)
         End If
+    End Sub
+    Sub CheckUpdate()
+        Dim checkUpdateThread = New Thread(AddressOf OnlineVersion.CheckUpdate)
+        checkUpdateThread.SetApartmentState(ApartmentState.STA)
+        checkUpdateThread.Start()
     End Sub
     Private Sub SelectHomeDirectory()
         Dim TempFileDialog As OpenFileDialog = New OpenFileDialog
@@ -2033,6 +2039,14 @@ Public Class MainForm
             BitConverter.ToInt32(ObjArrayBytes, &H48 + ChairCount * 8 + i * &H30), 'D1 Decimal
             BitConverter.ToInt32(ObjArrayBytes, &H4C + ChairCount * 8 + i * &H30)) 'D2 Decimal 
         Next
+    End Sub
+
+    Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
+        Help.ShowHelp(Nothing, "https://pozzum.github.io/WrestleMINUS/")
+    End Sub
+
+    Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        ActiveReader.Dispose()
     End Sub
 #End Region
 
