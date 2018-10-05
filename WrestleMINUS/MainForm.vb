@@ -9,11 +9,10 @@ Imports System.Drawing.Imaging
 Imports System.Runtime.InteropServices
 Imports System.Environment 'appdata
 Imports System.Threading 'Multithreading
-
-
-
 Public Class MainForm
-
+    '<DllImport("oo2core_6_win64.dll")> 
+    Private Declare Function OodleLZ_Decompress Lib "oo2core_6_win64" (InputBuffer As Byte(), bufferSize As Long, OutputBuffer As Byte(), outputBufferSize As Long,
+            a As UInt32, b As UInt32, c As ULong, d As UInt32, e As UInt32, f As UInt32, g As UInt32, h As UInt32, i As UInt32, threadModule As UInt32) As Integer
 #Region "Main Form Functions"
 
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -110,6 +109,21 @@ Public Class MainForm
             My.Settings.PacReferences.Add(New String("Pacs Not Read"))
             My.Settings.PacReferences.AddRange(New String(&H500 - 1) {})
         End If
+        Try
+            If My.Settings.OODLObtained = False Then
+                Dim TestLocation As String = Path.GetDirectoryName(My.Settings.ExeLocation) & Path.DirectorySeparatorChar & "oo2core_6_win64.dll"
+                If File.Exists(TestLocation) Then
+                    File.Copy(TestLocation,
+                              Path.GetDirectoryName(Application.ExecutablePath) & Path.DirectorySeparatorChar & "oo2core_6_win64.dll", True)
+                    My.Settings.OODLObtained = True
+                Else
+                    MessageBox.Show("Oodle Dll Not loaded")
+                End If
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+
     End Sub
     Sub HideTabs()
         If TabControl1.TabPages.Contains(StringView) Then
@@ -246,6 +260,7 @@ Public Class MainForm
         OFOP
         YANMPack
         YANM
+        OODL
     End Enum
     Dim ActiveReader As BinaryReader
     Dim ActiveFile As String = ""
@@ -292,30 +307,52 @@ Public Class MainForm
         ElseIf NodeTag.FileType = PackageType.SHDC Then
             If NodeTag.StoredData.Length > 0 Then
                 'ActiveReader.BaseStream.Seek(NodeTag.Index + &H1C, SeekOrigin.Begin)
+                Dim TempHeaderCheck As Integer = BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + &H18)
                 Dim TempHeaderStart As Integer = BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + &H1C)
                 Dim TempHeaderLength As Integer = BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + &H20)
+                If TempHeaderStart < TempHeaderCheck Then
+                    TempHeaderStart = TempHeaderCheck + &H10 + &H40
+                    If TempHeaderStart Mod &H10 > 0 Then
+                        TempHeaderStart = CInt(TempHeaderStart / &H10 - 1) * &H10
+                        MessageBox.Show(TempHeaderStart)
+                    End If
+                End If
                 Dim PachPartsCount As Integer = (TempHeaderLength / &H10) '1 index
                 For i As Integer = 0 To PachPartsCount - 1
-                    Dim PartName As String = Hex(BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + TempHeaderStart + (i * &H10)))
+                        Dim PartName As String = Hex(BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + TempHeaderStart + (i * &H10)))
                     'MessageBox.Show(PartName)
+                    If PartName = "FFFFFFFF" Then
+                        Continue For
+                    End If
                     Dim TempNode As TreeNode = New TreeNode(PartName)
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties
-                    TempNodeProps.Index = BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + TempHeaderStart + (i * &H10) + &H4)
-                    TempNodeProps.length = BitConverter.ToUInt64(NodeTag.StoredData, NodeTag.Index + TempHeaderStart + (i * &H10) + &H8)
-                    TempNodeProps.StoredData = NodeTag.StoredData
-                    TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, NodeTag.StoredData)
-                    TempNode.Tag = TempNodeProps
-                    HostNode.Nodes.Add(TempNode)
-                Next
-            Else
-                ActiveReader.BaseStream.Seek(NodeTag.Index + &H1C, SeekOrigin.Begin)
+                        TempNodeProps.Index = BitConverter.ToUInt32(NodeTag.StoredData, NodeTag.Index + TempHeaderStart + (i * &H10) + &H4)
+                        TempNodeProps.length = BitConverter.ToUInt64(NodeTag.StoredData, NodeTag.Index + TempHeaderStart + (i * &H10) + &H8)
+                        TempNodeProps.StoredData = NodeTag.StoredData
+                        TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, NodeTag.StoredData)
+                        TempNode.Tag = TempNodeProps
+                        HostNode.Nodes.Add(TempNode)
+                    Next
+                Else
+                ActiveReader.BaseStream.Seek(NodeTag.Index + &H18, SeekOrigin.Begin)
+                Dim TempHeaderCheck As Integer = ActiveReader.ReadUInt32
                 Dim TempHeaderStart As Integer = ActiveReader.ReadUInt32
                 Dim TempHeaderLength As Integer = ActiveReader.ReadUInt32
+                If TempHeaderStart < TempHeaderCheck Then
+                    TempHeaderStart = TempHeaderCheck + &H10 + &H40
+                    If TempHeaderStart Mod &H10 > 0 Then
+                        TempHeaderStart = CInt(TempHeaderStart / &H10 - 1) * &H10
+                        'messageBox.Show(TempHeaderStart)
+                    End If
+                End If
                 Dim PachPartsCount As Integer = (TempHeaderLength / &H10) '1 index
                 For i As Integer = 0 To PachPartsCount - 1
                     ActiveReader.BaseStream.Seek(NodeTag.Index + TempHeaderStart + (i * &H10), SeekOrigin.Begin)
                     Dim PartName As String = Hex(ActiveReader.ReadUInt32)
+                    If PartName = "FFFFFFFF" Then
+                        Continue For
+                    End If
                     'MessageBox.Show(PartName)
                     Dim TempNode As TreeNode = New TreeNode(PartName)
                     TempNode.ToolTipText = HostNode.ToolTipText
@@ -434,7 +471,7 @@ Public Class MainForm
             If NodeTag.StoredData.Length > 0 Then
                 Array.Copy(NodeTag.StoredData, CInt(NodeTag.Index), ZlibBytes, 0, CInt(NodeTag.length))
             Else
-                ActiveReader.BaseStream.Seek(NodeTag.length, SeekOrigin.Begin)
+                ActiveReader.BaseStream.Seek(NodeTag.Index, SeekOrigin.Begin)
                 ZlibBytes = ActiveReader.ReadBytes(NodeTag.length)
             End If
             Dim align As Byte() = New Byte(3) {}
@@ -496,6 +533,50 @@ Public Class MainForm
             TempNodeProps.StoredData = UncompressedBytes
             TempNode.Tag = TempNodeProps
             HostNode.Nodes.Add(TempNode)
+        ElseIf NodeTag.FileType = PackageType.OODL Then
+            Dim OODLBytes As Byte() = New Byte(NodeTag.length - 1) {}
+            If NodeTag.StoredData.Length > 0 Then
+                Array.Copy(NodeTag.StoredData, CInt(NodeTag.Index), OODLBytes, 0, CInt(NodeTag.length))
+            Else
+                ActiveReader.BaseStream.Seek(NodeTag.Index, SeekOrigin.Begin)
+                OODLBytes = ActiveReader.ReadBytes(NodeTag.length)
+            End If
+            Dim CompressedLength As Integer = BitConverter.ToUInt32(OODLBytes, &H14)
+            Dim CompressedBytes As Byte() = New Byte(CompressedLength - 1) {}
+            Dim LengthDiff As Int32 = OODLBytes.Length - CompressedBytes.Length
+            Array.Copy(OODLBytes, LengthDiff, CompressedBytes, 0, CInt(CompressedBytes.Length))
+            Dim UncompressedLength As Integer = BitConverter.ToUInt32(OODLBytes, &H10)
+            Dim input As Byte() = New Byte(CompressedLength + &H10) {}
+            Array.Copy(OODLBytes, &H10, input, 0, CInt(NodeTag.length - &H10))
+            Dim UncompressedBytes As Byte() = New Byte(UncompressedLength) {}
+            Try
+                OodleLZ_Decompress(CompressedBytes, CompressedLength, UncompressedBytes, UncompressedLength,
+                                   0, 0, 0, 0, 0, 0, 0, 0, 0, 3)
+                'MessageBox.Show(Oodle.Decompress(OODLBytes, CompressedLength, UncompressedLength)(0))
+                'UncompressedBytes = Oodle.Decompress(OODLBytes, CompressedLength, UncompressedLength)
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+                NodeTag.FileType = PackageType.Unknown
+                HostNode.Tag = NodeTag
+                Exit Sub
+            End Try
+            If UncompressedBytes.Length = 0 Then
+                NodeTag.FileType = PackageType.Unknown
+                HostNode.Tag = NodeTag
+                Exit Sub
+            Else
+                Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
+                TempNode.ToolTipText = HostNode.ToolTipText
+                Dim TempNodeProps As NodeProperties = New NodeProperties
+                TempNodeProps.Index = 0
+                TempNodeProps.length = UncompressedBytes.Length
+                TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, UncompressedBytes)
+                'MessageBox.Show(output.Length)
+                TempNodeProps.StoredData = UncompressedBytes
+                TempNode.Tag = TempNodeProps
+                HostNode.Nodes.Add(TempNode)
+            End If
+
         ElseIf NodeTag.FileType = PackageType.TextureLibrary Then
             If NodeTag.StoredData.Length > 0 Then
                 Dim TextureCount As Integer = NodeTag.StoredData(0)
@@ -574,9 +655,9 @@ Public Class MainForm
             End If
             'we have to reverse 
             Dim HeaderLength As UInt32 = BitConverter.ToUInt32(EndianReverse(YANMPackBytes), 0) + &H20
-            MessageBox.Show(HeaderLength)
+            'MessageBox.Show(HeaderLength)
             Dim YANMLength As UInt32 = BitConverter.ToUInt32(EndianReverse(YANMPackBytes, 3), 0)
-            MessageBox.Show(YANMLength)
+            'MessageBox.Show(YANMLength)
             Dim HeadIndex As Integer = 0
             Dim partcount As Integer = 0
             Do While HeadIndex < HeaderLength
@@ -585,14 +666,12 @@ Public Class MainForm
                 End If
                 'getting the part name
                 Dim PartName As String = Encoding.ASCII.GetString(YANMPackBytes, HeadIndex + 4, 8)
-                MessageBox.Show(PartName)
                 Dim TempNode As TreeNode = New TreeNode(PartName)
                 TempNode.ToolTipText = HostNode.ToolTipText
                 Dim TempNodeProps As NodeProperties = New NodeProperties
                 TempNodeProps.FileType = PackageType.YANM
                 'getting the start offset
                 TempNodeProps.Index = (BitConverter.ToUInt32(EndianReverse(YANMPackBytes, HeadIndex + &H24), 0)) + HeaderLength + HostNode.Index
-                MessageBox.Show(PartName)
                 'Get the file Length
                 If HeadIndex + &H20 + &H28 < HeaderLength Then
                     TempNodeProps.length = (BitConverter.ToUInt32(EndianReverse(YANMPackBytes, HeadIndex + &H24 + &H28), 0)) + HeaderLength - TempNodeProps.Index
@@ -656,6 +735,8 @@ Public Class MainForm
             Return PackageType.OFOP
         ElseIf FirstFour = "YANM" Then
             Return PackageType.YANM
+        ElseIf FirstFour = "OODL" Then
+            Return PackageType.OODL
         ElseIf FirstFour.Contains("STG") Then
             Return PackageType.ShowInfo
         ElseIf FirstFour.Contains("DDS") Then
@@ -2046,7 +2127,8 @@ Public Class MainForm
     End Sub
 
     Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        ActiveReader.Dispose()
+        'ActiveReader.Close()
+
     End Sub
 #End Region
 

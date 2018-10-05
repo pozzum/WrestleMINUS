@@ -171,6 +171,18 @@ Namespace My
                 Me("UnrrbpePath") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property OODLObtained() As Boolean
+            Get
+                Return CType(Me("OODLObtained"),Boolean)
+            End Get
+            Set
+                Me("OODLObtained") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
