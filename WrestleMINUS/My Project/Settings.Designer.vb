@@ -139,24 +139,26 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
-        Public Property StringReferences() As Global.system.collections.arraylist
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property StringObject() As String
             Get
-                Return CType(Me("StringReferences"),Global.system.collections.arraylist)
+                Return CType(Me("StringObject"),String)
             End Get
             Set
-                Me("StringReferences") = value
+                Me("StringObject") = value
             End Set
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
-        Public Property PacReferences() As Global.system.collections.arraylist
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property PacNumObject() As String
             Get
-                Return CType(Me("PacReferences"),Global.system.collections.arraylist)
+                Return CType(Me("PacNumObject"),String)
             End Get
             Set
-                Me("PacReferences") = value
+                Me("PacNumObject") = value
             End Set
         End Property
         
@@ -169,18 +171,6 @@ Namespace My
             End Get
             Set
                 Me("UnrrbpePath") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
-        Public Property OODLObtained() As Boolean
-            Get
-                Return CType(Me("OODLObtained"),Boolean)
-            End Get
-            Set
-                Me("OODLObtained") = value
             End Set
         End Property
     End Class

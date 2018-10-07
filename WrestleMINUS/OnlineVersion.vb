@@ -42,8 +42,12 @@ Public Class OnlineVersion
                                                             "Version Update",
                                                             MessageBoxButtons.YesNo)
                     If result = DialogResult.Yes Then
-                        Help.ShowHelp(Nothing, PageAddress)
-
+                        Dim Adresult As Integer = MessageBox.Show("Would you be willing to view an ad?", "ads help support development", MessageBoxButtons.YesNo)
+                        If Adresult = DialogResult.Yes Then
+                            Process.Start("http://metastead.com/12819869/wrestleminus")
+                        Else
+                            Process.Start(PageAddress)
+                        End If
                     Else
                         'do nothing
                     End If

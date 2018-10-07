@@ -23,17 +23,14 @@
     <Setting Name="RADVideoToolPath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="StringReferences" Type="system.collections.arraylist" Scope="User">
+    <Setting Name="StringObject" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="PacReferences" Type="system.collections.arraylist" Scope="User">
+    <Setting Name="PacNumObject" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="UnrrbpePath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="OODLObtained" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>
