@@ -28,7 +28,7 @@ Public Class OptionsMenu
             LabelOodle.ForeColor = Color.Red
             ButtonOodleSelect.Visible = True
         End If
-
+        CheckBoxLoadHome.Checked = My.Settings.LoadHomeOnLaunch
     End Sub
     Private Sub ButtonSelectHome_Click(sender As Object, e As EventArgs) Handles ButtonSelectHome.Click
         MainForm.SelectHomeDirectory()
@@ -52,5 +52,9 @@ Public Class OptionsMenu
     End Sub
     Private Sub ButtonDownloadUnrrbpe_Click(sender As Object, e As EventArgs) Handles ButtonDownloadUnrrbpe.Click
         Process.Start("http://asmodean.reverse.net/pages/unrrbpe.html")
+    End Sub
+
+    Private Sub CheckBoxLoadHome_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxLoadHome.CheckedChanged
+        My.Settings.LoadHomeOnLaunch = CheckBoxLoadHome.Checked
     End Sub
 End Class

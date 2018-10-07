@@ -15,6 +15,7 @@ Public Class MainForm
 #Region "Main Form Functions"
     Dim StringReferences() As String
     Dim PacNumbers() As Integer
+    Dim SelectedFiles() As String
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = Me.Text & " Ver: " & My.Application.Info.Version.ToString
         CheckUpdate()
@@ -25,7 +26,7 @@ Public Class MainForm
     Private Sub MainForm_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         If CheckCommands() Then
             LoadParameters()
-        Else
+        ElseIf My.Settings.LoadHomeOnLaunch Then
             LoadHome()
         End If
     End Sub
@@ -46,7 +47,7 @@ Public Class MainForm
             GetRadVideo()
         End If
         If My.Settings.UnrrbpePath = "" Then
-
+            GetUnrrbpe()
         End If
         HexViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         TextViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
@@ -133,6 +134,9 @@ Public Class MainForm
         If TabControl1.TabPages.Contains(ObjArrayView) Then
             TabControl1.TabPages.Remove(ObjArrayView)
         End If
+        If TabControl1.TabPages.Contains(AssetView) Then
+            TabControl1.TabPages.Remove(AssetView)
+        End If
     End Sub
     Sub CheckUpdate()
         Dim checkUpdateThread = New Thread(AddressOf OnlineVersion.CheckUpdate)
@@ -152,7 +156,12 @@ Public Class MainForm
             My.Settings.ExeLocation = TempFileDialog.FileName
         Else
             If My.Settings.ExeLocation = "" Then
-                SelectHomeDirectory()
+                If MessageBox.Show("Home Directory Required", "Retry?", MessageBoxButtons.RetryCancel) = DialogResult.Retry Then
+                    SelectHomeDirectory()
+                Else
+                    Application.Exit()
+                End If
+
             End If
         End If
     End Sub
@@ -287,16 +296,17 @@ Public Class MainForm
             Return True
         End If
     End Function
-    Shared Function CheckCommands()
+    Shared Function CheckCommands() As Boolean
         Dim args As String() = Environment.GetCommandLineArgs()
         Dim parameters As Boolean = False
-        For i As Integer = 0 To args.Length - 1
-            If args(i).StartsWith("-pofo") Then
-                parameters = True
-            ElseIf args(i).StartsWith("-moveset") Then
-                parameters = True
-            End If
-        Next
+        If args.Length > 1 Then
+            parameters = True
+            MainForm.SelectedFiles = New String(args.Length - 2) {}
+            For i As Integer = 1 To args.Length - 1
+                MainForm.SelectedFiles(i - 1) = args(i)
+            Next
+        End If
+
         Return parameters
     End Function
     Private Sub MainForm_DragEnter(sender As Object, e As DragEventArgs) Handles MyBase.DragEnter
@@ -464,7 +474,7 @@ Public Class MainForm
                 Dim HeaderLength As Integer = BitConverter.ToUInt32(FileBytes, 4)
                 Dim index As Integer = 0
                 Do While index < HeaderLength - 1
-                    Dim DirectoryName As String = BitConverter.ToString(FileBytes, &H800 + index, 4)
+                    Dim DirectoryName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 4)
                     Dim DirectoryTreeNode As TreeNode = New TreeNode(DirectoryName)
                     Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 4
                     Dim DirectoryNodeProps As NodeProperties = New NodeProperties
@@ -472,7 +482,7 @@ Public Class MainForm
                     DirectoryNodeProps.FileType = PackageType.PachDirectory
                     index += &HC
                     For i As Integer = 0 To DirectoryContainsCount - 1
-                        Dim PachName As String = BitConverter.ToString(FileBytes, &H800 + index, 8)
+                        Dim PachName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 8)
                         Dim TempNode As TreeNode = New TreeNode(PachName)
                         TempNode.ToolTipText = HostNode.ToolTipText
                         Dim TempNodeProps As NodeProperties = New NodeProperties
@@ -507,7 +517,7 @@ Public Class MainForm
                 Dim HeaderLength As Integer = BitConverter.ToUInt32(FileBytes, 4)
                 Dim index As Integer = 0
                 Do While index < HeaderLength - 1
-                    Dim DirectoryName As String = BitConverter.ToString(FileBytes, &H800 + index, 4)
+                    Dim DirectoryName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 4)
                     Dim DirectoryTreeNode As TreeNode = New TreeNode(DirectoryName)
                     Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 4
                     Dim DirectoryNodeProps As NodeProperties = New NodeProperties
@@ -515,7 +525,7 @@ Public Class MainForm
                     DirectoryNodeProps.FileType = PackageType.PachDirectory
                     index += &HC
                     For i As Integer = 0 To DirectoryContainsCount - 1
-                        Dim PachName As String = BitConverter.ToString(FileBytes, &H800 + index, 4)
+                        Dim PachName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 4)
                         Dim TempNode As TreeNode = New TreeNode(PachName)
                         TempNode.ToolTipText = HostNode.ToolTipText
                         Dim TempNodeProps As NodeProperties = New NodeProperties
@@ -555,12 +565,12 @@ Public Class MainForm
                 If TempHeaderStart < TempHeaderCheck Then
                     TempHeaderStart = TempHeaderCheck + &H10 + &H40
                     If TempHeaderStart Mod &H10 > 0 Then
-                        TempHeaderStart = CInt(TempHeaderStart / &H10) * &H10
+                        TempHeaderStart = TempHeaderStart + &H10 - (TempHeaderStart Mod &H10)
                     End If
                 End If
                 Dim PachPartsCount As Integer = (TempHeaderLength / &H10) '1 index
-                Try
-                    For i As Integer = 0 To PachPartsCount - 1
+                For i As Integer = 0 To PachPartsCount - 1
+                    Try
                         Dim PartName As String = Hex(BitConverter.ToUInt32(FileBytes, TempHeaderStart + (i * &H10)))
                         'MessageBox.Show(PartName)
                         If PartName = "FFFFFFFF" Then
@@ -583,10 +593,13 @@ Public Class MainForm
                             End If
                         End If
                         HostNode.Nodes.Add(TempNode)
-                    Next
-                Catch ex As Exception
-                    MessageBox.Show(ex.Message)
-                End Try
+                    Catch ex As Exception
+                        MessageBox.Show(ex.Message & vbNewLine &
+                                        "Object Number: " & i & vbNewLine &
+                                        "Header Start {hex}: " & Hex(TempHeaderStart))
+                    End Try
+                Next
+
             Case PackageType.PACH
                 Dim Partcount As Integer = BitConverter.ToUInt32(FileBytes, 4)
                 For i As Integer = 0 To Partcount - 1
@@ -609,6 +622,7 @@ Public Class MainForm
                     End If
                     HostNode.Nodes.Add(TempNode)
                 Next
+
 #End Region
 #Region "Compression Types"
             Case PackageType.ZLIB
@@ -948,7 +962,7 @@ Public Class MainForm
     End Function
 #End Region
 #Region "Menu Strip"
-    Dim SelectedFiles() As String
+
     Private Sub LoadHomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoadHomeToolStripMenuItem.Click
         LoadHome()
     End Sub
@@ -964,11 +978,15 @@ Public Class MainForm
     Private Sub OptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsToolStripMenuItem.Click
         OptionsMenu.Show()
     End Sub
+    Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
+        Help.ShowHelp(Nothing, "https://pozzum.github.io/WrestleMINUS/")
+    End Sub
 #End Region
 #Region "TreeView Population"
     Sub LoadParameters()
         TreeView1.Nodes.Clear()
         ProgressBar1.Value = 0
+        ProgressBar1.Maximum = SelectedFiles.Length
         If SelectedFiles.Length = 1 Then
             CurrentViewToolStripMenuItem.Text = "Current View: " & Path.GetFileName(SelectedFiles(0))
         Else
@@ -976,15 +994,29 @@ Public Class MainForm
         End If
         For i As Integer = 0 To SelectedFiles.Length - 1
             If Not SelectedFiles(i) = "" Then
-                Dim TempNode As TreeNode = TreeView1.Nodes.Add(Path.GetFileName(SelectedFiles(i)))
-                TempNode.ToolTipText = SelectedFiles(i)
-                TempNode.StateImageIndex = 0
-                Dim TempNodeProps As NodeProperties = New NodeProperties
-                TempNodeProps.FileType = PackageType.Unchecked
-                TempNodeProps.StoredData = New Byte() {}
-                TempNode.Tag = TempNodeProps
-                CheckFile(TempNode)
-                ActiveReader.Close()
+                If File.Exists(SelectedFiles(i)) Then
+                    Dim NewFI As FileInfo = New FileInfo(SelectedFiles(i))
+                    Dim TempNode As TreeNode = TreeView1.Nodes.Add(NewFI.Name)
+                    TempNode.ToolTipText = NewFI.FullName
+                    TempNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
+                        .Index = 0,
+                        .length = FileLen(NewFI.FullName),
+                        .StoredData = New Byte() {}}
+                    TempNode.StateImageIndex = 1
+                    CheckFile(TempNode)
+                    ProgressBar1.Value += 1
+                ElseIf Directory.Exists(SelectedFiles(i)) Then
+                    Dim TempDI As DirectoryInfo = New DirectoryInfo(SelectedFiles(i))
+                    Dim TempNode As TreeNode = TreeView1.Nodes.Add(TempDI.Name)
+                    TempNode.ToolTipText = TempDI.FullName
+                    TempNode.Tag = New NodeProperties With {.FileType = PackageType.Folder,
+                            .Index = 0,
+                            .length = 0,
+                            .StoredData = New Byte(0) {}}
+                    TempNode.StateImageIndex = 0
+                    LoadSubDirectories(SelectedFiles(i), TempNode)
+                    LoadFiles(SelectedFiles(i), TempNode)
+                End If
             End If
         Next
     End Sub
@@ -1003,8 +1035,9 @@ Public Class MainForm
                 .length = 0,
                 .StoredData = New Byte(0) {}}
         TempNode.StateImageIndex = 0
-        LoadFiles(HomeDirectory, TempNode)
+        'testing having folders first
         LoadSubDirectories(HomeDirectory, TempNode)
+        LoadFiles(HomeDirectory, TempNode)
     End Sub
     Sub LoadSubDirectories(DirectoryPath As String, ParentNode As TreeNode)
         Dim ListofSubDirectores() As String = Directory.GetDirectories(DirectoryPath)
@@ -1018,8 +1051,8 @@ Public Class MainForm
                 .StoredData = New Byte(0) {}
             }
             TempNode.StateImageIndex = 0
-            LoadFiles(SubDirectory, TempNode)
             LoadSubDirectories(SubDirectory, TempNode)
+            LoadFiles(SubDirectory, TempNode)
             UpdateProgress()
         Next
     End Sub
@@ -1169,6 +1202,16 @@ Public Class MainForm
                     TabControl1.TabPages.Remove(ObjArrayView)
                 End If
             End If
+            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.VMUM Then
+                If Not TabControl1.TabPages.Contains(AssetView) Then
+                    TabControl1.TabPages.Add(AssetView)
+                End If
+                LoadAssetFile(TreeView1.SelectedNode)
+            Else
+                If TabControl1.TabPages.Contains(AssetView) Then
+                    TabControl1.TabPages.Remove(AssetView)
+                End If
+            End If
         End If
     End Sub
 
@@ -1194,7 +1237,7 @@ Public Class MainForm
             If NodeTag.Index > 0 OrElse
                    NodeTag.StoredData.Length > 0 Then
                 ExtractToolStripMenuItem.Visible = True
-                InjectToolStripMenuItem.Visible = True
+                InjectToolStripMenuItem.Visible = False
             Else
                 ExtractToolStripMenuItem.Visible = False
                 InjectToolStripMenuItem.Visible = False
@@ -1281,6 +1324,27 @@ Public Class MainForm
             ExtractAllNode(TreeView1.SelectedNode)
         End If
     End Sub
+    Private Sub InjectToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InjectToolStripMenuItem.Click
+        Dim filepath As String = TreeView1.SelectedNode.ToolTipText
+        Dim NodeTag As NodeProperties = New NodeProperties
+        NodeTag = CType(TreeView1.SelectedNode.Tag, NodeProperties)
+        Dim ParrentNodeTag As NodeProperties = New NodeProperties
+        NodeTag = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
+        If NodeTag.FileType = PackageType.HSPC Then
+            Dim injectopenfile As OpenFileDialog = New OpenFileDialog With {
+            .FileName = TreeView1.SelectedNode.Text & "." & NodeTag.FileType.ToString,
+            .InitialDirectory = Path.GetDirectoryName(filepath)}
+            If injectopenfile.ShowDialog() = DialogResult.OK Then
+                If File.Exists(injectopenfile.FileName) Then
+                    InjectIntoNode(TreeView1.SelectedNode, File.ReadAllBytes(injectopenfile.FileName))
+                Else
+                    MessageBox.Show("File Does Not Exist")
+                End If
+            End If
+        Else
+            MessageBox.Show("Not Yet Supported")
+        End If
+    End Sub
     Sub Crawlnode(Basenode As TreeNode)
         Dim filepath As String = Basenode.ToolTipText
         ProgressBar1.Value = 0
@@ -1334,6 +1398,28 @@ Public Class MainForm
             End If
         Next
     End Sub
+    Function InjectIntoNode(Sentnode As TreeNode, SentBytes As Byte()) As Boolean
+        Dim NodeTag As NodeProperties = New NodeProperties
+        NodeTag = CType(Sentnode.Tag, NodeProperties)
+        Dim SizeDifference As Long = SentBytes.Length - NodeTag.length
+        'checking File Type match
+        Dim TempCheck As PackageType = CheckHeaderType(0, SentBytes)
+        If Not NodeTag.FileType = TempCheck Then
+            If MessageBox.Show("File Type Mismatch!" & vbNewLine & "Continue?",
+                            TempCheck.ToString & " Replacing " & NodeTag.FileType.ToString,
+                            MessageBoxButtons.YesNo) = DialogResult.No Then
+                Return False
+            End If
+        End If
+        Dim ParentNodeTag As NodeProperties = New NodeProperties
+        ParentNodeTag = CType(Sentnode.Parent.Tag, NodeProperties)
+        If ParentNodeTag.Index = 0 AndAlso
+            ParentNodeTag.StoredData.Length = 0 Then
+            'File to be Written
+
+        End If
+        Return True
+    End Function
 #End Region
 #Region "Hex View Controls"
     Sub AddHexText(SelectedFilePath As TreeNode)
@@ -1985,12 +2071,12 @@ Public Class MainForm
     Sub LoadAttires(SelectedData As TreeNode)
         DataGridAttireView.Rows.Clear()
         Dim StringRead As Boolean = False
-        If Not My.Settings.StringObject(0) = "String Not Read" Then
+        If Not StringReferences(0) = "String Not Read" Then
             StringRead = True
         End If
         StringLoadedToolStripMenuItem.Text = "String Loaded: " & StringRead.ToString
         Dim PacsRead As Boolean = False
-        If Not My.Settings.PacNumObject(0) = "Pacs Not Read" Then
+        If Not PacNumbers(0) = -1 Then
             PacsRead = True
         End If
         PacsLoadedToolStripMenuItem.Text = "Pacs Loaded: " & PacsRead.ToString
@@ -2073,16 +2159,16 @@ Public Class MainForm
                 AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir9Manager", .HeaderText = "Manager"})
                 For i As Integer = 0 To WrestlerCount - 1
                     DataGridAttireView.Rows.Add(WrestlerPacs(i), AttireCount(i),
-                                               Hex(AttireNames(i * 10 + 0)), My.Settings.StringObject(AttireNames(i * 10 + 0)), AttireEnabled(i * 10 + 0), AttireManager(i * 10 + 0),
-                                                Hex(AttireNames(i * 10 + 1)), My.Settings.StringObject(AttireNames(i * 10 + 1)), AttireEnabled(i * 10 + 1), AttireManager(i * 10 + 1),
-                                                Hex(AttireNames(i * 10 + 2)), My.Settings.StringObject(AttireNames(i * 10 + 2)), AttireEnabled(i * 10 + 2), AttireManager(i * 10 + 2),
-                                                Hex(AttireNames(i * 10 + 3)), My.Settings.StringObject(AttireNames(i * 10 + 3)), AttireEnabled(i * 10 + 3), AttireManager(i * 10 + 3),
-                                                Hex(AttireNames(i * 10 + 4)), My.Settings.StringObject(AttireNames(i * 10 + 4)), AttireEnabled(i * 10 + 4), AttireManager(i * 10 + 4),
-                                                Hex(AttireNames(i * 10 + 5)), My.Settings.StringObject(AttireNames(i * 10 + 5)), AttireEnabled(i * 10 + 5), AttireManager(i * 10 + 5),
-                                                Hex(AttireNames(i * 10 + 6)), My.Settings.StringObject(AttireNames(i * 10 + 6)), AttireEnabled(i * 10 + 6), AttireManager(i * 10 + 6),
-                                                Hex(AttireNames(i * 10 + 7)), My.Settings.StringObject(AttireNames(i * 10 + 7)), AttireEnabled(i * 10 + 7), AttireManager(i * 10 + 7),
-                                                Hex(AttireNames(i * 10 + 8)), My.Settings.StringObject(AttireNames(i * 10 + 8)), AttireEnabled(i * 10 + 8), AttireManager(i * 10 + 8),
-                                                Hex(AttireNames(i * 10 + 9)), My.Settings.StringObject(AttireNames(i * 10 + 9)), AttireEnabled(i * 10 + 9), AttireManager(i * 10 + 9))
+                                               Hex(AttireNames(i * 10 + 0)), StringReferences(AttireNames(i * 10 + 0)), AttireEnabled(i * 10 + 0), AttireManager(i * 10 + 0),
+                                                Hex(AttireNames(i * 10 + 1)), StringReferences(AttireNames(i * 10 + 1)), AttireEnabled(i * 10 + 1), AttireManager(i * 10 + 1),
+                                                Hex(AttireNames(i * 10 + 2)), StringReferences(AttireNames(i * 10 + 2)), AttireEnabled(i * 10 + 2), AttireManager(i * 10 + 2),
+                                                Hex(AttireNames(i * 10 + 3)), StringReferences(AttireNames(i * 10 + 3)), AttireEnabled(i * 10 + 3), AttireManager(i * 10 + 3),
+                                                Hex(AttireNames(i * 10 + 4)), StringReferences(AttireNames(i * 10 + 4)), AttireEnabled(i * 10 + 4), AttireManager(i * 10 + 4),
+                                                Hex(AttireNames(i * 10 + 5)), StringReferences(AttireNames(i * 10 + 5)), AttireEnabled(i * 10 + 5), AttireManager(i * 10 + 5),
+                                                Hex(AttireNames(i * 10 + 6)), StringReferences(AttireNames(i * 10 + 6)), AttireEnabled(i * 10 + 6), AttireManager(i * 10 + 6),
+                                                Hex(AttireNames(i * 10 + 7)), StringReferences(AttireNames(i * 10 + 7)), AttireEnabled(i * 10 + 7), AttireManager(i * 10 + 7),
+                                                Hex(AttireNames(i * 10 + 8)), StringReferences(AttireNames(i * 10 + 8)), AttireEnabled(i * 10 + 8), AttireManager(i * 10 + 8),
+                                                Hex(AttireNames(i * 10 + 9)), StringReferences(AttireNames(i * 10 + 9)), AttireEnabled(i * 10 + 9), AttireManager(i * 10 + 9))
                 Next
             End If
         Else 'Pacs Read Only can't do much
@@ -2302,10 +2388,7 @@ Public Class MainForm
 #Region "Object Array Controls"
     Sub LoadObjectArray(SelectedData As TreeNode)
         Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
-        NodeTag.Index = CType(SelectedData.Tag, NodeProperties).Index
-        NodeTag.length = CType(SelectedData.Tag, NodeProperties).length
-        NodeTag.StoredData = CType(SelectedData.Tag, NodeProperties).StoredData
+        NodeTag = CType(SelectedData.Tag, NodeProperties)
         Dim ObjArrayBytes As Byte()
         If NodeTag.StoredData.Length > 0 Then
             Dim FileBytes As Byte() = NodeTag.StoredData
@@ -2334,9 +2417,51 @@ Public Class MainForm
         Next
     End Sub
 
-    Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
-        Help.ShowHelp(Nothing, "https://pozzum.github.io/WrestleMINUS/")
+#End Region
+#Region "Asset View Controls"
+    Sub LoadAssetFile(SelectedData As TreeNode)
+        Dim NodeTag As NodeProperties = New NodeProperties
+        NodeTag = CType(SelectedData.Tag, NodeProperties)
+        Dim AssetConvBytes As Byte()
+        If NodeTag.StoredData.Length > 0 Then
+            Dim FileBytes As Byte() = NodeTag.StoredData
+            AssetConvBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), AssetConvBytes, 0, CInt(NodeTag.length))
+        Else
+            Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
+            AssetConvBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), AssetConvBytes, 0, CInt(NodeTag.length))
+        End If
+        Dim AssetCount As UInt32 = BitConverter.ToUInt32(AssetConvBytes, &HC)
+        Dim index As UInt32 = &H18
+        For i As Integer = 0 To AssetCount - 2
+            Dim PacNumber As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40)
+            Dim AttireNum As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 4)
+            Dim AudioNum As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 8)
+            Dim Check2 As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 12)
+            Dim Check3 As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 16)
+            Dim FileOffset As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 20)
+            Dim TitantronNum As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 24)
+            Dim MiniNum As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 28)
+            Dim HeaderNum As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 32)
+            Dim WallNum As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 36)
+            Dim RampNum As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 40)
+            Dim WallRightNum As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 44)
+            Dim WallLeftNum As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 48)
+            Dim Check4 As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 52)
+            Dim Check5 As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 56)
+            Dim Check6 As UInt32 = BitConverter.ToUInt32(AssetConvBytes, index + i * &H40 + 60)
+            Dim FileName As String = ""
+            If FileOffset > 0 Then
+                Try
+                    FileName = Encoding.Default.GetString(AssetConvBytes, FileOffset, &HC)
+                Catch ex As Exception
+                    FileName = "ERROR"
+                End Try
+            End If
+            DataGridAssetView.Rows.Add(PacNumber, AttireNum, AudioNum, Check2, Check3, FileOffset, TitantronNum, MiniNum,
+                                        HeaderNum, WallNum, RampNum, WallRightNum, WallLeftNum, Check4, Check5, Check6, FileName)
+        Next
     End Sub
 #End Region
-
 End Class

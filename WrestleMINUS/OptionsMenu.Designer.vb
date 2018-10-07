@@ -41,6 +41,7 @@ Partial Class OptionsMenu
         Me.LabelOodle = New System.Windows.Forms.Label()
         Me.ButtonSelectZlib = New System.Windows.Forms.Button()
         Me.ButtonOodleSelect = New System.Windows.Forms.Button()
+        Me.CheckBoxLoadHome = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
         '
         'Label1
@@ -177,7 +178,7 @@ Partial Class OptionsMenu
         'LabelOodle
         '
         Me.LabelOodle.AutoSize = True
-        Me.LabelOodle.Location = New System.Drawing.Point(9, 205)
+        Me.LabelOodle.Location = New System.Drawing.Point(12, 203)
         Me.LabelOodle.Name = "LabelOodle"
         Me.LabelOodle.Size = New System.Drawing.Size(125, 13)
         Me.LabelOodle.TabIndex = 15
@@ -203,11 +204,22 @@ Partial Class OptionsMenu
         Me.ButtonOodleSelect.UseVisualStyleBackColor = True
         Me.ButtonOodleSelect.Visible = False
         '
+        'CheckBoxLoadHome
+        '
+        Me.CheckBoxLoadHome.AutoSize = True
+        Me.CheckBoxLoadHome.Location = New System.Drawing.Point(15, 232)
+        Me.CheckBoxLoadHome.Name = "CheckBoxLoadHome"
+        Me.CheckBoxLoadHome.Size = New System.Drawing.Size(135, 17)
+        Me.CheckBoxLoadHome.TabIndex = 18
+        Me.CheckBoxLoadHome.Text = "Load Home on Launch"
+        Me.CheckBoxLoadHome.UseVisualStyleBackColor = True
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(284, 261)
+        Me.Controls.Add(Me.CheckBoxLoadHome)
         Me.Controls.Add(Me.ButtonOodleSelect)
         Me.Controls.Add(Me.ButtonSelectZlib)
         Me.Controls.Add(Me.LabelOodle)
@@ -253,4 +265,5 @@ Partial Class OptionsMenu
     Friend WithEvents LabelOodle As Label
     Friend WithEvents ButtonSelectZlib As Button
     Friend WithEvents ButtonOodleSelect As Button
+    Friend WithEvents CheckBoxLoadHome As CheckBox
 End Class
