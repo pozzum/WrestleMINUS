@@ -215,32 +215,42 @@ Public Class MainForm
             End If
         End If
     End Sub
-    Public Sub GetUnrrbpe()
-        My.Settings.UnrrbpePath = "Not Installed"
-        If MessageBox.Show("Would you like to navigate to ""unrrbpe.exe""" & vbNewLine &
-                        "this would be in any ""X-Packer"" install folder.",
-                           "BPE Decompresser",
-                           MessageBoxButtons.YesNo) = DialogResult.Yes Then
-            Dim UnrrbpeOpenDialog As New OpenFileDialog With {.FileName = "unrrbpe.exe", .Title = "Select unrrbpe.exe"}
-            If UnrrbpeOpenDialog.ShowDialog = DialogResult.OK Then
-                If Path.GetFileName(UnrrbpeOpenDialog.FileName) = "unrrbpe.exe" Then
-                    If MessageBox.Show("Would you like create a copy of this to the appdata?",
-                                       "Copy File?",
-                                       MessageBoxButtons.YesNo) = DialogResult.Yes Then
-                        Dim AppDataStorage As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
-                        FolderCheck(AppDataStorage)
-                        File.Copy(UnrrbpeOpenDialog.FileName, AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe")
-                        My.Settings.UnrrbpePath = AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe"
-                    Else
-                        My.Settings.UnrrbpePath = UnrrbpeOpenDialog.FileName
-                    End If
+    Public Sub GetUnrrbpe(Optional FromOptions As Boolean = False)
+        Dim AppDataStorage As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
+        If FromOptions = False Then
+            If File.Exists(AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe") Then
+                My.Settings.UnrrbpePath = AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe"
+                Exit Sub
+            Else
+                If MessageBox.Show("Would you like to navigate to ""unrrbpe.exe""" & vbNewLine &
+                    "this would be in any ""X-Packer"" install folder.",
+                       "BPE Decompresser",
+                       MessageBoxButtons.YesNo) = DialogResult.No Then
                 Else
-                    MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                    MessageBox.Show("Download link can be found in the options menu.")
+                    My.Settings.UnrrbpePath = "Not Installed"
+                    Exit Sub
                 End If
             End If
-        Else
-            MessageBox.Show("Download link can be found in the options menu.")
         End If
+        My.Settings.UnrrbpePath = "Not Installed"
+        Dim UnrrbpeOpenDialog As New OpenFileDialog With {.FileName = "unrrbpe.exe", .Title = "Select unrrbpe.exe"}
+        If UnrrbpeOpenDialog.ShowDialog = DialogResult.OK Then
+            If Path.GetFileName(UnrrbpeOpenDialog.FileName) = "unrrbpe.exe" Then
+                If MessageBox.Show("Would you like create a copy of this to the appdata?",
+                                   "Copy File?",
+                                   MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    FolderCheck(AppDataStorage)
+                    File.Copy(UnrrbpeOpenDialog.FileName, AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe")
+                    My.Settings.UnrrbpePath = AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe"
+                Else
+                    My.Settings.UnrrbpePath = UnrrbpeOpenDialog.FileName
+                End If
+            Else
+                MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+            End If
+        End If
+
     End Sub
     Public Function CheckIconicZlib(Optional FromOptions As Boolean = False)
         If Not File.Exists(Application.StartupPath & Path.DirectorySeparatorChar & "Ionic.Zlib.dll") Then
@@ -1237,7 +1247,7 @@ Public Class MainForm
             If NodeTag.Index > 0 OrElse
                    NodeTag.StoredData.Length > 0 Then
                 ExtractToolStripMenuItem.Visible = True
-                InjectToolStripMenuItem.Visible = False
+                InjectToolStripMenuItem.Visible = True
             Else
                 ExtractToolStripMenuItem.Visible = False
                 InjectToolStripMenuItem.Visible = False
@@ -1329,14 +1339,18 @@ Public Class MainForm
         Dim NodeTag As NodeProperties = New NodeProperties
         NodeTag = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = New NodeProperties
-        NodeTag = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
-        If NodeTag.FileType = PackageType.HSPC Then
+        ParrentNodeTag = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
+        If ParrentNodeTag.FileType = PackageType.HSPC Then
             Dim injectopenfile As OpenFileDialog = New OpenFileDialog With {
             .FileName = TreeView1.SelectedNode.Text & "." & NodeTag.FileType.ToString,
             .InitialDirectory = Path.GetDirectoryName(filepath)}
             If injectopenfile.ShowDialog() = DialogResult.OK Then
                 If File.Exists(injectopenfile.FileName) Then
-                    InjectIntoNode(TreeView1.SelectedNode, File.ReadAllBytes(injectopenfile.FileName))
+                    Dim FileBytes As Byte() = File.ReadAllBytes(injectopenfile.FileName)
+                    If NodeTag.FileType = PackageType.SHDC Then
+                        ReDim Preserve FileBytes(FileBytes.Length + (FileBytes.Length Mod &H100) - 1)
+                    End If
+                    InjectIntoNode(TreeView1.SelectedNode, FileBytes)
                 Else
                     MessageBox.Show("File Does Not Exist")
                 End If
@@ -1401,7 +1415,7 @@ Public Class MainForm
     Function InjectIntoNode(Sentnode As TreeNode, SentBytes As Byte()) As Boolean
         Dim NodeTag As NodeProperties = New NodeProperties
         NodeTag = CType(Sentnode.Tag, NodeProperties)
-        Dim SizeDifference As Long = SentBytes.Length - NodeTag.length
+        Dim SizeDifference As Long = SentBytes.Length - NodeTag.length 'negative for shorter
         'checking File Type match
         Dim TempCheck As PackageType = CheckHeaderType(0, SentBytes)
         If Not NodeTag.FileType = TempCheck Then
@@ -1411,12 +1425,65 @@ Public Class MainForm
                 Return False
             End If
         End If
+        'Get Parent Node Bytes
         Dim ParentNodeTag As NodeProperties = New NodeProperties
         ParentNodeTag = CType(Sentnode.Parent.Tag, NodeProperties)
+        Dim ParentBytes As Byte() = New Byte(ParentNodeTag.length) {}
+        If ParentNodeTag.StoredData.Length > 0 Then
+            Array.Copy(ParentNodeTag.StoredData, CInt(ParentNodeTag.Index), ParentBytes, 0, CInt(ParentNodeTag.length))
+        Else
+            Try
+                ActiveReader = New BinaryReader(File.Open(ActiveFile, FileMode.Open, FileAccess.Read))
+                ActiveReader.BaseStream.Seek(ParentNodeTag.Index, SeekOrigin.Begin)
+                ParentBytes = ActiveReader.ReadBytes(ParentNodeTag.length)
+                ActiveReader.Close()
+                ' MessageBox.Show(NodeTag.Index & vbNewLine & NodeTag.length)
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+            End Try
+        End If
+        'Create Byte Array of length
+        Dim WrittenFileArray As Byte() = New Byte(ParentNodeTag.length + SizeDifference) {}
+        ' Write File Prior to new file
+        Array.Copy(ParentBytes, 0, WrittenFileArray, 0, CInt(NodeTag.Index))
+        'write new file
+        Array.Copy(SentBytes, 0, WrittenFileArray, CInt(NodeTag.Index), SentBytes.Length)
+        'write old file from after file part if there are any
+        If ParentBytes.Length > NodeTag.Index + NodeTag.length Then 'there are bytes after the injected file
+            Buffer.BlockCopy(ParentBytes, NodeTag.Index + NodeTag.length, WrittenFileArray, NodeTag.Index + SentBytes.Length,
+                             ParentBytes.Length - (NodeTag.Index + NodeTag.length))
+        End If
+        'Get Node Location
+        Dim NodeLocation As Integer = Sentnode.Index '0 based
+        'Adjust Headers
+        If ParentNodeTag.FileType = PackageType.HSPC Then
+            Dim FileCount As Integer = BitConverter.ToUInt32(WrittenFileArray, &H38)
+            'adjust total file length
+            Array.Copy(BitConverter.GetBytes(CUInt(WrittenFileArray.Length / &H10)), 0, WrittenFileArray, &H3C, 4)
+
+            For i As Integer = 0 To FileCount - 1
+                If i < NodeLocation Then
+                    'no change needed
+                ElseIf i = NodeLocation Then
+                    'Index Stays the same
+                    Array.Copy(BitConverter.GetBytes(CUInt(SentBytes.Length / &H100)), 0, WrittenFileArray, &H1000 + i * &HC + &H4, 4)
+                Else 'size stays but index changes
+                    Dim TempIndex As UInt32 = BitConverter.ToUInt32(WrittenFileArray, &H1000 + i * &HC) * &H800 + SizeDifference
+                    Array.Copy(BitConverter.GetBytes(CUInt(TempIndex / &H800)), 0, WrittenFileArray, &H1000 + i * &HC, 4)
+                End If
+            Next
+        End If
         If ParentNodeTag.Index = 0 AndAlso
             ParentNodeTag.StoredData.Length = 0 Then
             'File to be Written
-
+            Dim WrittenFile As String = Sentnode.Parent.ToolTipText
+            If My.Settings.BackupInjections Then
+                File.Copy(WrittenFile, WrittenFile & ".bak", True)
+            End If
+            File.WriteAllBytes(WrittenFile, WrittenFileArray)
+        Else
+            'we must go higher
+            InjectIntoNode(Sentnode.Parent, WrittenFileArray)
         End If
         Return True
     End Function

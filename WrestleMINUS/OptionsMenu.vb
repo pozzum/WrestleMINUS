@@ -29,6 +29,7 @@ Public Class OptionsMenu
             ButtonOodleSelect.Visible = True
         End If
         CheckBoxLoadHome.Checked = My.Settings.LoadHomeOnLaunch
+        CheckBoxBackup.Checked = My.Settings.BackupInjections
     End Sub
     Private Sub ButtonSelectHome_Click(sender As Object, e As EventArgs) Handles ButtonSelectHome.Click
         MainForm.SelectHomeDirectory()
@@ -56,5 +57,9 @@ Public Class OptionsMenu
 
     Private Sub CheckBoxLoadHome_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxLoadHome.CheckedChanged
         My.Settings.LoadHomeOnLaunch = CheckBoxLoadHome.Checked
+    End Sub
+
+    Private Sub CheckBoxBackup_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxBackup.CheckedChanged
+        My.Settings.BackupInjections = CheckBoxBackup.Checked
     End Sub
 End Class

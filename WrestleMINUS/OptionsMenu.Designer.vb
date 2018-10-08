@@ -42,6 +42,7 @@ Partial Class OptionsMenu
         Me.ButtonSelectZlib = New System.Windows.Forms.Button()
         Me.ButtonOodleSelect = New System.Windows.Forms.Button()
         Me.CheckBoxLoadHome = New System.Windows.Forms.CheckBox()
+        Me.CheckBoxBackup = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
         '
         'Label1
@@ -214,11 +215,22 @@ Partial Class OptionsMenu
         Me.CheckBoxLoadHome.Text = "Load Home on Launch"
         Me.CheckBoxLoadHome.UseVisualStyleBackColor = True
         '
+        'CheckBoxBackup
+        '
+        Me.CheckBoxBackup.AutoSize = True
+        Me.CheckBoxBackup.Location = New System.Drawing.Point(15, 255)
+        Me.CheckBoxBackup.Name = "CheckBoxBackup"
+        Me.CheckBoxBackup.Size = New System.Drawing.Size(196, 17)
+        Me.CheckBoxBackup.TabIndex = 19
+        Me.CheckBoxBackup.Text = "Create Backup Files When Injecting"
+        Me.CheckBoxBackup.UseVisualStyleBackColor = True
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 261)
+        Me.ClientSize = New System.Drawing.Size(284, 286)
+        Me.Controls.Add(Me.CheckBoxBackup)
         Me.Controls.Add(Me.CheckBoxLoadHome)
         Me.Controls.Add(Me.ButtonOodleSelect)
         Me.Controls.Add(Me.ButtonSelectZlib)
@@ -266,4 +278,5 @@ Partial Class OptionsMenu
     Friend WithEvents ButtonSelectZlib As Button
     Friend WithEvents ButtonOodleSelect As Button
     Friend WithEvents CheckBoxLoadHome As CheckBox
+    Friend WithEvents CheckBoxBackup As CheckBox
 End Class
