@@ -165,27 +165,53 @@ Public Class MainForm
             End If
         End If
     End Sub
-    Public Sub GetTexConvExe()
+    Public Sub GetTexConvExe(Optional fromoptions As Boolean = False)
         Dim convertpath As String = Path.GetDirectoryName(Application.ExecutablePath) &
                       Path.DirectorySeparatorChar & "texconv.exe"
         Dim appDataPath As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
         FolderCheck(appDataPath)
         appDataPath += Path.DirectorySeparatorChar & "texconv.exe"
-        If File.Exists(convertpath) Then
-            If MessageBox.Show("Would you like to move the texture conversion exe to Appdata?" & vbNewLine & "(Recommended)", "Move tool to appdata?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+        If fromoptions Then
+            Dim TexConvToolOpenDialog As New OpenFileDialog With {.FileName = "texconv.exe", .Title = "Select texconv.exe"}
+            If My.Settings.TexConvPath = "" Then
+                TexConvToolOpenDialog.InitialDirectory = Application.StartupPath
+            Else
+                Path.GetDirectoryName(My.Settings.TexConvPath)
+            End If
+            If TexConvToolOpenDialog.ShowDialog = DialogResult.OK Then
+                If Path.GetFileName(TexConvToolOpenDialog.FileName) = "texconv.exe" Then
+                        My.Settings.TexConvPath = TexConvToolOpenDialog.FileName
+                    Else
+                    MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                End If
+            End If
+        Else
+            If File.Exists(convertpath) Then
+                If MessageBox.Show("Would you like to move the texture conversion exe to Appdata?" & vbNewLine & "(Recommended)", "Move tool to appdata?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
 
-                File.Move(convertpath, appDataPath)
+                    File.Move(convertpath, appDataPath)
+                    My.Settings.TexConvPath = appDataPath
+                Else
+                    My.Settings.TexConvPath = convertpath
+                End If
+            ElseIf File.Exists(appDataPath) Then
                 My.Settings.TexConvPath = appDataPath
             Else
-                My.Settings.TexConvPath = convertpath
-            End If
-        ElseIf File.Exists(appDataPath) Then
-            My.Settings.TexConvPath = appDataPath
-        Else
-            If MessageBox.Show("texconv.exe not found!" & vbNewLine &
-                            "Would you like to navigate to ""texconv.exe"" ", "Find texconv.exe", MessageBoxButtons.YesNo) = DialogResult.Yes Then
-            Else
-                MessageBox.Show("Picture view will raise errors")
+                If MessageBox.Show("texconv.exe not found!" & vbNewLine &
+                                "Would you like to navigate to ""texconv.exe"" ", "Find texconv.exe", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    Dim TexConvToolOpenDialog As New OpenFileDialog With {.FileName = "texconv.exe", .Title = "Select texconv.exe"}
+                    If TexConvToolOpenDialog.ShowDialog = DialogResult.OK Then
+                        If Path.GetFileName(TexConvToolOpenDialog.FileName) = "texconv.exe" Then
+                                My.Settings.TexConvPath = TexConvToolOpenDialog.FileName
+                            Else
+                            MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                        End If
+                    End If
+
+
+                Else
+                    MessageBox.Show("Picture view will raise errors")
+                End If
             End If
         End If
     End Sub
@@ -462,9 +488,8 @@ Public Class MainForm
                 Dim FileCount As Integer = BitConverter.ToUInt32(FileBytes, &H38)
                 Dim FileNameLength As Integer = BitConverter.ToUInt32(FileBytes, &H18)
                 FileNameLength += -(FileNameLength Mod &H800) + &H1000
-                MessageBox.Show(Hex(FileNameLength))
                 For i As Integer = 0 To FileCount - 1
-                    Dim FileName As String = Hex(BitConverter.ToUInt64(FileBytes, &H800 + i * &H14)).ToUpper
+                    Dim FileName As String = BitConverter.ToString(FileBytes, &H800 + i * &H14, 8).ToUpper.Replace("-", "")
                     Dim TempNode As TreeNode = New TreeNode(FileName)
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties
@@ -1574,10 +1599,10 @@ Public Class MainForm
             Else
                 HexLength = NodeTag.length
             End If
-            If HexLength < &H1000 Then
+            If HexLength < (&H1000 * My.Settings.HexViewLength) Then
                 TextString = New String(".", HexLength)
             Else
-                TextString = New String(".", &H1000)
+                TextString = New String(".", (&H1000 * My.Settings.HexViewLength))
             End If
             Dim FirstBuilder As New StringBuilder(TextString)
             For i As Integer = 0 To TextString.Length - 1
@@ -1727,12 +1752,23 @@ Public Class MainForm
                                                          ArenaJson.IndexOf(",", ArenaJson.IndexOf("FloorMattress") + 15) - ArenaJson.IndexOf("FloorMattress") - 15)
             Dim Crowd As String = ArenaJson.Substring(ArenaJson.IndexOf("Crowd") + 7,
                                                       ArenaJson.IndexOf(",", ArenaJson.IndexOf("Crowd") + 7) - ArenaJson.IndexOf("Crowd") - 7)
+            Dim TempCrowdSeatPlan As Integer = ArenaJson.IndexOf("Titantron")
+            Dim CrowdSeatPlan As String = "-1"
+            If Not TempCrowdSeatPlan = -1 Then
+                CrowdSeatPlan = ArenaJson.Substring(ArenaJson.IndexOf("CrowdSeatsPlace") + 17,
+                                                ArenaJson.IndexOf(",", ArenaJson.IndexOf("CrowdSeatsPlace") + 17) - ArenaJson.IndexOf("CrowdSeatsPlace") - 17)
+            End If
+            Dim TempCrowdSeatModel As Integer = ArenaJson.IndexOf("Titantron")
+            Dim CrowdSeatModel As String = "-1"
+            If Not TempCrowdSeatModel = -1 Then
+                CrowdSeatModel = ArenaJson.Substring(ArenaJson.IndexOf("CrowdSeatsModel") + 17,
+                                                ArenaJson.IndexOf(",", ArenaJson.IndexOf("CrowdSeatsModel") + 17) - ArenaJson.IndexOf("CrowdSeatsModel") - 17)
+            End If
             Dim IBL As String = ArenaJson.Substring(ArenaJson.IndexOf("IBL") + 5,
                                                     ArenaJson.IndexOf(",", ArenaJson.IndexOf("IBL") + 5) - ArenaJson.IndexOf("IBL") - 5)
             Dim TempTitantron As Integer = ArenaJson.IndexOf("Titantron")
             Dim Titantron As String = "-1"
-            If TempTitantron = -1 Then
-            Else
+            If Not TempTitantron = -1 Then
                 Titantron = ArenaJson.Substring(ArenaJson.IndexOf("Titantron") + 11,
                                                 ArenaJson.IndexOf(",", ArenaJson.IndexOf("Titantron") + 11) - ArenaJson.IndexOf("Titantron") - 11)
             End If
@@ -1840,7 +1876,7 @@ Public Class MainForm
                                        Wall_R, Header, Floor, MiscObject, LightingType, CornerPost_CM, Rope_CM, Apron_CM, Turnbuckle_CM, RingMat_CM, version)
             ElseIf GameType = 4 Then '2K19
                 DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, LEDCorner, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
-                                       CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, IBL, Titantron, Minitron, Wall_L,
+                                       CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, CrowdSeatPlan, CrowdSeatModel, IBL, Titantron, Minitron, Wall_L,
                                        Wall_R, Header, Floor, MiscObject, LightingType, CornerPost_CM, Rope_CM, Apron_CM, Turnbuckle_CM, RingMat_CM, version)
             End If
             DataGridMiscView.Rows.Item(i).HeaderCell.Value = ArenaNum
@@ -1903,6 +1939,14 @@ Public Class MainForm
         ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "Crowd",
                        .Name = "Crowd"})
+        If MenuIndex > 3 Then '2K19 and Beyond
+            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+                       .HeaderText = "CSPlace",
+                       .Name = "CSPlace"})
+            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+                       .HeaderText = "CSModel",
+                       .Name = "CSModel"})
+        End If
         ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "IBL",
                        .Name = "IBL"})
@@ -1942,11 +1986,11 @@ Public Class MainForm
                        .HeaderText = "RopeCM",
                        .Name = "RopeCM"})
             ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "TurnbCM",
-                       .Name = "TurnbCM"})
+                   .HeaderText = "ApronCM",
+                   .Name = "ApronCM"})
             ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "ApronCM",
-                       .Name = "ApronCM"})
+                           .HeaderText = "TurnbCM",
+                           .Name = "TurnbCM"})
             ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "RingMatCM",
                        .Name = "RingMatCM"})

@@ -38,7 +38,7 @@ Public Class OptionsMenu
         LoadSettings()
     End Sub
     Private Sub ButtonSelectTexConv_Click(sender As Object, e As EventArgs) Handles ButtonSelectTexConv.Click
-        MainForm.GetTexConvExe()
+        MainForm.GetTexConvExe(True)
         LoadSettings()
     End Sub
     Private Sub ButtonSelectRadVideo_Click(sender As Object, e As EventArgs) Handles ButtonSelectRadVideo.Click
