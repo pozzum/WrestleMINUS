@@ -197,6 +197,18 @@ Namespace My
                 Me("BackupInjections") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1")>  _
+        Public Property HexViewLength() As Long
+            Get
+                Return CType(Me("HexViewLength"),Long)
+            End Get
+            Set
+                Me("HexViewLength") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

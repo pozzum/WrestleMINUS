@@ -30,6 +30,8 @@ Public Class OptionsMenu
         End If
         CheckBoxLoadHome.Checked = My.Settings.LoadHomeOnLaunch
         CheckBoxBackup.Checked = My.Settings.BackupInjections
+        TrackBarHexLength.Value = My.Settings.HexViewLength
+        updateviewlength()
     End Sub
     Private Sub ButtonSelectHome_Click(sender As Object, e As EventArgs) Handles ButtonSelectHome.Click
         MainForm.SelectHomeDirectory()
@@ -61,5 +63,17 @@ Public Class OptionsMenu
 
     Private Sub CheckBoxBackup_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxBackup.CheckedChanged
         My.Settings.BackupInjections = CheckBoxBackup.Checked
+    End Sub
+
+    Private Sub TrackBarHexLength_Scroll(sender As Object, e As EventArgs) Handles TrackBarHexLength.Scroll
+        My.Settings.HexViewLength = TrackBarHexLength.Value
+        updateviewlength()
+    End Sub
+    Sub updateviewlength()
+        If TrackBarHexLength.Value > 1024 Then
+            LabelHexLength.Text = "Hex/Text View Length: " & CInt(TrackBarHexLength.Value / 1024) & "MB"
+        Else
+            LabelHexLength.Text = "Hex/Text View Length: " & TrackBarHexLength.Value & "KB"
+        End If
     End Sub
 End Class

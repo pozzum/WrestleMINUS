@@ -43,6 +43,9 @@ Partial Class OptionsMenu
         Me.ButtonOodleSelect = New System.Windows.Forms.Button()
         Me.CheckBoxLoadHome = New System.Windows.Forms.CheckBox()
         Me.CheckBoxBackup = New System.Windows.Forms.CheckBox()
+        Me.TrackBarHexLength = New System.Windows.Forms.TrackBar()
+        Me.LabelHexLength = New System.Windows.Forms.Label()
+        CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label1
@@ -225,11 +228,35 @@ Partial Class OptionsMenu
         Me.CheckBoxBackup.Text = "Create Backup Files When Injecting"
         Me.CheckBoxBackup.UseVisualStyleBackColor = True
         '
+        'TrackBarHexLength
+        '
+        Me.TrackBarHexLength.LargeChange = 100
+        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 291)
+        Me.TrackBarHexLength.Maximum = 500
+        Me.TrackBarHexLength.Minimum = 1
+        Me.TrackBarHexLength.Name = "TrackBarHexLength"
+        Me.TrackBarHexLength.Size = New System.Drawing.Size(260, 45)
+        Me.TrackBarHexLength.SmallChange = 10
+        Me.TrackBarHexLength.TabIndex = 20
+        Me.TrackBarHexLength.TickFrequency = 50
+        Me.TrackBarHexLength.Value = 1
+        '
+        'LabelHexLength
+        '
+        Me.LabelHexLength.AutoSize = True
+        Me.LabelHexLength.Location = New System.Drawing.Point(12, 275)
+        Me.LabelHexLength.Name = "LabelHexLength"
+        Me.LabelHexLength.Size = New System.Drawing.Size(140, 13)
+        Me.LabelHexLength.TabIndex = 21
+        Me.LabelHexLength.Text = "Hex/Text View Length: 1KB"
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 286)
+        Me.ClientSize = New System.Drawing.Size(284, 361)
+        Me.Controls.Add(Me.LabelHexLength)
+        Me.Controls.Add(Me.TrackBarHexLength)
         Me.Controls.Add(Me.CheckBoxBackup)
         Me.Controls.Add(Me.CheckBoxLoadHome)
         Me.Controls.Add(Me.ButtonOodleSelect)
@@ -254,6 +281,7 @@ Partial Class OptionsMenu
         Me.Name = "OptionsMenu"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Options Menu"
+        CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -279,4 +307,6 @@ Partial Class OptionsMenu
     Friend WithEvents ButtonOodleSelect As Button
     Friend WithEvents CheckBoxLoadHome As CheckBox
     Friend WithEvents CheckBoxBackup As CheckBox
+    Friend WithEvents TrackBarHexLength As TrackBar
+    Friend WithEvents LabelHexLength As Label
 End Class

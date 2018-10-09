@@ -460,13 +460,16 @@ Public Class MainForm
 #Region "Primary Container Types {PAC}"
             Case PackageType.HSPC
                 Dim FileCount As Integer = BitConverter.ToUInt32(FileBytes, &H38)
+                Dim FileNameLength As Integer = BitConverter.ToUInt32(FileBytes, &H18)
+                FileNameLength += -(FileNameLength Mod &H800) + &H1000
+                MessageBox.Show(Hex(FileNameLength))
                 For i As Integer = 0 To FileCount - 1
                     Dim FileName As String = Hex(BitConverter.ToUInt64(FileBytes, &H800 + i * &H14)).ToUpper
                     Dim TempNode As TreeNode = New TreeNode(FileName)
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties
-                    TempNodeProps.Index = BitConverter.ToUInt32(FileBytes, &H1000 + i * &HC) * &H800
-                    TempNodeProps.length = BitConverter.ToUInt32(FileBytes, &H1000 + i * &HC + &H4) * &H100
+                    TempNodeProps.Index = BitConverter.ToUInt32(FileBytes, FileNameLength + i * &HC) * &H800
+                    TempNodeProps.length = BitConverter.ToUInt32(FileBytes, FileNameLength + i * &HC + &H4) * &H100
                     TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, FileBytes)
                     TempNodeProps.Index += NodeTag.Index
                     TempNodeProps.StoredData = NodeTag.StoredData
@@ -824,6 +827,9 @@ Public Class MainForm
         Dim FirstFour As String
         'Make sure the file has bytes
         If ByteArray.Length = 0 Then
+            Return PackageType.bin
+        End If
+        If Index > ByteArray.Length Then
             Return PackageType.bin
         End If
         'If ByteArray Is Nothing Then
@@ -1247,7 +1253,7 @@ Public Class MainForm
             If NodeTag.Index > 0 OrElse
                    NodeTag.StoredData.Length > 0 Then
                 ExtractToolStripMenuItem.Visible = True
-                InjectToolStripMenuItem.Visible = True
+                InjectToolStripMenuItem.Visible = False
             Else
                 ExtractToolStripMenuItem.Visible = False
                 InjectToolStripMenuItem.Visible = False
@@ -1511,11 +1517,15 @@ Public Class MainForm
                 HexLength = NodeTag.length
             End If
             Dim ByteString As String = ""
-            If HexLength < &H1000 Then
-                ByteString = (BitConverter.ToString(Filebytes, CInt(NodeTag.Index), HexLength).Replace("-", " "))
-            Else
-                ByteString = (BitConverter.ToString(Filebytes, CInt(NodeTag.Index), &H1000).Replace("-", " "))
-            End If
+            Try
+                If HexLength < (&H1000 * My.Settings.HexViewLength) Then
+                    ByteString = (BitConverter.ToString(Filebytes, CInt(NodeTag.Index), HexLength).Replace("-", " "))
+                Else
+                    ByteString = (BitConverter.ToString(Filebytes, CInt(NodeTag.Index), (&H1000 * My.Settings.HexViewLength)).Replace("-", " "))
+                End If
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+            End Try
             'SelectedFilePath = SelectedFilePath.Replace(vbCr, "").Replace(vbLf, "")
             Dim builder As New StringBuilder(ByteString)
             Dim startIndex = builder.Length - (builder.Length Mod bitwidth * 3)
