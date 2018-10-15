@@ -365,6 +365,22 @@ Public Class MainForm
         'Next i
     End Sub
     Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        If SavePending Then
+            Dim Result As Integer = MessageBox.Show("File save is pending, would you like to save?", "Save Pending", MessageBoxButtons.YesNoCancel)
+            If Result = DialogResult.Cancel Then
+                e.Cancel = True
+            ElseIf Result = DialogResult.Yes Then
+                If TabControl1.TabPages.Contains(StringView) Then
+                    InjectIntoNode(ReadNode, BuildStringFile())
+                End If
+                If TabControl1.TabPages.Contains(MiscView) Then
+                    InjectIntoNode(ReadNode, BuildMiscFile())
+                End If
+                If TabControl1.TabPages.Contains(AttireView) Then
+                    InjectIntoNode(ReadNode, BuildAttireFile())
+                End If
+            End If
+        End If
         If File.Exists(My.Settings.StringObject) = True Then
             File.Delete(My.Settings.StringObject)
         End If
@@ -1199,7 +1215,6 @@ Public Class MainForm
                 End If
             End If
             If CType(e.Node.Tag, NodeProperties).FileType = PackageType.YOBJ Then
-                'StringView
                 If Not TabControl1.TabPages.Contains(ObjectView) Then
                     TabControl1.TabPages.Add(ObjectView)
                 End If
@@ -1217,7 +1232,7 @@ Public Class MainForm
                 LoadAttires(TreeView1.SelectedNode)
             Else
                 If TabControl1.TabPages.Contains(AttireView) Then
-                    TabControl1.TabPages.Remove(AttireView)
+                    CloseAttireView()
                 End If
             End If
             If CType(e.Node.Tag, NodeProperties).FileType = PackageType.MuscleFile Then
@@ -2185,7 +2200,7 @@ Public Class MainForm
             'Else '2K19
             DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, LEDCorner, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
                                        CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, CrowdSeatPlan, CrowdSeatModel, IBL, Titantron, Minitron, Wall_L,
-                                       Wall_R, Header, Floor, MiscObject, LightingType, CornerPost_CM, Rope_CM, Apron_CM, Turnbuckle_CM, 500, 100) 'RingMat_CM,version)
+                                       Wall_R, Header, Floor, MiscObject, LightingType, CornerPost_CM, Rope_CM, Apron_CM, Turnbuckle_CM, RingMat_CM, version)
             'End If
             DataGridMiscView.Rows.Item(i).HeaderCell.Value = ArenaNum
         Next
@@ -2325,7 +2340,6 @@ Public Class MainForm
                        .HeaderText = "Version",
                        .Name = "Version"})
     End Sub
-
     Private Sub MiscViewType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles MiscViewType.SelectedIndexChanged
         If SavePending Then
             MessageBox.Show("Any changes will be lost", "Continue format change?", MessageBoxButtons.YesNo)
@@ -2389,7 +2403,7 @@ Public Class MainForm
         Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Advertisement"":" & DataGridMiscView(1, index).Value.ToString & ","
         Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CornerPost"":" & DataGridMiscView(2, index).Value.ToString & ","
         If MiscViewType.SelectedIndex > 2 Then '2K18 and Beyond
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """LED_CornerPost"":" & DataGridMiscView(3, index).Value.ToString & ","
+            Temp_String = Temp_String & Chr(&HA) & "    " & """LED_CornerPost"":" & DataGridMiscView(3, index).Value.ToString & ","
         End If
         Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Rope"":" & DataGridMiscView(4, index).Value.ToString & ","
         Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Apron"":" & DataGridMiscView(5, index).Value.ToString & ","
@@ -2410,7 +2424,7 @@ Public Class MainForm
             Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CrowdSeatsPlace"":" & DataGridMiscView(17, index).Value.ToString & ","
             Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CrowdSeatsModel"":" & DataGridMiscView(18, index).Value.ToString & ","
         End If
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """IBL"":" & DataGridMiscView(19, index).Value.ToString & ","
+        Temp_String = Temp_String & Chr(&HA) & "    " & """IBL"":" & DataGridMiscView(19, index).Value.ToString & ","
         If MiscViewType.SelectedIndex > 0 Then '2K16 and Beyond
             Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Titantron"":" & DataGridMiscView(20, index).Value.ToString & ","
             Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Minitron"":" & DataGridMiscView(21, index).Value.ToString & ","
@@ -2423,7 +2437,7 @@ Public Class MainForm
         If MiscViewType.SelectedIndex > 2 Then '2K18 and Beyond
             Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """LightingType"":" & DataGridMiscView(27, index).Value.ToString & ","
         End If
-        If Not MiscViewType.SelectedIndex > 2 Then '2K18 and Beyond
+        If MiscViewType.SelectedIndex > 2 Then '2K18 and Beyond
             Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CornerPost_CM"":" & DataGridMiscView(28, index).Value.ToString & ","
             Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Rope_CM"":" & DataGridMiscView(29, index).Value.ToString & ","
             Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Apron_CM"":" & DataGridMiscView(30, index).Value.ToString & ","
@@ -2431,7 +2445,7 @@ Public Class MainForm
             Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """RingMat_CM"":" & DataGridMiscView(32, index).Value.ToString & ","
         End If
         Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """version"":" & DataGridMiscView(33, index).Value.ToString
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & Chr(&H7D) & Chr(&HD) & Chr(&HA)
+        Temp_String = Temp_String & Chr(&HA) & Chr(&H7D) & Chr(&HA) & Chr(&H0)
         Return Temp_String
     End Function
 #End Region
