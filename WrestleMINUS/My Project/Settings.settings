@@ -12,10 +12,10 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="MiscModeIndex" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">3</Value>
+      <Value Profile="(Default)">4</Value>
     </Setting>
     <Setting Name="ShowModeIndex" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">3</Value>
+      <Value Profile="(Default)">4</Value>
     </Setting>
     <Setting Name="TexConvPath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
