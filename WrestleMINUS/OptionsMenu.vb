@@ -42,7 +42,7 @@ Public Class OptionsMenu
         LoadSettings()
     End Sub
     Private Sub ButtonSelectRadVideo_Click(sender As Object, e As EventArgs) Handles ButtonSelectRadVideo.Click
-        MainForm.GetTexConvExe()
+        MainForm.GetRadVideo(True)
         LoadSettings()
     End Sub
     Private Sub ButtonDownloadRadVideo_Click(sender As Object, e As EventArgs) Handles ButtonDownloadRadVideo.Click
@@ -56,7 +56,12 @@ Public Class OptionsMenu
     Private Sub ButtonDownloadUnrrbpe_Click(sender As Object, e As EventArgs) Handles ButtonDownloadUnrrbpe.Click
         Process.Start("http://asmodean.reverse.net/pages/unrrbpe.html")
     End Sub
-
+    Private Sub ButtonSelectZlib_Click(sender As Object, e As EventArgs) Handles ButtonSelectZlib.Click
+        'TO DO
+    End Sub
+    Private Sub ButtonOodleSelect_Click(sender As Object, e As EventArgs) Handles ButtonOodleSelect.Click
+        'TO DO
+    End Sub
     Private Sub CheckBoxLoadHome_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxLoadHome.CheckedChanged
         My.Settings.LoadHomeOnLaunch = CheckBoxLoadHome.Checked
     End Sub
@@ -75,5 +80,13 @@ Public Class OptionsMenu
         Else
             LabelHexLength.Text = "Hex/Text View Length: " & TrackBarHexLength.Value & "KB"
         End If
+    End Sub
+    Private Sub ButtonResetStrings_Click(sender As Object, e As EventArgs) Handles ButtonResetStrings.Click
+        MainForm.StringReferences = New String(&HFFFFF) {}
+        MainForm.StringReferences(0) = "String Not Read"
+    End Sub
+    Private Sub ButtonResetPacs_Click(sender As Object, e As EventArgs) Handles ButtonResetPacs.Click
+        MainForm.PacNumbers = New Integer(1024) {}
+        MainForm.PacNumbers(0) = -1
     End Sub
 End Class

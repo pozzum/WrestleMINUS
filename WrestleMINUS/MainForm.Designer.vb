@@ -67,12 +67,16 @@ Partial Class MainForm
         Me.HexRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.StringText = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Length = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Changed = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.MenuStripStringView = New System.Windows.Forms.MenuStrip()
         Me.StringCountToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripTextBoxSearch = New System.Windows.Forms.ToolStripTextBox()
+        Me.SaveStringChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MiscView = New System.Windows.Forms.TabPage()
         Me.DataGridMiscView = New System.Windows.Forms.DataGridView()
         Me.MenuStripMiscView = New System.Windows.Forms.MenuStrip()
         Me.MiscViewType = New System.Windows.Forms.ToolStripComboBox()
+        Me.SaveMiscChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowView = New System.Windows.Forms.TabPage()
         Me.DataGridShowView = New System.Windows.Forms.DataGridView()
         Me.StrName = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -125,9 +129,62 @@ Partial Class MainForm
         Me.Label1 = New System.Windows.Forms.Label()
         Me.AttireView = New System.Windows.Forms.TabPage()
         Me.DataGridAttireView = New System.Windows.Forms.DataGridView()
+        Me.Pach = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Count = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire0Ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire0String = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire0Enabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire0Manager = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire0Unlock = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire1Ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire1String = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire1Enabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire1Manager = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire1Unlock = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire2Ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire2String = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire2Enabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire2Manager = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire2Unlock = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire3Ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire3String = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire3Enabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire3Manager = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire3Unlock = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire4Ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire4String = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire4Enabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire4Manager = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire4Unlock = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire5Ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire5String = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire5Enabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire5Manager = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire5Unlock = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire6Ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire6String = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire6Enabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire6Manager = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire6Unlock = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire7Ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire7String = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire7Enabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire7Manager = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire7Unlock = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire8Ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire8String = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire8Enabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire8Manager = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire8Unlock = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire9Ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire9String = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Attire9Enabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire9Manager = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Attire9Unlock = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripAttireView = New System.Windows.Forms.MenuStrip()
         Me.StringLoadedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PacsLoadedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveAttireChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MuscleView = New System.Windows.Forms.TabPage()
         Me.DataGridMuscleView = New System.Windows.Forms.DataGridView()
         Me.MenuStripMuscleView = New System.Windows.Forms.MenuStrip()
@@ -146,6 +203,24 @@ Partial Class MainForm
         Me.ChairName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStrip2 = New System.Windows.Forms.MenuStrip()
         Me.AssetView = New System.Windows.Forms.TabPage()
+        Me.DataGridAssetView = New System.Windows.Forms.DataGridView()
+        Me.PacNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AttireNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AudioNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Check2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Check3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FileOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.TitantronNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MiniNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.HeaderNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WallNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RampNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WallRightNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WallLeftNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Check4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Check5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Check6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripPictureView = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
@@ -194,24 +269,6 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.DataGridAssetView = New System.Windows.Forms.DataGridView()
-        Me.PacNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AttireNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AudioNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Check2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Check3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.FileOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TitantronNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MiniNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.HeaderNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WallNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RampNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WallRightNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WallLeftNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Check4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Check5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Check6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -249,9 +306,9 @@ Partial Class MainForm
         Me.ObjArrayView.SuspendLayout()
         CType(Me.DataGridObjArrayView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.AssetView.SuspendLayout()
+        CType(Me.DataGridAssetView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripPictureView.SuspendLayout()
         Me.TreeViewContext.SuspendLayout()
-        CType(Me.DataGridAssetView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -593,13 +650,13 @@ Partial Class MainForm
         Me.DataGridStringView.AllowUserToResizeRows = False
         Me.DataGridStringView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.DataGridStringView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridStringView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.HexRef, Me.StringText, Me.Length})
+        Me.DataGridStringView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.HexRef, Me.StringText, Me.Length, Me.Changed})
         Me.DataGridStringView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridStringView.Location = New System.Drawing.Point(3, 27)
+        Me.DataGridStringView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridStringView.MultiSelect = False
         Me.DataGridStringView.Name = "DataGridStringView"
         Me.DataGridStringView.RowHeadersVisible = False
-        Me.DataGridStringView.Size = New System.Drawing.Size(970, 394)
+        Me.DataGridStringView.Size = New System.Drawing.Size(970, 391)
         Me.DataGridStringView.TabIndex = 2
         '
         'HexRef
@@ -624,15 +681,21 @@ Partial Class MainForm
         Me.Length.HeaderText = "Length"
         Me.Length.MaxInputLength = 10
         Me.Length.Name = "Length"
-        Me.Length.ReadOnly = True
         Me.Length.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Changed
+        '
+        Me.Changed.FillWeight = 10.0!
+        Me.Changed.HeaderText = "Changed"
+        Me.Changed.Name = "Changed"
+        Me.Changed.Visible = False
         '
         'MenuStripStringView
         '
-        Me.MenuStripStringView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringCountToolStripMenuItem})
+        Me.MenuStripStringView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringCountToolStripMenuItem, Me.ToolStripTextBoxSearch, Me.SaveStringChangesToolStripMenuItem})
         Me.MenuStripStringView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripStringView.Name = "MenuStripStringView"
-        Me.MenuStripStringView.Size = New System.Drawing.Size(970, 24)
+        Me.MenuStripStringView.Size = New System.Drawing.Size(970, 27)
         Me.MenuStripStringView.TabIndex = 0
         Me.MenuStripStringView.Text = "MenuStrip2"
         '
@@ -640,8 +703,21 @@ Partial Class MainForm
         '
         Me.StringCountToolStripMenuItem.Enabled = False
         Me.StringCountToolStripMenuItem.Name = "StringCountToolStripMenuItem"
-        Me.StringCountToolStripMenuItem.Size = New System.Drawing.Size(89, 20)
+        Me.StringCountToolStripMenuItem.Size = New System.Drawing.Size(89, 23)
         Me.StringCountToolStripMenuItem.Text = "String Count:"
+        '
+        'ToolStripTextBoxSearch
+        '
+        Me.ToolStripTextBoxSearch.Name = "ToolStripTextBoxSearch"
+        Me.ToolStripTextBoxSearch.Size = New System.Drawing.Size(100, 23)
+        Me.ToolStripTextBoxSearch.Text = "Search..."
+        '
+        'SaveStringChangesToolStripMenuItem
+        '
+        Me.SaveStringChangesToolStripMenuItem.Name = "SaveStringChangesToolStripMenuItem"
+        Me.SaveStringChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 23)
+        Me.SaveStringChangesToolStripMenuItem.Text = "Save Changes"
+        Me.SaveStringChangesToolStripMenuItem.Visible = False
         '
         'MiscView
         '
@@ -659,17 +735,19 @@ Partial Class MainForm
         '
         Me.DataGridMiscView.AllowUserToAddRows = False
         Me.DataGridMiscView.AllowUserToDeleteRows = False
+        Me.DataGridMiscView.AllowUserToResizeRows = False
         Me.DataGridMiscView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
         Me.DataGridMiscView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridMiscView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridMiscView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridMiscView.Name = "DataGridMiscView"
+        Me.DataGridMiscView.RowHeadersWidth = 70
         Me.DataGridMiscView.Size = New System.Drawing.Size(970, 391)
         Me.DataGridMiscView.TabIndex = 1
         '
         'MenuStripMiscView
         '
-        Me.MenuStripMiscView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MiscViewType})
+        Me.MenuStripMiscView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MiscViewType, Me.SaveMiscChangesToolStripMenuItem})
         Me.MenuStripMiscView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripMiscView.Name = "MenuStripMiscView"
         Me.MenuStripMiscView.Size = New System.Drawing.Size(970, 27)
@@ -683,6 +761,13 @@ Partial Class MainForm
         Me.MiscViewType.Items.AddRange(New Object() {"2K15", "2K16", "2K17", "2K18", "2K19"})
         Me.MiscViewType.Name = "MiscViewType"
         Me.MiscViewType.Size = New System.Drawing.Size(121, 23)
+        '
+        'SaveMiscChangesToolStripMenuItem
+        '
+        Me.SaveMiscChangesToolStripMenuItem.Name = "SaveMiscChangesToolStripMenuItem"
+        Me.SaveMiscChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 23)
+        Me.SaveMiscChangesToolStripMenuItem.Text = "Save Changes"
+        Me.SaveMiscChangesToolStripMenuItem.Visible = False
         '
         'ShowView
         '
@@ -1051,15 +1136,400 @@ Partial Class MainForm
         '
         Me.DataGridAttireView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.DataGridAttireView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridAttireView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Pach, Me.Count, Me.Attire0Ref, Me.Attire0String, Me.Attire0Enabled, Me.Attire0Manager, Me.Attire0Unlock, Me.Attire1Ref, Me.Attire1String, Me.Attire1Enabled, Me.Attire1Manager, Me.Attire1Unlock, Me.Attire2Ref, Me.Attire2String, Me.Attire2Enabled, Me.Attire2Manager, Me.Attire2Unlock, Me.Attire3Ref, Me.Attire3String, Me.Attire3Enabled, Me.Attire3Manager, Me.Attire3Unlock, Me.Attire4Ref, Me.Attire4String, Me.Attire4Enabled, Me.Attire4Manager, Me.Attire4Unlock, Me.Attire5Ref, Me.Attire5String, Me.Attire5Enabled, Me.Attire5Manager, Me.Attire5Unlock, Me.Attire6Ref, Me.Attire6String, Me.Attire6Enabled, Me.Attire6Manager, Me.Attire6Unlock, Me.Attire7Ref, Me.Attire7String, Me.Attire7Enabled, Me.Attire7Manager, Me.Attire7Unlock, Me.Attire8Ref, Me.Attire8String, Me.Attire8Enabled, Me.Attire8Manager, Me.Attire8Unlock, Me.Attire9Ref, Me.Attire9String, Me.Attire9Enabled, Me.Attire9Manager, Me.Attire9Unlock})
         Me.DataGridAttireView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridAttireView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridAttireView.Name = "DataGridAttireView"
         Me.DataGridAttireView.Size = New System.Drawing.Size(970, 394)
         Me.DataGridAttireView.TabIndex = 1
         '
+        'Pach
+        '
+        Me.Pach.HeaderText = "Pach"
+        Me.Pach.MaxInputLength = 4
+        Me.Pach.Name = "Pach"
+        Me.Pach.Width = 57
+        '
+        'Count
+        '
+        Me.Count.HeaderText = "Count"
+        Me.Count.MaxInputLength = 2
+        Me.Count.Name = "Count"
+        Me.Count.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Count.Width = 41
+        '
+        'Attire0Ref
+        '
+        Me.Attire0Ref.HeaderText = "Default Attire"
+        Me.Attire0Ref.MaxInputLength = 4
+        Me.Attire0Ref.Name = "Attire0Ref"
+        Me.Attire0Ref.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire0Ref.Width = 74
+        '
+        'Attire0String
+        '
+        Me.Attire0String.HeaderText = "Name"
+        Me.Attire0String.Name = "Attire0String"
+        Me.Attire0String.ReadOnly = True
+        Me.Attire0String.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire0String.Width = 41
+        '
+        'Attire0Enabled
+        '
+        Me.Attire0Enabled.HeaderText = "Enabled"
+        Me.Attire0Enabled.Name = "Attire0Enabled"
+        Me.Attire0Enabled.Width = 52
+        '
+        'Attire0Manager
+        '
+        Me.Attire0Manager.HeaderText = "Manager"
+        Me.Attire0Manager.Name = "Attire0Manager"
+        Me.Attire0Manager.Width = 55
+        '
+        'Attire0Unlock
+        '
+        Me.Attire0Unlock.HeaderText = "Unlock"
+        Me.Attire0Unlock.Name = "Attire0Unlock"
+        Me.Attire0Unlock.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire0Unlock.Visible = False
+        Me.Attire0Unlock.Width = 47
+        '
+        'Attire1Ref
+        '
+        Me.Attire1Ref.HeaderText = "Attire 1"
+        Me.Attire1Ref.MaxInputLength = 4
+        Me.Attire1Ref.Name = "Attire1Ref"
+        Me.Attire1Ref.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire1Ref.Width = 46
+        '
+        'Attire1String
+        '
+        Me.Attire1String.HeaderText = "Name"
+        Me.Attire1String.Name = "Attire1String"
+        Me.Attire1String.ReadOnly = True
+        Me.Attire1String.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire1String.Width = 41
+        '
+        'Attire1Enabled
+        '
+        Me.Attire1Enabled.HeaderText = "Enabled"
+        Me.Attire1Enabled.Name = "Attire1Enabled"
+        Me.Attire1Enabled.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Attire1Enabled.Width = 52
+        '
+        'Attire1Manager
+        '
+        Me.Attire1Manager.HeaderText = "Manager"
+        Me.Attire1Manager.Name = "Attire1Manager"
+        Me.Attire1Manager.Width = 55
+        '
+        'Attire1Unlock
+        '
+        Me.Attire1Unlock.HeaderText = "Unlock"
+        Me.Attire1Unlock.Name = "Attire1Unlock"
+        Me.Attire1Unlock.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire1Unlock.Visible = False
+        Me.Attire1Unlock.Width = 47
+        '
+        'Attire2Ref
+        '
+        Me.Attire2Ref.HeaderText = "Attire 2"
+        Me.Attire2Ref.MaxInputLength = 4
+        Me.Attire2Ref.Name = "Attire2Ref"
+        Me.Attire2Ref.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire2Ref.Width = 46
+        '
+        'Attire2String
+        '
+        Me.Attire2String.HeaderText = "Name"
+        Me.Attire2String.Name = "Attire2String"
+        Me.Attire2String.ReadOnly = True
+        Me.Attire2String.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire2String.Width = 41
+        '
+        'Attire2Enabled
+        '
+        Me.Attire2Enabled.HeaderText = "Enabled"
+        Me.Attire2Enabled.Name = "Attire2Enabled"
+        Me.Attire2Enabled.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Attire2Enabled.Width = 52
+        '
+        'Attire2Manager
+        '
+        Me.Attire2Manager.HeaderText = "Manager"
+        Me.Attire2Manager.Name = "Attire2Manager"
+        Me.Attire2Manager.Width = 55
+        '
+        'Attire2Unlock
+        '
+        Me.Attire2Unlock.HeaderText = "Unlock"
+        Me.Attire2Unlock.Name = "Attire2Unlock"
+        Me.Attire2Unlock.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire2Unlock.Visible = False
+        Me.Attire2Unlock.Width = 47
+        '
+        'Attire3Ref
+        '
+        Me.Attire3Ref.HeaderText = "Attire 3"
+        Me.Attire3Ref.MaxInputLength = 4
+        Me.Attire3Ref.Name = "Attire3Ref"
+        Me.Attire3Ref.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire3Ref.Width = 46
+        '
+        'Attire3String
+        '
+        Me.Attire3String.HeaderText = "Name"
+        Me.Attire3String.Name = "Attire3String"
+        Me.Attire3String.ReadOnly = True
+        Me.Attire3String.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire3String.Width = 41
+        '
+        'Attire3Enabled
+        '
+        Me.Attire3Enabled.HeaderText = "Enabled"
+        Me.Attire3Enabled.Name = "Attire3Enabled"
+        Me.Attire3Enabled.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Attire3Enabled.Width = 52
+        '
+        'Attire3Manager
+        '
+        Me.Attire3Manager.HeaderText = "Manager"
+        Me.Attire3Manager.Name = "Attire3Manager"
+        Me.Attire3Manager.Width = 55
+        '
+        'Attire3Unlock
+        '
+        Me.Attire3Unlock.HeaderText = "Unlock"
+        Me.Attire3Unlock.Name = "Attire3Unlock"
+        Me.Attire3Unlock.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire3Unlock.Visible = False
+        Me.Attire3Unlock.Width = 47
+        '
+        'Attire4Ref
+        '
+        Me.Attire4Ref.HeaderText = "Attire 4"
+        Me.Attire4Ref.MaxInputLength = 4
+        Me.Attire4Ref.Name = "Attire4Ref"
+        Me.Attire4Ref.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire4Ref.Width = 46
+        '
+        'Attire4String
+        '
+        Me.Attire4String.HeaderText = "Name"
+        Me.Attire4String.Name = "Attire4String"
+        Me.Attire4String.ReadOnly = True
+        Me.Attire4String.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire4String.Width = 41
+        '
+        'Attire4Enabled
+        '
+        Me.Attire4Enabled.HeaderText = "Enabled"
+        Me.Attire4Enabled.Name = "Attire4Enabled"
+        Me.Attire4Enabled.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Attire4Enabled.Width = 52
+        '
+        'Attire4Manager
+        '
+        Me.Attire4Manager.HeaderText = "Manager"
+        Me.Attire4Manager.Name = "Attire4Manager"
+        Me.Attire4Manager.Width = 55
+        '
+        'Attire4Unlock
+        '
+        Me.Attire4Unlock.HeaderText = "Unlock"
+        Me.Attire4Unlock.Name = "Attire4Unlock"
+        Me.Attire4Unlock.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire4Unlock.Visible = False
+        Me.Attire4Unlock.Width = 47
+        '
+        'Attire5Ref
+        '
+        Me.Attire5Ref.HeaderText = "Attire 5"
+        Me.Attire5Ref.MaxInputLength = 4
+        Me.Attire5Ref.Name = "Attire5Ref"
+        Me.Attire5Ref.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire5Ref.Width = 46
+        '
+        'Attire5String
+        '
+        Me.Attire5String.HeaderText = "Name"
+        Me.Attire5String.Name = "Attire5String"
+        Me.Attire5String.ReadOnly = True
+        Me.Attire5String.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire5String.Width = 41
+        '
+        'Attire5Enabled
+        '
+        Me.Attire5Enabled.HeaderText = "Enabled"
+        Me.Attire5Enabled.Name = "Attire5Enabled"
+        Me.Attire5Enabled.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Attire5Enabled.Width = 52
+        '
+        'Attire5Manager
+        '
+        Me.Attire5Manager.HeaderText = "Manager"
+        Me.Attire5Manager.Name = "Attire5Manager"
+        Me.Attire5Manager.Width = 55
+        '
+        'Attire5Unlock
+        '
+        Me.Attire5Unlock.HeaderText = "Unlock"
+        Me.Attire5Unlock.Name = "Attire5Unlock"
+        Me.Attire5Unlock.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire5Unlock.Visible = False
+        Me.Attire5Unlock.Width = 47
+        '
+        'Attire6Ref
+        '
+        Me.Attire6Ref.HeaderText = "Attire 6"
+        Me.Attire6Ref.MaxInputLength = 4
+        Me.Attire6Ref.Name = "Attire6Ref"
+        Me.Attire6Ref.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire6Ref.Width = 46
+        '
+        'Attire6String
+        '
+        Me.Attire6String.HeaderText = "Name"
+        Me.Attire6String.Name = "Attire6String"
+        Me.Attire6String.ReadOnly = True
+        Me.Attire6String.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire6String.Width = 41
+        '
+        'Attire6Enabled
+        '
+        Me.Attire6Enabled.HeaderText = "Enabled"
+        Me.Attire6Enabled.Name = "Attire6Enabled"
+        Me.Attire6Enabled.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Attire6Enabled.Width = 52
+        '
+        'Attire6Manager
+        '
+        Me.Attire6Manager.HeaderText = "Manager"
+        Me.Attire6Manager.Name = "Attire6Manager"
+        Me.Attire6Manager.Width = 55
+        '
+        'Attire6Unlock
+        '
+        Me.Attire6Unlock.HeaderText = "Unlock"
+        Me.Attire6Unlock.Name = "Attire6Unlock"
+        Me.Attire6Unlock.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire6Unlock.Visible = False
+        Me.Attire6Unlock.Width = 47
+        '
+        'Attire7Ref
+        '
+        Me.Attire7Ref.HeaderText = "Attire 7"
+        Me.Attire7Ref.MaxInputLength = 4
+        Me.Attire7Ref.Name = "Attire7Ref"
+        Me.Attire7Ref.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire7Ref.Width = 46
+        '
+        'Attire7String
+        '
+        Me.Attire7String.HeaderText = "Name"
+        Me.Attire7String.Name = "Attire7String"
+        Me.Attire7String.ReadOnly = True
+        Me.Attire7String.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire7String.Width = 41
+        '
+        'Attire7Enabled
+        '
+        Me.Attire7Enabled.HeaderText = "Enabled"
+        Me.Attire7Enabled.Name = "Attire7Enabled"
+        Me.Attire7Enabled.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Attire7Enabled.Width = 52
+        '
+        'Attire7Manager
+        '
+        Me.Attire7Manager.HeaderText = "Manager"
+        Me.Attire7Manager.Name = "Attire7Manager"
+        Me.Attire7Manager.Width = 55
+        '
+        'Attire7Unlock
+        '
+        Me.Attire7Unlock.HeaderText = "Unlock"
+        Me.Attire7Unlock.Name = "Attire7Unlock"
+        Me.Attire7Unlock.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire7Unlock.Visible = False
+        Me.Attire7Unlock.Width = 47
+        '
+        'Attire8Ref
+        '
+        Me.Attire8Ref.HeaderText = "Attire 8"
+        Me.Attire8Ref.MaxInputLength = 4
+        Me.Attire8Ref.Name = "Attire8Ref"
+        Me.Attire8Ref.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire8Ref.Width = 46
+        '
+        'Attire8String
+        '
+        Me.Attire8String.HeaderText = "Name"
+        Me.Attire8String.Name = "Attire8String"
+        Me.Attire8String.ReadOnly = True
+        Me.Attire8String.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire8String.Width = 41
+        '
+        'Attire8Enabled
+        '
+        Me.Attire8Enabled.HeaderText = "Enabled"
+        Me.Attire8Enabled.Name = "Attire8Enabled"
+        Me.Attire8Enabled.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Attire8Enabled.Width = 52
+        '
+        'Attire8Manager
+        '
+        Me.Attire8Manager.HeaderText = "Manager"
+        Me.Attire8Manager.Name = "Attire8Manager"
+        Me.Attire8Manager.Width = 55
+        '
+        'Attire8Unlock
+        '
+        Me.Attire8Unlock.HeaderText = "Unlock"
+        Me.Attire8Unlock.Name = "Attire8Unlock"
+        Me.Attire8Unlock.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire8Unlock.Visible = False
+        Me.Attire8Unlock.Width = 47
+        '
+        'Attire9Ref
+        '
+        Me.Attire9Ref.HeaderText = "Attire 9"
+        Me.Attire9Ref.MaxInputLength = 4
+        Me.Attire9Ref.Name = "Attire9Ref"
+        Me.Attire9Ref.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire9Ref.Width = 46
+        '
+        'Attire9String
+        '
+        Me.Attire9String.HeaderText = "Name"
+        Me.Attire9String.Name = "Attire9String"
+        Me.Attire9String.ReadOnly = True
+        Me.Attire9String.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire9String.Width = 41
+        '
+        'Attire9Enabled
+        '
+        Me.Attire9Enabled.HeaderText = "Enabled"
+        Me.Attire9Enabled.Name = "Attire9Enabled"
+        Me.Attire9Enabled.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Attire9Enabled.Width = 52
+        '
+        'Attire9Manager
+        '
+        Me.Attire9Manager.HeaderText = "Manager"
+        Me.Attire9Manager.Name = "Attire9Manager"
+        Me.Attire9Manager.Width = 55
+        '
+        'Attire9Unlock
+        '
+        Me.Attire9Unlock.HeaderText = "Unlock"
+        Me.Attire9Unlock.Name = "Attire9Unlock"
+        Me.Attire9Unlock.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Attire9Unlock.Visible = False
+        Me.Attire9Unlock.Width = 47
+        '
         'MenuStripAttireView
         '
-        Me.MenuStripAttireView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringLoadedToolStripMenuItem, Me.PacsLoadedToolStripMenuItem})
+        Me.MenuStripAttireView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringLoadedToolStripMenuItem, Me.PacsLoadedToolStripMenuItem, Me.SaveAttireChangesToolStripMenuItem})
         Me.MenuStripAttireView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripAttireView.Name = "MenuStripAttireView"
         Me.MenuStripAttireView.Size = New System.Drawing.Size(970, 24)
@@ -1079,6 +1549,13 @@ Partial Class MainForm
         Me.PacsLoadedToolStripMenuItem.Name = "PacsLoadedToolStripMenuItem"
         Me.PacsLoadedToolStripMenuItem.Size = New System.Drawing.Size(88, 20)
         Me.PacsLoadedToolStripMenuItem.Text = "Pacs Loaded:"
+        '
+        'SaveAttireChangesToolStripMenuItem
+        '
+        Me.SaveAttireChangesToolStripMenuItem.Name = "SaveAttireChangesToolStripMenuItem"
+        Me.SaveAttireChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 20)
+        Me.SaveAttireChangesToolStripMenuItem.Text = "Save Changes"
+        Me.SaveAttireChangesToolStripMenuItem.Visible = False
         '
         'MuscleView
         '
@@ -1233,6 +1710,118 @@ Partial Class MainForm
         Me.AssetView.Text = "Asset View"
         Me.AssetView.UseVisualStyleBackColor = True
         '
+        'DataGridAssetView
+        '
+        Me.DataGridAssetView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DataGridAssetView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridAssetView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.PacNumber, Me.AttireNum, Me.AudioNum, Me.Check2, Me.Check3, Me.FileOffset, Me.TitantronNum, Me.MiniNum, Me.HeaderNum, Me.WallNum, Me.RampNum, Me.WallRightNum, Me.WallLeftNum, Me.Check4, Me.Check5, Me.Check6, Me.FileName})
+        Me.DataGridAssetView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridAssetView.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridAssetView.Name = "DataGridAssetView"
+        Me.DataGridAssetView.Size = New System.Drawing.Size(970, 418)
+        Me.DataGridAssetView.TabIndex = 0
+        '
+        'PacNumber
+        '
+        Me.PacNumber.HeaderText = "PacNumber"
+        Me.PacNumber.Name = "PacNumber"
+        Me.PacNumber.Width = 88
+        '
+        'AttireNum
+        '
+        Me.AttireNum.HeaderText = "AttireNum"
+        Me.AttireNum.Name = "AttireNum"
+        Me.AttireNum.Width = 78
+        '
+        'AudioNum
+        '
+        Me.AudioNum.HeaderText = "AudioNum"
+        Me.AudioNum.Name = "AudioNum"
+        Me.AudioNum.Width = 81
+        '
+        'Check2
+        '
+        Me.Check2.HeaderText = "Check2"
+        Me.Check2.Name = "Check2"
+        Me.Check2.Width = 69
+        '
+        'Check3
+        '
+        Me.Check3.HeaderText = "Check3"
+        Me.Check3.Name = "Check3"
+        Me.Check3.Width = 69
+        '
+        'FileOffset
+        '
+        Me.FileOffset.HeaderText = "FileOffset"
+        Me.FileOffset.Name = "FileOffset"
+        Me.FileOffset.Width = 76
+        '
+        'TitantronNum
+        '
+        Me.TitantronNum.HeaderText = "TitantronNum"
+        Me.TitantronNum.Name = "TitantronNum"
+        Me.TitantronNum.Width = 96
+        '
+        'MiniNum
+        '
+        Me.MiniNum.HeaderText = "MiniNum"
+        Me.MiniNum.Name = "MiniNum"
+        Me.MiniNum.Width = 73
+        '
+        'HeaderNum
+        '
+        Me.HeaderNum.HeaderText = "HeaderNum"
+        Me.HeaderNum.Name = "HeaderNum"
+        Me.HeaderNum.Width = 89
+        '
+        'WallNum
+        '
+        Me.WallNum.HeaderText = "WallNum"
+        Me.WallNum.Name = "WallNum"
+        Me.WallNum.Width = 75
+        '
+        'RampNum
+        '
+        Me.RampNum.HeaderText = "RampNum"
+        Me.RampNum.Name = "RampNum"
+        Me.RampNum.Width = 82
+        '
+        'WallRightNum
+        '
+        Me.WallRightNum.HeaderText = "WallRightNum"
+        Me.WallRightNum.Name = "WallRightNum"
+        '
+        'WallLeftNum
+        '
+        Me.WallLeftNum.HeaderText = "WallLeftNum"
+        Me.WallLeftNum.Name = "WallLeftNum"
+        Me.WallLeftNum.Width = 93
+        '
+        'Check4
+        '
+        Me.Check4.HeaderText = "Check4"
+        Me.Check4.Name = "Check4"
+        Me.Check4.Width = 69
+        '
+        'Check5
+        '
+        Me.Check5.HeaderText = "Check5"
+        Me.Check5.Name = "Check5"
+        Me.Check5.Width = 69
+        '
+        'Check6
+        '
+        Me.Check6.HeaderText = "Check6"
+        Me.Check6.Name = "Check6"
+        Me.Check6.Width = 69
+        '
+        'FileName
+        '
+        Me.FileName.HeaderText = "FileName"
+        Me.FileName.Name = "FileName"
+        Me.FileName.Width = 76
+        '
         'MenuStripPictureView
         '
         Me.MenuStripPictureView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
@@ -1257,7 +1846,7 @@ Partial Class MainForm
         '
         Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem1, Me.ExtractToolStripMenuItem, Me.ExtractAllInPlaceToolStripMenuItem, Me.ExtractAllToToolStripMenuItem, Me.InjectToolStripMenuItem, Me.CrawlToolStripMenuItem})
         Me.TreeViewContext.Name = "TreeViewContext"
-        Me.TreeViewContext.Size = New System.Drawing.Size(171, 158)
+        Me.TreeViewContext.Size = New System.Drawing.Size(171, 136)
         '
         'OpenToolStripMenuItem1
         '
@@ -1519,118 +2108,6 @@ Partial Class MainForm
         '
         Me.SaveExtractAllDialog.FileName = "Save Files Here"
         '
-        'DataGridAssetView
-        '
-        Me.DataGridAssetView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        Me.DataGridAssetView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridAssetView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.PacNumber, Me.AttireNum, Me.AudioNum, Me.Check2, Me.Check3, Me.FileOffset, Me.TitantronNum, Me.MiniNum, Me.HeaderNum, Me.WallNum, Me.RampNum, Me.WallRightNum, Me.WallLeftNum, Me.Check4, Me.Check5, Me.Check6, Me.FileName})
-        Me.DataGridAssetView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridAssetView.Location = New System.Drawing.Point(3, 3)
-        Me.DataGridAssetView.Name = "DataGridAssetView"
-        Me.DataGridAssetView.Size = New System.Drawing.Size(970, 418)
-        Me.DataGridAssetView.TabIndex = 0
-        '
-        'PacNumber
-        '
-        Me.PacNumber.HeaderText = "PacNumber"
-        Me.PacNumber.Name = "PacNumber"
-        Me.PacNumber.Width = 88
-        '
-        'AttireNum
-        '
-        Me.AttireNum.HeaderText = "AttireNum"
-        Me.AttireNum.Name = "AttireNum"
-        Me.AttireNum.Width = 78
-        '
-        'AudioNum
-        '
-        Me.AudioNum.HeaderText = "AudioNum"
-        Me.AudioNum.Name = "AudioNum"
-        Me.AudioNum.Width = 81
-        '
-        'Check2
-        '
-        Me.Check2.HeaderText = "Check2"
-        Me.Check2.Name = "Check2"
-        Me.Check2.Width = 69
-        '
-        'Check3
-        '
-        Me.Check3.HeaderText = "Check3"
-        Me.Check3.Name = "Check3"
-        Me.Check3.Width = 69
-        '
-        'FileOffset
-        '
-        Me.FileOffset.HeaderText = "FileOffset"
-        Me.FileOffset.Name = "FileOffset"
-        Me.FileOffset.Width = 76
-        '
-        'TitantronNum
-        '
-        Me.TitantronNum.HeaderText = "TitantronNum"
-        Me.TitantronNum.Name = "TitantronNum"
-        Me.TitantronNum.Width = 96
-        '
-        'MiniNum
-        '
-        Me.MiniNum.HeaderText = "MiniNum"
-        Me.MiniNum.Name = "MiniNum"
-        Me.MiniNum.Width = 73
-        '
-        'HeaderNum
-        '
-        Me.HeaderNum.HeaderText = "HeaderNum"
-        Me.HeaderNum.Name = "HeaderNum"
-        Me.HeaderNum.Width = 89
-        '
-        'WallNum
-        '
-        Me.WallNum.HeaderText = "WallNum"
-        Me.WallNum.Name = "WallNum"
-        Me.WallNum.Width = 75
-        '
-        'RampNum
-        '
-        Me.RampNum.HeaderText = "RampNum"
-        Me.RampNum.Name = "RampNum"
-        Me.RampNum.Width = 82
-        '
-        'WallRightNum
-        '
-        Me.WallRightNum.HeaderText = "WallRightNum"
-        Me.WallRightNum.Name = "WallRightNum"
-        '
-        'WallLeftNum
-        '
-        Me.WallLeftNum.HeaderText = "WallLeftNum"
-        Me.WallLeftNum.Name = "WallLeftNum"
-        Me.WallLeftNum.Width = 93
-        '
-        'Check4
-        '
-        Me.Check4.HeaderText = "Check4"
-        Me.Check4.Name = "Check4"
-        Me.Check4.Width = 69
-        '
-        'Check5
-        '
-        Me.Check5.HeaderText = "Check5"
-        Me.Check5.Name = "Check5"
-        Me.Check5.Width = 69
-        '
-        'Check6
-        '
-        Me.Check6.HeaderText = "Check6"
-        Me.Check6.Name = "Check6"
-        Me.Check6.Width = 69
-        '
-        'FileName
-        '
-        Me.FileName.HeaderText = "FileName"
-        Me.FileName.Name = "FileName"
-        Me.FileName.Width = 76
-        '
         'MainForm
         '
         Me.AllowDrop = True
@@ -1701,10 +2178,10 @@ Partial Class MainForm
         Me.ObjArrayView.PerformLayout()
         CType(Me.DataGridObjArrayView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.AssetView.ResumeLayout(False)
+        CType(Me.DataGridAssetView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStripPictureView.ResumeLayout(False)
         Me.MenuStripPictureView.PerformLayout()
         Me.TreeViewContext.ResumeLayout(False)
-        CType(Me.DataGridAssetView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1752,9 +2229,6 @@ Partial Class MainForm
     Friend WithEvents TextViewFileName As ToolStripMenuItem
     Friend WithEvents StringView As TabPage
     Friend WithEvents DataGridStringView As DataGridView
-    Friend WithEvents HexRef As DataGridViewTextBoxColumn
-    Friend WithEvents StringText As DataGridViewTextBoxColumn
-    Friend WithEvents Length As DataGridViewTextBoxColumn
     Friend WithEvents MenuStripStringView As MenuStrip
     Friend WithEvents StringCountToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents MiscView As TabPage
@@ -1917,4 +2391,64 @@ Partial Class MainForm
     Friend WithEvents Check5 As DataGridViewTextBoxColumn
     Friend WithEvents Check6 As DataGridViewTextBoxColumn
     Friend WithEvents FileName As DataGridViewTextBoxColumn
+    Friend WithEvents SaveStringChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents HexRef As DataGridViewTextBoxColumn
+    Friend WithEvents StringText As DataGridViewTextBoxColumn
+    Friend WithEvents Length As DataGridViewTextBoxColumn
+    Friend WithEvents Changed As DataGridViewCheckBoxColumn
+    Friend WithEvents ToolStripTextBoxSearch As ToolStripTextBox
+    Friend WithEvents SaveMiscChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SaveAttireChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents Pach As DataGridViewTextBoxColumn
+    Friend WithEvents Count As DataGridViewTextBoxColumn
+    Friend WithEvents Attire0Ref As DataGridViewTextBoxColumn
+    Friend WithEvents Attire0String As DataGridViewTextBoxColumn
+    Friend WithEvents Attire0Enabled As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire0Manager As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire0Unlock As DataGridViewTextBoxColumn
+    Friend WithEvents Attire1Ref As DataGridViewTextBoxColumn
+    Friend WithEvents Attire1String As DataGridViewTextBoxColumn
+    Friend WithEvents Attire1Enabled As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire1Manager As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire1Unlock As DataGridViewTextBoxColumn
+    Friend WithEvents Attire2Ref As DataGridViewTextBoxColumn
+    Friend WithEvents Attire2String As DataGridViewTextBoxColumn
+    Friend WithEvents Attire2Enabled As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire2Manager As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire2Unlock As DataGridViewTextBoxColumn
+    Friend WithEvents Attire3Ref As DataGridViewTextBoxColumn
+    Friend WithEvents Attire3String As DataGridViewTextBoxColumn
+    Friend WithEvents Attire3Enabled As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire3Manager As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire3Unlock As DataGridViewTextBoxColumn
+    Friend WithEvents Attire4Ref As DataGridViewTextBoxColumn
+    Friend WithEvents Attire4String As DataGridViewTextBoxColumn
+    Friend WithEvents Attire4Enabled As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire4Manager As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire4Unlock As DataGridViewTextBoxColumn
+    Friend WithEvents Attire5Ref As DataGridViewTextBoxColumn
+    Friend WithEvents Attire5String As DataGridViewTextBoxColumn
+    Friend WithEvents Attire5Enabled As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire5Manager As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire5Unlock As DataGridViewTextBoxColumn
+    Friend WithEvents Attire6Ref As DataGridViewTextBoxColumn
+    Friend WithEvents Attire6String As DataGridViewTextBoxColumn
+    Friend WithEvents Attire6Enabled As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire6Manager As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire6Unlock As DataGridViewTextBoxColumn
+    Friend WithEvents Attire7Ref As DataGridViewTextBoxColumn
+    Friend WithEvents Attire7String As DataGridViewTextBoxColumn
+    Friend WithEvents Attire7Enabled As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire7Manager As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire7Unlock As DataGridViewTextBoxColumn
+    Friend WithEvents Attire8Ref As DataGridViewTextBoxColumn
+    Friend WithEvents Attire8String As DataGridViewTextBoxColumn
+    Friend WithEvents Attire8Enabled As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire8Manager As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire8Unlock As DataGridViewTextBoxColumn
+    Friend WithEvents Attire9Ref As DataGridViewTextBoxColumn
+    Friend WithEvents Attire9String As DataGridViewTextBoxColumn
+    Friend WithEvents Attire9Enabled As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire9Manager As DataGridViewCheckBoxColumn
+    Friend WithEvents Attire9Unlock As DataGridViewTextBoxColumn
 End Class

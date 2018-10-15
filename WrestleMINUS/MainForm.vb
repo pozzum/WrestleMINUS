@@ -13,8 +13,8 @@ Public Class MainForm
     Private Declare Function OodleLZ_Decompress Lib "oo2core_6_win64" (InputBuffer As Byte(), bufferSize As Long, OutputBuffer As Byte(), outputBufferSize As Long,
             a As UInt32, b As UInt32, c As ULong, d As UInt32, e As UInt32, f As UInt32, g As UInt32, h As UInt32, i As UInt32, threadModule As UInt32) As Integer
 #Region "Main Form Functions"
-    Dim StringReferences() As String
-    Dim PacNumbers() As Integer
+    Friend Shared StringReferences() As String
+    Friend Shared PacNumbers() As Integer
     Dim SelectedFiles() As String
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = Me.Text & " Ver: " & My.Application.Info.Version.ToString
@@ -219,7 +219,7 @@ Public Class MainForm
         My.Settings.RADVideoToolPath = "Not Installed"
         Dim AllDrives As DriveInfo() = DriveInfo.GetDrives()
         For Each Drive As DriveInfo In AllDrives
-            MessageBox.Show(Drive.Name & "Program Files (x86)\RADVideo\radvideo.exe")
+            'MessageBox.Show(Drive.Name & "Program Files (x86)\RADVideo\radvideo.exe")
             If (Drive.IsReady = True) Then
                 If File.Exists(Drive.Name & "Program Files (x86)\RADVideo\radvideo.exe") Then
                     My.Settings.RADVideoToolPath = Drive.Name & "Program Files (x86)\RADVideo\binkplay.exe"
@@ -230,8 +230,11 @@ Public Class MainForm
                 End If
             End If
         Next
-        If My.Settings.RADVideoToolPath = "Not Installed" AndAlso FromOptions Then
+        If My.Settings.RADVideoToolPath = "Not Installed" OrElse FromOptions Then
             Dim RADVideoToolOpenDialog As New OpenFileDialog With {.FileName = "radvideo.exe", .Title = "Select radvideo.exe"}
+            If Not My.Settings.RADVideoToolPath = "Not Installed" Then
+                RADVideoToolOpenDialog.InitialDirectory = Path.GetDirectoryName(My.Settings.RADVideoToolPath)
+            End If
             If RADVideoToolOpenDialog.ShowDialog = DialogResult.OK Then
                 If Path.GetFileName(RADVideoToolOpenDialog.FileName) = "radvideo.exe" Then
                     My.Settings.RADVideoToolPath = RADVideoToolOpenDialog.FileName.Replace("radvideo.exe", "binkplay.exe")
@@ -376,6 +379,7 @@ Public Class MainForm
         Dim PacNumBinaryFormatter As BinaryFormatter = New BinaryFormatter()
         PacNumBinaryFormatter.Serialize(PacNumFileStream, PacNumbers)
         PacNumFileStream.Close()
+        'TO DO Add Check for file edits pending dialog box.
     End Sub
 #End Region
 #Region "General Tools"
@@ -514,6 +518,7 @@ Public Class MainForm
                 Do While index < HeaderLength - 1
                     Dim DirectoryName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 4)
                     Dim DirectoryTreeNode As TreeNode = New TreeNode(DirectoryName)
+                    DirectoryTreeNode.ToolTipText = HostNode.ToolTipText
                     Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 4
                     Dim DirectoryNodeProps As NodeProperties = New NodeProperties
                     DirectoryNodeProps.StoredData = NodeTag.StoredData
@@ -557,7 +562,8 @@ Public Class MainForm
                 Do While index < HeaderLength - 1
                     Dim DirectoryName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 4)
                     Dim DirectoryTreeNode As TreeNode = New TreeNode(DirectoryName)
-                    Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 4
+                    DirectoryTreeNode.ToolTipText = HostNode.ToolTipText
+                    Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 3
                     Dim DirectoryNodeProps As NodeProperties = New NodeProperties
                     DirectoryNodeProps.StoredData = NodeTag.StoredData
                     DirectoryNodeProps.FileType = PackageType.PachDirectory
@@ -637,7 +643,6 @@ Public Class MainForm
                                         "Header Start {hex}: " & Hex(TempHeaderStart))
                     End Try
                 Next
-
             Case PackageType.PACH
                 Dim Partcount As Integer = BitConverter.ToUInt32(FileBytes, 4)
                 For i As Integer = 0 To Partcount - 1
@@ -1145,7 +1150,7 @@ Public Class MainForm
                 FillStringView(TreeView1.SelectedNode)
             Else
                 If TabControl1.TabPages.Contains(StringView) Then
-                    TabControl1.TabPages.Remove(StringView)
+                    CloseStringView()
                 End If
             End If
             If CType(e.Node.Tag, NodeProperties).FileType = PackageType.ArenaInfo Then
@@ -1156,7 +1161,7 @@ Public Class MainForm
                 FillMiscView(TreeView1.SelectedNode)
             Else
                 If TabControl1.TabPages.Contains(MiscView) Then
-                    TabControl1.TabPages.Remove(MiscView)
+                    CloseMiscView()
                 End If
             End If
             If CType(e.Node.Tag, NodeProperties).FileType = PackageType.ShowInfo Then
@@ -1278,7 +1283,7 @@ Public Class MainForm
             If NodeTag.Index > 0 OrElse
                    NodeTag.StoredData.Length > 0 Then
                 ExtractToolStripMenuItem.Visible = True
-                InjectToolStripMenuItem.Visible = False
+                InjectToolStripMenuItem.Visible = True
             Else
                 ExtractToolStripMenuItem.Visible = False
                 InjectToolStripMenuItem.Visible = False
@@ -1371,7 +1376,11 @@ Public Class MainForm
         NodeTag = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = New NodeProperties
         ParrentNodeTag = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
-        If ParrentNodeTag.FileType = PackageType.HSPC Then
+        If ParrentNodeTag.FileType = PackageType.HSPC OrElse
+           ParrentNodeTag.FileType = PackageType.SHDC OrElse
+            ParrentNodeTag.FileType = PackageType.EPK8 OrElse
+            ParrentNodeTag.FileType = PackageType.EPAC OrElse
+            ParrentNodeTag.FileType = PackageType.PachDirectory Then
             Dim injectopenfile As OpenFileDialog = New OpenFileDialog With {
             .FileName = TreeView1.SelectedNode.Text & "." & NodeTag.FileType.ToString,
             .InitialDirectory = Path.GetDirectoryName(filepath)}
@@ -1447,6 +1456,7 @@ Public Class MainForm
         Dim NodeTag As NodeProperties = New NodeProperties
         NodeTag = CType(Sentnode.Tag, NodeProperties)
         Dim SizeDifference As Long = SentBytes.Length - NodeTag.length 'negative for shorter
+
         'checking File Type match
         Dim TempCheck As PackageType = CheckHeaderType(0, SentBytes)
         If Not NodeTag.FileType = TempCheck Then
@@ -1458,63 +1468,176 @@ Public Class MainForm
         End If
         'Get Parent Node Bytes
         Dim ParentNodeTag As NodeProperties = New NodeProperties
-        ParentNodeTag = CType(Sentnode.Parent.Tag, NodeProperties)
-        Dim ParentBytes As Byte() = New Byte(ParentNodeTag.length) {}
-        If ParentNodeTag.StoredData.Length > 0 Then
-            Array.Copy(ParentNodeTag.StoredData, CInt(ParentNodeTag.Index), ParentBytes, 0, CInt(ParentNodeTag.length))
-        Else
-            Try
-                ActiveReader = New BinaryReader(File.Open(ActiveFile, FileMode.Open, FileAccess.Read))
-                ActiveReader.BaseStream.Seek(ParentNodeTag.Index, SeekOrigin.Begin)
-                ParentBytes = ActiveReader.ReadBytes(ParentNodeTag.length)
-                ActiveReader.Close()
-                ' MessageBox.Show(NodeTag.Index & vbNewLine & NodeTag.length)
-            Catch ex As Exception
-                MessageBox.Show(ex.Message)
-            End Try
-        End If
-        'Create Byte Array of length
-        Dim WrittenFileArray As Byte() = New Byte(ParentNodeTag.length + SizeDifference) {}
-        ' Write File Prior to new file
-        Array.Copy(ParentBytes, 0, WrittenFileArray, 0, CInt(NodeTag.Index))
-        'write new file
-        Array.Copy(SentBytes, 0, WrittenFileArray, CInt(NodeTag.Index), SentBytes.Length)
-        'write old file from after file part if there are any
-        If ParentBytes.Length > NodeTag.Index + NodeTag.length Then 'there are bytes after the injected file
-            Buffer.BlockCopy(ParentBytes, NodeTag.Index + NodeTag.length, WrittenFileArray, NodeTag.Index + SentBytes.Length,
-                             ParentBytes.Length - (NodeTag.Index + NodeTag.length))
-        End If
-        'Get Node Location
-        Dim NodeLocation As Integer = Sentnode.Index '0 based
-        'Adjust Headers
-        If ParentNodeTag.FileType = PackageType.HSPC Then
-            Dim FileCount As Integer = BitConverter.ToUInt32(WrittenFileArray, &H38)
-            'adjust total file length
-            Array.Copy(BitConverter.GetBytes(CUInt(WrittenFileArray.Length / &H10)), 0, WrittenFileArray, &H3C, 4)
 
-            For i As Integer = 0 To FileCount - 1
-                If i < NodeLocation Then
-                    'no change needed
-                ElseIf i = NodeLocation Then
-                    'Index Stays the same
-                    Array.Copy(BitConverter.GetBytes(CUInt(SentBytes.Length / &H100)), 0, WrittenFileArray, &H1000 + i * &HC + &H4, 4)
-                Else 'size stays but index changes
-                    Dim TempIndex As UInt32 = BitConverter.ToUInt32(WrittenFileArray, &H1000 + i * &HC) * &H800 + SizeDifference
-                    Array.Copy(BitConverter.GetBytes(CUInt(TempIndex / &H800)), 0, WrittenFileArray, &H1000 + i * &HC, 4)
-                End If
-            Next
+        If Not IsNothing(Sentnode.Parent) Then
+            ParentNodeTag = CType(Sentnode.Parent.Tag, NodeProperties)
+        Else
+            ParentNodeTag.StoredData = New Byte() {}
+            ParentNodeTag.length = 0
         End If
-        If ParentNodeTag.Index = 0 AndAlso
+        If Not ParentNodeTag.length = 0 Then
+            'skipping pachdirectories
+            Dim DirectoryIndex As Integer = -1
+            If ParentNodeTag.FileType = PackageType.PachDirectory Then
+                DirectoryIndex = Sentnode.Parent.Index
+                MessageBox.Show("Directory Skipped" & vbNewLine & DirectoryIndex)
+                ParentNodeTag = CType(Sentnode.Parent.Parent.Tag, NodeProperties)
+            End If
+            'MessageBox.Show(ParentNodeTag.FileType.ToString)
+            Dim ParentBytes As Byte() = New Byte(ParentNodeTag.length) {}
+            If ParentNodeTag.StoredData.Length > 0 Then
+                Array.Copy(ParentNodeTag.StoredData, CInt(ParentNodeTag.Index), ParentBytes, 0, CInt(ParentNodeTag.length))
+            Else
+                Try
+                    ActiveReader = New BinaryReader(File.Open(ActiveFile, FileMode.Open, FileAccess.Read))
+                    ActiveReader.BaseStream.Seek(ParentNodeTag.Index, SeekOrigin.Begin)
+                    ParentBytes = ActiveReader.ReadBytes(ParentNodeTag.length)
+                    ActiveReader.Close()
+                    ' MessageBox.Show(NodeTag.Index & vbNewLine & NodeTag.length)
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message)
+                End Try
+            End If
+            'adjust length if needed
+            If ParentNodeTag.FileType = PackageType.HSPC OrElse
+                ParentNodeTag.FileType = PackageType.EPK8 OrElse
+                 ParentNodeTag.FileType = PackageType.EPAC Then
+                If SizeDifference > 0 Then
+                    SizeDifference += (&H800 - SizeDifference Mod &H800)
+                Else
+                    SizeDifference -= (&H800 - Math.Abs(SizeDifference) Mod &H800)
+                End If
+            End If
+            'Create Byte Array of length
+            Dim WrittenFileArray As Byte() = New Byte(ParentNodeTag.length + SizeDifference) {}
+            ' Write File Prior to new file
+            Array.Copy(ParentBytes, 0, WrittenFileArray, 0, CInt(NodeTag.Index - ParentNodeTag.Index))
+            'write new file
+            Array.Copy(SentBytes, 0, WrittenFileArray, CInt(NodeTag.Index - ParentNodeTag.Index), SentBytes.Length)
+            'write old file from after file part if there are any
+            If ParentBytes.Length > (NodeTag.Index - ParentNodeTag.Index) + NodeTag.length Then 'there are bytes after the injected file
+                Buffer.BlockCopy(ParentBytes,
+                                 (NodeTag.Index - ParentNodeTag.Index) + NodeTag.length,
+                                 WrittenFileArray,
+                                 (NodeTag.Index - ParentNodeTag.Index) + NodeTag.length + SizeDifference,
+                                 ParentBytes.Length - ((NodeTag.Index - ParentNodeTag.Index) + NodeTag.length))
+            End If
+            'Get Node Location
+            Dim NodeLocation As Integer = Sentnode.Index '0 based
+
+            'Adjust Headers
+            If ParentNodeTag.FileType = PackageType.HSPC Then
+                Dim FileCount As Integer = BitConverter.ToUInt32(WrittenFileArray, &H38)
+                'adjust total file length
+                Array.Copy(BitConverter.GetBytes(CUInt(WrittenFileArray.Length / &H10)), 0, WrittenFileArray, &H3C, 4)
+                'Get the header length
+                Dim FileNameLength As Integer = BitConverter.ToUInt32(WrittenFileArray, &H18)
+                FileNameLength += -(FileNameLength Mod &H800) + &H1000
+                For i As Integer = 0 To FileCount - 1
+                    If i < NodeLocation Then
+                        'no change needed
+                    ElseIf i = NodeLocation Then
+                        'Index Stays the same
+                        Array.Copy(BitConverter.GetBytes(CUInt(SentBytes.Length / &H100)), 0, WrittenFileArray, FileNameLength + i * &HC + &H4, 4)
+                    Else 'size stays but index changes
+                        Dim OldIndex As UInt32 = BitConverter.ToUInt32(WrittenFileArray, FileNameLength + i * &HC)
+                        Dim TempIndex As UInt64 = OldIndex * &H800 + SizeDifference
+                        Array.Copy(BitConverter.GetBytes(CUInt(TempIndex / &H800)), 0, WrittenFileArray, FileNameLength + i * &HC, 4)
+                    End If
+                Next
+            ElseIf ParentNodeTag.FileType = PackageType.EPK8 OrElse
+            ParentNodeTag.FileType = PackageType.EPAC Then
+                Dim HeaderLength As Integer = BitConverter.ToUInt32(WrittenFileArray, 4)
+                Dim index As Integer = 0
+                Dim DirectoryCount As Integer = 0
+                'DirectoryIndex
+                Do While index < HeaderLength - 1
+                    Dim DirectoryContainsCount As Integer = 0
+                    If PackageType.EPAC Then
+                        DirectoryContainsCount = BitConverter.ToUInt16(WrittenFileArray, &H800 + index + 4) / 3
+                    ElseIf PackageType.EPK8 Then
+                        DirectoryContainsCount = BitConverter.ToUInt16(WrittenFileArray, &H800 + index + 4) / 4
+                    End If
+                    index += &HC
+                    For i As Integer = 0 To DirectoryContainsCount - 1
+                        If DirectoryCount < DirectoryIndex Then
+                            'no change needed
+                        ElseIf DirectoryCount = DirectoryIndex Then
+                            If i < NodeLocation Then
+                                'no change needed
+                            ElseIf i = NodeLocation Then
+                                'Index Stays the same
+                                Array.Copy(BitConverter.GetBytes(CUInt(SentBytes.Length / &H100)), 0, WrittenFileArray, &H800 + index + 12, 4)
+                            Else ' i > 
+                                Dim OldIndex As UInt32 = BitConverter.ToUInt32(WrittenFileArray, &H800 + index + 8)
+                                MessageBox.Show(Hex(OldIndex))
+                                Dim TempIndex As UInt64 = OldIndex * &H800 + SizeDifference
+                                MessageBox.Show(Hex(TempIndex) / &H800)
+                                Array.Copy(BitConverter.GetBytes(CUInt(TempIndex / &H800)), 0, WrittenFileArray, &H800 + index + 8, 4)
+                            End If
+                        Else ' directory > 
+                            Dim OldIndex As UInt32 = BitConverter.ToUInt32(WrittenFileArray, &H800 + index + 8)
+                            MessageBox.Show(Hex(OldIndex))
+                            Dim TempIndex As UInt64 = OldIndex * &H800 + SizeDifference
+                            MessageBox.Show(Hex(TempIndex / &H800))
+                            Array.Copy(BitConverter.GetBytes(CUInt(TempIndex / &H800)), 0, WrittenFileArray, &H800 + index + 8, 4)
+                        End If
+                        If PackageType.EPAC Then
+                            index += &HC
+                        ElseIf PackageType.EPK8 Then
+                            index += &H10
+                        End If
+                    Next
+                    DirectoryCount += 1
+                Loop
+            ElseIf ParentNodeTag.FileType = PackageType.SHDC Then
+                Dim TempHeaderCheck As Integer = BitConverter.ToUInt32(WrittenFileArray, &H18)
+                Dim TempHeaderStart As Integer = BitConverter.ToUInt32(WrittenFileArray, &H1C)
+                Dim TempHeaderLength As Integer = BitConverter.ToUInt32(WrittenFileArray, &H20)
+                If TempHeaderStart < TempHeaderCheck Then
+                    TempHeaderStart = TempHeaderCheck + &H10 + &H40
+                    If TempHeaderStart Mod &H10 > 0 Then
+                        TempHeaderStart = TempHeaderStart + &H10 - (TempHeaderStart Mod &H10)
+                    End If
+                End If
+                Dim PachPartsCount As Integer = (TempHeaderLength / &H10) '1 index
+                For i As Integer = 0 To PachPartsCount - 1
+                    Dim PartName As String = Hex(BitConverter.ToUInt32(WrittenFileArray, TempHeaderStart + (i * &H10)))
+                    'MessageBox.Show(PartName)
+                    If PartName = "FFFFFFFF" Then
+                        Continue For
+                    End If
+                    If i < NodeLocation Then
+                        'no change needed
+                    ElseIf i = NodeLocation Then
+                        'Index Stays the same
+                        Array.Copy(BitConverter.GetBytes(CULng(SentBytes.Length)), 0, WrittenFileArray, (TempHeaderStart + (i * &H10) + &H8), 8)
+                    Else ' i > NodeLocation
+                        'Size stays index changed
+                        Dim OldIndex As UInt32 = BitConverter.ToUInt32(WrittenFileArray, TempHeaderStart + (i * &H10) + &H4)
+                        Array.Copy(BitConverter.GetBytes(CUInt(OldIndex + SizeDifference)), 0, WrittenFileArray, (TempHeaderStart + (i * &H10) + &H4), 4)
+                    End If
+                Next
+            End If
+
+            If ParentNodeTag.Index = 0 AndAlso
             ParentNodeTag.StoredData.Length = 0 Then
-            'File to be Written
-            Dim WrittenFile As String = Sentnode.Parent.ToolTipText
+                'File to be Written
+                Dim WrittenFile As String = Sentnode.ToolTipText
+                If My.Settings.BackupInjections Then
+                    File.Copy(WrittenFile, WrittenFile & ".bak", True)
+                End If
+                File.WriteAllBytes(WrittenFile, WrittenFileArray)
+            Else
+                'we must go higher
+                InjectIntoNode(Sentnode.Parent, WrittenFileArray)
+            End If
+        Else
+            Dim WrittenFile As String = Sentnode.ToolTipText
             If My.Settings.BackupInjections Then
                 File.Copy(WrittenFile, WrittenFile & ".bak", True)
             End If
-            File.WriteAllBytes(WrittenFile, WrittenFileArray)
-        Else
-            'we must go higher
-            InjectIntoNode(Sentnode.Parent, WrittenFileArray)
+            File.WriteAllBytes(WrittenFile, SentBytes)
         End If
         Return True
     End Function
@@ -1637,17 +1760,37 @@ Public Class MainForm
     End Sub
 
 #End Region
+    'Injection Properties used across multiple forms
+    Dim SavePending As Boolean = False
+    Dim ReadNode As TreeNode
+    Dim SizeChange As Integer
 #Region "String View Controls"
-    'Dim StringList(&H100000) As String
+    Sub CloseStringView()
+        If SavePending Then
+            If MessageBox.Show("Changes have not yet been saved.  Would you like to save them now?", "Save Changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                InjectIntoNode(ReadNode, BuildStringFile())
+            End If
+            SaveStringChangesToolStripMenuItem.Visible = False
+            SavePending = False
+        End If
+        ReadNode = Nothing
+        TabControl1.TabPages.Remove(StringView)
+    End Sub
+    Dim StringFileOffset() As Integer
+    Dim StringFileLength() As Integer
+    Dim StringFileReference() As Integer
+    Dim StringCount As Integer
     Sub FillStringView(SelectedData As TreeNode)
+        ReadNode = SelectedData
+        SizeChange = 0
         Dim Testing As String = ""
+        DataGridStringView.Rows.Clear()
+        DataGridStringView.Rows.Add()
+        Dim CloneRow As DataGridViewRow = DataGridStringView.Rows(0).Clone()
+        DataGridStringView.Rows.Clear()
+        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
         Try
-            DataGridStringView.Rows.Clear()
-            Dim NodeTag As NodeProperties = New NodeProperties
-            NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
-            NodeTag.Index = CType(SelectedData.Tag, NodeProperties).Index
-            NodeTag.length = CType(SelectedData.Tag, NodeProperties).length
-            NodeTag.StoredData = CType(SelectedData.Tag, NodeProperties).StoredData
+            Dim NodeTag As NodeProperties = CType(SelectedData.Tag, NodeProperties)
             Dim StringBytes As Byte()
             If NodeTag.StoredData.Length > 0 Then
                 StringBytes = NodeTag.StoredData
@@ -1656,14 +1799,14 @@ Public Class MainForm
                 StringBytes = New Byte(NodeTag.length - 1) {}
                 Array.Copy(FileBytes, CInt(NodeTag.Index), StringBytes, 0, CInt(NodeTag.length))
             End If
-            Dim StringCount As Integer = BitConverter.ToInt32(StringBytes, 4)
+            StringCount = BitConverter.ToInt32(StringBytes, 4)
             StringCountToolStripMenuItem.Text = "String Count: " & StringCount
-            ProgressBar1.Maximum = StringCount
+            ProgressBar1.Maximum = StringCount - 1
             ProgressBar1.Value = 0
             'Get Data On the Pach parts
-            Dim StringFileOffset(Int16.MaxValue) As Integer
-            Dim StringFileLength(Int16.MaxValue) As Integer
-            Dim StringFileReference(Int16.MaxValue) As Integer
+            ReDim StringFileOffset(Int16.MaxValue)
+            ReDim StringFileLength(Int16.MaxValue)
+            ReDim StringFileReference(Int16.MaxValue)
             For j As Integer = 0 To StringCount - 1
                 StringFileOffset(j) = BitConverter.ToInt32(StringBytes, 8 + j * 12 + 0)
                 StringFileLength(j) = BitConverter.ToInt32(StringBytes, 8 + j * 12 + 4)
@@ -1671,18 +1814,183 @@ Public Class MainForm
                 Testing = StringFileReference(j)
                 'Trim all 00 chars so the strings don't end abrubtly in future manipulation
                 StringReferences(StringFileReference(j)) = Encoding.Default.GetString(StringBytes, StringFileOffset(j), StringFileLength(j)).TrimEnd(Chr(0))
-                DataGridStringView.Rows.Add(Hex(StringFileReference(j)),
-                                            StringReferences(StringFileReference(j)),
-                                            StringFileLength(j).ToString)
+                Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
+                TempGridRow.Cells(0).Value = Hex(StringFileReference(j))
+                TempGridRow.Cells(1).Value = StringReferences(StringFileReference(j))
+                TempGridRow.Cells(2).Value = StringFileLength(j).ToString
+                TempGridRow.Cells(3).Value = False
+                WorkingCollection.Add(TempGridRow)
                 ProgressBar1.Value = j
             Next
         Catch ex As Exception
             MessageBox.Show(ex.Message & vbNewLine & Testing)
         End Try
+        DataGridStringView.Rows.AddRange(WorkingCollection.ToArray())
+        AddHandler DataGridStringView.CellValueChanged, AddressOf DataGridStringView_CellValueChanged
+        AddHandler DataGridStringView.CellEnter, AddressOf DataGridStringView_CellEnter
     End Sub
+    Private Sub SaveChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveStringChangesToolStripMenuItem.Click
+        InjectIntoNode(ReadNode, BuildStringFile())
+        ReadNode = Nothing
+        SaveStringChangesToolStripMenuItem.Visible = False
+        SavePending = False
+    End Sub
+    Dim OldString As String = ""
+    Dim OldLength As Integer
+    Dim LengthTheSame As Boolean = False
+    Dim ChangePending As Boolean = False
+
+    Private Sub DataGridStringView_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs)
+        If ChangePending Then
+            ChangePending = False
+            Exit Sub
+        End If
+        If e.ColumnIndex = 1 Then
+            If LengthTheSame Then
+                SizeChange += (DataGridStringView.Rows(e.RowIndex).Cells(1).Value.length + 1) -
+                    DataGridStringView.Rows(e.RowIndex).Cells(2).Value
+                DataGridStringView.Rows(e.RowIndex).Cells(2).Value = DataGridStringView.Rows(e.RowIndex).Cells(1).Value.length + 1
+            Else
+                If MessageBox.Show("String currently contains extra characters." & vbNewLine &
+                                  "Would you like to maintain the length",
+                                   "Potential Super String Detected!",
+                                   MessageBoxButtons.YesNo) = DialogResult.No Then
+                    ChangePending = True
+                    SizeChange += (DataGridStringView.Rows(e.RowIndex).Cells(1).Value.length + 1) -
+                                    DataGridStringView.Rows(e.RowIndex).Cells(2).Value
+                    DataGridStringView.Rows(e.RowIndex).Cells(2).Value = DataGridStringView.Rows(e.RowIndex).Cells(1).Value.length + 1
+                Else 'check if new string is too long
+                    If DataGridStringView.Rows(e.RowIndex).Cells(2).Value < DataGridStringView.Rows(e.RowIndex).Cells(1).Value.length + 1 Then
+                        MessageBox.Show("String is too long, string will be truncated.")
+                        ChangePending = True
+                        DataGridStringView.Rows(e.RowIndex).Cells(1).Value =
+                            DataGridStringView.Rows(e.RowIndex).Cells(1).Value.ToString.Substring(0, DataGridStringView.Rows(e.RowIndex).Cells(2).Value - 1)
+                    End If
+                End If
+            End If
+            SavePending = True
+            SaveStringChangesToolStripMenuItem.Visible = True
+            DataGridStringView.Rows(e.RowIndex).Cells(3).Value = True
+        ElseIf e.ColumnIndex = 2 Then
+            If DataGridStringView.Rows(e.RowIndex).Cells(2).Value < DataGridStringView.Rows(e.RowIndex).Cells(1).Value.length + 1 Then
+                MessageBox.Show("String is too long, string will be truncated.")
+                DataGridStringView.Rows(e.RowIndex).Cells(1).Value =
+                            DataGridStringView.Rows(e.RowIndex).Cells(1).Value.ToString.Substring(0, DataGridStringView.Rows(e.RowIndex).Cells(2).Value - 1)
+            End If
+            SizeChange += DataGridStringView.Rows(e.RowIndex).Cells(2).Value - OldLength
+            SavePending = True
+            SaveStringChangesToolStripMenuItem.Visible = True
+            DataGridStringView.Rows(e.RowIndex).Cells(3).Value = True
+        End If
+    End Sub
+    Private Sub DataGridStringView_CellEnter(sender As Object, e As DataGridViewCellEventArgs)
+        If e.ColumnIndex = 1 Then
+            OldString = DataGridStringView.Rows(e.RowIndex).Cells(1).Value
+            OldLength = DataGridStringView.Rows(e.RowIndex).Cells(2).Value
+            LengthTheSame = (OldString.Length + 1 = OldLength)
+            'If Not LengthDif Then
+            'MessageBox.Show("Super String")
+            'End If
+        ElseIf e.ColumnIndex = 2 Then
+            OldLength = DataGridStringView.Rows(e.RowIndex).Cells(2).Value
+        End If
+    End Sub
+    Private Sub ToolStripTextBoxSearch_Enter(sender As Object, e As EventArgs) Handles ToolStripTextBoxSearch.Enter
+        If ToolStripTextBoxSearch.Text = "Search..." Then
+            ToolStripTextBoxSearch.Text = ""
+        End If
+    End Sub
+
+    Private Sub ToolStripTextBoxSearch_Leave(sender As Object, e As EventArgs) Handles ToolStripTextBoxSearch.Leave
+        If ToolStripTextBoxSearch.Text = "" Then
+            ToolStripTextBoxSearch.Text = "Search..."
+        End If
+        Dim TemporaryCollection As DataGridViewRow() = New DataGridViewRow(DataGridStringView.Rows.Count - 1) {}
+        DataGridStringView.Rows.CopyTo(TemporaryCollection, 0)
+        DataGridStringView.Rows.Clear()
+        ProgressBar1.Maximum = StringCount - 1
+        ProgressBar1.Value = 0
+        If ToolStripTextBoxSearch.Text = "" OrElse
+            ToolStripTextBoxSearch.Text = "Search..." Then
+            For i As Integer = 0 To TemporaryCollection.Count - 1
+                TemporaryCollection(i).Visible = True
+                ProgressBar1.Value = i
+            Next
+        Else
+            For i As Integer = 0 To TemporaryCollection.Count - 1
+                If TemporaryCollection(i).Cells(1).Value.ToString.ToLower.Contains(ToolStripTextBoxSearch.Text.ToLower) Then
+                    TemporaryCollection(i).Visible = True
+                Else
+                    TemporaryCollection(i).Visible = False
+                End If
+                ProgressBar1.Value = i
+            Next
+        End If
+        DataGridStringView.Rows.AddRange(TemporaryCollection.ToArray)
+    End Sub
+    Private Function BuildStringFile() As Byte()
+        Dim NodeTag As NodeProperties = CType(ReadNode.Tag, NodeProperties)
+        Dim StringBytes As Byte()
+        If NodeTag.StoredData.Length > 0 Then
+            StringBytes = NodeTag.StoredData
+        Else
+            Dim FileBytes As Byte() = File.ReadAllBytes(ReadNode.ToolTipText)
+            StringBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), StringBytes, 0, CInt(NodeTag.length))
+        End If
+        'First get the string count and make a header
+        MessageBox.Show(SizeChange)
+        Dim ReturnedBytes As Byte() = New Byte(ReadNode.Tag.length + SizeChange) {}
+        Array.Copy(BitConverter.GetBytes(CUInt(StringCount)), 0, ReturnedBytes, 4, 4)
+
+        ProgressBar1.Maximum = StringCount - 1
+        ProgressBar1.Value = 0
+        Dim CurrentChange As Integer = 0
+        For i As Integer = 0 To StringCount - 1
+            If DataGridStringView.Rows(i).Cells(3).Value = True Then
+                'index of string won't change
+                Array.Copy(BitConverter.GetBytes(StringFileOffset(i) + CurrentChange), 0, ReturnedBytes, 8 + i * 12 + 0, 4)
+                'String Length will be equal to cell 3 (2 in 0 index)
+                Array.Copy(BitConverter.GetBytes(CUInt(DataGridStringView.Rows(i).Cells(2).Value)), 0, ReturnedBytes, 8 + i * 12 + 4, 4)
+                'Reference Stays the same
+                Array.Copy(BitConverter.GetBytes(StringFileReference(i)), 0, ReturnedBytes, 8 + i * 12 + 8, 4)
+                'now we have to build the new string as bytes and inject it including a buffer so we need to make a temp byte array
+                Dim TempBytes As Byte() = Encoding.Default.GetBytes(DataGridStringView.Rows(i).Cells(1).Value.ToString)
+                ReDim Preserve TempBytes(DataGridStringView.Rows(i).Cells(2).Value)
+                Array.Copy(TempBytes, 0, ReturnedBytes, StringFileOffset(i) + CurrentChange, TempBytes.Length)
+                'Now add the length difference to the Current Change Value
+                CurrentChange += CUInt(DataGridStringView.Rows(i).Cells(2).Value) - StringFileLength(i)
+                'Subtracts for shorter strings and adds for longer strings
+            Else
+                Array.Copy(BitConverter.GetBytes(StringFileOffset(i) + CurrentChange), 0, ReturnedBytes, 8 + i * 12 + 0, 4)
+                Array.Copy(BitConverter.GetBytes(StringFileLength(i)), 0, ReturnedBytes, 8 + i * 12 + 4, 4)
+                Array.Copy(BitConverter.GetBytes(StringFileReference(i)), 0, ReturnedBytes, 8 + i * 12 + 8, 4)
+                'now copy the string bytes over since they didn't change
+                Array.Copy(StringBytes, StringFileOffset(i), ReturnedBytes, StringFileOffset(i) + CurrentChange, StringFileLength(i))
+            End If
+            ProgressBar1.Value = i
+        Next
+        Return ReturnedBytes
+    End Function
 #End Region
+    'TO DO Increase speed of datagrid population with collections
 #Region "Misc View Controls"
+    Sub CloseMiscView()
+        If SavePending Then
+            If MessageBox.Show("Changes have not yet been saved.  Would you like to save them now?", "Save Changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                InjectIntoNode(ReadNode, BuildMiscFile())
+            End If
+            SaveMiscChangesToolStripMenuItem.Visible = False
+            SavePending = False
+        End If
+        ReadNode = Nothing
+        RemoveHandler DataGridMiscView.CellValueChanged, AddressOf DataGridMiscView_CellValueChanged
+        TabControl1.TabPages.Remove(MiscView)
+    End Sub
     Sub FillMiscView(SelectedData As TreeNode)
+        RemoveHandler DataGridMiscView.CellValueChanged, AddressOf DataGridMiscView_CellValueChanged
+        ReadNode = SelectedData
+        SizeChange = 0
         DataGridMiscView.Rows.Clear()
         DataGridMiscView.Columns.Clear()
         Dim GameType As Integer = MiscViewType.SelectedIndex
@@ -1859,28 +2167,29 @@ Public Class MainForm
             Dim version As String = ArenaJson.Substring(ArenaJson.IndexOf("version") + 9,
                                                         ArenaJson.IndexOf("}", ArenaJson.IndexOf("version") + 9) - ArenaJson.IndexOf("version") - 9)
             'MessageBox.Show(temparena)
-            If GameType = 0 Then '2K15
-                DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, Rope, Apron, Turnbuckle, Barricade, Fence,
-                                       CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, IBL, version)
-            ElseIf GameType = 1 Then '2K16
-                DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
-                                       CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, IBL, Titantron, Minitron, Wall_L,
-                                       Wall_R, Header, Floor, MiscObject, version)
-            ElseIf GameType = 2 Then '2K17 
-                DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
-                                       CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, IBL, Titantron, Minitron, Wall_L,
-                                       Wall_R, Header, Floor, MiscObject, version)
-            ElseIf GameType = 3 Then '2K18
-                DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, LEDCorner, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
-                                       CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, IBL, Titantron, Minitron, Wall_L,
-                                       Wall_R, Header, Floor, MiscObject, LightingType, CornerPost_CM, Rope_CM, Apron_CM, Turnbuckle_CM, RingMat_CM, version)
-            ElseIf GameType = 4 Then '2K19
-                DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, LEDCorner, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
+            'If GameType = 0 Then '2K15
+            'DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, Rope, Apron, Turnbuckle, Barricade, Fence,
+            'CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, IBL, version)
+            'ElseIf GameType = 1 Then '2K16
+            'DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
+            '                       CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, IBL, Titantron, Minitron, Wall_L,
+            '                       Wall_R, Header, Floor, MiscObject, version)
+            'ElseIf GameType = 2 Then '2K17 
+            '   DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
+            '  CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, IBL, Titantron, Minitron, Wall_L,
+            ' Wall_R, Header, Floor, MiscObject, version)
+            'If GameType < 4 Then '2K18
+            'DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, LEDCorner, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
+            'CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, IBL, Titantron, Minitron, Wall_L,
+            'Wall_R, Header, Floor, MiscObject, LightingType, CornerPost_CM, Rope_CM, Apron_CM, Turnbuckle_CM, RingMat_CM, 100) 'version)
+            'Else '2K19
+            DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, LEDCorner, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
                                        CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, CrowdSeatPlan, CrowdSeatModel, IBL, Titantron, Minitron, Wall_L,
-                                       Wall_R, Header, Floor, MiscObject, LightingType, CornerPost_CM, Rope_CM, Apron_CM, Turnbuckle_CM, RingMat_CM, version)
-            End If
+                                       Wall_R, Header, Floor, MiscObject, LightingType, CornerPost_CM, Rope_CM, Apron_CM, Turnbuckle_CM, 500, 100) 'RingMat_CM,version)
+            'End If
             DataGridMiscView.Rows.Item(i).HeaderCell.Value = ArenaNum
         Next
+        AddHandler DataGridMiscView.CellValueChanged, AddressOf DataGridMiscView_CellValueChanged
     End Sub
     Sub GetMiscColumns(MenuIndex As Integer)
         Dim ArenaParts As DataGridViewColumnCollection = DataGridMiscView.Columns
@@ -1893,10 +2202,11 @@ Public Class MainForm
         ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "CornerPost",
                        .Name = "CornerPost"})
-        If MenuIndex > 2 Then '2K18 and Beyond
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "LEDCorner",
                        .Name = "LEDCorner"})
+        If Not MenuIndex > 2 Then '2K18 and Beyond
+            ArenaParts(3).Visible = False
         End If
         ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "Rope",
@@ -1904,10 +2214,11 @@ Public Class MainForm
         ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "Apron",
                        .Name = "Apron"})
-        If MenuIndex > 0 Then '2K16 and Beyond
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "LEDApron",
                        .Name = "LEDApron"})
+        If Not MenuIndex > 0 Then '2K18 and Beyond
+            ArenaParts(6).Visible = False
         End If
         ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "Turnbuckle",
@@ -1939,62 +2250,76 @@ Public Class MainForm
         ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "Crowd",
                        .Name = "Crowd"})
-        If MenuIndex > 3 Then '2K19 and Beyond
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "CSPlace",
                        .Name = "CSPlace"})
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "CSModel",
                        .Name = "CSModel"})
+        If Not MenuIndex > 3 Then '2K19 and Beyond
+            ArenaParts(17).Visible = False
+            ArenaParts(18).Visible = False
         End If
         ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "IBL",
                        .Name = "IBL"})
-        If MenuIndex > 0 Then '2K16 and Beyond
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                                   .HeaderText = "Titantron",
-                                   .Name = "Titantron"})
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+                         .HeaderText = "Titantron",
+                         .Name = "Titantron"})
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                                    .HeaderText = "Minitron",
                                    .Name = "Minitron"})
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+                                   .HeaderText = "Wall_L",
+                                  .Name = "Wall_L"})
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                                    .HeaderText = "Wall_R",
-                                   .Name = "Wall_R"})
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                                   .HeaderText = "Header",
+                                  .Name = "Wall_R"})
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+                                  .HeaderText = "Header",
                                    .Name = "Header"})
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                                    .HeaderText = "Floor",
                                    .Name = "Floor"})
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                                    .HeaderText = "MiscO",
                                    .Name = "MiscO"})
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                                   .HeaderText = "MiscO",
-                                   .Name = "MiscO"})
+        If Not MenuIndex > 0 Then '2K16 and Beyond
+            ArenaParts(20).Visible = False
+            ArenaParts(21).Visible = False
+            ArenaParts(22).Visible = False
+            ArenaParts(23).Visible = False
+            ArenaParts(24).Visible = False
+            ArenaParts(25).Visible = False
+            ArenaParts(26).Visible = False
         End If
-        If MenuIndex > 1 Then '2K17 and Beyond
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                                   .HeaderText = "LightT",
-                                   .Name = "LightT"})
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+                          .HeaderText = "LightT",
+                          .Name = "LightT"})
+        If Not MenuIndex > 2 Then '2K18 and Beyond
+            ArenaParts(27).Visible = False
         End If
-        If MenuIndex > 2 Then '2K18 and Beyond
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "CornerCM",
-                       .Name = "CornerCM"})
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+                   .HeaderText = "CornerCM",
+                   .Name = "CornerCM"})
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "RopeCM",
                        .Name = "RopeCM"})
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                    .HeaderText = "ApronCM",
                    .Name = "ApronCM"})
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                           .HeaderText = "TurnbCM",
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+                          .HeaderText = "TurnbCM",
                            .Name = "TurnbCM"})
-            ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "RingMatCM",
+        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
+                      .HeaderText = "RingMatCM",
                        .Name = "RingMatCM"})
-
+        If Not MenuIndex > 2 Then '2K18 and Beyond
+            ArenaParts(28).Visible = False
+            ArenaParts(29).Visible = False
+            ArenaParts(30).Visible = False
+            ArenaParts(31).Visible = False
+            ArenaParts(32).Visible = False
         End If
         ArenaParts.Add(New DataGridViewTextBoxColumn() With {
                        .HeaderText = "Version",
@@ -2002,12 +2327,115 @@ Public Class MainForm
     End Sub
 
     Private Sub MiscViewType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles MiscViewType.SelectedIndexChanged
+        If SavePending Then
+            MessageBox.Show("Any changes will be lost", "Continue format change?", MessageBoxButtons.YesNo)
+        End If
         My.Settings.MiscModeIndex = MiscViewType.SelectedIndex
         If TreeView1.SelectedNode IsNot Nothing Then
             FillMiscView(TreeView1.SelectedNode)
         End If
     End Sub
+    Private Sub DataGridMiscView_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs)
+        SavePending = True
+        SaveMiscChangesToolStripMenuItem.Visible = True
+    End Sub
+    Private Sub SaveChangesToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles SaveMiscChangesToolStripMenuItem.Click
+        InjectIntoNode(ReadNode, BuildMiscFile())
+        ReadNode = Nothing
+        SaveMiscChangesToolStripMenuItem.Visible = False
+        SavePending = False
+    End Sub
+    Private Function BuildMiscFile() As Byte()
+        Dim Active_Offset As Integer
+        Dim Temp_Array As Byte() = New Byte(&H20000) {}
+        Temp_Array(0) = DataGridMiscView.RowCount
+        Temp_Array(5) = 1
+        Temp_Array(&HC) = &H10
+        For i As Integer = 0 To DataGridMiscView.RowCount - 1
+            If i = 0 Then
+                Active_Offset = &H10 + &H20 * DataGridMiscView.RowCount
+            End If
+            'Making the header 
+            Dim Part_Head_Array As Byte() = New Byte(&H20) {}
+            'Adding the text parts.
+            Dim ArenaInfoBytes As Byte() = Encoding.ASCII.GetBytes("arenaInfo" & DataGridMiscView.Rows.Item(i).HeaderCell.Value)
+            Buffer.BlockCopy(ArenaInfoBytes, 0, Part_Head_Array, 0, ArenaInfoBytes.Length)
+            Buffer.BlockCopy(Encoding.ASCII.GetBytes("jsn"), 0, Part_Head_Array, &H10, 3)
+            'Build the Arena String
+            Dim Part_String As String = buildarena(i)
+            'MessageBox.Show(Part_String)
+            'Add the Length to the Header
+            Dim Length_Array As Byte() = System.BitConverter.GetBytes(Part_String.Length)
+            'Array.Reverse(Length_Array, 0, Length_Array.Length)
+            Buffer.BlockCopy(Length_Array, 0, Part_Head_Array, &H14, 4)
+            'Add the offset to the header
+            Dim Offset_Array As Byte() = System.BitConverter.GetBytes(Active_Offset)
+            'Array.Reverse(Offset_Array, 0, Offset_Array.Length)
+            Buffer.BlockCopy(Offset_Array, 0, Part_Head_Array, &H18, 4)
+            'injecting the header
+            Buffer.BlockCopy(Part_Head_Array, 0, Temp_Array, &H10 + &H20 * i, &H20)
+            'Adding the ArenaInfo to the ararry
+            Buffer.BlockCopy(Encoding.ASCII.GetBytes(Part_String), 0, Temp_Array, Active_Offset, Part_String.Length)
+            'Updating the Active Offset
+            Active_Offset = Active_Offset + Part_String.Length + (16 - Part_String.Length Mod 16)
+        Next
+        Dim Final_Array As Byte() = New Byte(Active_Offset - 1) {}
+        Buffer.BlockCopy(Temp_Array, 0, Final_Array, 0, Active_Offset)
+        Return Final_Array
+    End Function
+    Function buildarena(index As Integer) As String
+        ' Chr(&H7B) = { Chr(&HD) = Carriage return Chr(&HA) = Line feed
+        Dim Temp_String As String = Chr(&H7B) & Chr(&HD) & Chr(&HA) & "    " & """Stadium"":" & DataGridMiscView(0, index).Value.ToString & ","
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Advertisement"":" & DataGridMiscView(1, index).Value.ToString & ","
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CornerPost"":" & DataGridMiscView(2, index).Value.ToString & ","
+        If MiscViewType.SelectedIndex > 2 Then '2K18 and Beyond
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """LED_CornerPost"":" & DataGridMiscView(3, index).Value.ToString & ","
+        End If
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Rope"":" & DataGridMiscView(4, index).Value.ToString & ","
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Apron"":" & DataGridMiscView(5, index).Value.ToString & ","
+        If MiscViewType.SelectedIndex > 0 Then '2K16 and Beyond
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """LED_Apron"":" & DataGridMiscView(6, index).Value.ToString & ","
+        End If
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Turnbuckle"":" & DataGridMiscView(7, index).Value.ToString & ","
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Barricade"":" & DataGridMiscView(8, index).Value.ToString & ","
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Fence"":" & DataGridMiscView(9, index).Value.ToString & ","
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CeilingLighting"":" & DataGridMiscView(10, index).Value.ToString & ","
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Spotlight"":" & DataGridMiscView(11, index).Value.ToString & ","
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Stairs"":" & DataGridMiscView(12, index).Value.ToString & ","
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CommentarySeat"":" & DataGridMiscView(13, index).Value.ToString & ","
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """RingMat"":" & DataGridMiscView(14, index).Value.ToString & ","
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """FloorMattress"":" & DataGridMiscView(15, index).Value.ToString & ","
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Crowd"":" & DataGridMiscView(16, index).Value.ToString & ","
+        If MiscViewType.SelectedIndex > 3 Then '2K19 and Beyond
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CrowdSeatsPlace"":" & DataGridMiscView(17, index).Value.ToString & ","
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CrowdSeatsModel"":" & DataGridMiscView(18, index).Value.ToString & ","
+        End If
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """IBL"":" & DataGridMiscView(19, index).Value.ToString & ","
+        If MiscViewType.SelectedIndex > 0 Then '2K16 and Beyond
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Titantron"":" & DataGridMiscView(20, index).Value.ToString & ","
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Minitron"":" & DataGridMiscView(21, index).Value.ToString & ","
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Wall_L"":" & DataGridMiscView(22, index).Value.ToString & ","
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Wall_R"":" & DataGridMiscView(23, index).Value.ToString & ","
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Header"":" & DataGridMiscView(24, index).Value.ToString & ","
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Floor"":" & DataGridMiscView(25, index).Value.ToString & ","
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """MiscObjects"":" & DataGridMiscView(26, index).Value.ToString & ","
+        End If
+        If MiscViewType.SelectedIndex > 2 Then '2K18 and Beyond
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """LightingType"":" & DataGridMiscView(27, index).Value.ToString & ","
+        End If
+        If Not MiscViewType.SelectedIndex > 2 Then '2K18 and Beyond
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CornerPost_CM"":" & DataGridMiscView(28, index).Value.ToString & ","
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Rope_CM"":" & DataGridMiscView(29, index).Value.ToString & ","
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Apron_CM"":" & DataGridMiscView(30, index).Value.ToString & ","
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Turnbuckle_CM"":" & DataGridMiscView(31, index).Value.ToString & ","
+            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """RingMat_CM"":" & DataGridMiscView(32, index).Value.ToString & ","
+        End If
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """version"":" & DataGridMiscView(33, index).Value.ToString
+        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & Chr(&H7D) & Chr(&HD) & Chr(&HA)
+        Return Temp_String
+    End Function
 #End Region
+    'Build Injector
 #Region "Show View Controls"
     Sub FillShowView(SelectedData As TreeNode)
         DataGridShowView.Rows.Clear()
@@ -2188,8 +2616,21 @@ Public Class MainForm
         CreatedImages.Clear()
     End Sub
 #End Region
+    'Attire Editor Built
 #Region "Attire Editor View"
+    Sub CloseAttireView()
+        If SavePending Then
+            If MessageBox.Show("Changes have not yet been saved.  Would you like to save them now?", "Save Changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                InjectIntoNode(ReadNode, BuildAttireFile())
+            End If
+            SaveAttireChangesToolStripMenuItem.Visible = False
+            SavePending = False
+        End If
+        ReadNode = Nothing
+        TabControl1.TabPages.Remove(AttireView)
+    End Sub
     Sub LoadAttires(SelectedData As TreeNode)
+        ReadNode = SelectedData
         DataGridAttireView.Rows.Clear()
         Dim StringRead As Boolean = False
         If Not StringReferences(0) = "String Not Read" Then
@@ -2223,124 +2664,166 @@ Public Class MainForm
         Dim AttireNames((WrestlerCount) * 10 - 1) As Integer
         Dim AttireEnabled((WrestlerCount) * 10 - 1) As Boolean
         Dim AttireManager((WrestlerCount) * 10 - 1) As Boolean
+        Dim AttireUnlockNumber((WrestlerCount) * 10 - 1) As UInt32
         For i As Integer = 0 To WrestlerCount - 1
             WrestlerPacs(i) = BitConverter.ToUInt32(AttireBytes, &HC + &HA8 * i)
             AttireCount(i) = BitConverter.ToUInt32(AttireBytes, &H10 + &HA8 * i)
             For K As Integer = 0 To 9
                 AttireNames(i * 10 + K) = BitConverter.ToUInt32(AttireBytes, &H14 + &HA8 * i + &H10 * K)
-                'MessageBox.Show()
-                AttireEnabled(i * 10 + K) = (BitConverter.ToUInt32(AttireBytes, &H18 + &HA8 * i + &H10 * K) = &HFFFFFFFF)
+                AttireEnabled(i * 10 + K) = (AttireBytes(&H20 + &HA8 * i + &H10 * K) = &HFF)
                 AttireManager(i * 10 + K) = (AttireBytes(&H20 + &HA8 * i + &H10 * K) = &H2)
+                AttireUnlockNumber(i * 10 + K) = BitConverter.ToUInt32(AttireBytes, &H18 + &HA8 * i + &H10 * K)
             Next
         Next
         If StringRead Then 'True
             If PacsRead Then 'Strings and Pacs Read
             Else 'Strings Read Only
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Pach", .HeaderText = "Pach"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Count", .HeaderText = "Count"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire0Ref", .HeaderText = "Default Attire"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire0String", .HeaderText = "Name"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire0Enabled", .HeaderText = "Enabled"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire0Manager", .HeaderText = "Manager"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire1Ref", .HeaderText = "Attire 1"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire1String", .HeaderText = "Name"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire1Enabled", .HeaderText = "Enabled"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire1Manager", .HeaderText = "Manager"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire2Ref", .HeaderText = "Attire 2"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire2String", .HeaderText = "Name"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire2Enabled", .HeaderText = "Enabled"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire2Manager", .HeaderText = "Manager"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire3Ref", .HeaderText = "Attire 3"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire3String", .HeaderText = "Name"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire3Enabled", .HeaderText = "Enabled"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire3Manager", .HeaderText = "Manager"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire4Ref", .HeaderText = "Attire 4"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire4String", .HeaderText = "Name"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire4Enabled", .HeaderText = "Enabled"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire4Manager", .HeaderText = "Manager"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire5Ref", .HeaderText = "Attire 5"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire5String", .HeaderText = "Name"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire5Enabled", .HeaderText = "Enabled"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir5Manager", .HeaderText = "Manager"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire6Ref", .HeaderText = "Attire 6"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire6String", .HeaderText = "Name"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire6Enabled", .HeaderText = "Enabled"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir6Manager", .HeaderText = "Manager"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire7Ref", .HeaderText = "Attire 7"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire7String", .HeaderText = "Name"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire7Enabled", .HeaderText = "Enabled"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir7Manager", .HeaderText = "Manager"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire8Ref", .HeaderText = "Attire 8"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire8String", .HeaderText = "Name"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire8Enabled", .HeaderText = "Enabled"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir8Manager", .HeaderText = "Manager"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire9Ref", .HeaderText = "Attire 9"})
-                AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire9String", .HeaderText = "Name"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire9Enabled", .HeaderText = "Enabled"})
-                AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir9Manager", .HeaderText = "Manager"})
-                For i As Integer = 0 To WrestlerCount - 1
-                    DataGridAttireView.Rows.Add(WrestlerPacs(i), AttireCount(i),
-                                               Hex(AttireNames(i * 10 + 0)), StringReferences(AttireNames(i * 10 + 0)), AttireEnabled(i * 10 + 0), AttireManager(i * 10 + 0),
-                                                Hex(AttireNames(i * 10 + 1)), StringReferences(AttireNames(i * 10 + 1)), AttireEnabled(i * 10 + 1), AttireManager(i * 10 + 1),
-                                                Hex(AttireNames(i * 10 + 2)), StringReferences(AttireNames(i * 10 + 2)), AttireEnabled(i * 10 + 2), AttireManager(i * 10 + 2),
-                                                Hex(AttireNames(i * 10 + 3)), StringReferences(AttireNames(i * 10 + 3)), AttireEnabled(i * 10 + 3), AttireManager(i * 10 + 3),
-                                                Hex(AttireNames(i * 10 + 4)), StringReferences(AttireNames(i * 10 + 4)), AttireEnabled(i * 10 + 4), AttireManager(i * 10 + 4),
-                                                Hex(AttireNames(i * 10 + 5)), StringReferences(AttireNames(i * 10 + 5)), AttireEnabled(i * 10 + 5), AttireManager(i * 10 + 5),
-                                                Hex(AttireNames(i * 10 + 6)), StringReferences(AttireNames(i * 10 + 6)), AttireEnabled(i * 10 + 6), AttireManager(i * 10 + 6),
-                                                Hex(AttireNames(i * 10 + 7)), StringReferences(AttireNames(i * 10 + 7)), AttireEnabled(i * 10 + 7), AttireManager(i * 10 + 7),
-                                                Hex(AttireNames(i * 10 + 8)), StringReferences(AttireNames(i * 10 + 8)), AttireEnabled(i * 10 + 8), AttireManager(i * 10 + 8),
-                                                Hex(AttireNames(i * 10 + 9)), StringReferences(AttireNames(i * 10 + 9)), AttireEnabled(i * 10 + 9), AttireManager(i * 10 + 9))
-                Next
+
             End If
         Else 'Pacs Read Only can't do much
-            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Pach", .HeaderText = "Pach"})
-            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Count", .HeaderText = "Count"})
-            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire0String", .HeaderText = "Default Attire"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire0Enabled", .HeaderText = "Enabled"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire0Manager", .HeaderText = "Manager"})
-            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire1String", .HeaderText = "Attire 1"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire1Enabled", .HeaderText = "Enabled"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire1Manager", .HeaderText = "Manager"})
-            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire2String", .HeaderText = "Attire 2"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire2Enabled", .HeaderText = "Enabled"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire2Manager", .HeaderText = "Manager"})
-            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire3String", .HeaderText = "Attire 3"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire3Enabled", .HeaderText = "Enabled"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire3Manager", .HeaderText = "Manager"})
-            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire4String", .HeaderText = "Attire 4"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire4Enabled", .HeaderText = "Enabled"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire4Manager", .HeaderText = "Manager"})
-            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire5String", .HeaderText = "Attire 5"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire5Enabled", .HeaderText = "Enabled"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir5Manager", .HeaderText = "Manager"})
-            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire6String", .HeaderText = "Attire 6"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire6Enabled", .HeaderText = "Enabled"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir6Manager", .HeaderText = "Manager"})
-            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire7String", .HeaderText = "Attire 7"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire7Enabled", .HeaderText = "Enabled"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir7Manager", .HeaderText = "Manager"})
-            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire8String", .HeaderText = "Attire 8"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire8Enabled", .HeaderText = "Enabled"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir8Manager", .HeaderText = "Manager"})
-            AttireCol.Add(New DataGridViewTextBoxColumn() With {.Name = "Attire9String", .HeaderText = "Attire 9"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attire9Enabled", .HeaderText = "Enabled"})
-            AttireCol.Add(New DataGridViewCheckBoxColumn() With {.Name = "Attir9Manager", .HeaderText = "Manager"})
-            For i As Integer = 0 To WrestlerCount - 1
-                DataGridAttireView.Rows.Add(WrestlerPacs(i), AttireCount(i),
-                                           Hex(AttireNames(i * 10 + 0)), AttireEnabled(i * 10 + 0), AttireManager(i * 10 + 0),
-                                            Hex(AttireNames(i * 10 + 1)), AttireEnabled(i * 10 + 1), AttireManager(i * 10 + 1),
-                                            Hex(AttireNames(i * 10 + 2)), AttireEnabled(i * 10 + 2), AttireManager(i * 10 + 2),
-                                            Hex(AttireNames(i * 10 + 3)), AttireEnabled(i * 10 + 3), AttireManager(i * 10 + 3),
-                                            Hex(AttireNames(i * 10 + 4)), AttireEnabled(i * 10 + 4), AttireManager(i * 10 + 4),
-                                            Hex(AttireNames(i * 10 + 5)), AttireEnabled(i * 10 + 5), AttireManager(i * 10 + 5),
-                                            Hex(AttireNames(i * 10 + 6)), AttireEnabled(i * 10 + 6), AttireManager(i * 10 + 6),
-                                            Hex(AttireNames(i * 10 + 7)), AttireEnabled(i * 10 + 7), AttireManager(i * 10 + 7),
-                                            Hex(AttireNames(i * 10 + 8)), AttireEnabled(i * 10 + 8), AttireManager(i * 10 + 8),
-                                            Hex(AttireNames(i * 10 + 9)), AttireEnabled(i * 10 + 9), AttireManager(i * 10 + 9))
+            'Hide Strings
+            DataGridAttireView.Columns(3).Visible = False
+            DataGridAttireView.Columns(8).Visible = False
+            DataGridAttireView.Columns(13).Visible = False
+            DataGridAttireView.Columns(18).Visible = False
+            DataGridAttireView.Columns(23).Visible = False
+            DataGridAttireView.Columns(28).Visible = False
+            DataGridAttireView.Columns(33).Visible = False
+            DataGridAttireView.Columns(38).Visible = False
+            DataGridAttireView.Columns(43).Visible = False
+            DataGridAttireView.Columns(48).Visible = False
+        End If
+        For i As Integer = 0 To WrestlerCount - 1
+            DataGridAttireView.Rows.Add(WrestlerPacs(i), AttireCount(i),
+                                       Hex(AttireNames(i * 10 + 0)), StringReferences(AttireNames(i * 10 + 0)), AttireEnabled(i * 10 + 0), AttireManager(i * 10 + 0), AttireUnlockNumber(i * 10 + 0),
+                                        Hex(AttireNames(i * 10 + 1)), StringReferences(AttireNames(i * 10 + 1)), AttireEnabled(i * 10 + 1), AttireManager(i * 10 + 1), AttireUnlockNumber(i * 10 + 1),
+                                        Hex(AttireNames(i * 10 + 2)), StringReferences(AttireNames(i * 10 + 2)), AttireEnabled(i * 10 + 2), AttireManager(i * 10 + 2), AttireUnlockNumber(i * 10 + 2),
+                                        Hex(AttireNames(i * 10 + 3)), StringReferences(AttireNames(i * 10 + 3)), AttireEnabled(i * 10 + 3), AttireManager(i * 10 + 3), AttireUnlockNumber(i * 10 + 3),
+                                        Hex(AttireNames(i * 10 + 4)), StringReferences(AttireNames(i * 10 + 4)), AttireEnabled(i * 10 + 4), AttireManager(i * 10 + 4), AttireUnlockNumber(i * 10 + 4),
+                                        Hex(AttireNames(i * 10 + 5)), StringReferences(AttireNames(i * 10 + 5)), AttireEnabled(i * 10 + 5), AttireManager(i * 10 + 5), AttireUnlockNumber(i * 10 + 5),
+                                        Hex(AttireNames(i * 10 + 6)), StringReferences(AttireNames(i * 10 + 6)), AttireEnabled(i * 10 + 6), AttireManager(i * 10 + 6), AttireUnlockNumber(i * 10 + 6),
+                                        Hex(AttireNames(i * 10 + 7)), StringReferences(AttireNames(i * 10 + 7)), AttireEnabled(i * 10 + 7), AttireManager(i * 10 + 7), AttireUnlockNumber(i * 10 + 7),
+                                        Hex(AttireNames(i * 10 + 8)), StringReferences(AttireNames(i * 10 + 8)), AttireEnabled(i * 10 + 8), AttireManager(i * 10 + 8), AttireUnlockNumber(i * 10 + 8),
+                                        Hex(AttireNames(i * 10 + 9)), StringReferences(AttireNames(i * 10 + 9)), AttireEnabled(i * 10 + 9), AttireManager(i * 10 + 9), AttireUnlockNumber(i * 10 + 9))
+            If i > 99 Then
+                DataGridAttireView.Rows(i).HeaderCell.Value = "UNREAD"
+            Else
+                DataGridAttireView.Rows(i).HeaderCell.Value = ""
+            End If
+        Next
+        AddHandler DataGridAttireView.CellValueChanged, AddressOf DataGridAttireView_CellValueChanged
+        AddHandler DataGridAttireView.CellEnter, AddressOf DataGridAttireView_CellEnter
+        AddHandler DataGridAttireView.RowsAdded, AddressOf DataGridAttireView_RowsAdded
+    End Sub
+    Dim OldValue
+    Private Sub DataGridAttireView_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs)
+        If e.ColumnIndex = 0 Then 'Pac Number, Verify Number <= 1024
+            If Not IsNumeric(DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) Then
+                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            ElseIf CInt(DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) < 0 OrElse
+               CInt(DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) > 1024 Then
+                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            End If
+        ElseIf e.ColumnIndex = 1 Then 'Attire Count, Verify Number <= 10
+            If Not IsNumeric(DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) Then
+                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            ElseIf CInt(DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) < 0 OrElse
+               CInt(DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) > 10 Then
+                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            End If
+            'ADD IN Disable Attires past number
+            'If DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value < 10 Then
+            'For i As Integer = DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value To 9
+            'DataGridAttireView.Rows(e.RowIndex).Cells(1 + i * 5).ReadOnly = True
+            'Next
+            'End If
+        ElseIf ((e.ColumnIndex - 2) Mod 5) = 0 Then 'Attire Name
+            Dim HexString As String = DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
+            Dim hexcheck As Boolean = HexString.All(Function(c) "0123456789abcdefABCDEF".Contains(c))
+            If Not hexcheck Then
+                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            End If
+            DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = StringReferences(CUInt("&H" & HexString))
+        ElseIf ((e.ColumnIndex - 2) Mod 5) = 1 Then 'Attire String Does Nothing
+        ElseIf ((e.ColumnIndex - 2) Mod 5) = 2 Then 'Enabled Changed
+            If DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value Then 'if enabled checked
+                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = False 'unchecks manager
+            End If
+        ElseIf ((e.ColumnIndex - 2) Mod 5) = 3 Then 'Manager Changed
+            If DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value Then 'if manager checked
+                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex - 1).Value = False 'unchecks enabled
+            End If
+        ElseIf ((e.ColumnIndex - 2) Mod 5) = 4 Then 'UnlockMode Program Only
+        End If
+        SavePending = True
+        SaveAttireChangesToolStripMenuItem.Visible = True
+    End Sub
+    Private Sub DataGridAttireView_CellEnter(sender As Object, e As DataGridViewCellEventArgs)
+        OldValue = DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
+    End Sub
+    Private Sub DataGridAttireView_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs)
+        Dim NewRow As DataGridViewRow = DataGridAttireView.Rows(e.RowIndex - 1)
+        NewRow.Cells(0).Value = 0
+        NewRow.Cells(0).ValueType = GetType(System.Int32)
+        NewRow.Cells(1).Value = 10
+        For i As Integer = 0 To 9
+            NewRow.Cells(2 + i * 5).Value = Hex(&H50A2 + i)
+            NewRow.Cells(2 + i * 5 + 1).Value = StringReferences(&H50A2 + i)
+            NewRow.Cells(2 + i * 5 + 2).Value = True
+            NewRow.Cells(2 + i * 5 + 3).Value = False
+            NewRow.Cells(2 + i * 5 + 4).Value = UInt32.MaxValue
+        Next
+        If e.RowIndex > 99 Then
+            NewRow.HeaderCell.Value = "UNREAD"
+        Else
+            NewRow.HeaderCell.Value = ""
+        End If
+    End Sub
+    Private Sub DataGridAttireView_Sorted(sender As Object, e As EventArgs) Handles DataGridAttireView.Sorted
+        If DataGridAttireView.RowCount > 100 Then
+            For i As Integer = 0 To 99
+                DataGridAttireView.Rows(i).HeaderCell.Value = ""
+            Next
+            For i As Integer = 100 To DataGridAttireView.RowCount - 1
+                DataGridAttireView.Rows(i).HeaderCell.Value = "UNREAD"
+            Next
+        Else
+            For i As Integer = 0 To DataGridAttireView.RowCount - 1
+                DataGridAttireView.Rows(i).HeaderCell.Value = ""
             Next
         End If
-
     End Sub
+    Private Sub SaveAttireChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveAttireChangesToolStripMenuItem.Click
+        InjectIntoNode(ReadNode, BuildAttireFile())
+        SaveAttireChangesToolStripMenuItem.Visible = False
+    End Sub
+    Private Function BuildAttireFile() As Byte()
+        Dim ReturnedBytes As Byte() = New Byte(&HC + ((DataGridAttireView.RowCount - 1) * &HA8) - 1) {}
+        'COS
+        ReturnedBytes(0) = &H43
+        ReturnedBytes(1) = &H4F
+        ReturnedBytes(2) = &H53
+        ReturnedBytes(4) = &H1
+        ReturnedBytes(8) = DataGridAttireView.RowCount - 1
+        For i As Integer = 0 To DataGridAttireView.RowCount - 2 '2 to skip the added row
+            'PacNumber
+            Array.Copy(BitConverter.GetBytes(CUInt(DataGridAttireView.Rows(i).Cells(0).Value)), 0, ReturnedBytes, &HC + i * &HA8, 4)
+            'Attire Count
+            Array.Copy(BitConverter.GetBytes(CUInt(DataGridAttireView.Rows(i).Cells(1).Value)), 0, ReturnedBytes, &HC + i * &HA8 + 4, 4)
+            For K As Integer = 0 To 9
+
+                Array.Copy(BitConverter.GetBytes(CUInt("&H" & (DataGridAttireView.Rows(i).Cells(2 + K * 5).Value.ToString))), 0, ReturnedBytes, &HC + i * &HA8 + K * &H10 + 8, 4)
+                'Unlock Info
+                Array.Copy(BitConverter.GetBytes(CUInt(DataGridAttireView.Rows(i).Cells(6 + K * 5).Value.ToString)), 0, ReturnedBytes, &HC + i * &HA8 + K * &H10 + 12, 4)
+                If DataGridAttireView.Rows(i).Cells(4 + K * 5).Value Then
+                    ReturnedBytes(&HC + i * &HA8 + K * &H10 + 20) = &HFF
+                ElseIf DataGridAttireView.Rows(i).Cells(5 + K * 5).Value Then
+                    ReturnedBytes(&HC + i * &HA8 + K * &H10 + 20) = 2
+                End If
+            Next
+        Next
+        Return ReturnedBytes
+    End Function
 #End Region
 #Region "Muscle View Controls"
     Sub LoadMuscles(SelectedData As TreeNode)

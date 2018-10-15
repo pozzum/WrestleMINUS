@@ -45,6 +45,8 @@ Partial Class OptionsMenu
         Me.CheckBoxBackup = New System.Windows.Forms.CheckBox()
         Me.TrackBarHexLength = New System.Windows.Forms.TrackBar()
         Me.LabelHexLength = New System.Windows.Forms.Label()
+        Me.ButtonResetStrings = New System.Windows.Forms.Button()
+        Me.ButtonResetPacs = New System.Windows.Forms.Button()
         CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -250,11 +252,31 @@ Partial Class OptionsMenu
         Me.LabelHexLength.TabIndex = 21
         Me.LabelHexLength.Text = "Hex/Text View Length: 1KB"
         '
+        'ButtonResetStrings
+        '
+        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 326)
+        Me.ButtonResetStrings.Name = "ButtonResetStrings"
+        Me.ButtonResetStrings.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonResetStrings.TabIndex = 22
+        Me.ButtonResetStrings.Text = "Reset Strings"
+        Me.ButtonResetStrings.UseVisualStyleBackColor = True
+        '
+        'ButtonResetPacs
+        '
+        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 326)
+        Me.ButtonResetPacs.Name = "ButtonResetPacs"
+        Me.ButtonResetPacs.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonResetPacs.TabIndex = 23
+        Me.ButtonResetPacs.Text = "Reset Pacs"
+        Me.ButtonResetPacs.UseVisualStyleBackColor = True
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(284, 361)
+        Me.Controls.Add(Me.ButtonResetPacs)
+        Me.Controls.Add(Me.ButtonResetStrings)
         Me.Controls.Add(Me.LabelHexLength)
         Me.Controls.Add(Me.TrackBarHexLength)
         Me.Controls.Add(Me.CheckBoxBackup)
@@ -309,4 +331,6 @@ Partial Class OptionsMenu
     Friend WithEvents CheckBoxBackup As CheckBox
     Friend WithEvents TrackBarHexLength As TrackBar
     Friend WithEvents LabelHexLength As Label
+    Friend WithEvents ButtonResetStrings As Button
+    Friend WithEvents ButtonResetPacs As Button
 End Class

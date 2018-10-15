@@ -76,10 +76,16 @@ Public Class OnlineVersion
     Shared Function GetUpdateType(CheckedVersion, LocalVersion) As UpdateType
         If CheckedVersion(0) > LocalVersion(0) Then
             Return UpdateType.MajorUpdate
+        ElseIf CheckedVersion(0) < LocalVersion(0) Then
+            Return UpdateType.None
         ElseIf CheckedVersion(1) > LocalVersion(1) Then
             Return UpdateType.MinorUpdate
+        ElseIf CheckedVersion(1) < LocalVersion(1) Then
+            Return UpdateType.None
         ElseIf CheckedVersion(2) > LocalVersion(2) Then
             Return UpdateType.MajorBugFix
+        ElseIf CheckedVersion(2) < LocalVersion(2) Then
+            Return UpdateType.None
         ElseIf CheckedVersion(3) > LocalVersion(3) Then
             Return UpdateType.MinorBugFix
         Else
