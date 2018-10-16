@@ -30,6 +30,7 @@ Public Class OptionsMenu
         End If
         CheckBoxLoadHome.Checked = My.Settings.LoadHomeOnLaunch
         CheckBoxBackup.Checked = My.Settings.BackupInjections
+        CheckBoxDeleteTempBMP.Checked = My.Settings.DeleteTempBMP
         TrackBarHexLength.Value = My.Settings.HexViewLength
         updateviewlength()
     End Sub
@@ -68,6 +69,10 @@ Public Class OptionsMenu
 
     Private Sub CheckBoxBackup_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxBackup.CheckedChanged
         My.Settings.BackupInjections = CheckBoxBackup.Checked
+    End Sub
+
+    Private Sub CheckBoxDeleteTempBMP_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxBackup.CheckedChanged, CheckBoxDeleteTempBMP.CheckedChanged
+        My.Settings.DeleteTempBMP = CheckBoxDeleteTempBMP.Checked
     End Sub
 
     Private Sub TrackBarHexLength_Scroll(sender As Object, e As EventArgs) Handles TrackBarHexLength.Scroll

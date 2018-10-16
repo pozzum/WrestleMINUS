@@ -47,6 +47,7 @@ Partial Class OptionsMenu
         Me.LabelHexLength = New System.Windows.Forms.Label()
         Me.ButtonResetStrings = New System.Windows.Forms.Button()
         Me.ButtonResetPacs = New System.Windows.Forms.Button()
+        Me.CheckBoxDeleteTempBMP = New System.Windows.Forms.CheckBox()
         CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -233,48 +234,59 @@ Partial Class OptionsMenu
         'TrackBarHexLength
         '
         Me.TrackBarHexLength.LargeChange = 100
-        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 291)
+        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 314)
         Me.TrackBarHexLength.Maximum = 500
         Me.TrackBarHexLength.Minimum = 1
         Me.TrackBarHexLength.Name = "TrackBarHexLength"
         Me.TrackBarHexLength.Size = New System.Drawing.Size(260, 45)
         Me.TrackBarHexLength.SmallChange = 10
-        Me.TrackBarHexLength.TabIndex = 20
+        Me.TrackBarHexLength.TabIndex = 21
         Me.TrackBarHexLength.TickFrequency = 50
         Me.TrackBarHexLength.Value = 1
         '
         'LabelHexLength
         '
         Me.LabelHexLength.AutoSize = True
-        Me.LabelHexLength.Location = New System.Drawing.Point(12, 275)
+        Me.LabelHexLength.Location = New System.Drawing.Point(12, 298)
         Me.LabelHexLength.Name = "LabelHexLength"
         Me.LabelHexLength.Size = New System.Drawing.Size(140, 13)
-        Me.LabelHexLength.TabIndex = 21
+        Me.LabelHexLength.TabIndex = 22
         Me.LabelHexLength.Text = "Hex/Text View Length: 1KB"
         '
         'ButtonResetStrings
         '
-        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 326)
+        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 349)
         Me.ButtonResetStrings.Name = "ButtonResetStrings"
         Me.ButtonResetStrings.Size = New System.Drawing.Size(125, 23)
-        Me.ButtonResetStrings.TabIndex = 22
+        Me.ButtonResetStrings.TabIndex = 23
         Me.ButtonResetStrings.Text = "Reset Strings"
         Me.ButtonResetStrings.UseVisualStyleBackColor = True
         '
         'ButtonResetPacs
         '
-        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 326)
+        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 349)
         Me.ButtonResetPacs.Name = "ButtonResetPacs"
         Me.ButtonResetPacs.Size = New System.Drawing.Size(125, 23)
-        Me.ButtonResetPacs.TabIndex = 23
+        Me.ButtonResetPacs.TabIndex = 24
         Me.ButtonResetPacs.Text = "Reset Pacs"
         Me.ButtonResetPacs.UseVisualStyleBackColor = True
+        '
+        'CheckBoxDeleteTempBMP
+        '
+        Me.CheckBoxDeleteTempBMP.AutoSize = True
+        Me.CheckBoxDeleteTempBMP.Location = New System.Drawing.Point(15, 279)
+        Me.CheckBoxDeleteTempBMP.Name = "CheckBoxDeleteTempBMP"
+        Me.CheckBoxDeleteTempBMP.Size = New System.Drawing.Size(172, 17)
+        Me.CheckBoxDeleteTempBMP.TabIndex = 25
+        Me.CheckBoxDeleteTempBMP.Text = "Delete Temp BMP Files on Exit"
+        Me.CheckBoxDeleteTempBMP.UseVisualStyleBackColor = True
         '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 361)
+        Me.ClientSize = New System.Drawing.Size(284, 386)
+        Me.Controls.Add(Me.CheckBoxDeleteTempBMP)
         Me.Controls.Add(Me.ButtonResetPacs)
         Me.Controls.Add(Me.ButtonResetStrings)
         Me.Controls.Add(Me.LabelHexLength)
@@ -333,4 +345,5 @@ Partial Class OptionsMenu
     Friend WithEvents LabelHexLength As Label
     Friend WithEvents ButtonResetStrings As Button
     Friend WithEvents ButtonResetPacs As Button
+    Friend WithEvents CheckBoxDeleteTempBMP As CheckBox
 End Class
