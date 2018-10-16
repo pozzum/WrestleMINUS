@@ -365,6 +365,16 @@ Public Class MainForm
         'Next i
     End Sub
     Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        If My.Settings.DeleteTempBMP Then
+            Dim TempFolder As String = Path.GetDirectoryName(My.Settings.TexConvPath) &
+                                Path.DirectorySeparatorChar
+            Try
+                For Each f In Directory.GetFiles(TempFolder, "*.BMP", SearchOption.AllDirectories)
+                    File.Delete(f)
+                Next
+            Catch ex As UnauthorizedAccessException
+            End Try
+        End If
         If SavePending Then
             Dim Result As Integer = MessageBox.Show("File save is pending, would you like to save?", "Save Pending", MessageBoxButtons.YesNoCancel)
             If Result = DialogResult.Cancel Then
@@ -2604,6 +2614,12 @@ Public Class MainForm
         Dim TempBMP As String = Path.GetDirectoryName(My.Settings.TexConvPath) &
                                 Path.DirectorySeparatorChar &
                                 Path.GetFileNameWithoutExtension(TempName) & ".BMP"
+        Dim TempBMPLocal As String = Application.StartupPath & Path.DirectorySeparatorChar &
+                                Path.GetFileNameWithoutExtension(TempName) & ".BMP"
+        If File.Exists(TempBMPLocal) Then
+            File.Copy(TempBMPLocal, TempBMP, True)
+            File.Delete(TempBMPLocal)
+        End If
         If File.Exists(TempBMP) Then
             Dim tempimage As Image
             Using TempObject = New Bitmap(TempBMP)
