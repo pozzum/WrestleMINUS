@@ -366,14 +366,16 @@ Public Class MainForm
     End Sub
     Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         If My.Settings.DeleteTempBMP Then
-            Dim TempFolder As String = Path.GetDirectoryName(My.Settings.TexConvPath) &
-                                Path.DirectorySeparatorChar
-            Try
-                For Each f In Directory.GetFiles(TempFolder, "*.BMP", SearchOption.AllDirectories)
-                    File.Delete(f)
-                Next
-            Catch ex As UnauthorizedAccessException
-            End Try
+            DeleteTempImages()
+            'Code from xhp-creations commented out for future if Delete Temp does not properly wor
+            'Dim TempFolder As String = Path.GetDirectoryName(My.Settings.TexConvPath) &
+            'Path.DirectorySeparatorChar
+            'Try
+            'For Each f In Directory.GetFiles(TempFolder, "*.BMP", SearchOption.AllDirectories)
+            'File.Delete(f)
+            'Next
+            'Catch ex As UnauthorizedAccessException
+            'End Try
         End If
         If SavePending Then
             Dim Result As Integer = MessageBox.Show("File save is pending, would you like to save?", "Save Pending", MessageBoxButtons.YesNoCancel)
@@ -1221,7 +1223,9 @@ Public Class MainForm
             Else
                 If TabControl1.TabPages.Contains(PictureView) Then
                     TabControl1.TabPages.Remove(PictureView)
-                    DeleteCurrentImage()
+                    If My.Settings.DeleteTempBMP Then
+                        DeleteTempImages()
+                    End If
                 End If
             End If
             If CType(e.Node.Tag, NodeProperties).FileType = PackageType.YOBJ Then
@@ -2632,7 +2636,7 @@ Public Class MainForm
         CreatedImages.Add(TempBMP)
         File.Delete(TempName)
     End Sub
-    Sub DeleteCurrentImage()
+    Sub DeleteTempImages()
         PictureBox2.Image = Nothing
         For Each CurrentImage As String In CreatedImages
             Try
