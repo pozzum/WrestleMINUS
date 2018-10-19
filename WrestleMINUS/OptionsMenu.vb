@@ -71,7 +71,7 @@ Public Class OptionsMenu
         My.Settings.BackupInjections = CheckBoxBackup.Checked
     End Sub
 
-    Private Sub CheckBoxDeleteTempBMP_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxBackup.CheckedChanged, CheckBoxDeleteTempBMP.CheckedChanged
+    Private Sub CheckBoxDeleteTempBMP_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxDeleteTempBMP.CheckedChanged
         My.Settings.DeleteTempBMP = CheckBoxDeleteTempBMP.Checked
     End Sub
 
