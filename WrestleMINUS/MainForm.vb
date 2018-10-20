@@ -1223,9 +1223,9 @@ Public Class MainForm
             Else
                 If TabControl1.TabPages.Contains(PictureView) Then
                     TabControl1.TabPages.Remove(PictureView)
-                    If My.Settings.DeleteTempBMP Then
-                        DeleteTempImages()
-                    End If
+                    'If My.Settings.DeleteTempBMP Then
+                    'DeleteTempImages()
+                    'End If
                 End If
             End If
             If CType(e.Node.Tag, NodeProperties).FileType = PackageType.YOBJ Then
