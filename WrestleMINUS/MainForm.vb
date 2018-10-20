@@ -1219,9 +1219,11 @@ Public Class MainForm
                 If Not TabControl1.TabPages.Contains(PictureView) Then
                     TabControl1.TabPages.Add(PictureView)
                 End If
-                LoadPicture(TreeView1.SelectedNode)
+                If TabControl1.SelectedIndex = TabControl1.TabPages.IndexOf(PictureView) Then
+                    LoadPicture(TreeView1.SelectedNode)
+                End If
             Else
-                If TabControl1.TabPages.Contains(PictureView) Then
+                    If TabControl1.TabPages.Contains(PictureView) Then
                     TabControl1.TabPages.Remove(PictureView)
                     'If My.Settings.DeleteTempBMP Then
                     'DeleteTempImages()
@@ -1289,7 +1291,12 @@ Public Class MainForm
             End If
         End If
     End Sub
-
+    'moving functions from on tree view to on tab select to reduce load times during tree movement on keyboard
+    Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
+        If e.TabPageIndex = TabControl1.TabPages.IndexOf(PictureView) Then
+            LoadPicture(TreeView1.SelectedNode)
+        End If
+    End Sub
 #End Region
 #Region "Context Menu Strip"
     Private Sub TreeView1_NodeMouseClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles TreeView1.NodeMouseClick
@@ -3101,5 +3108,6 @@ Public Class MainForm
                                         HeaderNum, WallNum, RampNum, WallRightNum, WallLeftNum, Check4, Check5, Check6, FileName)
         Next
     End Sub
+
 #End Region
 End Class
