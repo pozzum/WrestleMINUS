@@ -1175,7 +1175,7 @@ Public Class MainForm
                 If Not TabControl1.TabPages.Contains(StringView) Then
                     TabControl1.TabPages.Add(StringView)
                 End If
-                FillStringView(TreeView1.SelectedNode)
+                'FillStringView(TreeView1.SelectedNode)
             Else
                 If TabControl1.TabPages.Contains(StringView) Then
                     CloseStringView()
@@ -1295,6 +1295,8 @@ Public Class MainForm
     Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
         If e.TabPageIndex = TabControl1.TabPages.IndexOf(PictureView) Then
             LoadPicture(TreeView1.SelectedNode)
+        ElseIf e.TabPageIndex = TabControl1.TabPages.IndexOf(StringView) Then
+            FillStringView(TreeView1.SelectedNode)
         End If
     End Sub
 #End Region
@@ -1673,6 +1675,7 @@ Public Class MainForm
             If My.Settings.BackupInjections Then
                 File.Copy(WrittenFile, WrittenFile & ".bak", True)
             End If
+            'TO DO ADD handle for injecting uncompressed bytes into compressed current as there is some issue.
             File.WriteAllBytes(WrittenFile, SentBytes)
         End If
         Return True
@@ -2619,6 +2622,7 @@ Public Class MainForm
         End If
         Dim ImageStream As MemoryStream = New MemoryStream(PictureBytes)
         Dim TempName As String = Path.GetTempFileName
+        FileSystem.Rename(TempName, TempName + ".dds")
         TempName += ".dds"
         File.WriteAllBytes(TempName, PictureBytes)
         Process.Start(My.Settings.TexConvPath, " -ft bmp " & TempName).WaitForExit()
