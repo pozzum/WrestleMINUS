@@ -940,10 +940,7 @@ Public Class MainForm
             Return PackageType.YOBJArray
         Else
             Dim ArenaCheck As String = ""
-            If ByteArray Is Nothing Then
-                ActiveReader.BaseStream.Seek(Index + &H10, SeekOrigin.Begin)
-                ArenaCheck = Encoding.Default.GetChars(ActiveReader.ReadBytes(4))
-            Else
+            If ByteArray.Length > &H14 Then
                 ArenaCheck = Encoding.Default.GetChars(ByteArray, Index + &H10, 4)
             End If
             If ArenaCheck = "aren" Then
@@ -951,10 +948,7 @@ Public Class MainForm
             End If
             'mask file check
             Dim MaskCheck As String = ""
-            If ByteArray Is Nothing Then
-                ActiveReader.BaseStream.Seek(Index + &H14, SeekOrigin.Begin)
-                MaskCheck = Encoding.Default.GetChars(ActiveReader.ReadBytes(6))
-            Else
+            If ByteArray.Length > &H20 Then
                 MaskCheck = Encoding.Default.GetChars(ByteArray, Index + &H14, 6)
             End If
             If MaskCheck = "M_Head" OrElse
@@ -963,10 +957,7 @@ Public Class MainForm
             End If
             'muscle file check
             Dim MuscleCheck As String = ""
-            If ByteArray Is Nothing Then
-                ActiveReader.BaseStream.Seek(Index + &H18, SeekOrigin.Begin)
-                MuscleCheck = Encoding.Default.GetChars(ActiveReader.ReadBytes(3))
-            Else
+            If ByteArray.Length > &H20 Then
                 MuscleCheck = Encoding.Default.GetChars(ByteArray, Index + &H18, 3)
             End If
             If MuscleCheck = "yM_" Then
@@ -974,11 +965,7 @@ Public Class MainForm
             End If
             'dds check
             Dim DDSCheck As String = ""
-            If ByteArray Is Nothing Then
-                ActiveReader.BaseStream.Seek(Index + &H20, SeekOrigin.Begin)
-                DDSCheck = Encoding.Default.GetChars(ActiveReader.ReadBytes(3))
-
-            Else
+            If ByteArray.Length > &H24 Then
                 DDSCheck = Encoding.Default.GetChars(ByteArray, Index + &H20, 3)
             End If
             If DDSCheck.ToLower = "dds" Then
@@ -986,11 +973,7 @@ Public Class MainForm
             End If
             'dds check
             Dim YANMCheck As String = ""
-            If ByteArray Is Nothing Then
-                ActiveReader.BaseStream.Seek(Index + &H24, SeekOrigin.Begin)
-                YANMCheck = Encoding.Default.GetChars(ActiveReader.ReadBytes(4))
-
-            Else
+            If ByteArray.Length > &H30 Then
                 YANMCheck = Encoding.Default.GetChars(ByteArray, Index + &H24, 4)
             End If
             If YANMCheck.ToLower = "root" Then
@@ -999,16 +982,7 @@ Public Class MainForm
             'String File Test
             If ActiveFile.ToLower.Contains("string") Then
                 Dim StringTest As UInt32
-                If ByteArray Is Nothing Then
-                    If Not Index >= ActiveReader.BaseStream.Length - 4 Then
-                        ActiveReader.BaseStream.Seek(Index, SeekOrigin.Begin)
-
-                        StringTest = ActiveReader.ReadUInt32
-
-                    End If
-                Else
-                    StringTest = BitConverter.ToUInt32(ByteArray, Index + 0)
-                End If
+                StringTest = BitConverter.ToUInt32(ByteArray, Index + 0)
                 If StringTest = 0 Then
                     Return PackageType.StringFile
                 End If
@@ -1415,7 +1389,7 @@ Public Class MainForm
         Dim ParrentNodeTag As NodeProperties = New NodeProperties
         ParrentNodeTag = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
         If ParrentNodeTag.FileType = PackageType.HSPC OrElse
-           ParrentNodeTag.FileType = PackageType.SHDC OrElse
+            ParrentNodeTag.FileType = PackageType.SHDC OrElse
             ParrentNodeTag.FileType = PackageType.EPK8 OrElse
             ParrentNodeTag.FileType = PackageType.EPAC OrElse
             ParrentNodeTag.FileType = PackageType.PachDirectory Then
@@ -1506,10 +1480,12 @@ Public Class MainForm
         End If
         'Get Parent Node Bytes
         Dim ParentNodeTag As NodeProperties = New NodeProperties
-
+        Dim ParentNode As TreeNode = New TreeNode
         If Not IsNothing(Sentnode.Parent) Then
+            ParentNode = Sentnode.Parent
             ParentNodeTag = CType(Sentnode.Parent.Tag, NodeProperties)
         Else
+            ParentNode = Sentnode
             ParentNodeTag.StoredData = New Byte() {}
             ParentNodeTag.length = 0
         End If
@@ -1666,6 +1642,16 @@ Public Class MainForm
                     File.Copy(WrittenFile, WrittenFile & ".bak", True)
                 End If
                 File.WriteAllBytes(WrittenFile, WrittenFileArray)
+                'resettreebranch
+                Dim TempName As String = ParentNode.Text
+                ParentNode.Nodes.Clear()
+                ParentNode.Text = TempName
+                ParentNode.ToolTipText = WrittenFile
+                ParentNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
+                    .Index = 0,
+                    .length = WrittenFileArray.Length,
+                    .StoredData = New Byte() {}}
+                CheckFile(ParentNode)
             Else
                 'we must go higher
                 InjectIntoNode(Sentnode.Parent, WrittenFileArray)
