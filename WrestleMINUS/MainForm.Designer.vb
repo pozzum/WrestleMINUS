@@ -276,7 +276,7 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.Enabled = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.TitleEnabled = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PropRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Name1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -1871,7 +1871,7 @@ Partial Class MainForm
         Me.DataGridTitleView.AllowUserToDeleteRows = False
         Me.DataGridTitleView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.DataGridTitleView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridTitleView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Enabled, Me.PropRef, Me.MenuNumber, Me.Name1, Me.Name1Full, Me.Name2, Me.Name2Full, Me.Name3, Me.Name3Full, Me.MyWWE1, Me.MyWWE2, Me.Uni1, Me.Uni2, Me.Temp1, Me.Temp2, Me.Female, Me.TagTeam, Me.Cruiserweight, Me.UnlockNum, Me.Temp4})
+        Me.DataGridTitleView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.TitleEnabled, Me.PropRef, Me.MenuNumber, Me.Name1, Me.Name1Full, Me.Name2, Me.Name2Full, Me.Name3, Me.Name3Full, Me.MyWWE1, Me.MyWWE2, Me.Uni1, Me.Uni2, Me.Temp1, Me.Temp2, Me.Female, Me.TagTeam, Me.Cruiserweight, Me.UnlockNum, Me.Temp4})
         Me.DataGridTitleView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridTitleView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridTitleView.Name = "DataGridTitleView"
@@ -2202,13 +2202,13 @@ Partial Class MainForm
         '
         Me.SaveExtractAllDialog.FileName = "Save Files Here"
         '
-        'Enabled
+        'TitleEnabled
         '
-        Me.Enabled.HeaderText = "Enabled"
-        Me.Enabled.MaxInputLength = 1
-        Me.Enabled.Name = "Enabled"
-        Me.Enabled.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Enabled.Width = 52
+        Me.TitleEnabled.HeaderText = "Enabled"
+        Me.TitleEnabled.MaxInputLength = 1
+        Me.TitleEnabled.Name = "TitleEnabled"
+        Me.TitleEnabled.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.TitleEnabled.Width = 52
         '
         'PropRef
         '
@@ -2708,7 +2708,7 @@ Partial Class MainForm
     Friend WithEvents PacsLoadedTitleMenuItem As ToolStripMenuItem
     Friend WithEvents SaveChangesTitleMenuItem As ToolStripMenuItem
     Friend WithEvents TitleGameComboBox As ToolStripComboBox
-    Friend WithEvents Enabled As DataGridViewTextBoxColumn
+    Friend WithEvents TitleEnabled As DataGridViewTextBoxColumn
     Friend WithEvents PropRef As DataGridViewTextBoxColumn
     Friend WithEvents MenuNumber As DataGridViewTextBoxColumn
     Friend WithEvents Name1 As DataGridViewTextBoxColumn

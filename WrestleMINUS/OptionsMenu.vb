@@ -58,10 +58,10 @@ Public Class OptionsMenu
         Process.Start("http://asmodean.reverse.net/pages/unrrbpe.html")
     End Sub
     Private Sub ButtonSelectZlib_Click(sender As Object, e As EventArgs) Handles ButtonSelectZlib.Click
-        'TO DO
+        MainForm.CheckIconicZlib(True)
     End Sub
     Private Sub ButtonOodleSelect_Click(sender As Object, e As EventArgs) Handles ButtonOodleSelect.Click
-        'TO DO
+        MainForm.CheckOodle(True)
     End Sub
     Private Sub CheckBoxLoadHome_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxLoadHome.CheckedChanged
         My.Settings.LoadHomeOnLaunch = CheckBoxLoadHome.Checked

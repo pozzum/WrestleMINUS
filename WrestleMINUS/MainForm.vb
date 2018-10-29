@@ -20,7 +20,7 @@ Public Class MainForm
         Me.Text = Me.Text & " Ver: " & My.Application.Info.Version.ToString
         CheckUpdate()
         SettingsCheck()
-        HideTabs()
+        HideTabs(Nothing)
         CreatedImages = New List(Of String)
     End Sub
     Private Sub MainForm_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
@@ -103,41 +103,48 @@ Public Class MainForm
         CheckOodle()
         My.Settings.Save()
     End Sub
-    Sub HideTabs()
-        If TabControl1.TabPages.Contains(StringView) Then
-            TabControl1.TabPages.Remove(StringView)
+    Dim MuscleViewStartupRemoved As Boolean = False
+    Function HideTabs(ExcludedTab As TabPage) As DialogResult
+        If IsNothing(ExcludedTab) Then
+            ExcludedTab = New TabPage()
         End If
-        If TabControl1.TabPages.Contains(MiscView) Then
-            TabControl1.TabPages.Remove(MiscView)
-        End If
-        If TabControl1.TabPages.Contains(ShowView) Then
-            TabControl1.TabPages.Remove(ShowView)
-        End If
-        If TabControl1.TabPages.Contains(NIBJView) Then
-            TabControl1.TabPages.Remove(NIBJView)
-        End If
-        If TabControl1.TabPages.Contains(PictureView) Then
-            TabControl1.TabPages.Remove(PictureView)
-        End If
-        If TabControl1.TabPages.Contains(ObjectView) Then
-            TabControl1.TabPages.Remove(ObjectView)
-        End If
-        If TabControl1.TabPages.Contains(AttireView) Then
-            TabControl1.TabPages.Remove(AttireView)
-        End If
-        If TabControl1.TabPages.Contains(MuscleView) Then
-            TabControl1.TabPages.Remove(MuscleView)
-        End If
-        If TabControl1.TabPages.Contains(MaskView) Then
-            TabControl1.TabPages.Remove(MaskView)
-        End If
-        If TabControl1.TabPages.Contains(ObjArrayView) Then
-            TabControl1.TabPages.Remove(ObjArrayView)
-        End If
-        If TabControl1.TabPages.Contains(AssetView) Then
-            TabControl1.TabPages.Remove(AssetView)
-        End If
-    End Sub
+        For Each TempTabPage As TabPage In TabControl1.TabPages
+            Select Case TempTabPage.Name
+                Case HexView.Name
+                    'Never Hide
+                Case TextView.Name
+                    'Never Hide
+                Case MuscleView.Name
+                    'this is not automatically removed except on startup
+                    If Not MuscleViewStartupRemoved Then
+                        TabControl1.TabPages.Remove(TempTabPage)
+                    End If
+                Case ExcludedTab.Name
+                    'Excluded
+                Case Else
+                    'Here we will add the save pending check and file injection
+                    If SavePending Then
+                        Dim Result As Integer = MessageBox.Show("File save is pending, would you like to save?", "Save Pending", MessageBoxButtons.YesNoCancel)
+                        If Result = DialogResult.Cancel Then
+                            'This exits the command so we don't hide any tabs, and returns a cancel to the form closing command.
+                            Return DialogResult.Cancel
+                        ElseIf Result = DialogResult.Yes Then
+                            If TabControl1.TabPages.Contains(StringView) Then
+                                InjectIntoNode(ReadNode, BuildStringFile())
+                            End If
+                            If TabControl1.TabPages.Contains(MiscView) Then
+                                InjectIntoNode(ReadNode, BuildMiscFile())
+                            End If
+                            If TabControl1.TabPages.Contains(AttireView) Then
+                                InjectIntoNode(ReadNode, BuildAttireFile())
+                            End If
+                        End If
+                    End If
+                    TabControl1.TabPages.Remove(TempTabPage)
+            End Select
+        Next
+        Return DialogResult.OK
+    End Function
     Sub CheckUpdate()
         Dim checkUpdateThread = New Thread(AddressOf OnlineVersion.CheckUpdate)
         checkUpdateThread.SetApartmentState(ApartmentState.STA)
@@ -156,12 +163,9 @@ Public Class MainForm
             My.Settings.ExeLocation = TempFileDialog.FileName
         Else
             If My.Settings.ExeLocation = "" Then
-                If MessageBox.Show("Home Directory Required", "Retry?", MessageBoxButtons.RetryCancel) = DialogResult.Retry Then
-                    SelectHomeDirectory()
-                Else
-                    Application.Exit()
-                End If
-
+                MessageBox.Show("Loading home disabled")
+                My.Settings.ExeLocation = ""
+                My.Settings.LoadHomeOnLaunch = False
             End If
         End If
     End Sub
@@ -281,7 +285,7 @@ Public Class MainForm
         End If
 
     End Sub
-    Public Function CheckIconicZlib(Optional FromOptions As Boolean = False)
+    Public Function CheckIconicZlib(Optional FromOptions As Boolean = False) As Boolean
         If Not File.Exists(Application.StartupPath & Path.DirectorySeparatorChar & "Ionic.Zlib.dll") Then
             If Not FromOptions Then
                 MessageBox.Show("Ionic.Zlib Dll Not loaded")
@@ -304,7 +308,7 @@ Public Class MainForm
             Return True
         End If
     End Function
-    Public Function CheckOodle(Optional FromOptions As Boolean = False)
+    Public Function CheckOodle(Optional FromOptions As Boolean = False) As Boolean
         If Not File.Exists(Application.StartupPath & Path.DirectorySeparatorChar & "oo2core_6_win64.dll") Then
             Dim TestLocation As String = Path.GetDirectoryName(My.Settings.ExeLocation) & Path.DirectorySeparatorChar & "oo2core_6_win64.dll"
             If File.Exists(TestLocation) Then
@@ -345,7 +349,6 @@ Public Class MainForm
                 MainForm.SelectedFiles(i - 1) = args(i)
             Next
         End If
-
         Return parameters
     End Function
     Private Sub MainForm_DragEnter(sender As Object, e As DragEventArgs) Handles MyBase.DragEnter
@@ -377,40 +380,41 @@ Public Class MainForm
             'Catch ex As UnauthorizedAccessException
             'End Try
         End If
-        If SavePending Then
-            Dim Result As Integer = MessageBox.Show("File save is pending, would you like to save?", "Save Pending", MessageBoxButtons.YesNoCancel)
-            If Result = DialogResult.Cancel Then
-                e.Cancel = True
-            ElseIf Result = DialogResult.Yes Then
-                If TabControl1.TabPages.Contains(StringView) Then
-                    InjectIntoNode(ReadNode, BuildStringFile())
-                End If
-                If TabControl1.TabPages.Contains(MiscView) Then
-                    InjectIntoNode(ReadNode, BuildMiscFile())
-                End If
-                If TabControl1.TabPages.Contains(AttireView) Then
-                    InjectIntoNode(ReadNode, BuildAttireFile())
-                End If
-            End If
+        'Close all tabs so save check is in just one place.
+        If HideTabs(Nothing) = DialogResult.Cancel Then
+            e.Cancel = True
         End If
-        If File.Exists(My.Settings.StringObject) = True Then
-            File.Delete(My.Settings.StringObject)
+        'Seperating command out to allow for error handling to exit closing form command
+        If SaveSettingsFiles() = DialogResult.Cancel Then
+            e.Cancel = True
         End If
-        Dim StringFileStream As Stream = New FileStream(My.Settings.StringObject, FileMode.Create)
-        Dim StringBinaryFormatter As BinaryFormatter = New BinaryFormatter()
-        StringBinaryFormatter.Serialize(StringFileStream, StringReferences)
-        StringFileStream.Close()
-        If File.Exists(My.Settings.PacNumObject) = True Then
-            File.Delete(My.Settings.PacNumObject)
-        End If
-        Dim PacNumFileStream As Stream = New FileStream(My.Settings.PacNumObject, FileMode.Create)
-        Dim PacNumBinaryFormatter As BinaryFormatter = New BinaryFormatter()
-        PacNumBinaryFormatter.Serialize(PacNumFileStream, PacNumbers)
-        PacNumFileStream.Close()
-        'TO DO Add Check for file edits pending dialog box.
     End Sub
+    Function SaveSettingsFiles() As DialogResult
+        Try
+            'Here is the saving of the String File so we don't store it in the settings file and bloat the loading and closing.
+            If File.Exists(My.Settings.StringObject) = True Then
+                File.Delete(My.Settings.StringObject)
+            End If
+            Dim StringFileStream As Stream = New FileStream(My.Settings.StringObject, FileMode.Create)
+            Dim StringBinaryFormatter As BinaryFormatter = New BinaryFormatter()
+            StringBinaryFormatter.Serialize(StringFileStream, StringReferences)
+            StringFileStream.Close()
+            If File.Exists(My.Settings.PacNumObject) = True Then
+                File.Delete(My.Settings.PacNumObject)
+            End If
+            Dim PacNumFileStream As Stream = New FileStream(My.Settings.PacNumObject, FileMode.Create)
+            Dim PacNumBinaryFormatter As BinaryFormatter = New BinaryFormatter()
+            PacNumBinaryFormatter.Serialize(PacNumFileStream, PacNumbers)
+            PacNumFileStream.Close()
+            Return DialogResult.OK
+        Catch ex As Exception
+            Return MessageBox.Show("Error Savings Settings Files" & vbNewLine &
+                            ex.Message & vbNewLine & "Continue?", "Settings Error", MessageBoxButtons.OKCancel)
+        End Try
+    End Function
 #End Region
 #Region "General Tools"
+    'Here are App-seperate commands use as required.
     Private Sub FolderCheck(FolderPath As String)
         If Directory.Exists(FolderPath) = False Then
             Directory.CreateDirectory(FolderPath)
@@ -465,57 +469,20 @@ Public Class MainForm
         VMUM
         TitleFile
     End Enum
-    Dim ActiveReader As BinaryReader
+
     Dim ActiveFile As String = ""
     Sub CheckFile(ByRef HostNode As TreeNode, Optional Crawl As Boolean = False)
         Dim NodeTag As NodeProperties = New NodeProperties
         NodeTag = CType(HostNode.Tag, NodeProperties)
         ActiveFile = HostNode.ToolTipText
-        If NodeTag.FileType = PackageType.Folder Then
-            If Crawl Then
-                For Each TempNode As TreeNode In HostNode.Nodes
-                    Dim TempNodeProps As NodeProperties = New NodeProperties
-                    TempNodeProps = CType(TempNode.Tag, NodeProperties)
-                    ProgressBar1.Maximum += 1
-                    ProgressBar1.Value += 1
-                    If Expandable(TempNodeProps.FileType) Then
-                        CheckFile(TempNode, Crawl)
-                    End If
-                Next
-            Else
-                'You should not be here.
-                Exit Sub
-            End If
-        End If
-        If Not File.Exists(ActiveFile) Then
-            MessageBox.Show("File Not Found")
-            Exit Sub
-        End If
-        Dim FileBytes As Byte() = New Byte(NodeTag.length - 1) {}
-        If NodeTag.StoredData.Length > 0 Then
-            Array.Copy(NodeTag.StoredData, CInt(NodeTag.Index), FileBytes, 0, CInt(NodeTag.length))
-        Else
-            Try
-                ActiveReader = New BinaryReader(File.Open(ActiveFile, FileMode.Open, FileAccess.Read))
-                ActiveReader.BaseStream.Seek(NodeTag.Index, SeekOrigin.Begin)
-                FileBytes = ActiveReader.ReadBytes(NodeTag.length)
-                ActiveReader.Close()
-                ' MessageBox.Show(NodeTag.Index & vbNewLine & NodeTag.length)
-            Catch ex As Exception
-                MessageBox.Show(ex.Message)
-            End Try
-
-        End If
-        'TO DO Add better memory array handler that will probably remove like 100 linees of code...
-        'If Not SkipReader Then
-        'ActiveReader = New BinaryReader(File.Open(HostNode.ToolTipText, FileMode.Open, FileAccess.Read))
-        'End If
+        Dim FileBytes As Byte() = GetNodeBytes(HostNode)
         Select Case NodeTag.FileType
             Case PackageType.Unchecked
                 NodeTag.FileType = CheckHeaderType(0, FileBytes)
                 NodeTag.StoredData = New Byte() {}
                 HostNode.Tag = NodeTag
                 CheckFile(HostNode, Crawl)
+                Exit Sub 'Skips the crawler at the bottom and duping the host node update
 #Region "Primary Container Types {PAC}"
             Case PackageType.HSPC
                 Dim FileCount As Integer = BitConverter.ToUInt32(FileBytes, &H38)
@@ -525,20 +492,12 @@ Public Class MainForm
                     Dim FileName As String = BitConverter.ToString(FileBytes, &H800 + i * &H14, 8).ToUpper.Replace("-", "")
                     Dim TempNode As TreeNode = New TreeNode(FileName)
                     TempNode.ToolTipText = HostNode.ToolTipText
-                    Dim TempNodeProps As NodeProperties = New NodeProperties
-                    TempNodeProps.Index = BitConverter.ToUInt32(FileBytes, FileNameLength + i * &HC) * &H800
-                    TempNodeProps.length = BitConverter.ToUInt32(FileBytes, FileNameLength + i * &HC + &H4) * &H100
-                    TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, FileBytes)
-                    TempNodeProps.Index += NodeTag.Index
-                    TempNodeProps.StoredData = NodeTag.StoredData
+                    Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .Index = BitConverter.ToUInt32(FileBytes, FileNameLength + i * &HC) * &H800 + NodeTag.Index,
+                        .length = BitConverter.ToUInt32(FileBytes, FileNameLength + i * &HC + &H4) * &H100,
+                        .StoredData = NodeTag.StoredData,
+                        .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
                     TempNode.Tag = TempNodeProps
-                    If Crawl Then
-                        ProgressBar1.Maximum += 1
-                        ProgressBar1.Value += 1
-                        If Expandable(TempNodeProps.FileType) Then
-                            CheckFile(TempNode, Crawl)
-                        End If
-                    End If
                     HostNode.Nodes.Add(TempNode)
                 Next
             Case PackageType.EPK8
@@ -549,40 +508,28 @@ Public Class MainForm
                     Dim DirectoryTreeNode As TreeNode = New TreeNode(DirectoryName)
                     DirectoryTreeNode.ToolTipText = HostNode.ToolTipText
                     Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 4
-                    Dim DirectoryNodeProps As NodeProperties = New NodeProperties
-                    DirectoryNodeProps.StoredData = NodeTag.StoredData
-                    DirectoryNodeProps.FileType = PackageType.PachDirectory
+                    Dim DirectoryNodeProps As NodeProperties = New NodeProperties With {
+                        .StoredData = NodeTag.StoredData,
+                        .FileType = PackageType.PachDirectory}
                     index += &HC
                     For i As Integer = 0 To DirectoryContainsCount - 1
                         Dim PachName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 8)
                         Dim TempNode As TreeNode = New TreeNode(PachName)
                         TempNode.ToolTipText = HostNode.ToolTipText
-                        Dim TempNodeProps As NodeProperties = New NodeProperties
-                        TempNodeProps.Index = BitConverter.ToUInt32(FileBytes, &H800 + index + 8) * &H800 + &H4000
+                        Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                            .Index = BitConverter.ToUInt32(FileBytes, &H800 + index + 8) * &H800 + &H4000 + NodeTag.Index,
+                            .length = BitConverter.ToUInt32(FileBytes, &H800 + index + 12) * &H100,
+                            .StoredData = NodeTag.StoredData,
+                            .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
                         If i = 0 Then
                             DirectoryNodeProps.Index = TempNodeProps.Index
                         End If
-                        TempNodeProps.length = BitConverter.ToUInt32(FileBytes, &H800 + index + 12) * &H100
                         DirectoryNodeProps.length += TempNodeProps.length
-                        TempNodeProps.StoredData = NodeTag.StoredData
-                        TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, FileBytes)
-                        TempNodeProps.Index += NodeTag.Index
                         index += &H10
                         TempNode.Tag = TempNodeProps
-                        If Crawl Then
-                            ProgressBar1.Maximum += 1
-                            ProgressBar1.Value += 1
-                            If Expandable(TempNodeProps.FileType) Then
-                                CheckFile(TempNode, Crawl)
-                            End If
-                        End If
                         DirectoryTreeNode.Nodes.Add(TempNode)
                     Next
                     DirectoryTreeNode.Tag = DirectoryNodeProps
-                    If Crawl Then
-                        ProgressBar1.Maximum += 1
-                        ProgressBar1.Value += 1
-                    End If
                     HostNode.Nodes.Add(DirectoryTreeNode)
                 Loop
             Case PackageType.EPAC
@@ -593,44 +540,32 @@ Public Class MainForm
                     Dim DirectoryTreeNode As TreeNode = New TreeNode(DirectoryName)
                     DirectoryTreeNode.ToolTipText = HostNode.ToolTipText
                     Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 3
-                    Dim DirectoryNodeProps As NodeProperties = New NodeProperties
-                    DirectoryNodeProps.StoredData = NodeTag.StoredData
-                    DirectoryNodeProps.FileType = PackageType.PachDirectory
+                    Dim DirectoryNodeProps As NodeProperties = New NodeProperties With {
+                        .StoredData = NodeTag.StoredData,
+                        .FileType = PackageType.PachDirectory}
                     index += &HC
                     For i As Integer = 0 To DirectoryContainsCount - 1
                         Dim PachName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 4)
                         Dim TempNode As TreeNode = New TreeNode(PachName)
                         TempNode.ToolTipText = HostNode.ToolTipText
-                        Dim TempNodeProps As NodeProperties = New NodeProperties
-                        TempNodeProps.Index = BitConverter.ToUInt32(FileBytes, &H800 + index + 4) * &H800 + &H4000
+                        Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                            .Index = BitConverter.ToUInt32(FileBytes, &H800 + index + 4) * &H800 + &H4000 + NodeTag.Index,
+                            .length = BitConverter.ToUInt32(FileBytes, &H800 + index + 8) * &H100,
+                            .StoredData = NodeTag.StoredData,
+                            .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
                         If i = 0 Then
                             DirectoryNodeProps.Index = TempNodeProps.Index
                         End If
-                        TempNodeProps.length = BitConverter.ToUInt32(FileBytes, &H800 + index + 8) * &H100
                         DirectoryNodeProps.length += TempNodeProps.length
-                        TempNodeProps.StoredData = NodeTag.StoredData
-                        TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, FileBytes)
-                        TempNodeProps.Index += NodeTag.Index
                         index += &HC
                         TempNode.Tag = TempNodeProps
-                        If Crawl Then
-                            ProgressBar1.Maximum += 1
-                            ProgressBar1.Value += 1
-                            If Expandable(TempNodeProps.FileType) Then
-                                CheckFile(TempNode, Crawl)
-                            End If
-                        End If
                         DirectoryTreeNode.Nodes.Add(TempNode)
                     Next
                     DirectoryTreeNode.Tag = DirectoryNodeProps
-                    If Crawl Then
-                        ProgressBar1.Maximum += 1
-                        ProgressBar1.Value += 1
-                    End If
                     HostNode.Nodes.Add(DirectoryTreeNode)
                 Loop
 #End Region
-#Region "Primary Container Types {PACH}"
+#Region "Secondary Container Types {PACH}"
             Case PackageType.SHDC
                 Dim TempHeaderCheck As Integer = BitConverter.ToUInt32(FileBytes, &H18)
                 Dim TempHeaderStart As Integer = BitConverter.ToUInt32(FileBytes, &H1C)
@@ -651,20 +586,12 @@ Public Class MainForm
                         End If
                         Dim TempNode As TreeNode = New TreeNode(PartName)
                         TempNode.ToolTipText = HostNode.ToolTipText
-                        Dim TempNodeProps As NodeProperties = New NodeProperties
-                        TempNodeProps.Index = BitConverter.ToUInt32(FileBytes, TempHeaderStart + (i * &H10) + &H4)
-                        TempNodeProps.length = BitConverter.ToUInt64(FileBytes, TempHeaderStart + (i * &H10) + &H8)
-                        TempNodeProps.StoredData = NodeTag.StoredData
-                        TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, FileBytes)
-                        TempNodeProps.Index += NodeTag.Index
+                        Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                            .Index = BitConverter.ToUInt32(FileBytes, TempHeaderStart + (i * &H10) + &H4) + NodeTag.Index,
+                            .length = BitConverter.ToUInt64(FileBytes, TempHeaderStart + (i * &H10) + &H8),
+                            .StoredData = NodeTag.StoredData,
+                            .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
                         TempNode.Tag = TempNodeProps
-                        If Crawl Then
-                            ProgressBar1.Maximum += 1
-                            ProgressBar1.Value += 1
-                            If Expandable(TempNodeProps.FileType) Then
-                                CheckFile(TempNode, Crawl)
-                            End If
-                        End If
                         HostNode.Nodes.Add(TempNode)
                     Catch ex As Exception
                         MessageBox.Show(ex.Message & vbNewLine &
@@ -678,23 +605,14 @@ Public Class MainForm
                     Dim PartName As String = Hex(BitConverter.ToUInt32(FileBytes, &H8 + (i * &HC)))
                     Dim TempNode As TreeNode = New TreeNode(PartName)
                     TempNode.ToolTipText = HostNode.ToolTipText
-                    Dim TempNodeProps As NodeProperties = New NodeProperties
-                    TempNodeProps.Index = BitConverter.ToUInt32(FileBytes, &HC + (i * &HC)) + &H8 + Partcount * &HC
-                    TempNodeProps.length = BitConverter.ToUInt32(FileBytes, &H10 + (i * &HC))
-                    TempNodeProps.StoredData = NodeTag.StoredData
-                    TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, FileBytes)
-                    TempNodeProps.Index += NodeTag.Index
+                    Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .Index = BitConverter.ToUInt32(FileBytes, &HC + (i * &HC)) + &H8 + Partcount * &HC + NodeTag.Index,
+                        .length = BitConverter.ToUInt32(FileBytes, &H10 + (i * &HC)),
+                        .StoredData = NodeTag.StoredData,
+                        .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
                     TempNode.Tag = TempNodeProps
-                    If Crawl Then
-                        ProgressBar1.Maximum += 1
-                        ProgressBar1.Value += 1
-                        If Expandable(TempNodeProps.FileType) Then
-                            CheckFile(TempNode, Crawl)
-                        End If
-                    End If
                     HostNode.Nodes.Add(TempNode)
                 Next
-
 #End Region
 #Region "Compression Types"
             Case PackageType.ZLIB
@@ -713,20 +631,12 @@ Public Class MainForm
                 End Try
                 Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
                 TempNode.ToolTipText = HostNode.ToolTipText
-                Dim TempNodeProps As NodeProperties = New NodeProperties
-                TempNodeProps.Index = 0
-                TempNodeProps.length = output.Length
-                TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, output)
-                'MessageBox.Show(output.Length)
-                TempNodeProps.StoredData = output
+                Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                    .Index = 0,
+                    .length = output.Length,
+                    .StoredData = output,
+                    .FileType = CheckHeaderType(.Index, output)}
                 TempNode.Tag = TempNodeProps
-                If Crawl Then
-                    ProgressBar1.Maximum += 1
-                    ProgressBar1.Value += 1
-                    If Expandable(TempNodeProps.FileType) Then
-                        CheckFile(TempNode, Crawl)
-                    End If
-                End If
                 HostNode.Nodes.Add(TempNode)
             Case PackageType.BPE
                 Dim UncompressedLength As Integer = BitConverter.ToUInt32(FileBytes, &HC)
@@ -737,6 +647,8 @@ Public Class MainForm
                     File.WriteAllBytes(TempInput, FileBytes)
                     Process.Start(My.Settings.UnrrbpePath, TempInput & " " & TempOutput).WaitForExit()
                     UncompressedBytes = File.ReadAllBytes(TempOutput)
+                    File.Delete(TempInput)
+                    File.Delete(TempOutput)
                 Catch ex As Exception
                     MessageBox.Show(ex.Message)
                     NodeTag.FileType = PackageType.bin
@@ -745,20 +657,12 @@ Public Class MainForm
                 End Try
                 Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
                 TempNode.ToolTipText = HostNode.ToolTipText
-                Dim TempNodeProps As NodeProperties = New NodeProperties
-                TempNodeProps.Index = 0
-                TempNodeProps.length = UncompressedBytes.Length
-                TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, UncompressedBytes)
-                'MessageBox.Show(output.Length)
-                TempNodeProps.StoredData = UncompressedBytes
+                Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                    .Index = 0,
+                    .length = UncompressedBytes.Length,
+                    .StoredData = UncompressedBytes,
+                    .FileType = CheckHeaderType(.Index, UncompressedBytes)}
                 TempNode.Tag = TempNodeProps
-                If Crawl Then
-                    ProgressBar1.Maximum += 1
-                    ProgressBar1.Value += 1
-                    If Expandable(TempNodeProps.FileType) Then
-                        CheckFile(TempNode, Crawl)
-                    End If
-                End If
                 HostNode.Nodes.Add(TempNode)
             Case PackageType.OODL
                 Dim CompressedLength As Long = BitConverter.ToUInt32(FileBytes, &H14)
@@ -778,20 +682,12 @@ Public Class MainForm
                 End Try
                 Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
                 TempNode.ToolTipText = HostNode.ToolTipText
-                Dim TempNodeProps As NodeProperties = New NodeProperties
-                TempNodeProps.Index = 0
-                TempNodeProps.length = UncompressedBytes.Length
-                TempNodeProps.FileType = CheckHeaderType(TempNodeProps.Index, UncompressedBytes)
-                'MessageBox.Show(output.Length)
-                TempNodeProps.StoredData = UncompressedBytes
+                Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                    .Index = 0,
+                    .length = UncompressedBytes.Length,
+                    .StoredData = UncompressedBytes,
+                    .FileType = CheckHeaderType(.Index, UncompressedBytes)}
                 TempNode.Tag = TempNodeProps
-                If Crawl Then
-                    ProgressBar1.Maximum += 1
-                    ProgressBar1.Value += 1
-                    If Expandable(TempNodeProps.FileType) Then
-                        CheckFile(TempNode, Crawl)
-                    End If
-                End If
                 HostNode.Nodes.Add(TempNode)
 #End Region
 #Region "Library Types"
@@ -801,19 +697,12 @@ Public Class MainForm
                     Dim ImageName As String = Encoding.Default.GetChars(FileBytes, i * &H20 + &H10, &H10)
                     Dim TempNode As TreeNode = New TreeNode(ImageName)
                     TempNode.ToolTipText = HostNode.ToolTipText
-                    Dim TempNodeProps As NodeProperties = New NodeProperties
-                    TempNodeProps.FileType = PackageType.DDS
-                    TempNodeProps.length = BitConverter.ToUInt32(FileBytes, i * &H20 + &H10 + &H14)
-                    TempNodeProps.Index = BitConverter.ToUInt64(FileBytes, i * &H20 + &H10 + &H18)
-                    TempNodeProps.StoredData = NodeTag.StoredData
+                    Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .length = BitConverter.ToUInt32(FileBytes, i * &H20 + &H10 + &H14),
+                        .Index = BitConverter.ToUInt64(FileBytes, i * &H20 + &H10 + &H18) + TempNode.Index,
+                        .StoredData = NodeTag.StoredData,
+                        .FileType = PackageType.DDS}
                     TempNode.Tag = TempNodeProps
-                    If Crawl Then
-                        ProgressBar1.Maximum += 1
-                        ProgressBar1.Value += 1
-                        If Expandable(TempNodeProps.FileType) Then
-                            CheckFile(TempNode, Crawl)
-                        End If
-                    End If
                     HostNode.Nodes.Add(TempNode)
                 Next
             Case PackageType.YANMPack
@@ -831,27 +720,17 @@ Public Class MainForm
                     Dim PartName As String = Encoding.ASCII.GetString(FileBytes, HeadIndex + 4, 8)
                     Dim TempNode As TreeNode = New TreeNode(PartName)
                     TempNode.ToolTipText = HostNode.ToolTipText
-                    Dim TempNodeProps As NodeProperties = New NodeProperties
-                    TempNodeProps.FileType = PackageType.YANM
-                    'getting the start offset
-                    TempNodeProps.Index = (BitConverter.ToUInt32(EndianReverse(FileBytes, HeadIndex + &H24), 0)) + HeaderLength + HostNode.Index
-                    'Get the file Length
+                    Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .Index = (BitConverter.ToUInt32(EndianReverse(FileBytes, HeadIndex + &H24), 0)) + HeaderLength + HostNode.Index,
+                        .FileType = PackageType.YANM,
+                        .StoredData = NodeTag.StoredData}
                     If HeadIndex + &H20 + &H28 < HeaderLength Then
                         TempNodeProps.length = (BitConverter.ToUInt32(EndianReverse(FileBytes, HeadIndex + &H24 + &H28), 0)) + HeaderLength - TempNodeProps.Index
                     Else
                         TempNodeProps.length = YANMLength - TempNodeProps.Index + HeaderLength
                     End If
-                    MessageBox.Show(TempNodeProps.length)
-                    TempNodeProps.StoredData = NodeTag.StoredData
                     'add to list box
                     TempNode.Tag = TempNodeProps
-                    If Crawl Then
-                        ProgressBar1.Maximum += 1
-                        ProgressBar1.Value += 1
-                        If Expandable(TempNodeProps.FileType) Then
-                            CheckFile(TempNode, Crawl)
-                        End If
-                    End If
                     HostNode.Nodes.Add(TempNode)
                     partcount = partcount + 1
                     HeadIndex = HeadIndex + &H28
@@ -860,28 +739,39 @@ Public Class MainForm
             Case PackageType.YOBJ
 #End Region
 #End Region
-
 #Region "Stand Alone Files"
-            Case PackageType.StringFile
-            Case PackageType.bin
-            Case PackageType.DDS
-            Case PackageType.YANM
-            Case PackageType.ArenaInfo
-            Case PackageType.ShowInfo
-            Case PackageType.NIBJ
-            Case PackageType.bk2
-            Case PackageType.CostumeFile
-            Case PackageType.MuscleFile
-            Case PackageType.MaskFile
-            Case PackageType.YOBJArray
-            Case PackageType.OFOP
-            Case PackageType.YANM
-            Case PackageType.VMUM
+                'Case PackageType.StringFile
+                'Case PackageType.bin
+                'Case PackageType.DDS
+                'Case PackageType.YANM
+                'Case PackageType.ArenaInfo
+                'Case PackageType.ShowInfo
+                'Case PackageType.NIBJ
+                'Case PackageType.bk2
+                'Case PackageType.CostumeFile
+                'Case PackageType.MuscleFile
+                'Case PackageType.MaskFile
+                'Case PackageType.YOBJArray
+                'Case PackageType.OFOP
+                'Case PackageType.YANM
+                'Case PackageType.VMUM
 #End Region
         End Select
+        If Crawl Then
+            For Each ChildNode As TreeNode In HostNode.Nodes
+                Dim ChildNodeProps As NodeProperties = New NodeProperties
+                ChildNodeProps = CType(ChildNode.Tag, NodeProperties)
+                ProgressBar1.Maximum += 1
+                ProgressBar1.Value += 1
+                If Expandable(ChildNodeProps.FileType) Then
+                    CheckFile(ChildNode, Crawl)
+                End If
+            Next
+        End If
         HostNode.Tag = NodeTag
     End Sub
-    Function CheckHeaderType(Index As Long, ByVal ByteArray As Byte())
+
+    Function CheckHeaderType(Index As Long, ByVal ByteArray As Byte()) As PackageType
         'To be split into 2 seperate functions once all processes are added
         Dim FirstFour As String
         'Make sure the file has bytes
@@ -891,110 +781,82 @@ Public Class MainForm
         If Index > ByteArray.Length Then
             Return PackageType.bin
         End If
-        'If ByteArray Is Nothing Then
-        'ActiveReader.BaseStream.Seek(Index, SeekOrigin.Begin)
-        'Try
-        'FirstFour = ActiveReader.ReadChars(4)
-        'Catch ex As Exception
-        'MessageBox.Show(ex.Message)
-        'Return PackageType.Unknown
-        'End Try
-        'Else
         FirstFour = Encoding.Default.GetChars(ByteArray, Index, 4)
-        'End If
-        If FirstFour = "HSPC" Then
-            Return PackageType.HSPC
-        ElseIf FirstFour = "SHDC" Then
-            Return PackageType.SHDC
-        ElseIf FirstFour = "EPK8" Then
-            Return PackageType.EPK8
-        ElseIf FirstFour = "PACH" Then
-            Return PackageType.PACH
-        ElseIf FirstFour = "EPAC" Then
-            Return PackageType.EPAC
-        ElseIf FirstFour = "ZLIB" Then
-            Return PackageType.ZLIB
-        ElseIf FirstFour = "YOBJ" OrElse
-            FirstFour = "JBOY" Then
-            Return PackageType.YOBJ
-        ElseIf FirstFour = "NIBJ" Then
-            Return PackageType.NIBJ
-        ElseIf FirstFour = "0FOP" Then
-            Return PackageType.OFOP
-        ElseIf FirstFour = "YANM" Then
-            Return PackageType.YANM
-        ElseIf FirstFour = "OODL" Then
-            Return PackageType.OODL
-        ElseIf FirstFour = "VMUM" Then
-            Return PackageType.VMUM
-        ElseIf FirstFour.Contains("STG") Then
-            Return PackageType.ShowInfo
-        ElseIf FirstFour.Contains("DDS") Then
-            Return PackageType.DDS 'KB2
-        ElseIf FirstFour.Contains("KB2") Then
-            Return PackageType.bk2
-        ElseIf FirstFour.Contains("COS") Then
-            Return PackageType.CostumeFile
-        ElseIf FirstFour.Contains("BPE") Then
-            Return PackageType.BPE
-        ElseIf FirstFour.Contains("ê¡Y") Then
-            Return PackageType.YOBJArray
-        Else
-            Dim ArenaCheck As String = ""
-            If ByteArray.Length > &H14 Then
-                ArenaCheck = Encoding.Default.GetChars(ByteArray, Index + &H10, 4)
-            End If
-            If ArenaCheck = "aren" Then
-                Return PackageType.ArenaInfo
-            End If
-            'mask file check
-            Dim MaskCheck As String = ""
-            Dim TitleCheck As Integer = 0
-            If ByteArray.Length > &H20 Then
-                MaskCheck = Encoding.Default.GetChars(ByteArray, Index + &H14, 6)
-                TitleCheck = BitConverter.ToUInt32(ByteArray, Index + &H14)
-            End If
-            If MaskCheck = "M_Head" OrElse
-               MaskCheck = "M_Body" Then
-                Return PackageType.MaskFile
-            End If
-            If TitleCheck = 2004 Then 'this is an unsafe check.  It just works for all known games so far.
-                Return PackageType.TitleFile
-            End If
-            'muscle file check
-            Dim MuscleCheck As String = ""
-            If ByteArray.Length > &H20 Then
-                MuscleCheck = Encoding.Default.GetChars(ByteArray, Index + &H18, 3)
-            End If
-            If MuscleCheck = "yM_" Then
-                Return PackageType.MuscleFile
-            End If
-            'dds check
-            Dim DDSCheck As String = ""
-            If ByteArray.Length > &H24 Then
-                DDSCheck = Encoding.Default.GetChars(ByteArray, Index + &H20, 3)
-            End If
-            If DDSCheck.ToLower = "dds" Then
-                Return PackageType.TextureLibrary
-            End If
-            'dds check
-            Dim YANMCheck As String = ""
-            If ByteArray.Length > &H30 Then
-                YANMCheck = Encoding.Default.GetChars(ByteArray, Index + &H24, 4)
-            End If
-            If YANMCheck.ToLower = "root" Then
-                Return PackageType.YANMPack
-            End If
-            'String File Test
-            If ActiveFile.ToLower.Contains("string") Then
-                Dim StringTest As UInt32
-                StringTest = BitConverter.ToUInt32(ByteArray, Index + 0)
-                If StringTest = 0 Then
-                    Return PackageType.StringFile
-                End If
-            End If
-            Return PackageType.bin
-        End If
+        Select Case FirstFour
+            Case "HSPC"
+                Return PackageType.HSPC
+            Case "SHDC"
+                Return PackageType.SHDC
+            Case "EPK8"
+                Return PackageType.EPK8
+            Case "PACH"
+                Return PackageType.PACH
+            Case "EPAC"
+                Return PackageType.EPAC
+            Case "ZLIB"
+                Return PackageType.ZLIB
+            Case "YOBJ"
+                Return PackageType.YOBJ
+            Case "JBOY"
+                Return PackageType.YOBJ
+            Case "NIBJ"
+                Return PackageType.NIBJ
+            Case "0FOP"
+                Return PackageType.OFOP
+            Case "YANM"
+                Return PackageType.YANM
+            Case "OODL"
+                Return PackageType.OODL
+            Case "VMUM"
+                Return PackageType.VMUM
+            Case Else
+                'if we don't have a perfect 4 match we go to check the 3 character matches
+                Select Case True
+                    Case FirstFour.Contains("STG")
+                        Return PackageType.ShowInfo
+                    Case FirstFour.Contains("DDS")
+                        Return PackageType.DDS
+                    Case FirstFour.Contains("KB2")
+                        Return PackageType.bk2
+                    Case FirstFour.Contains("COS")
+                        Return PackageType.CostumeFile
+                    Case FirstFour.Contains("BPE")
+                        Return PackageType.BPE
+                    Case FirstFour.Contains("ê¡Y")
+                        Return PackageType.YOBJArray
+                    Case Else
+                        'if we do not have a header text to guide us we have some additional text checks that are consistent.
+                        'some of these checks don't 100% require this many bytes, but none should functionally have that little byte length
+                        If ByteArray.Length > &H30 Then
+                            Select Case True
+                                Case Encoding.Default.GetChars(ByteArray, Index + &H10, 4) = "aren"
+                                    Return PackageType.ArenaInfo
+                                Case Encoding.Default.GetChars(ByteArray, Index + &H14, 6) = "M_Head"
+                                    Return PackageType.MaskFile
+                                Case Encoding.Default.GetChars(ByteArray, Index + &H14, 6) = "M_Body"
+                                    Return PackageType.MaskFile
+                                Case BitConverter.ToUInt32(ByteArray, Index + &H14) = 2004 'this is an unsafe check.  It just works for all known games so far.
+                                    Return PackageType.TitleFile
+                                Case Encoding.Default.GetChars(ByteArray, Index + &H18, 3) = "yM_"
+                                    Return PackageType.MuscleFile
+                                Case Encoding.Default.GetChars(ByteArray, Index + &H20, 3) = "dds"
+                                    Return PackageType.TextureLibrary
+                                Case Encoding.Default.GetChars(ByteArray, Index + &H24, 4) = "root"
+                                    Return PackageType.TextureLibrary
+                                Case ActiveFile.ToLower.Contains("string")
+                                    Dim NumberCheck As UInt32 = BitConverter.ToUInt32(ByteArray, Index + 0)
+                                    If NumberCheck = 0 Then
+                                        Return PackageType.StringFile
+                                    End If
+                                    Return PackageType.TextureLibrary
+                                Case Else
+                                    Return PackageType.bin
+                            End Select
+                        Else
+                            Return PackageType.bin
+                        End If
+                End Select
+        End Select
     End Function
     Function Expandable(TestType As PackageType) As Boolean
         If TestType = PackageType.Unchecked OrElse
@@ -1003,16 +865,41 @@ Public Class MainForm
            TestType = PackageType.EPK8 OrElse
            TestType = PackageType.EPAC OrElse
            TestType = PackageType.SHDC OrElse
-           TestType = PackageType.PachDirectory OrElse
-           TestType = PackageType.BPE OrElse
+           TestType = PackageType.PACH OrElse
+            TestType = PackageType.BPE OrElse
            TestType = PackageType.ZLIB OrElse
            TestType = PackageType.OODL OrElse
+           TestType = PackageType.PachDirectory OrElse
            TestType = PackageType.TextureLibrary OrElse
            TestType = PackageType.YANMPack OrElse
            TestType = PackageType.YOBJ Then
             Return True
         End If
         Return False
+    End Function
+    Function GetNodeBytes(ByRef HostNode As TreeNode) As Byte()
+        Dim NodeTag As NodeProperties = New NodeProperties
+        NodeTag = CType(HostNode.Tag, NodeProperties)
+        Dim FileBytes As Byte() = New Byte(NodeTag.length - 1) {}
+        If NodeTag.StoredData.Length > 0 Then
+            Array.Copy(NodeTag.StoredData, CInt(NodeTag.Index), FileBytes, 0, CInt(NodeTag.length))
+        ElseIf NodeTag.length > 0 Then
+            If Not File.Exists(ActiveFile) Then
+                MessageBox.Show("File Not Found")
+                Return New Byte() {}
+            End If
+            Try
+                Dim ActiveReader As BinaryReader = New BinaryReader(File.Open(ActiveFile, FileMode.Open, FileAccess.Read))
+                ActiveReader.BaseStream.Seek(NodeTag.Index, SeekOrigin.Begin)
+                FileBytes = ActiveReader.ReadBytes(NodeTag.length)
+                ActiveReader.Dispose()
+                ' MessageBox.Show(NodeTag.Index & vbNewLine & NodeTag.length)
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+            End Try
+        Else Return New Byte() {}
+        End If
+        Return FileBytes
     End Function
 #End Region
 #Region "Menu Strip"
@@ -1075,23 +962,30 @@ Public Class MainForm
         Next
     End Sub
     Sub LoadHome()
-        TreeView1.Nodes.Clear()
-        ProgressBar1.Value = 0
-        Dim HomeDirectory As String = Path.GetDirectoryName(My.Settings.ExeLocation) & Path.DirectorySeparatorChar
-        CurrentViewToolStripMenuItem.Text = "Current View: " & HomeDirectory
-        Dim HomeDI As DirectoryInfo = New DirectoryInfo(HomeDirectory)
-        ProgressBar1.Maximum = Directory.GetFiles(HomeDirectory, "*.*", SearchOption.AllDirectories).Length +
-                                Directory.GetDirectories(HomeDirectory, "**", SearchOption.AllDirectories).Length
-        Dim TempNode As TreeNode = TreeView1.Nodes.Add(HomeDI.Name)
-        TempNode.ToolTipText = HomeDI.FullName
-        TempNode.Tag = New NodeProperties With {.FileType = PackageType.Folder,
-                .Index = 0,
-                .length = 0,
-                .StoredData = New Byte(0) {}}
-        TempNode.StateImageIndex = 0
-        'testing having folders first
-        LoadSubDirectories(HomeDirectory, TempNode)
-        LoadFiles(HomeDirectory, TempNode)
+        If Not My.Settings.ExeLocation = "" Then
+            TreeView1.Nodes.Clear()
+            ProgressBar1.Value = 0
+            Dim HomeDirectory As String = Path.GetDirectoryName(My.Settings.ExeLocation) & Path.DirectorySeparatorChar
+            CurrentViewToolStripMenuItem.Text = "Current View: " & HomeDirectory
+            Dim HomeDI As DirectoryInfo = New DirectoryInfo(HomeDirectory)
+            ProgressBar1.Maximum = Directory.GetFiles(HomeDirectory, "*.*", SearchOption.AllDirectories).Length +
+                                    Directory.GetDirectories(HomeDirectory, "**", SearchOption.AllDirectories).Length
+            Dim TempNode As TreeNode = TreeView1.Nodes.Add(HomeDI.Name)
+            TempNode.ToolTipText = HomeDI.FullName
+            TempNode.Tag = New NodeProperties With {.FileType = PackageType.Folder,
+                    .Index = 0,
+                    .length = 0,
+                    .StoredData = New Byte(0) {}}
+            TempNode.StateImageIndex = 0
+            'testing having folders first
+            LoadSubDirectories(HomeDirectory, TempNode)
+            LoadFiles(HomeDirectory, TempNode)
+        Else
+            If MessageBox.Show("No Home Directory Selected." & vbNewLine &
+                             "Select Home Now?", "Select Home?", MessageBoxButtons.OKCancel) = DialogResult.OK Then
+                SelectHomeDirectory()
+            End If
+        End If
     End Sub
     Sub LoadSubDirectories(DirectoryPath As String, ParentNode As TreeNode)
         Dim ListofSubDirectores() As String = Directory.GetDirectories(DirectoryPath)
@@ -1138,10 +1032,9 @@ Public Class MainForm
     End Sub
     Private Sub TreeView1_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles TreeView1.AfterSelect
         If File.Exists(e.Node.ToolTipText.ToString()) Then
-            If Not CType(e.Node.Tag, NodeProperties).FileType = PackageType.bin Then
+            If Expandable(CType(e.Node.Tag, NodeProperties).FileType) Then
                 If e.Node.Nodes.Count = 0 Then
                     CheckFile(e.Node)
-                    ActiveReader.Close()
                 End If
             End If
             HexViewFileName.Text = TreeView1.SelectedNode.Text
@@ -1149,7 +1042,7 @@ Public Class MainForm
             TextViewFileName.Text = TreeView1.SelectedNode.Text
             AddText(TreeView1.SelectedNode)
             'TO DO I'll change this to a match case at some point I swear
-            'TO DO add to an extenral function so I can create a crawler.
+
             If CType(e.Node.Tag, NodeProperties).FileType = PackageType.StringFile Then
                 'StringView
                 If Not TabControl1.TabPages.Contains(StringView) Then
@@ -1519,10 +1412,11 @@ Public Class MainForm
                 Array.Copy(ParentNodeTag.StoredData, CInt(ParentNodeTag.Index), ParentBytes, 0, CInt(ParentNodeTag.length))
             Else
                 Try
+                    Dim ActiveReader As BinaryReader
                     ActiveReader = New BinaryReader(File.Open(ActiveFile, FileMode.Open, FileAccess.Read))
                     ActiveReader.BaseStream.Seek(ParentNodeTag.Index, SeekOrigin.Begin)
                     ParentBytes = ActiveReader.ReadBytes(ParentNodeTag.length)
-                    ActiveReader.Close()
+                    ActiveReader.Dispose()
                     ' MessageBox.Show(NodeTag.Index & vbNewLine & NodeTag.length)
                 Catch ex As Exception
                     MessageBox.Show(ex.Message)
