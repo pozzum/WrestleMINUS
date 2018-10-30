@@ -31,6 +31,7 @@ Public Class OptionsMenu
         CheckBoxLoadHome.Checked = My.Settings.LoadHomeOnLaunch
         CheckBoxBackup.Checked = My.Settings.BackupInjections
         CheckBoxDeleteTempBMP.Checked = My.Settings.DeleteTempBMP
+        CheckBoxTreeNodeIcons.Checked = My.Settings.UseTreeIcons
         TrackBarHexLength.Value = My.Settings.HexViewLength
         updateviewlength()
     End Sub
@@ -73,6 +74,10 @@ Public Class OptionsMenu
 
     Private Sub CheckBoxDeleteTempBMP_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxDeleteTempBMP.CheckedChanged
         My.Settings.DeleteTempBMP = CheckBoxDeleteTempBMP.Checked
+    End Sub
+    Private Sub CheckBoxTreeNodeIcons_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxTreeNodeIcons.CheckedChanged
+        My.Settings.UseTreeIcons = CheckBoxTreeNodeIcons.Checked
+        MainForm.LoadIcons()
     End Sub
 
     Private Sub TrackBarHexLength_Scroll(sender As Object, e As EventArgs) Handles TrackBarHexLength.Scroll

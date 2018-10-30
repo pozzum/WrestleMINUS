@@ -12,10 +12,16 @@ Imports System.Runtime.Serialization.Formatters.Binary 'Binary Formatter
 Public Class MainForm
     Private Declare Function OodleLZ_Decompress Lib "oo2core_6_win64" (InputBuffer As Byte(), bufferSize As Long, OutputBuffer As Byte(), outputBufferSize As Long,
             a As UInt32, b As UInt32, c As ULong, d As UInt32, e As UInt32, f As UInt32, g As UInt32, h As UInt32, i As UInt32, threadModule As UInt32) As Integer
-#Region "Main Form Functions"
     Friend Shared StringReferences() As String
     Friend Shared PacNumbers() As Integer
     Dim SelectedFiles() As String
+    'Injection Properties used across multiple forms
+    Dim SavePending As Boolean = False
+    Dim ReadNode As TreeNode
+    Dim SizeChange As Integer
+    Dim OldValue
+    Dim InformationLoaded As Boolean = False
+#Region "Main Form Functions"
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = Me.Text & " Ver: " & My.Application.Info.Version.ToString
         CheckUpdate()
@@ -118,6 +124,7 @@ Public Class MainForm
                     'this is not automatically removed except on startup
                     If Not MuscleViewStartupRemoved Then
                         TabControl1.TabPages.Remove(TempTabPage)
+                        MuscleViewStartupRemoved = True
                     End If
                 Case ExcludedTab.Name
                     'Excluded
@@ -129,15 +136,19 @@ Public Class MainForm
                             'This exits the command so we don't hide any tabs, and returns a cancel to the form closing command.
                             Return DialogResult.Cancel
                         ElseIf Result = DialogResult.Yes Then
-                            If TabControl1.TabPages.Contains(StringView) Then
-                                InjectIntoNode(ReadNode, BuildStringFile())
-                            End If
-                            If TabControl1.TabPages.Contains(MiscView) Then
-                                InjectIntoNode(ReadNode, BuildMiscFile())
-                            End If
-                            If TabControl1.TabPages.Contains(AttireView) Then
-                                InjectIntoNode(ReadNode, BuildAttireFile())
-                            End If
+                            Dim InjectedByte As Byte() = New Byte() {}
+                            Select Case CType(ReadNode.Tag, NodeProperties).FileType
+                                Case PackageType.StringFile
+                                    InjectedByte = BuildStringFile()
+                                Case PackageType.ArenaInfo
+                                    InjectedByte = BuildMiscFile()
+                                Case PackageType.CostumeFile
+                                    InjectedByte = BuildAttireFile()
+                                Case PackageType.TitleFile
+                                    InjectedByte = BuildTitleFile()
+                            End Select
+                            InjectIntoNode(ReadNode, InjectedByte)
+                            SavePending = True
                         End If
                     End If
                     TabControl1.TabPages.Remove(TempTabPage)
@@ -351,6 +362,13 @@ Public Class MainForm
         End If
         Return parameters
     End Function
+    Shared Sub LoadIcons()
+        If My.Settings.UseTreeIcons Then
+            MainForm.TreeView1.ImageList = MainForm.ImageList1
+        Else
+            MainForm.TreeView1.ImageList = Nothing
+        End If
+    End Sub
     Private Sub MainForm_DragEnter(sender As Object, e As DragEventArgs) Handles MyBase.DragEnter
         If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
             e.Effect = DragDropEffects.All
@@ -469,7 +487,6 @@ Public Class MainForm
         VMUM
         TitleFile
     End Enum
-
     Dim ActiveFile As String = ""
     Sub CheckFile(ByRef HostNode As TreeNode, Optional Crawl As Boolean = False)
         Dim NodeTag As NodeProperties = New NodeProperties
@@ -480,6 +497,8 @@ Public Class MainForm
             Case PackageType.Unchecked
                 NodeTag.FileType = CheckHeaderType(0, FileBytes)
                 NodeTag.StoredData = New Byte() {}
+                HostNode.ImageIndex = GetImageIndex(NodeTag.FileType)
+                HostNode.SelectedImageIndex = HostNode.ImageIndex
                 HostNode.Tag = NodeTag
                 CheckFile(HostNode, Crawl)
                 Exit Sub 'Skips the crawler at the bottom and duping the host node update
@@ -505,7 +524,7 @@ Public Class MainForm
                 Dim index As Integer = 0
                 Do While index < HeaderLength - 1
                     Dim DirectoryName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 4)
-                    Dim DirectoryTreeNode As TreeNode = New TreeNode(DirectoryName)
+                    Dim DirectoryTreeNode As TreeNode = New TreeNode(DirectoryName, 6, 6)
                     DirectoryTreeNode.ToolTipText = HostNode.ToolTipText
                     Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 4
                     Dim DirectoryNodeProps As NodeProperties = New NodeProperties With {
@@ -537,7 +556,7 @@ Public Class MainForm
                 Dim index As Integer = 0
                 Do While index < HeaderLength - 1
                     Dim DirectoryName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 4)
-                    Dim DirectoryTreeNode As TreeNode = New TreeNode(DirectoryName)
+                    Dim DirectoryTreeNode As TreeNode = New TreeNode(DirectoryName, 6, 6)
                     DirectoryTreeNode.ToolTipText = HostNode.ToolTipText
                     Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 3
                     Dim DirectoryNodeProps As NodeProperties = New NodeProperties With {
@@ -768,7 +787,10 @@ Public Class MainForm
                 End If
             Next
         End If
+        HostNode.ImageIndex = GetImageIndex(NodeTag.FileType)
+        HostNode.SelectedImageIndex = HostNode.ImageIndex
         HostNode.Tag = NodeTag
+
     End Sub
 
     Function CheckHeaderType(Index As Long, ByVal ByteArray As Byte()) As PackageType
@@ -901,9 +923,33 @@ Public Class MainForm
         End If
         Return FileBytes
     End Function
+    Function GetImageIndex(SentType As PackageType) As UInt32
+        Select Case SentType
+            Case PackageType.Folder
+                Return 1
+            Case PackageType.HSPC
+                Return 2
+            Case PackageType.EPK8
+                Return 3
+            Case PackageType.EPAC
+                Return 4
+            Case PackageType.SHDC
+                Return 5
+            Case PackageType.PACH
+                Return 6
+            Case PackageType.PachDirectory
+                Return 6
+            Case PackageType.OODL
+                Return 7
+            Case PackageType.ZLIB
+                Return 8
+            Case Else
+                Return 0
+        End Select
+
+    End Function
 #End Region
 #Region "Menu Strip"
-
     Private Sub LoadHomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoadHomeToolStripMenuItem.Click
         LoadHome()
     End Sub
@@ -920,7 +966,13 @@ Public Class MainForm
         OptionsMenu.Show()
     End Sub
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
-        Help.ShowHelp(Nothing, "https://pozzum.github.io/WrestleMINUS/")
+        Process.Start("https://pozzum.github.io/WrestleMINUS/")
+    End Sub
+    Private Sub SupportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SupportToolStripMenuItem.Click
+        Process.Start("https://smacktalks.org/forums/topic/70048-wrestleminus/")
+    End Sub
+    Private Sub GitHubIssuesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GitHubIssuesToolStripMenuItem.Click
+        Process.Start("https://github.com/pozzum/WrestleMINUS/issues")
     End Sub
 #End Region
 #Region "TreeView Population"
@@ -943,7 +995,8 @@ Public Class MainForm
                         .Index = 0,
                         .length = FileLen(NewFI.FullName),
                         .StoredData = New Byte() {}}
-                    TempNode.StateImageIndex = 1
+                    TempNode.ImageIndex = 0
+                    TempNode.SelectedImageIndex = 0
                     CheckFile(TempNode)
                     ProgressBar1.Value += 1
                 ElseIf Directory.Exists(SelectedFiles(i)) Then
@@ -954,7 +1007,8 @@ Public Class MainForm
                             .Index = 0,
                             .length = 0,
                             .StoredData = New Byte(0) {}}
-                    TempNode.StateImageIndex = 0
+                    TempNode.ImageIndex = 1
+                    TempNode.SelectedImageIndex = 1
                     LoadSubDirectories(SelectedFiles(i), TempNode)
                     LoadFiles(SelectedFiles(i), TempNode)
                 End If
@@ -976,7 +1030,8 @@ Public Class MainForm
                     .Index = 0,
                     .length = 0,
                     .StoredData = New Byte(0) {}}
-            TempNode.StateImageIndex = 0
+            TempNode.ImageIndex = 1
+            TempNode.SelectedImageIndex = 1
             'testing having folders first
             LoadSubDirectories(HomeDirectory, TempNode)
             LoadFiles(HomeDirectory, TempNode)
@@ -998,7 +1053,8 @@ Public Class MainForm
                 .length = 0,
                 .StoredData = New Byte(0) {}
             }
-            TempNode.StateImageIndex = 0
+            TempNode.ImageIndex = 1
+            TempNode.SelectedImageIndex = 1
             LoadSubDirectories(SubDirectory, TempNode)
             LoadFiles(SubDirectory, TempNode)
             UpdateProgress()
@@ -1014,7 +1070,8 @@ Public Class MainForm
                 .Index = 0,
                 .length = FileLen(NewFI.FullName),
                 .StoredData = New Byte() {}}
-            TempNode.StateImageIndex = 1
+            TempNode.ImageIndex = 0
+            TempNode.SelectedImageIndex = 0
             UpdateProgress()
         Next
     End Sub
@@ -1027,7 +1084,6 @@ Public Class MainForm
                                                      Brushes.Black,
                                                      New PointF(ProgressBar1.Width / 2 - 10,
                                                                 ProgressBar1.Height / 2 - 7))
-            'Application.DoEvents()
         End If
     End Sub
     Private Sub TreeView1_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles TreeView1.AfterSelect
@@ -1037,152 +1093,97 @@ Public Class MainForm
                     CheckFile(e.Node)
                 End If
             End If
-            HexViewFileName.Text = TreeView1.SelectedNode.Text
-            AddHexText(TreeView1.SelectedNode)
-            TextViewFileName.Text = TreeView1.SelectedNode.Text
-            AddText(TreeView1.SelectedNode)
-            'TO DO I'll change this to a match case at some point I swear
-
-            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.StringFile Then
-                'StringView
-                If Not TabControl1.TabPages.Contains(StringView) Then
-                    TabControl1.TabPages.Add(StringView)
-                End If
-                'FillStringView(TreeView1.SelectedNode)
-            Else
-                If TabControl1.TabPages.Contains(StringView) Then
-                    CloseStringView()
-                End If
-            End If
-            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.ArenaInfo Then
-                'StringView
-                If Not TabControl1.TabPages.Contains(MiscView) Then
-                    TabControl1.TabPages.Add(MiscView)
-                End If
-                FillMiscView(TreeView1.SelectedNode)
-            Else
-                If TabControl1.TabPages.Contains(MiscView) Then
-                    CloseMiscView()
-                End If
-            End If
-            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.ShowInfo Then
-                'StringView
-                If Not TabControl1.TabPages.Contains(ShowView) Then
-                    TabControl1.TabPages.Add(ShowView)
-                End If
-                FillShowView(TreeView1.SelectedNode)
-            Else
-                If TabControl1.TabPages.Contains(ShowView) Then
-                    TabControl1.TabPages.Remove(ShowView)
-                End If
-            End If
-            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.NIBJ Then
-                'StringView
-                If Not TabControl1.TabPages.Contains(NIBJView) Then
-                    TabControl1.TabPages.Add(NIBJView)
-                End If
-                FillNIBJView(TreeView1.SelectedNode)
-            Else
-                If TabControl1.TabPages.Contains(NIBJView) Then
-                    TabControl1.TabPages.Remove(NIBJView)
-                End If
-            End If
-            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.DDS Then
-                'StringView
-                If Not TabControl1.TabPages.Contains(PictureView) Then
-                    TabControl1.TabPages.Add(PictureView)
-                End If
-                If TabControl1.SelectedIndex = TabControl1.TabPages.IndexOf(PictureView) Then
-                    LoadPicture(TreeView1.SelectedNode)
+            Dim PageLoaded As TabPage = GetTabType(CType(e.Node.Tag, NodeProperties).FileType)
+            If HideTabs(PageLoaded) = DialogResult.OK Then
+                ReadNode = e.Node
+                HexViewFileName.Text = TreeView1.SelectedNode.Text
+                AddHexText(TreeView1.SelectedNode)
+                TextViewFileName.Text = TreeView1.SelectedNode.Text
+                AddText(TreeView1.SelectedNode)
+                If Not PageLoaded Is Nothing Then
+                    LoadTab(PageLoaded)
                 End If
             Else
-                    If TabControl1.TabPages.Contains(PictureView) Then
-                    TabControl1.TabPages.Remove(PictureView)
-                    'If My.Settings.DeleteTempBMP Then
-                    'DeleteTempImages()
-                    'End If
-                End If
-            End If
-            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.YOBJ Then
-                If Not TabControl1.TabPages.Contains(ObjectView) Then
-                    TabControl1.TabPages.Add(ObjectView)
-                End If
-                'LoadPicture(TreeView1.SelectedNode)
-            Else
-                If TabControl1.TabPages.Contains(ObjectView) Then
-                    TabControl1.TabPages.Remove(ObjectView)
-
-                End If
-            End If
-            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.CostumeFile Then
-                If Not TabControl1.TabPages.Contains(AttireView) Then
-                    TabControl1.TabPages.Add(AttireView)
-                End If
-                LoadAttires(TreeView1.SelectedNode)
-            Else
-                If TabControl1.TabPages.Contains(AttireView) Then
-                    CloseAttireView()
-                End If
-            End If
-            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.MuscleFile Then
-                If Not TabControl1.TabPages.Contains(MuscleView) Then
-                    TabControl1.TabPages.Add(MuscleView)
-                End If
-                LoadMuscles(TreeView1.SelectedNode)
-            Else
-            End If
-            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.MaskFile Then
-                If Not TabControl1.TabPages.Contains(MaskView) Then
-                    TabControl1.TabPages.Add(MaskView)
-                End If
-                LoadMask(TreeView1.SelectedNode)
-            Else
-                If TabControl1.TabPages.Contains(MaskView) Then
-                    TabControl1.TabPages.Remove(MaskView)
-                End If
-            End If
-            'ObjArrayView
-            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.YOBJArray Then
-                If Not TabControl1.TabPages.Contains(ObjArrayView) Then
-                    TabControl1.TabPages.Add(ObjArrayView)
-                End If
-                LoadObjectArray(TreeView1.SelectedNode)
-            Else
-                If TabControl1.TabPages.Contains(ObjArrayView) Then
-                    TabControl1.TabPages.Remove(ObjArrayView)
-                End If
-            End If
-            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.VMUM Then
-                If Not TabControl1.TabPages.Contains(AssetView) Then
-                    TabControl1.TabPages.Add(AssetView)
-                End If
-                LoadAssetFile(TreeView1.SelectedNode)
-            Else
-                If TabControl1.TabPages.Contains(AssetView) Then
-                    TabControl1.TabPages.Remove(AssetView)
-                End If
-            End If
-            If CType(e.Node.Tag, NodeProperties).FileType = PackageType.TitleFile Then
-                If Not TabControl1.TabPages.Contains(TitleView) Then
-                    TabControl1.TabPages.Add(TitleView)
-                End If
-                LoadTitleFile(TreeView1.SelectedNode)
-            Else
-                If TabControl1.TabPages.Contains(TitleView) Then
-                    TabControl1.TabPages.Remove(TitleView)
-                End If
+                TreeView1.SelectedNode = ReadNode
             End If
         End If
     End Sub
     'moving functions from on tree view to on tab select to reduce load times during tree movement on keyboard
     Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
-        If e.TabPageIndex = TabControl1.TabPages.IndexOf(PictureView) Then
-            LoadPicture(TreeView1.SelectedNode)
-        ElseIf e.TabPageIndex = TabControl1.TabPages.IndexOf(StringView) Then
-            FillStringView(TreeView1.SelectedNode)
+        If InformationLoaded = False Then
+            Select Case e.TabPage.Name
+                Case StringView.Name
+                    FillStringView(ReadNode)
+                Case MiscView.Name
+                    FillMiscView(ReadNode)
+                Case ShowView.Name
+                    FillShowView(ReadNode)
+                Case NIBJView.Name
+                    FillNIBJView(ReadNode)
+                Case PictureView.Name
+                    LoadPicture(ReadNode)
+                Case AttireView.Name
+                    LoadAttires(ReadNode)
+                Case MuscleView.Name
+                    LoadMuscles(ReadNode)
+                Case MaskView.Name
+                    LoadMask(ReadNode)
+                Case MaskView.Name
+                    LoadMask(ReadNode)
+                Case ObjArrayView.Name
+                    LoadObjectArray(ReadNode)
+                Case AssetView.Name
+                    LoadAssetFile(ReadNode)
+                Case TitleView.Name
+                    LoadTitleFile(ReadNode)
+            End Select
+            InformationLoaded = True
+        End If
+
+    End Sub
+    Function GetTabType(SelectedType As PackageType) As TabPage
+        Select Case SelectedType
+            Case PackageType.StringFile
+                Return StringView
+            Case PackageType.ArenaInfo
+                Return MiscView
+            Case PackageType.ShowInfo
+                Return ShowView
+            Case PackageType.NIBJ
+                Return NIBJView
+            Case PackageType.DDS
+                Return PictureView
+            Case PackageType.YOBJ
+                Return ObjectView
+            Case PackageType.CostumeFile
+                Return AttireView
+            Case PackageType.MaskFile
+                Return MaskView
+            Case PackageType.MuscleFile
+                Return MuscleView
+            Case PackageType.YOBJArray
+                Return ObjArrayView
+            Case PackageType.VMUM
+                Return AssetView
+            Case PackageType.TitleFile
+                Return TitleView
+            Case Else
+                Return Nothing
+        End Select
+    End Function
+    Sub LoadTab(NewTab As TabPage)
+        If Not TabControl1.TabPages.Contains(NewTab) Then
+            TabControl1.TabPages.Add(NewTab)
+            InformationLoaded = False
+            If NewTab.Name = MuscleView.Name Then
+                LoadMuscles(ReadNode)
+            End If
+        ElseIf NewTab.Name = MuscleView.Name Then
+            LoadMuscles(ReadNode)
         End If
     End Sub
 #End Region
+    'Left Off here refactoring
 #Region "Context Menu Strip"
     Private Sub TreeView1_NodeMouseClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles TreeView1.NodeMouseClick
         If Not e.Button = MouseButtons.Right Then
@@ -1695,11 +1696,6 @@ Public Class MainForm
     End Sub
 
 #End Region
-    'Injection Properties used across multiple forms
-    Dim SavePending As Boolean = False
-    Dim ReadNode As TreeNode
-    Dim SizeChange As Integer
-    Dim OldValue
 #Region "String View Controls"
     Sub CloseStringView()
         If SavePending Then
@@ -3246,5 +3242,6 @@ Public Class MainForm
         End If
         Return ReturnedBytes
     End Function
+
 #End Region
 End Class

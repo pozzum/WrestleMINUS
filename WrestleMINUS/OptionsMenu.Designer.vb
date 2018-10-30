@@ -48,6 +48,7 @@ Partial Class OptionsMenu
         Me.ButtonResetStrings = New System.Windows.Forms.Button()
         Me.ButtonResetPacs = New System.Windows.Forms.Button()
         Me.CheckBoxDeleteTempBMP = New System.Windows.Forms.CheckBox()
+        Me.CheckBoxTreeNodeIcons = New System.Windows.Forms.CheckBox()
         CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -234,7 +235,7 @@ Partial Class OptionsMenu
         'TrackBarHexLength
         '
         Me.TrackBarHexLength.LargeChange = 100
-        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 316)
+        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 348)
         Me.TrackBarHexLength.Maximum = 500
         Me.TrackBarHexLength.Minimum = 1
         Me.TrackBarHexLength.Name = "TrackBarHexLength"
@@ -247,7 +248,7 @@ Partial Class OptionsMenu
         'LabelHexLength
         '
         Me.LabelHexLength.AutoSize = True
-        Me.LabelHexLength.Location = New System.Drawing.Point(12, 300)
+        Me.LabelHexLength.Location = New System.Drawing.Point(12, 332)
         Me.LabelHexLength.Name = "LabelHexLength"
         Me.LabelHexLength.Size = New System.Drawing.Size(140, 13)
         Me.LabelHexLength.TabIndex = 22
@@ -255,7 +256,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetStrings
         '
-        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 351)
+        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 383)
         Me.ButtonResetStrings.Name = "ButtonResetStrings"
         Me.ButtonResetStrings.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetStrings.TabIndex = 23
@@ -264,7 +265,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetPacs
         '
-        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 351)
+        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 383)
         Me.ButtonResetPacs.Name = "ButtonResetPacs"
         Me.ButtonResetPacs.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetPacs.TabIndex = 24
@@ -281,11 +282,22 @@ Partial Class OptionsMenu
         Me.CheckBoxDeleteTempBMP.Text = "Delete Temp BMP Files on Exit"
         Me.CheckBoxDeleteTempBMP.UseVisualStyleBackColor = True
         '
+        'CheckBoxTreeNodeIcons
+        '
+        Me.CheckBoxTreeNodeIcons.AutoSize = True
+        Me.CheckBoxTreeNodeIcons.Location = New System.Drawing.Point(15, 302)
+        Me.CheckBoxTreeNodeIcons.Name = "CheckBoxTreeNodeIcons"
+        Me.CheckBoxTreeNodeIcons.Size = New System.Drawing.Size(125, 17)
+        Me.CheckBoxTreeNodeIcons.TabIndex = 26
+        Me.CheckBoxTreeNodeIcons.Text = "Use TreeNode Icons"
+        Me.CheckBoxTreeNodeIcons.UseVisualStyleBackColor = True
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 386)
+        Me.ClientSize = New System.Drawing.Size(284, 411)
+        Me.Controls.Add(Me.CheckBoxTreeNodeIcons)
         Me.Controls.Add(Me.CheckBoxDeleteTempBMP)
         Me.Controls.Add(Me.ButtonResetPacs)
         Me.Controls.Add(Me.ButtonResetStrings)
@@ -346,4 +358,5 @@ Partial Class OptionsMenu
     Friend WithEvents ButtonResetStrings As Button
     Friend WithEvents ButtonResetPacs As Button
     Friend WithEvents CheckBoxDeleteTempBMP As CheckBox
+    Friend WithEvents CheckBoxTreeNodeIcons As CheckBox
 End Class

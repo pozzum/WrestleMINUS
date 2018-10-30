@@ -59,5 +59,12 @@ The `HideTabs` command will be used for removing all tabs needed and incroperate
   * This Node properties also includes a `.FileType` which unless the container will only contain 1 type of file should be `= CheckHeaderType(.Index - NodeTag.Index, FileBytes)`
   * Also make sure to add the new file type to the `Expandable` function
 * No matter the format the program will need to know how to identify it.  so it must be added to the `CheckHeaderType` function. How this is done is entirely dependent on the file type.
-* 
+* Now if the new file type is editable we will want to add a new `tabpage` 
+  * Give the TabPage a descriptive name and first add it to the `GetTabType` 
+  * This will show the tab and hide all other tabs when a filetype of that type is selected.
+* Next we want to add a command to the `TabControl1_Selecting` command with information on how the tab is loaded with information.
+* -
+* To make any Changes in the tab saveable, you need to make a cuntion which will return a Byte Array that is the new File.  
+  * To have a Save Button use `InjectIntoNode(ReadNode, YourFunction())`
+  * You will want to add this to the `HideTabs` command so a save pending warning can be raised.
 

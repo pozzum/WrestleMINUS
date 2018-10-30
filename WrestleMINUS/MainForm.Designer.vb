@@ -29,23 +29,11 @@ Partial Class MainForm
         Me.LoadHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EditToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.UndoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RedoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.toolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
-        Me.CutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CopyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PasteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.toolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
-        Me.SelectAllToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ContentsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.IndexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SearchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.toolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SupportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GitHubIssuesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.TreeView1 = New System.Windows.Forms.TreeView()
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
@@ -223,6 +211,26 @@ Partial Class MainForm
         Me.FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TitleView = New System.Windows.Forms.TabPage()
         Me.DataGridTitleView = New System.Windows.Forms.DataGridView()
+        Me.TitleEnabled = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PropRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MenuNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Name1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Name1Full = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Name2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Name2Full = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Name3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Name3Full = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MyWWE1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MyWWE2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Uni1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Uni2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Temp1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Temp2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Female = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.TagTeam = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Cruiserweight = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.UnlockNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Temp4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStrip3 = New System.Windows.Forms.MenuStrip()
         Me.TitleGameComboBox = New System.Windows.Forms.ToolStripComboBox()
         Me.StringLoadedTitleMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -276,26 +284,7 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.TitleEnabled = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PropRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MenuNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Name1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Name1Full = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Name2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Name2Full = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Name3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Name3Full = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MyWWE1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MyWWE2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Uni1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Uni2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Temp1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Temp2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Female = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.TagTeam = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.Cruiserweight = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.UnlockNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Temp4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -343,7 +332,7 @@ Partial Class MainForm
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.EditToolStripMenuItem, Me.ToolsToolStripMenuItem, Me.HelpToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.OptionsToolStripMenuItem, Me.HelpToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1184, 24)
@@ -381,118 +370,36 @@ Partial Class MainForm
         Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
         Me.ExitToolStripMenuItem.Text = "E&xit"
         '
-        'EditToolStripMenuItem
-        '
-        Me.EditToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UndoToolStripMenuItem, Me.RedoToolStripMenuItem, Me.toolStripSeparator3, Me.CutToolStripMenuItem, Me.CopyToolStripMenuItem, Me.PasteToolStripMenuItem, Me.toolStripSeparator4, Me.SelectAllToolStripMenuItem})
-        Me.EditToolStripMenuItem.Name = "EditToolStripMenuItem"
-        Me.EditToolStripMenuItem.Size = New System.Drawing.Size(39, 20)
-        Me.EditToolStripMenuItem.Text = "&Edit"
-        '
-        'UndoToolStripMenuItem
-        '
-        Me.UndoToolStripMenuItem.Name = "UndoToolStripMenuItem"
-        Me.UndoToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Z), System.Windows.Forms.Keys)
-        Me.UndoToolStripMenuItem.Size = New System.Drawing.Size(144, 22)
-        Me.UndoToolStripMenuItem.Text = "&Undo"
-        '
-        'RedoToolStripMenuItem
-        '
-        Me.RedoToolStripMenuItem.Name = "RedoToolStripMenuItem"
-        Me.RedoToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Y), System.Windows.Forms.Keys)
-        Me.RedoToolStripMenuItem.Size = New System.Drawing.Size(144, 22)
-        Me.RedoToolStripMenuItem.Text = "&Redo"
-        '
-        'toolStripSeparator3
-        '
-        Me.toolStripSeparator3.Name = "toolStripSeparator3"
-        Me.toolStripSeparator3.Size = New System.Drawing.Size(141, 6)
-        '
-        'CutToolStripMenuItem
-        '
-        Me.CutToolStripMenuItem.Image = CType(resources.GetObject("CutToolStripMenuItem.Image"), System.Drawing.Image)
-        Me.CutToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.CutToolStripMenuItem.Name = "CutToolStripMenuItem"
-        Me.CutToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.X), System.Windows.Forms.Keys)
-        Me.CutToolStripMenuItem.Size = New System.Drawing.Size(144, 22)
-        Me.CutToolStripMenuItem.Text = "Cu&t"
-        '
-        'CopyToolStripMenuItem
-        '
-        Me.CopyToolStripMenuItem.Image = CType(resources.GetObject("CopyToolStripMenuItem.Image"), System.Drawing.Image)
-        Me.CopyToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.CopyToolStripMenuItem.Name = "CopyToolStripMenuItem"
-        Me.CopyToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.C), System.Windows.Forms.Keys)
-        Me.CopyToolStripMenuItem.Size = New System.Drawing.Size(144, 22)
-        Me.CopyToolStripMenuItem.Text = "&Copy"
-        '
-        'PasteToolStripMenuItem
-        '
-        Me.PasteToolStripMenuItem.Image = CType(resources.GetObject("PasteToolStripMenuItem.Image"), System.Drawing.Image)
-        Me.PasteToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.PasteToolStripMenuItem.Name = "PasteToolStripMenuItem"
-        Me.PasteToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.V), System.Windows.Forms.Keys)
-        Me.PasteToolStripMenuItem.Size = New System.Drawing.Size(144, 22)
-        Me.PasteToolStripMenuItem.Text = "&Paste"
-        '
-        'toolStripSeparator4
-        '
-        Me.toolStripSeparator4.Name = "toolStripSeparator4"
-        Me.toolStripSeparator4.Size = New System.Drawing.Size(141, 6)
-        '
-        'SelectAllToolStripMenuItem
-        '
-        Me.SelectAllToolStripMenuItem.Name = "SelectAllToolStripMenuItem"
-        Me.SelectAllToolStripMenuItem.Size = New System.Drawing.Size(144, 22)
-        Me.SelectAllToolStripMenuItem.Text = "Select &All"
-        '
-        'ToolsToolStripMenuItem
-        '
-        Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsToolStripMenuItem})
-        Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
-        Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(47, 20)
-        Me.ToolsToolStripMenuItem.Text = "&Tools"
-        '
-        'OptionsToolStripMenuItem
-        '
-        Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
-        Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.OptionsToolStripMenuItem.Text = "&Options"
-        '
         'HelpToolStripMenuItem
         '
-        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ContentsToolStripMenuItem, Me.IndexToolStripMenuItem, Me.SearchToolStripMenuItem, Me.toolStripSeparator5, Me.AboutToolStripMenuItem})
+        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem, Me.SupportToolStripMenuItem, Me.GitHubIssuesToolStripMenuItem})
         Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
         Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.HelpToolStripMenuItem.Text = "&Help"
         '
-        'ContentsToolStripMenuItem
-        '
-        Me.ContentsToolStripMenuItem.Name = "ContentsToolStripMenuItem"
-        Me.ContentsToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
-        Me.ContentsToolStripMenuItem.Text = "&Contents"
-        '
-        'IndexToolStripMenuItem
-        '
-        Me.IndexToolStripMenuItem.Name = "IndexToolStripMenuItem"
-        Me.IndexToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
-        Me.IndexToolStripMenuItem.Text = "&Index"
-        '
-        'SearchToolStripMenuItem
-        '
-        Me.SearchToolStripMenuItem.Name = "SearchToolStripMenuItem"
-        Me.SearchToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
-        Me.SearchToolStripMenuItem.Text = "&Search"
-        '
-        'toolStripSeparator5
-        '
-        Me.toolStripSeparator5.Name = "toolStripSeparator5"
-        Me.toolStripSeparator5.Size = New System.Drawing.Size(119, 6)
-        '
         'AboutToolStripMenuItem
         '
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
         Me.AboutToolStripMenuItem.Text = "&About..."
+        '
+        'SupportToolStripMenuItem
+        '
+        Me.SupportToolStripMenuItem.Name = "SupportToolStripMenuItem"
+        Me.SupportToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
+        Me.SupportToolStripMenuItem.Text = "ST Thread"
+        '
+        'GitHubIssuesToolStripMenuItem
+        '
+        Me.GitHubIssuesToolStripMenuItem.Name = "GitHubIssuesToolStripMenuItem"
+        Me.GitHubIssuesToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
+        Me.GitHubIssuesToolStripMenuItem.Text = "GitHub Issues"
+        '
+        'OptionsToolStripMenuItem
+        '
+        Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
+        Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
+        Me.OptionsToolStripMenuItem.Text = "&Options"
         '
         'SplitContainer1
         '
@@ -516,8 +423,11 @@ Partial Class MainForm
         'TreeView1
         '
         Me.TreeView1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TreeView1.ImageIndex = 0
+        Me.TreeView1.ImageList = Me.ImageList1
         Me.TreeView1.Location = New System.Drawing.Point(0, 24)
         Me.TreeView1.Name = "TreeView1"
+        Me.TreeView1.SelectedImageIndex = 0
         Me.TreeView1.ShowNodeToolTips = True
         Me.TreeView1.Size = New System.Drawing.Size(196, 403)
         Me.TreeView1.TabIndex = 0
@@ -1879,6 +1789,157 @@ Partial Class MainForm
         Me.DataGridTitleView.Size = New System.Drawing.Size(970, 391)
         Me.DataGridTitleView.TabIndex = 1
         '
+        'TitleEnabled
+        '
+        Me.TitleEnabled.HeaderText = "Enabled"
+        Me.TitleEnabled.MaxInputLength = 1
+        Me.TitleEnabled.Name = "TitleEnabled"
+        Me.TitleEnabled.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.TitleEnabled.Width = 52
+        '
+        'PropRef
+        '
+        Me.PropRef.HeaderText = "PropRef"
+        Me.PropRef.MaxInputLength = 4
+        Me.PropRef.Name = "PropRef"
+        Me.PropRef.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.PropRef.Width = 52
+        '
+        'MenuNumber
+        '
+        Me.MenuNumber.HeaderText = "MenuNum"
+        Me.MenuNumber.Name = "MenuNumber"
+        Me.MenuNumber.Width = 81
+        '
+        'Name1
+        '
+        Me.Name1.HeaderText = "Name1"
+        Me.Name1.MaxInputLength = 8
+        Me.Name1.Name = "Name1"
+        Me.Name1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Name1.Width = 47
+        '
+        'Name1Full
+        '
+        Me.Name1Full.HeaderText = "Name1Full"
+        Me.Name1Full.Name = "Name1Full"
+        Me.Name1Full.ReadOnly = True
+        Me.Name1Full.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Name1Full.Width = 63
+        '
+        'Name2
+        '
+        Me.Name2.HeaderText = "Name2"
+        Me.Name2.MaxInputLength = 8
+        Me.Name2.Name = "Name2"
+        Me.Name2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Name2.Width = 47
+        '
+        'Name2Full
+        '
+        Me.Name2Full.HeaderText = "Name2Full"
+        Me.Name2Full.Name = "Name2Full"
+        Me.Name2Full.ReadOnly = True
+        Me.Name2Full.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Name2Full.Width = 63
+        '
+        'Name3
+        '
+        Me.Name3.HeaderText = "Name3"
+        Me.Name3.MaxInputLength = 8
+        Me.Name3.Name = "Name3"
+        Me.Name3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Name3.Width = 47
+        '
+        'Name3Full
+        '
+        Me.Name3Full.HeaderText = "Name3Full"
+        Me.Name3Full.Name = "Name3Full"
+        Me.Name3Full.ReadOnly = True
+        Me.Name3Full.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Name3Full.Width = 63
+        '
+        'MyWWE1
+        '
+        Me.MyWWE1.HeaderText = "MyWWE1"
+        Me.MyWWE1.MaxInputLength = 4
+        Me.MyWWE1.Name = "MyWWE1"
+        Me.MyWWE1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.MyWWE1.Width = 62
+        '
+        'MyWWE2
+        '
+        Me.MyWWE2.HeaderText = "MyWWE2"
+        Me.MyWWE2.MaxInputLength = 4
+        Me.MyWWE2.Name = "MyWWE2"
+        Me.MyWWE2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.MyWWE2.Width = 62
+        '
+        'Uni1
+        '
+        Me.Uni1.HeaderText = "Uni1"
+        Me.Uni1.MaxInputLength = 4
+        Me.Uni1.Name = "Uni1"
+        Me.Uni1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Uni1.Width = 35
+        '
+        'Uni2
+        '
+        Me.Uni2.HeaderText = "Uni2"
+        Me.Uni2.MaxInputLength = 4
+        Me.Uni2.Name = "Uni2"
+        Me.Uni2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Uni2.Width = 35
+        '
+        'Temp1
+        '
+        Me.Temp1.HeaderText = "Temp1"
+        Me.Temp1.MaxInputLength = 8
+        Me.Temp1.Name = "Temp1"
+        Me.Temp1.Width = 65
+        '
+        'Temp2
+        '
+        Me.Temp2.HeaderText = "Temp2"
+        Me.Temp2.MaxInputLength = 8
+        Me.Temp2.Name = "Temp2"
+        Me.Temp2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Temp2.Width = 46
+        '
+        'Female
+        '
+        Me.Female.HeaderText = "Female"
+        Me.Female.Name = "Female"
+        Me.Female.Width = 47
+        '
+        'TagTeam
+        '
+        Me.TagTeam.HeaderText = "TagTeam"
+        Me.TagTeam.Name = "TagTeam"
+        Me.TagTeam.Width = 59
+        '
+        'Cruiserweight
+        '
+        Me.Cruiserweight.HeaderText = "Cruiser"
+        Me.Cruiserweight.Name = "Cruiserweight"
+        Me.Cruiserweight.Width = 45
+        '
+        'UnlockNum
+        '
+        Me.UnlockNum.HeaderText = "UnlockNum"
+        Me.UnlockNum.MaxInputLength = 8
+        Me.UnlockNum.Name = "UnlockNum"
+        Me.UnlockNum.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.UnlockNum.Width = 69
+        '
+        'Temp4
+        '
+        Me.Temp4.HeaderText = "Temp4"
+        Me.Temp4.MaxInputLength = 8
+        Me.Temp4.Name = "Temp4"
+        Me.Temp4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Temp4.Width = 46
+        '
         'MenuStrip3
         '
         Me.MenuStrip3.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TitleGameComboBox, Me.StringLoadedTitleMenuItem, Me.PacsLoadedTitleMenuItem, Me.SaveChangesTitleMenuItem})
@@ -2202,156 +2263,19 @@ Partial Class MainForm
         '
         Me.SaveExtractAllDialog.FileName = "Save Files Here"
         '
-        'TitleEnabled
+        'ImageList1
         '
-        Me.TitleEnabled.HeaderText = "Enabled"
-        Me.TitleEnabled.MaxInputLength = 1
-        Me.TitleEnabled.Name = "TitleEnabled"
-        Me.TitleEnabled.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.TitleEnabled.Width = 52
-        '
-        'PropRef
-        '
-        Me.PropRef.HeaderText = "PropRef"
-        Me.PropRef.MaxInputLength = 4
-        Me.PropRef.Name = "PropRef"
-        Me.PropRef.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.PropRef.Width = 52
-        '
-        'MenuNumber
-        '
-        Me.MenuNumber.HeaderText = "MenuNum"
-        Me.MenuNumber.Name = "MenuNumber"
-        Me.MenuNumber.Width = 81
-        '
-        'Name1
-        '
-        Me.Name1.HeaderText = "Name1"
-        Me.Name1.MaxInputLength = 8
-        Me.Name1.Name = "Name1"
-        Me.Name1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Name1.Width = 47
-        '
-        'Name1Full
-        '
-        Me.Name1Full.HeaderText = "Name1Full"
-        Me.Name1Full.Name = "Name1Full"
-        Me.Name1Full.ReadOnly = True
-        Me.Name1Full.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Name1Full.Width = 63
-        '
-        'Name2
-        '
-        Me.Name2.HeaderText = "Name2"
-        Me.Name2.MaxInputLength = 8
-        Me.Name2.Name = "Name2"
-        Me.Name2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Name2.Width = 47
-        '
-        'Name2Full
-        '
-        Me.Name2Full.HeaderText = "Name2Full"
-        Me.Name2Full.Name = "Name2Full"
-        Me.Name2Full.ReadOnly = True
-        Me.Name2Full.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Name2Full.Width = 63
-        '
-        'Name3
-        '
-        Me.Name3.HeaderText = "Name3"
-        Me.Name3.MaxInputLength = 8
-        Me.Name3.Name = "Name3"
-        Me.Name3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Name3.Width = 47
-        '
-        'Name3Full
-        '
-        Me.Name3Full.HeaderText = "Name3Full"
-        Me.Name3Full.Name = "Name3Full"
-        Me.Name3Full.ReadOnly = True
-        Me.Name3Full.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Name3Full.Width = 63
-        '
-        'MyWWE1
-        '
-        Me.MyWWE1.HeaderText = "MyWWE1"
-        Me.MyWWE1.MaxInputLength = 4
-        Me.MyWWE1.Name = "MyWWE1"
-        Me.MyWWE1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.MyWWE1.Width = 62
-        '
-        'MyWWE2
-        '
-        Me.MyWWE2.HeaderText = "MyWWE2"
-        Me.MyWWE2.MaxInputLength = 4
-        Me.MyWWE2.Name = "MyWWE2"
-        Me.MyWWE2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.MyWWE2.Width = 62
-        '
-        'Uni1
-        '
-        Me.Uni1.HeaderText = "Uni1"
-        Me.Uni1.MaxInputLength = 4
-        Me.Uni1.Name = "Uni1"
-        Me.Uni1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Uni1.Width = 35
-        '
-        'Uni2
-        '
-        Me.Uni2.HeaderText = "Uni2"
-        Me.Uni2.MaxInputLength = 4
-        Me.Uni2.Name = "Uni2"
-        Me.Uni2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Uni2.Width = 35
-        '
-        'Temp1
-        '
-        Me.Temp1.HeaderText = "Temp1"
-        Me.Temp1.MaxInputLength = 8
-        Me.Temp1.Name = "Temp1"
-        Me.Temp1.Width = 65
-        '
-        'Temp2
-        '
-        Me.Temp2.HeaderText = "Temp2"
-        Me.Temp2.MaxInputLength = 8
-        Me.Temp2.Name = "Temp2"
-        Me.Temp2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Temp2.Width = 46
-        '
-        'Female
-        '
-        Me.Female.HeaderText = "Female"
-        Me.Female.Name = "Female"
-        Me.Female.Width = 47
-        '
-        'TagTeam
-        '
-        Me.TagTeam.HeaderText = "TagTeam"
-        Me.TagTeam.Name = "TagTeam"
-        Me.TagTeam.Width = 59
-        '
-        'Cruiserweight
-        '
-        Me.Cruiserweight.HeaderText = "Cruiser"
-        Me.Cruiserweight.Name = "Cruiserweight"
-        Me.Cruiserweight.Width = 45
-        '
-        'UnlockNum
-        '
-        Me.UnlockNum.HeaderText = "UnlockNum"
-        Me.UnlockNum.MaxInputLength = 8
-        Me.UnlockNum.Name = "UnlockNum"
-        Me.UnlockNum.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.UnlockNum.Width = 69
-        '
-        'Temp4
-        '
-        Me.Temp4.HeaderText = "Temp4"
-        Me.Temp4.MaxInputLength = 8
-        Me.Temp4.Name = "Temp4"
-        Me.Temp4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Temp4.Width = 46
+        Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
+        Me.ImageList1.Images.SetKeyName(0, "Qu.png")
+        Me.ImageList1.Images.SetKeyName(1, "F.png")
+        Me.ImageList1.Images.SetKeyName(2, "H.png")
+        Me.ImageList1.Images.SetKeyName(3, "8.png")
+        Me.ImageList1.Images.SetKeyName(4, "E.png")
+        Me.ImageList1.Images.SetKeyName(5, "S.png")
+        Me.ImageList1.Images.SetKeyName(6, "P.png")
+        Me.ImageList1.Images.SetKeyName(7, "O.png")
+        Me.ImageList1.Images.SetKeyName(8, "Z.png")
         '
         'MainForm
         '
@@ -2442,22 +2366,7 @@ Partial Class MainForm
     Friend WithEvents LoadHomeToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents OpenToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents EditToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents UndoToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents RedoToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents toolStripSeparator3 As ToolStripSeparator
-    Friend WithEvents CutToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents CopyToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents PasteToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents toolStripSeparator4 As ToolStripSeparator
-    Friend WithEvents SelectAllToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ToolsToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents OptionsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ContentsToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents IndexToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents SearchToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents toolStripSeparator5 As ToolStripSeparator
     Friend WithEvents AboutToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents TreeView1 As TreeView
@@ -2728,4 +2637,8 @@ Partial Class MainForm
     Friend WithEvents Cruiserweight As DataGridViewCheckBoxColumn
     Friend WithEvents UnlockNum As DataGridViewTextBoxColumn
     Friend WithEvents Temp4 As DataGridViewTextBoxColumn
+    Friend WithEvents SupportToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents GitHubIssuesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents OptionsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ImageList1 As ImageList
 End Class
