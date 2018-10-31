@@ -9,24 +9,40 @@ Public Class OptionsMenu
         TextBoxTexConv.Text = My.Settings.TexConvPath
         If Not File.Exists(My.Settings.TexConvPath) Then
             LabelTexConv.ForeColor = Color.Red
+        Else
+            LabelTexConv.ForeColor = Color.Black
         End If
         TextBoxRadVideo.Text = My.Settings.RADVideoToolPath
         If Not File.Exists(My.Settings.RADVideoToolPath) Then
             LabelRadVideo.ForeColor = Color.Red
+        Else
+            LabelRadVideo.ForeColor = Color.Black
         End If
         TextBoxUnrrbpe.Text = My.Settings.UnrrbpePath
         If Not File.Exists(My.Settings.UnrrbpePath) Then
             LabelUnrrbpe.ForeColor = Color.Red
+        Else
+            LabelUnrrbpe.ForeColor = Color.Black
+        End If
+        TextBoxDDSExe.Text = My.Settings.DDSexeLocation
+        If Not File.Exists(My.Settings.DDSexeLocation) Then
+            LabelDSSExe.ForeColor = Color.Red
+        Else
+            LabelDSSExe.ForeColor = Color.Black
         End If
         If Not MainForm.CheckIconicZlib() Then
             LabelZlib.Text = "Zlib DLL Loaded: False"
             LabelZlib.ForeColor = Color.Red
             ButtonSelectZlib.Visible = True
+        Else
+            LabelZlib.ForeColor = Color.Black
         End If
         If Not MainForm.CheckOodle() Then
             LabelOodle.Text = "Oodle DLL Loaded: False"
             LabelOodle.ForeColor = Color.Red
             ButtonOodleSelect.Visible = True
+        Else
+            LabelOodle.ForeColor = Color.Black
         End If
         CheckBoxLoadHome.Checked = My.Settings.LoadHomeOnLaunch
         CheckBoxBackup.Checked = My.Settings.BackupInjections
@@ -52,7 +68,11 @@ Public Class OptionsMenu
     End Sub
 
     Private Sub ButtonSelectUnrrbpe_Click(sender As Object, e As EventArgs) Handles ButtonSelectUnrrbpe.Click
-        MainForm.GetUnrrbpe()
+        MainForm.GetUnrrbpe(True)
+        LoadSettings()
+    End Sub
+    Private Sub ButtonSelectDDSexe_Click(sender As Object, e As EventArgs) Handles ButtonSelectDDSexe.Click
+        MainForm.GetDDSexe(True)
         LoadSettings()
     End Sub
     Private Sub ButtonDownloadUnrrbpe_Click(sender As Object, e As EventArgs) Handles ButtonDownloadUnrrbpe.Click
@@ -99,4 +119,5 @@ Public Class OptionsMenu
         MainForm.PacNumbers = New Integer(1024) {}
         MainForm.PacNumbers(0) = -1
     End Sub
+
 End Class

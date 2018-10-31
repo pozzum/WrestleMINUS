@@ -55,6 +55,7 @@ Public Class MainForm
         If My.Settings.UnrrbpePath = "" Then
             GetUnrrbpe()
         End If
+        GetDDSexe()
         HexViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         TextViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         MiscViewType.SelectedIndex = My.Settings.MiscModeIndex
@@ -231,20 +232,22 @@ Public Class MainForm
         End If
     End Sub
     Public Sub GetRadVideo(Optional FromOptions As Boolean = False)
-        My.Settings.RADVideoToolPath = "Not Installed"
-        Dim AllDrives As DriveInfo() = DriveInfo.GetDrives()
-        For Each Drive As DriveInfo In AllDrives
-            'MessageBox.Show(Drive.Name & "Program Files (x86)\RADVideo\radvideo.exe")
-            If (Drive.IsReady = True) Then
-                If File.Exists(Drive.Name & "Program Files (x86)\RADVideo\radvideo.exe") Then
-                    My.Settings.RADVideoToolPath = Drive.Name & "Program Files (x86)\RADVideo\binkplay.exe"
-                    Exit For
-                ElseIf File.Exists(Drive.Name & "Program Files\RADVideo\radvideo.exe") Then
-                    My.Settings.RADVideoToolPath = Drive.Name & "Program Files\RADVideo\binkplay.exe"
-                    Exit For
+        If My.Settings.RADVideoToolPath = "" Then
+            My.Settings.RADVideoToolPath = "Not Installed"
+            Dim AllDrives As DriveInfo() = DriveInfo.GetDrives()
+            For Each Drive As DriveInfo In AllDrives
+                'MessageBox.Show(Drive.Name & "Program Files (x86)\RADVideo\radvideo.exe")
+                If (Drive.IsReady = True) Then
+                    If File.Exists(Drive.Name & "Program Files (x86)\RADVideo\radvideo.exe") Then
+                        My.Settings.RADVideoToolPath = Drive.Name & "Program Files (x86)\RADVideo\binkplay.exe"
+                        Exit For
+                    ElseIf File.Exists(Drive.Name & "Program Files\RADVideo\radvideo.exe") Then
+                        My.Settings.RADVideoToolPath = Drive.Name & "Program Files\RADVideo\binkplay.exe"
+                        Exit For
+                    End If
                 End If
-            End If
-        Next
+            Next
+        End If
         If My.Settings.RADVideoToolPath = "Not Installed" OrElse FromOptions Then
             Dim RADVideoToolOpenDialog As New OpenFileDialog With {.FileName = "radvideo.exe", .Title = "Select radvideo.exe"}
             If Not My.Settings.RADVideoToolPath = "Not Installed" Then
@@ -277,7 +280,9 @@ Public Class MainForm
                 End If
             End If
         End If
-        My.Settings.UnrrbpePath = "Not Installed"
+        If My.Settings.UnrrbpePath = "" Then
+            My.Settings.UnrrbpePath = "Not Installed"
+        End If
         Dim UnrrbpeOpenDialog As New OpenFileDialog With {.FileName = "unrrbpe.exe", .Title = "Select unrrbpe.exe"}
         If UnrrbpeOpenDialog.ShowDialog = DialogResult.OK Then
             If Path.GetFileName(UnrrbpeOpenDialog.FileName) = "unrrbpe.exe" Then
@@ -294,7 +299,19 @@ Public Class MainForm
                 MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
             End If
         End If
-
+    End Sub
+    Public Sub GetDDSexe(Optional FromOptions As Boolean = False)
+        If FromOptions Then
+            Dim DDSOpenExeOpenDialog As New OpenFileDialog With {.FileName = "*.exe", .Title = "Select exe for opening DDS files"}
+            If Not My.Settings.DDSexeLocation = "Not Installed" Then
+                DDSOpenExeOpenDialog.InitialDirectory = Path.GetDirectoryName(My.Settings.DDSexeLocation)
+            End If
+            If DDSOpenExeOpenDialog.ShowDialog = DialogResult.OK Then
+                My.Settings.DDSexeLocation = DDSOpenExeOpenDialog.FileName
+            End If
+        ElseIf File.Exists(My.Settings.DDSexeLocation) Then
+            OpenWithToolStripMenuItem.Text = "Open With " & Path.GetFileNameWithoutExtension(My.Settings.DDSexeLocation)
+        End If
     End Sub
     Public Function CheckIconicZlib(Optional FromOptions As Boolean = False) As Boolean
         If Not File.Exists(Application.StartupPath & Path.DirectorySeparatorChar & "Ionic.Zlib.dll") Then
@@ -714,6 +731,7 @@ Public Class MainForm
                 Dim TextureCount As Integer = FileBytes(0)
                 For i As Integer = 0 To TextureCount - 1
                     Dim ImageName As String = Encoding.Default.GetChars(FileBytes, i * &H20 + &H10, &H10)
+                    ImageName = ImageName.TrimEnd(Chr(0))
                     Dim TempNode As TreeNode = New TreeNode(ImageName)
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties With {
@@ -1183,39 +1201,48 @@ Public Class MainForm
         End If
     End Sub
 #End Region
-    'Left Off here refactoring
+
 #Region "Context Menu Strip"
     Private Sub TreeView1_NodeMouseClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles TreeView1.NodeMouseClick
         If Not e.Button = MouseButtons.Right Then
             Exit Sub
         End If
         TreeView1.SelectedNode = e.Node
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag.FileType = CType(e.Node.Tag, NodeProperties).FileType
-        NodeTag.Index = CType(e.Node.Tag, NodeProperties).Index
-        NodeTag.length = CType(e.Node.Tag, NodeProperties).length
-        NodeTag.StoredData = CType(e.Node.Tag, NodeProperties).StoredData
-        Dim ShownOptions As Integer = 6
+        If SavePending Then 'Changing the node should remove the pending save unless it is canceled and then we shouldn't show the strip.
+            Exit Sub
+        End If
+        Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
+        Dim ShownOptions As Integer = TreeViewContext.Items.Count
+        'Hide Menu Options when not needed, and if no options are relevent do not show the context strip
         If NodeTag.FileType = PackageType.Folder Then
             ExtractToolStripMenuItem.Visible = False
             InjectToolStripMenuItem.Visible = False
             OpenToolStripMenuItem1.Visible = False
-            ShownOptions -= 3
+            OpenWithToolStripMenuItem.Visible = False
+            ShownOptions -= 4
         Else
             If NodeTag.Index > 0 OrElse
-                   NodeTag.StoredData.Length > 0 Then
+                       NodeTag.StoredData.Length > 0 Then
                 ExtractToolStripMenuItem.Visible = True
-                InjectToolStripMenuItem.Visible = True
+                InjectToolStripMenuItem.Visible = True 'injection is still in progess
             Else
                 ExtractToolStripMenuItem.Visible = False
                 InjectToolStripMenuItem.Visible = False
                 ShownOptions -= 2
             End If
+            'TO DO add Open With Items Somehow
             If NodeTag.FileType = PackageType.bk2 AndAlso My.Settings.RADVideoToolPath <> "Not Installed" Then
                 OpenToolStripMenuItem1.Visible = True
+                OpenWithToolStripMenuItem.Visible = False
+                ShownOptions -= 1
+            ElseIf NodeTag.FileType = PackageType.DDS Then
+                OpenToolStripMenuItem1.Visible = False
+                OpenWithToolStripMenuItem.Visible = True
+                ShownOptions -= 1
             Else
                 OpenToolStripMenuItem1.Visible = False
-                ShownOptions -= 1
+                OpenWithToolStripMenuItem.Visible = False
+                ShownOptions -= 2
             End If
         End If
         If TreeView1.SelectedNode.GetNodeCount(False) > 0 Then
@@ -1233,76 +1260,65 @@ Public Class MainForm
         End If
     End Sub
     Private Sub ExtractToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExtractToolStripMenuItem.Click
-        Dim filepath As String = TreeView1.SelectedNode.ToolTipText
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag = CType(TreeView1.SelectedNode.Tag, NodeProperties)
-        SaveFileDialog1.InitialDirectory = Path.GetDirectoryName(filepath)
-        SaveFileDialog1.FileName = TreeView1.SelectedNode.Text & "." & NodeTag.FileType.ToString
-        If SaveFileDialog1.ShowDialog() = DialogResult.OK Then
-            extractnode(TreeView1.SelectedNode, SaveFileDialog1.FileName)
+        Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
+        Dim ExtractSaveFileDialog As SaveFileDialog = New SaveFileDialog()
+        ExtractSaveFileDialog.InitialDirectory = Path.GetDirectoryName(TreeView1.SelectedNode.ToolTipText)
+        ExtractSaveFileDialog.FileName = TreeView1.SelectedNode.Text & "." & NodeTag.FileType.ToString
+        If ExtractSaveFileDialog.ShowDialog() = DialogResult.OK Then
+            extractnode(TreeView1.SelectedNode, ExtractSaveFileDialog.FileName)
         End If
     End Sub
     Private Sub OpenToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles OpenToolStripMenuItem1.Click
         'Currently Only Opens Bink Files
-        Dim filepath As String = TreeView1.SelectedNode.ToolTipText
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag.FileType = CType(TreeView1.SelectedNode.Tag, NodeProperties).FileType
-        NodeTag.Index = CType(TreeView1.SelectedNode.Tag, NodeProperties).Index
-        NodeTag.length = CType(TreeView1.SelectedNode.Tag, NodeProperties).length
-        NodeTag.StoredData = CType(TreeView1.SelectedNode.Tag, NodeProperties).StoredData
-
-        Dim TronBytes As Byte()
-        If NodeTag.StoredData.Length > 0 Then
-            Dim FileBytes As Byte() = NodeTag.StoredData
-            TronBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), TronBytes, 0, CInt(NodeTag.length))
-        Else
-            Dim FileBytes As Byte() = File.ReadAllBytes(filepath)
-            TronBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), TronBytes, 0, CInt(NodeTag.length))
-        End If
-        filepath = Path.GetTempFileName
-
+        Dim TronBytes As Byte() = GetNodeBytes(TreeView1.SelectedNode)
+        Dim filepath As String = Path.GetTempFileName
         File.WriteAllBytes(filepath, TronBytes)
-
         Process.Start(My.Settings.RADVideoToolPath, filepath)
     End Sub
+    Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenWithToolStripMenuItem.Click
+        If My.Settings.DDSexeLocation = "Not Installed" Then
+            GetDDSexe(True)
+        Else
+            'Currently Only Designed for DDS Files
+            Dim DDSBytes As Byte() = GetNodeBytes(TreeView1.SelectedNode)
+            Dim filepath As String = Path.GetTempPath & Guid.NewGuid().ToString() & ".dds"
+            File.WriteAllBytes(filepath, DDSBytes)
+            Process.Start(My.Settings.DDSexeLocation, filepath)
+        End If
+    End Sub
     Private Sub CrawlToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CrawlToolStripMenuItem.Click
-        Crawlnode(TreeView1.SelectedNode)
+        Crawlnode(TreeView1.SelectedNode) 'Crawls All of the Nodes and then expands the node
         TreeView1.SelectedNode.ExpandAll()
     End Sub
     Private Sub ExtractAllInPlaceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExtractAllInPlaceToolStripMenuItem.Click
-        Crawlnode(TreeView1.SelectedNode)
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag = CType(TreeView1.SelectedNode.Tag, NodeProperties)
-        If NodeTag.FileType = PackageType.Folder Then
-            ExtractFolder = TreeView1.SelectedNode.ToolTipText & Path.DirectorySeparatorChar
-        Else
-            ExtractFolder = Path.GetDirectoryName(TreeView1.SelectedNode.ToolTipText) & Path.DirectorySeparatorChar
+        Crawlnode(TreeView1.SelectedNode) 'crawls the node first so all of the files to be extracted are located
+        If CType(TreeView1.SelectedNode.Tag, NodeProperties).FileType = PackageType.Folder Then 'if a folder used the folder
+            ExtractAllNode(TreeView1.SelectedNode,
+                           TreeView1.SelectedNode.ToolTipText &
+                           Path.DirectorySeparatorChar)
+        Else 'otherwise use the folder that the file is in with a new folder using that file name
+            ExtractAllNode(TreeView1.SelectedNode,
+                           Path.GetDirectoryName(TreeView1.SelectedNode.ToolTipText) & Path.DirectorySeparatorChar &
+                           Path.GetFileNameWithoutExtension(TreeView1.SelectedNode.ToolTipText) & Path.DirectorySeparatorChar)
         End If
-        ExtractAllNode(TreeView1.SelectedNode)
     End Sub
     Private Sub ExtractAllToToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExtractAllToToolStripMenuItem.Click
         SaveExtractAllDialog.InitialDirectory = Path.GetDirectoryName(TreeView1.SelectedNode.ToolTipText)
         If SaveExtractAllDialog.ShowDialog() = DialogResult.OK Then
             Crawlnode(TreeView1.SelectedNode)
-            Dim NodeTag As NodeProperties = New NodeProperties
-            NodeTag = CType(TreeView1.SelectedNode.Tag, NodeProperties)
-            ExtractFolder = Path.GetDirectoryName(SaveExtractAllDialog.FileName) & Path.DirectorySeparatorChar
-            ExtractAllNode(TreeView1.SelectedNode)
+            ExtractAllNode(TreeView1.SelectedNode,
+                           (Path.GetDirectoryName(SaveExtractAllDialog.FileName) & Path.DirectorySeparatorChar))
         End If
     End Sub
     Private Sub InjectToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InjectToolStripMenuItem.Click
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag = CType(TreeView1.SelectedNode.Tag, NodeProperties)
-        Dim ParrentNodeTag As NodeProperties = New NodeProperties
-        ParrentNodeTag = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
+        Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
+        Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
         If ParrentNodeTag.FileType = PackageType.HSPC OrElse
             ParrentNodeTag.FileType = PackageType.SHDC OrElse
             ParrentNodeTag.FileType = PackageType.EPK8 OrElse
             ParrentNodeTag.FileType = PackageType.EPAC OrElse
-            ParrentNodeTag.FileType = PackageType.PachDirectory Then
+            ParrentNodeTag.FileType = PackageType.PachDirectory Then 'Hopefully this can expand to all
             Dim injectopenfile As OpenFileDialog = New OpenFileDialog With {
             .FileName = TreeView1.SelectedNode.Text & "." & NodeTag.FileType.ToString,
             .InitialDirectory = Path.GetDirectoryName(filepath)}
@@ -1326,9 +1342,7 @@ Public Class MainForm
         ProgressBar1.Value = 0
         ProgressBar1.Maximum = Basenode.GetNodeCount(False)
         For Each TestedNode As TreeNode In Basenode.Nodes
-            Dim NodeTag As NodeProperties = New NodeProperties
-            NodeTag = CType(TestedNode.Tag, NodeProperties)
-            If Expandable(NodeTag.FileType) Then
+            If Expandable(CType(TestedNode.Tag, NodeProperties).FileType) Then
                 CheckFile(TestedNode, True)
             End If
             ProgressBar1.Value += 1
@@ -1336,29 +1350,15 @@ Public Class MainForm
         ProgressBar1.Value = ProgressBar1.Maximum
     End Sub
     Sub extractnode(Sentnode As TreeNode, Savepath As String)
-        Dim filepath As String = Sentnode.ToolTipText
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag = CType(Sentnode.Tag, NodeProperties)
-        Dim ExtractByte As Byte()
-        If NodeTag.StoredData.Length > 0 Then
-            Dim FileBytes As Byte() = NodeTag.StoredData
-            ExtractByte = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), ExtractByte, 0, CInt(NodeTag.length))
-        Else
-            Dim FileBytes As Byte() = File.ReadAllBytes(filepath)
-            ExtractByte = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), ExtractByte, 0, CInt(NodeTag.length))
-        End If
-        File.WriteAllBytes(Savepath, ExtractByte)
+        File.WriteAllBytes(Savepath, GetNodeBytes(Sentnode))
     End Sub
-    Dim ExtractFolder As String
-    Sub ExtractAllNode(CurrentNode As TreeNode, Optional AdditonalFolders As String = "")
+    Sub ExtractAllNode(CurrentNode As TreeNode, BaseFolder As String, Optional AdditonalFolders As String = "")
+        FolderCheck(BaseFolder & AdditonalFolders)
         For Each temporarynode As TreeNode In CurrentNode.Nodes
-            Dim NodeTag As NodeProperties = New NodeProperties
-            NodeTag = CType(temporarynode.Tag, NodeProperties)
-            If Not NodeTag.FileType = PackageType.Folder Then
-                If Not Path.GetFileName(temporarynode.ToolTipText) = temporarynode.Text Then
-                    extractnode(temporarynode, ExtractFolder & AdditonalFolders &
+            Dim NodeTag As NodeProperties = CType(temporarynode.Tag, NodeProperties)
+            If Not NodeTag.FileType = PackageType.Folder Then 'Folders aren't extractable but make new folders
+                If Not Path.GetFileName(temporarynode.ToolTipText) = temporarynode.Text Then 'if it's a file we don't want to copy it.
+                    extractnode(temporarynode, BaseFolder & AdditonalFolders &
                                    temporarynode.Text & "." & NodeTag.FileType.ToString)
                 End If
             End If
@@ -1369,16 +1369,14 @@ Public Class MainForm
                 Else
                     Folder = temporarynode.Text
                 End If
-                FolderCheck(ExtractFolder & AdditonalFolders & Folder)
-                ExtractAllNode(temporarynode, AdditonalFolders & Folder & Path.DirectorySeparatorChar)
+                ExtractAllNode(temporarynode, BaseFolder, AdditonalFolders & Folder & Path.DirectorySeparatorChar)
             End If
         Next
     End Sub
+    'Left Off here refactoring
     Function InjectIntoNode(Sentnode As TreeNode, SentBytes As Byte()) As Boolean
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag = CType(Sentnode.Tag, NodeProperties)
+        Dim NodeTag As NodeProperties = CType(Sentnode.Tag, NodeProperties)
         Dim SizeDifference As Long = SentBytes.Length - NodeTag.length 'negative for shorter
-
         'checking File Type match
         Dim TempCheck As PackageType = CheckHeaderType(0, SentBytes)
         If Not NodeTag.FileType = TempCheck Then
@@ -3242,6 +3240,5 @@ Public Class MainForm
         End If
         Return ReturnedBytes
     End Function
-
 #End Region
 End Class

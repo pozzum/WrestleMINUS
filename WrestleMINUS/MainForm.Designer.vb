@@ -247,7 +247,6 @@ Partial Class MainForm
         Me.ExtractAllToToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.InjectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CrawlToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -285,6 +284,7 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
+        Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -1999,9 +1999,9 @@ Partial Class MainForm
         '
         'TreeViewContext
         '
-        Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem1, Me.ExtractToolStripMenuItem, Me.ExtractAllInPlaceToolStripMenuItem, Me.ExtractAllToToolStripMenuItem, Me.InjectToolStripMenuItem, Me.CrawlToolStripMenuItem})
+        Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem1, Me.OpenWithToolStripMenuItem, Me.ExtractToolStripMenuItem, Me.ExtractAllInPlaceToolStripMenuItem, Me.ExtractAllToToolStripMenuItem, Me.InjectToolStripMenuItem, Me.CrawlToolStripMenuItem})
         Me.TreeViewContext.Name = "TreeViewContext"
-        Me.TreeViewContext.Size = New System.Drawing.Size(171, 136)
+        Me.TreeViewContext.Size = New System.Drawing.Size(171, 158)
         '
         'OpenToolStripMenuItem1
         '
@@ -2277,6 +2277,12 @@ Partial Class MainForm
         Me.ImageList1.Images.SetKeyName(7, "O.png")
         Me.ImageList1.Images.SetKeyName(8, "Z.png")
         '
+        'OpenWithToolStripMenuItem
+        '
+        Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.OpenWithToolStripMenuItem.Text = "Open With..."
+        '
         'MainForm
         '
         Me.AllowDrop = True
@@ -2445,7 +2451,6 @@ Partial Class MainForm
     Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents TreeViewContext As ContextMenuStrip
     Friend WithEvents ExtractToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents SaveFileDialog1 As SaveFileDialog
     Friend WithEvents OpenToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents ObjectView As TabPage
     Friend WithEvents PictureView As TabPage
@@ -2641,4 +2646,5 @@ Partial Class MainForm
     Friend WithEvents GitHubIssuesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents OptionsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ImageList1 As ImageList
+    Friend WithEvents OpenWithToolStripMenuItem As ToolStripMenuItem
 End Class

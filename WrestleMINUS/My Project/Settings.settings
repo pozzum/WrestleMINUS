@@ -47,5 +47,8 @@
     <Setting Name="UseTreeIcons" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="DDSexeLocation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Not Installed</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -49,6 +49,10 @@ Partial Class OptionsMenu
         Me.ButtonResetPacs = New System.Windows.Forms.Button()
         Me.CheckBoxDeleteTempBMP = New System.Windows.Forms.CheckBox()
         Me.CheckBoxTreeNodeIcons = New System.Windows.Forms.CheckBox()
+        Me.ButtonDownloadDDSexe = New System.Windows.Forms.Button()
+        Me.ButtonSelectDDSexe = New System.Windows.Forms.Button()
+        Me.TextBoxDDSExe = New System.Windows.Forms.TextBox()
+        Me.LabelDSSExe = New System.Windows.Forms.Label()
         CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -177,7 +181,7 @@ Partial Class OptionsMenu
         'LabelZlib
         '
         Me.LabelZlib.AutoSize = True
-        Me.LabelZlib.Location = New System.Drawing.Point(12, 174)
+        Me.LabelZlib.Location = New System.Drawing.Point(12, 213)
         Me.LabelZlib.Name = "LabelZlib"
         Me.LabelZlib.Size = New System.Drawing.Size(114, 13)
         Me.LabelZlib.TabIndex = 14
@@ -186,7 +190,7 @@ Partial Class OptionsMenu
         'LabelOodle
         '
         Me.LabelOodle.AutoSize = True
-        Me.LabelOodle.Location = New System.Drawing.Point(12, 203)
+        Me.LabelOodle.Location = New System.Drawing.Point(12, 242)
         Me.LabelOodle.Name = "LabelOodle"
         Me.LabelOodle.Size = New System.Drawing.Size(125, 13)
         Me.LabelOodle.TabIndex = 15
@@ -194,7 +198,7 @@ Partial Class OptionsMenu
         '
         'ButtonSelectZlib
         '
-        Me.ButtonSelectZlib.Location = New System.Drawing.Point(147, 169)
+        Me.ButtonSelectZlib.Location = New System.Drawing.Point(147, 208)
         Me.ButtonSelectZlib.Name = "ButtonSelectZlib"
         Me.ButtonSelectZlib.Size = New System.Drawing.Size(125, 23)
         Me.ButtonSelectZlib.TabIndex = 16
@@ -204,7 +208,7 @@ Partial Class OptionsMenu
         '
         'ButtonOodleSelect
         '
-        Me.ButtonOodleSelect.Location = New System.Drawing.Point(147, 198)
+        Me.ButtonOodleSelect.Location = New System.Drawing.Point(147, 237)
         Me.ButtonOodleSelect.Name = "ButtonOodleSelect"
         Me.ButtonOodleSelect.Size = New System.Drawing.Size(125, 23)
         Me.ButtonOodleSelect.TabIndex = 17
@@ -215,7 +219,7 @@ Partial Class OptionsMenu
         'CheckBoxLoadHome
         '
         Me.CheckBoxLoadHome.AutoSize = True
-        Me.CheckBoxLoadHome.Location = New System.Drawing.Point(15, 232)
+        Me.CheckBoxLoadHome.Location = New System.Drawing.Point(15, 271)
         Me.CheckBoxLoadHome.Name = "CheckBoxLoadHome"
         Me.CheckBoxLoadHome.Size = New System.Drawing.Size(135, 17)
         Me.CheckBoxLoadHome.TabIndex = 18
@@ -225,7 +229,7 @@ Partial Class OptionsMenu
         'CheckBoxBackup
         '
         Me.CheckBoxBackup.AutoSize = True
-        Me.CheckBoxBackup.Location = New System.Drawing.Point(15, 255)
+        Me.CheckBoxBackup.Location = New System.Drawing.Point(15, 294)
         Me.CheckBoxBackup.Name = "CheckBoxBackup"
         Me.CheckBoxBackup.Size = New System.Drawing.Size(196, 17)
         Me.CheckBoxBackup.TabIndex = 19
@@ -235,7 +239,7 @@ Partial Class OptionsMenu
         'TrackBarHexLength
         '
         Me.TrackBarHexLength.LargeChange = 100
-        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 348)
+        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 387)
         Me.TrackBarHexLength.Maximum = 500
         Me.TrackBarHexLength.Minimum = 1
         Me.TrackBarHexLength.Name = "TrackBarHexLength"
@@ -248,7 +252,7 @@ Partial Class OptionsMenu
         'LabelHexLength
         '
         Me.LabelHexLength.AutoSize = True
-        Me.LabelHexLength.Location = New System.Drawing.Point(12, 332)
+        Me.LabelHexLength.Location = New System.Drawing.Point(12, 371)
         Me.LabelHexLength.Name = "LabelHexLength"
         Me.LabelHexLength.Size = New System.Drawing.Size(140, 13)
         Me.LabelHexLength.TabIndex = 22
@@ -256,7 +260,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetStrings
         '
-        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 383)
+        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 422)
         Me.ButtonResetStrings.Name = "ButtonResetStrings"
         Me.ButtonResetStrings.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetStrings.TabIndex = 23
@@ -265,7 +269,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetPacs
         '
-        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 383)
+        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 422)
         Me.ButtonResetPacs.Name = "ButtonResetPacs"
         Me.ButtonResetPacs.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetPacs.TabIndex = 24
@@ -275,7 +279,7 @@ Partial Class OptionsMenu
         'CheckBoxDeleteTempBMP
         '
         Me.CheckBoxDeleteTempBMP.AutoSize = True
-        Me.CheckBoxDeleteTempBMP.Location = New System.Drawing.Point(15, 279)
+        Me.CheckBoxDeleteTempBMP.Location = New System.Drawing.Point(15, 318)
         Me.CheckBoxDeleteTempBMP.Name = "CheckBoxDeleteTempBMP"
         Me.CheckBoxDeleteTempBMP.Size = New System.Drawing.Size(172, 17)
         Me.CheckBoxDeleteTempBMP.TabIndex = 25
@@ -285,18 +289,57 @@ Partial Class OptionsMenu
         'CheckBoxTreeNodeIcons
         '
         Me.CheckBoxTreeNodeIcons.AutoSize = True
-        Me.CheckBoxTreeNodeIcons.Location = New System.Drawing.Point(15, 302)
+        Me.CheckBoxTreeNodeIcons.Location = New System.Drawing.Point(15, 341)
         Me.CheckBoxTreeNodeIcons.Name = "CheckBoxTreeNodeIcons"
         Me.CheckBoxTreeNodeIcons.Size = New System.Drawing.Size(125, 17)
         Me.CheckBoxTreeNodeIcons.TabIndex = 26
         Me.CheckBoxTreeNodeIcons.Text = "Use TreeNode Icons"
         Me.CheckBoxTreeNodeIcons.UseVisualStyleBackColor = True
         '
+        'ButtonDownloadDDSexe
+        '
+        Me.ButtonDownloadDDSexe.Location = New System.Drawing.Point(211, 179)
+        Me.ButtonDownloadDDSexe.Name = "ButtonDownloadDDSexe"
+        Me.ButtonDownloadDDSexe.Size = New System.Drawing.Size(30, 23)
+        Me.ButtonDownloadDDSexe.TabIndex = 30
+        Me.ButtonDownloadDDSexe.Text = "DL"
+        Me.ButtonDownloadDDSexe.UseVisualStyleBackColor = True
+        '
+        'ButtonSelectDDSexe
+        '
+        Me.ButtonSelectDDSexe.Location = New System.Drawing.Point(247, 179)
+        Me.ButtonSelectDDSexe.Name = "ButtonSelectDDSexe"
+        Me.ButtonSelectDDSexe.Size = New System.Drawing.Size(25, 23)
+        Me.ButtonSelectDDSexe.TabIndex = 29
+        Me.ButtonSelectDDSexe.Text = "..."
+        Me.ButtonSelectDDSexe.UseVisualStyleBackColor = True
+        '
+        'TextBoxDDSExe
+        '
+        Me.TextBoxDDSExe.Location = New System.Drawing.Point(12, 181)
+        Me.TextBoxDDSExe.Name = "TextBoxDDSExe"
+        Me.TextBoxDDSExe.ReadOnly = True
+        Me.TextBoxDDSExe.Size = New System.Drawing.Size(193, 20)
+        Me.TextBoxDDSExe.TabIndex = 28
+        '
+        'LabelDSSExe
+        '
+        Me.LabelDSSExe.AutoSize = True
+        Me.LabelDSSExe.Location = New System.Drawing.Point(12, 165)
+        Me.LabelDSSExe.Name = "LabelDSSExe"
+        Me.LabelDSSExe.Size = New System.Drawing.Size(138, 13)
+        Me.LabelDSSExe.TabIndex = 27
+        Me.LabelDSSExe.Text = "DDS Opening Exe Location"
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 411)
+        Me.ClientSize = New System.Drawing.Size(284, 451)
+        Me.Controls.Add(Me.ButtonDownloadDDSexe)
+        Me.Controls.Add(Me.ButtonSelectDDSexe)
+        Me.Controls.Add(Me.TextBoxDDSExe)
+        Me.Controls.Add(Me.LabelDSSExe)
         Me.Controls.Add(Me.CheckBoxTreeNodeIcons)
         Me.Controls.Add(Me.CheckBoxDeleteTempBMP)
         Me.Controls.Add(Me.ButtonResetPacs)
@@ -359,4 +402,8 @@ Partial Class OptionsMenu
     Friend WithEvents ButtonResetPacs As Button
     Friend WithEvents CheckBoxDeleteTempBMP As CheckBox
     Friend WithEvents CheckBoxTreeNodeIcons As CheckBox
+    Friend WithEvents ButtonDownloadDDSexe As Button
+    Friend WithEvents ButtonSelectDDSexe As Button
+    Friend WithEvents TextBoxDDSExe As TextBox
+    Friend WithEvents LabelDSSExe As Label
 End Class
