@@ -29,37 +29,35 @@ Partial Class MainForm
         Me.LoadHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SupportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GitHubIssuesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.TreeView1 = New System.Windows.Forms.TreeView()
+        Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.MenuStripTreeView = New System.Windows.Forms.MenuStrip()
         Me.CurrentViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.HexView = New System.Windows.Forms.TabPage()
-        Me.Hex_Selected = New System.Windows.Forms.TextBox()
+        Me.Hex_Selected = New System.Windows.Forms.RichTextBox()
         Me.MenuStripHexView = New System.Windows.Forms.MenuStrip()
         Me.HexViewBitWidth = New System.Windows.Forms.ToolStripComboBox()
         Me.HexViewFileName = New System.Windows.Forms.ToolStripMenuItem()
         Me.TextView = New System.Windows.Forms.TabPage()
-        Me.Text_Selected = New System.Windows.Forms.TextBox()
+        Me.Text_Selected = New System.Windows.Forms.RichTextBox()
         Me.MenuStripTextView = New System.Windows.Forms.MenuStrip()
         Me.TextViewBitWidth = New System.Windows.Forms.ToolStripComboBox()
         Me.TextViewFileName = New System.Windows.Forms.ToolStripMenuItem()
         Me.StringView = New System.Windows.Forms.TabPage()
         Me.DataGridStringView = New System.Windows.Forms.DataGridView()
-        Me.HexRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StringText = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Length = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Changed = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.MenuStripStringView = New System.Windows.Forms.MenuStrip()
         Me.StringCountToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripTextBoxSearch = New System.Windows.Forms.ToolStripTextBox()
         Me.SaveStringChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SortStringsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MiscView = New System.Windows.Forms.TabPage()
         Me.DataGridMiscView = New System.Windows.Forms.DataGridView()
         Me.MenuStripMiscView = New System.Windows.Forms.MenuStrip()
@@ -242,6 +240,7 @@ Partial Class MainForm
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.TreeViewContext = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.OpenToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExtractToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExtractAllInPlaceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExtractAllToToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -283,8 +282,11 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
-        Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HexRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StringText = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Length = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AddString = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.DeleteString = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -370,6 +372,12 @@ Partial Class MainForm
         Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
         Me.ExitToolStripMenuItem.Text = "E&xit"
         '
+        'OptionsToolStripMenuItem
+        '
+        Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
+        Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
+        Me.OptionsToolStripMenuItem.Text = "&Options"
+        '
         'HelpToolStripMenuItem
         '
         Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem, Me.SupportToolStripMenuItem, Me.GitHubIssuesToolStripMenuItem})
@@ -394,12 +402,6 @@ Partial Class MainForm
         Me.GitHubIssuesToolStripMenuItem.Name = "GitHubIssuesToolStripMenuItem"
         Me.GitHubIssuesToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
         Me.GitHubIssuesToolStripMenuItem.Text = "GitHub Issues"
-        '
-        'OptionsToolStripMenuItem
-        '
-        Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
-        Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
-        Me.OptionsToolStripMenuItem.Text = "&Options"
         '
         'SplitContainer1
         '
@@ -431,6 +433,20 @@ Partial Class MainForm
         Me.TreeView1.ShowNodeToolTips = True
         Me.TreeView1.Size = New System.Drawing.Size(196, 403)
         Me.TreeView1.TabIndex = 0
+        '
+        'ImageList1
+        '
+        Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
+        Me.ImageList1.Images.SetKeyName(0, "Qu.png")
+        Me.ImageList1.Images.SetKeyName(1, "F.png")
+        Me.ImageList1.Images.SetKeyName(2, "H.png")
+        Me.ImageList1.Images.SetKeyName(3, "8.png")
+        Me.ImageList1.Images.SetKeyName(4, "E.png")
+        Me.ImageList1.Images.SetKeyName(5, "S.png")
+        Me.ImageList1.Images.SetKeyName(6, "P.png")
+        Me.ImageList1.Images.SetKeyName(7, "O.png")
+        Me.ImageList1.Images.SetKeyName(8, "Z.png")
         '
         'ProgressBar1
         '
@@ -495,13 +511,11 @@ Partial Class MainForm
         Me.Hex_Selected.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Hex_Selected.Font = New System.Drawing.Font("Courier New", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Hex_Selected.Location = New System.Drawing.Point(3, 30)
-        Me.Hex_Selected.Multiline = True
         Me.Hex_Selected.Name = "Hex_Selected"
         Me.Hex_Selected.ReadOnly = True
-        Me.Hex_Selected.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.Hex_Selected.Size = New System.Drawing.Size(970, 391)
-        Me.Hex_Selected.TabIndex = 0
-        Me.Hex_Selected.WordWrap = False
+        Me.Hex_Selected.TabIndex = 2
+        Me.Hex_Selected.Text = ""
         '
         'MenuStripHexView
         '
@@ -542,13 +556,11 @@ Partial Class MainForm
         Me.Text_Selected.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Text_Selected.Font = New System.Drawing.Font("Courier New", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Text_Selected.Location = New System.Drawing.Point(3, 30)
-        Me.Text_Selected.Multiline = True
         Me.Text_Selected.Name = "Text_Selected"
         Me.Text_Selected.ReadOnly = True
-        Me.Text_Selected.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.Text_Selected.Size = New System.Drawing.Size(970, 391)
-        Me.Text_Selected.TabIndex = 1
-        Me.Text_Selected.WordWrap = False
+        Me.Text_Selected.TabIndex = 2
+        Me.Text_Selected.Text = ""
         '
         'MenuStripTextView
         '
@@ -591,7 +603,7 @@ Partial Class MainForm
         Me.DataGridStringView.AllowUserToResizeRows = False
         Me.DataGridStringView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.DataGridStringView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridStringView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.HexRef, Me.StringText, Me.Length, Me.Changed})
+        Me.DataGridStringView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.HexRef, Me.StringText, Me.Length, Me.AddString, Me.DeleteString})
         Me.DataGridStringView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridStringView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridStringView.MultiSelect = False
@@ -600,40 +612,9 @@ Partial Class MainForm
         Me.DataGridStringView.Size = New System.Drawing.Size(970, 391)
         Me.DataGridStringView.TabIndex = 2
         '
-        'HexRef
-        '
-        Me.HexRef.FillWeight = 25.0!
-        Me.HexRef.HeaderText = "HexRef"
-        Me.HexRef.MaxInputLength = 10
-        Me.HexRef.Name = "HexRef"
-        Me.HexRef.ReadOnly = True
-        Me.HexRef.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'StringText
-        '
-        Me.StringText.HeaderText = "String Text"
-        Me.StringText.MaxInputLength = 31
-        Me.StringText.Name = "StringText"
-        Me.StringText.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Length
-        '
-        Me.Length.FillWeight = 25.0!
-        Me.Length.HeaderText = "Length"
-        Me.Length.MaxInputLength = 10
-        Me.Length.Name = "Length"
-        Me.Length.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Changed
-        '
-        Me.Changed.FillWeight = 10.0!
-        Me.Changed.HeaderText = "Changed"
-        Me.Changed.Name = "Changed"
-        Me.Changed.Visible = False
-        '
         'MenuStripStringView
         '
-        Me.MenuStripStringView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringCountToolStripMenuItem, Me.ToolStripTextBoxSearch, Me.SaveStringChangesToolStripMenuItem})
+        Me.MenuStripStringView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringCountToolStripMenuItem, Me.ToolStripTextBoxSearch, Me.SaveStringChangesToolStripMenuItem, Me.SortStringsToolStripMenuItem})
         Me.MenuStripStringView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripStringView.Name = "MenuStripStringView"
         Me.MenuStripStringView.Size = New System.Drawing.Size(970, 27)
@@ -659,6 +640,13 @@ Partial Class MainForm
         Me.SaveStringChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 23)
         Me.SaveStringChangesToolStripMenuItem.Text = "Save Changes"
         Me.SaveStringChangesToolStripMenuItem.Visible = False
+        '
+        'SortStringsToolStripMenuItem
+        '
+        Me.SortStringsToolStripMenuItem.Name = "SortStringsToolStripMenuItem"
+        Me.SortStringsToolStripMenuItem.Size = New System.Drawing.Size(79, 23)
+        Me.SortStringsToolStripMenuItem.Text = "Sort Strings"
+        Me.SortStringsToolStripMenuItem.Visible = False
         '
         'MiscView
         '
@@ -2009,6 +1997,12 @@ Partial Class MainForm
         Me.OpenToolStripMenuItem1.Size = New System.Drawing.Size(170, 22)
         Me.OpenToolStripMenuItem1.Text = "Open"
         '
+        'OpenWithToolStripMenuItem
+        '
+        Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.OpenWithToolStripMenuItem.Text = "Open With..."
+        '
         'ExtractToolStripMenuItem
         '
         Me.ExtractToolStripMenuItem.Name = "ExtractToolStripMenuItem"
@@ -2263,25 +2257,42 @@ Partial Class MainForm
         '
         Me.SaveExtractAllDialog.FileName = "Save Files Here"
         '
-        'ImageList1
+        'HexRef
         '
-        Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), System.Windows.Forms.ImageListStreamer)
-        Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
-        Me.ImageList1.Images.SetKeyName(0, "Qu.png")
-        Me.ImageList1.Images.SetKeyName(1, "F.png")
-        Me.ImageList1.Images.SetKeyName(2, "H.png")
-        Me.ImageList1.Images.SetKeyName(3, "8.png")
-        Me.ImageList1.Images.SetKeyName(4, "E.png")
-        Me.ImageList1.Images.SetKeyName(5, "S.png")
-        Me.ImageList1.Images.SetKeyName(6, "P.png")
-        Me.ImageList1.Images.SetKeyName(7, "O.png")
-        Me.ImageList1.Images.SetKeyName(8, "Z.png")
+        Me.HexRef.FillWeight = 25.0!
+        Me.HexRef.HeaderText = "HexRef"
+        Me.HexRef.MaxInputLength = 8
+        Me.HexRef.Name = "HexRef"
+        Me.HexRef.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'OpenWithToolStripMenuItem
+        'StringText
         '
-        Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
-        Me.OpenWithToolStripMenuItem.Text = "Open With..."
+        Me.StringText.HeaderText = "String Text"
+        Me.StringText.MaxInputLength = 31
+        Me.StringText.Name = "StringText"
+        Me.StringText.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Length
+        '
+        Me.Length.FillWeight = 25.0!
+        Me.Length.HeaderText = "Length"
+        Me.Length.MaxInputLength = 10
+        Me.Length.Name = "Length"
+        Me.Length.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'AddString
+        '
+        Me.AddString.FillWeight = 10.0!
+        Me.AddString.HeaderText = "Add"
+        Me.AddString.Name = "AddString"
+        '
+        'DeleteString
+        '
+        Me.DeleteString.FillWeight = 10.0!
+        Me.DeleteString.HeaderText = "Delete"
+        Me.DeleteString.Name = "DeleteString"
+        Me.DeleteString.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DeleteString.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         '
         'MainForm
         '
@@ -2383,12 +2394,10 @@ Partial Class MainForm
     Friend WithEvents OpenFileDialog1 As OpenFileDialog
     Friend WithEvents CurrentViewToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ProgressBar1 As ProgressBar
-    Friend WithEvents Hex_Selected As TextBox
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents MenuStripHexView As MenuStrip
     Friend WithEvents HexViewBitWidth As ToolStripComboBox
     Friend WithEvents HexViewFileName As ToolStripMenuItem
-    Friend WithEvents Text_Selected As TextBox
     Friend WithEvents MenuStripTextView As MenuStrip
     Friend WithEvents TextViewBitWidth As ToolStripComboBox
     Friend WithEvents TextViewFileName As ToolStripMenuItem
@@ -2556,10 +2565,6 @@ Partial Class MainForm
     Friend WithEvents Check6 As DataGridViewTextBoxColumn
     Friend WithEvents FileName As DataGridViewTextBoxColumn
     Friend WithEvents SaveStringChangesToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents HexRef As DataGridViewTextBoxColumn
-    Friend WithEvents StringText As DataGridViewTextBoxColumn
-    Friend WithEvents Length As DataGridViewTextBoxColumn
-    Friend WithEvents Changed As DataGridViewCheckBoxColumn
     Friend WithEvents ToolStripTextBoxSearch As ToolStripTextBox
     Friend WithEvents SaveMiscChangesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SaveChangesAttireMenuItem As ToolStripMenuItem
@@ -2647,4 +2652,12 @@ Partial Class MainForm
     Friend WithEvents OptionsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ImageList1 As ImageList
     Friend WithEvents OpenWithToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents Hex_Selected As RichTextBox
+    Friend WithEvents Text_Selected As RichTextBox
+    Friend WithEvents SortStringsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents HexRef As DataGridViewTextBoxColumn
+    Friend WithEvents StringText As DataGridViewTextBoxColumn
+    Friend WithEvents Length As DataGridViewTextBoxColumn
+    Friend WithEvents AddString As DataGridViewButtonColumn
+    Friend WithEvents DeleteString As DataGridViewButtonColumn
 End Class

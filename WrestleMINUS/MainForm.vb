@@ -9,6 +9,8 @@ Imports System.Drawing.Imaging
 Imports System.Environment 'appdata
 Imports System.Threading 'Multithreading
 Imports System.Runtime.Serialization.Formatters.Binary 'Binary Formatter
+Imports Newtonsoft.Json
+Imports System.Text.RegularExpressions 'Regular Expressions for text matches
 Public Class MainForm
     Private Declare Function OodleLZ_Decompress Lib "oo2core_6_win64" (InputBuffer As Byte(), bufferSize As Long, OutputBuffer As Byte(), outputBufferSize As Long,
             a As UInt32, b As UInt32, c As ULong, d As UInt32, e As UInt32, f As UInt32, g As UInt32, h As UInt32, i As UInt32, threadModule As UInt32) As Integer
@@ -18,7 +20,7 @@ Public Class MainForm
     'Injection Properties used across multiple forms
     Dim SavePending As Boolean = False
     Dim ReadNode As TreeNode
-    Dim SizeChange As Integer
+
     Dim OldValue
     Dim InformationLoaded As Boolean = False
 #Region "Main Form Functions"
@@ -149,14 +151,17 @@ Public Class MainForm
                                     InjectedByte = BuildTitleFile()
                             End Select
                             InjectIntoNode(ReadNode, InjectedByte)
-                            SavePending = True
+                        Else 'Dialog Result No Save Canceled
+                            SaveFileNoLongerPending()
                         End If
                     End If
+
                     TabControl1.TabPages.Remove(TempTabPage)
             End Select
         Next
         Return DialogResult.OK
     End Function
+
     Sub CheckUpdate()
         Dim checkUpdateThread = New Thread(AddressOf OnlineVersion.CheckUpdate)
         checkUpdateThread.SetApartmentState(ApartmentState.STA)
@@ -196,8 +201,8 @@ Public Class MainForm
             End If
             If TexConvToolOpenDialog.ShowDialog = DialogResult.OK Then
                 If Path.GetFileName(TexConvToolOpenDialog.FileName) = "texconv.exe" Then
-                        My.Settings.TexConvPath = TexConvToolOpenDialog.FileName
-                    Else
+                    My.Settings.TexConvPath = TexConvToolOpenDialog.FileName
+                Else
                     MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
                 End If
             End If
@@ -218,8 +223,8 @@ Public Class MainForm
                     Dim TexConvToolOpenDialog As New OpenFileDialog With {.FileName = "texconv.exe", .Title = "Select texconv.exe"}
                     If TexConvToolOpenDialog.ShowDialog = DialogResult.OK Then
                         If Path.GetFileName(TexConvToolOpenDialog.FileName) = "texconv.exe" Then
-                                My.Settings.TexConvPath = TexConvToolOpenDialog.FileName
-                            Else
+                            My.Settings.TexConvPath = TexConvToolOpenDialog.FileName
+                        Else
                             MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
                         End If
                     End If
@@ -386,14 +391,18 @@ Public Class MainForm
             MainForm.TreeView1.ImageList = Nothing
         End If
     End Sub
-    Private Sub MainForm_DragEnter(sender As Object, e As DragEventArgs) Handles MyBase.DragEnter
+    Private Sub MainForm_DragEnter(sender As Object, e As DragEventArgs) Handles MyBase.DragEnter,
+                                                                                Hex_Selected.DragEnter,
+                                                                                Text_Selected.DragEnter
         If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
             e.Effect = DragDropEffects.All
         Else
             e.Effect = DragDropEffects.None
         End If
     End Sub
-    Private Sub MainForm_DragDrop(sender As Object, e As DragEventArgs) Handles MyBase.DragDrop
+    Private Sub MainForm_DragDrop(sender As Object, e As DragEventArgs) Handles MyBase.DragDrop,
+                                                                                Hex_Selected.DragDrop,
+                                                                                Text_Selected.DragDrop
         Dim s() As String = e.Data.GetData("FileDrop", False)
         SelectedFiles = s
         LoadParameters()
@@ -464,6 +473,10 @@ Public Class MainForm
         Array.Copy(Source, Index, ReturnedArray, 0, Length)
         Array.Reverse(ReturnedArray)
         Return ReturnedArray
+    End Function
+    Function HexCheck(StringtoCheck As String) As Boolean
+        Dim HexTest As Boolean = StringtoCheck.All(Function(c) "0123456789abcdefABCDEF".Contains(c))
+        Return HexTest
     End Function
 #End Region
 #Region "File Handlers"
@@ -810,7 +823,6 @@ Public Class MainForm
         HostNode.Tag = NodeTag
 
     End Sub
-
     Function CheckHeaderType(Index As Long, ByVal ByteArray As Byte()) As PackageType
         'To be split into 2 seperate functions once all processes are added
         Dim FirstFour As String
@@ -887,8 +899,9 @@ Public Class MainForm
                                     Dim NumberCheck As UInt32 = BitConverter.ToUInt32(ByteArray, Index + 0)
                                     If NumberCheck = 0 Then
                                         Return PackageType.StringFile
+                                    Else
+                                        Return PackageType.bin
                                     End If
-                                    Return PackageType.TextureLibrary
                                 Case Else
                                     Return PackageType.bin
                             End Select
@@ -924,12 +937,12 @@ Public Class MainForm
         If NodeTag.StoredData.Length > 0 Then
             Array.Copy(NodeTag.StoredData, CInt(NodeTag.Index), FileBytes, 0, CInt(NodeTag.length))
         ElseIf NodeTag.length > 0 Then
-            If Not File.Exists(ActiveFile) Then
+            If Not File.Exists(HostNode.ToolTipText) Then
                 MessageBox.Show("File Not Found")
                 Return New Byte() {}
             End If
             Try
-                Dim ActiveReader As BinaryReader = New BinaryReader(File.Open(ActiveFile, FileMode.Open, FileAccess.Read))
+                Dim ActiveReader As BinaryReader = New BinaryReader(File.Open(HostNode.ToolTipText, FileMode.Open, FileAccess.Read))
                 ActiveReader.BaseStream.Seek(NodeTag.Index, SeekOrigin.Begin)
                 FileBytes = ActiveReader.ReadBytes(NodeTag.length)
                 ActiveReader.Dispose()
@@ -995,6 +1008,7 @@ Public Class MainForm
 #End Region
 #Region "TreeView Population"
     Sub LoadParameters()
+        InformationLoaded = False
         TreeView1.Nodes.Clear()
         ProgressBar1.Value = 0
         ProgressBar1.Maximum = SelectedFiles.Length
@@ -1034,6 +1048,7 @@ Public Class MainForm
         Next
     End Sub
     Sub LoadHome()
+        InformationLoaded = False
         If Not My.Settings.ExeLocation = "" Then
             TreeView1.Nodes.Clear()
             ProgressBar1.Value = 0
@@ -1201,7 +1216,6 @@ Public Class MainForm
         End If
     End Sub
 #End Region
-
 #Region "Context Menu Strip"
     Private Sub TreeView1_NodeMouseClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles TreeView1.NodeMouseClick
         If Not e.Button = MouseButtons.Right Then
@@ -1373,7 +1387,7 @@ Public Class MainForm
             End If
         Next
     End Sub
-    'Left Off here refactoring
+    'First Pass but I feel like this can still be improved...
     Function InjectIntoNode(Sentnode As TreeNode, SentBytes As Byte()) As Boolean
         Dim NodeTag As NodeProperties = CType(Sentnode.Tag, NodeProperties)
         Dim SizeDifference As Long = SentBytes.Length - NodeTag.length 'negative for shorter
@@ -1387,228 +1401,201 @@ Public Class MainForm
             End If
         End If
         'Get Parent Node Bytes
-        Dim ParentNodeTag As NodeProperties = New NodeProperties
-        Dim ParentNode As TreeNode = New TreeNode
-        If Not IsNothing(Sentnode.Parent) Then
-            ParentNode = Sentnode.Parent
-            ParentNodeTag = CType(Sentnode.Parent.Tag, NodeProperties)
-        Else
+        Dim ParentNode As TreeNode = Sentnode.Parent
+        If IsNothing(Sentnode.Parent) Then
             ParentNode = Sentnode
-            ParentNodeTag.StoredData = New Byte() {}
-            ParentNodeTag.length = 0
+        Else
+            ParentNode = Sentnode.Parent
         End If
-        If Not ParentNodeTag.length = 0 Then
-            'skipping pachdirectories
-            Dim DirectoryIndex As Integer = -1
-            If ParentNodeTag.FileType = PackageType.PachDirectory Then
-                DirectoryIndex = Sentnode.Parent.Index
-                MessageBox.Show("Directory Skipped" & vbNewLine & DirectoryIndex)
-                ParentNodeTag = CType(Sentnode.Parent.Parent.Tag, NodeProperties)
-            End If
-            'MessageBox.Show(ParentNodeTag.FileType.ToString)
-            Dim ParentBytes As Byte() = New Byte(ParentNodeTag.length) {}
-            If ParentNodeTag.StoredData.Length > 0 Then
-                Array.Copy(ParentNodeTag.StoredData, CInt(ParentNodeTag.Index), ParentBytes, 0, CInt(ParentNodeTag.length))
-            Else
-                Try
-                    Dim ActiveReader As BinaryReader
-                    ActiveReader = New BinaryReader(File.Open(ActiveFile, FileMode.Open, FileAccess.Read))
-                    ActiveReader.BaseStream.Seek(ParentNodeTag.Index, SeekOrigin.Begin)
-                    ParentBytes = ActiveReader.ReadBytes(ParentNodeTag.length)
-                    ActiveReader.Dispose()
-                    ' MessageBox.Show(NodeTag.Index & vbNewLine & NodeTag.length)
-                Catch ex As Exception
-                    MessageBox.Show(ex.Message)
-                End Try
-            End If
-            'adjust length if needed
-            If ParentNodeTag.FileType = PackageType.HSPC OrElse
+        Dim ParentNodeTag As NodeProperties = CType(ParentNode.Tag, NodeProperties)
+        'skipping pachdirectories
+        Dim DirectoryIndex As Integer = -1
+        If ParentNodeTag.FileType = PackageType.PachDirectory Then
+            DirectoryIndex = ParentNode.Index
+            MessageBox.Show("Directory Skipped" & vbNewLine & DirectoryIndex)
+            ParentNode = ParentNode.Parent
+            ParentNodeTag = CType(ParentNode.Parent.Tag, NodeProperties)
+        End If
+        Dim ParentBytes As Byte() = GetNodeBytes(ParentNode)
+        'adjust length if needed
+        If ParentNodeTag.FileType = PackageType.HSPC OrElse
                 ParentNodeTag.FileType = PackageType.EPK8 OrElse
                  ParentNodeTag.FileType = PackageType.EPAC Then
-                If SizeDifference > 0 Then
-                    SizeDifference += (&H800 - SizeDifference Mod &H800)
-                Else
-                    SizeDifference -= (&H800 - Math.Abs(SizeDifference) Mod &H800)
-                End If
+            If SizeDifference > 0 Then 'size is rounded to &h800 bytes for these types
+                SizeDifference += (&H800 - SizeDifference Mod &H800)
+            Else
+                SizeDifference -= (&H800 - Math.Abs(SizeDifference) Mod &H800)
             End If
-            'Create Byte Array of length
-            Dim WrittenFileArray As Byte() = New Byte(ParentNodeTag.length + SizeDifference) {}
-            ' Write File Prior to new file
-            Array.Copy(ParentBytes, 0, WrittenFileArray, 0, CInt(NodeTag.Index - ParentNodeTag.Index))
-            'write new file
-            Array.Copy(SentBytes, 0, WrittenFileArray, CInt(NodeTag.Index - ParentNodeTag.Index), SentBytes.Length)
-            'write old file from after file part if there are any
-            If ParentBytes.Length > (NodeTag.Index - ParentNodeTag.Index) + NodeTag.length Then 'there are bytes after the injected file
-                Buffer.BlockCopy(ParentBytes,
+        End If
+        'Create Byte Array of length
+        Dim WrittenFileArray As Byte() = New Byte(ParentNodeTag.length + SizeDifference) {}
+        ' Write File Prior to new file
+        Array.Copy(ParentBytes, 0, WrittenFileArray, 0, CInt(NodeTag.Index - ParentNodeTag.Index))
+        'write new file
+        Array.Copy(SentBytes, 0, WrittenFileArray, CInt(NodeTag.Index - ParentNodeTag.Index), SentBytes.Length)
+        'write old file from after file part if there are any
+        If ParentBytes.Length > (NodeTag.Index - ParentNodeTag.Index) + NodeTag.length Then 'there are bytes after the injected file
+            Buffer.BlockCopy(ParentBytes,
                                  (NodeTag.Index - ParentNodeTag.Index) + NodeTag.length,
-                                 WrittenFileArray,
+                                WrittenFileArray,
                                  (NodeTag.Index - ParentNodeTag.Index) + NodeTag.length + SizeDifference,
                                  ParentBytes.Length - ((NodeTag.Index - ParentNodeTag.Index) + NodeTag.length))
-            End If
-            'Get Node Location
-            Dim NodeLocation As Integer = Sentnode.Index '0 based
-
-            'Adjust Headers
-            If ParentNodeTag.FileType = PackageType.HSPC Then
-                Dim FileCount As Integer = BitConverter.ToUInt32(WrittenFileArray, &H38)
-                'adjust total file length
-                Array.Copy(BitConverter.GetBytes(CUInt(WrittenFileArray.Length / &H10)), 0, WrittenFileArray, &H3C, 4)
-                'Get the header length
-                Dim FileNameLength As Integer = BitConverter.ToUInt32(WrittenFileArray, &H18)
-                FileNameLength += -(FileNameLength Mod &H800) + &H1000
-                For i As Integer = 0 To FileCount - 1
-                    If i < NodeLocation Then
+        End If
+        'Get Node Location
+        Dim NodeLocation As Integer = Sentnode.Index '0 based
+        'Adjust Headers
+        If ParentNodeTag.FileType = PackageType.HSPC Then
+            Dim FileCount As Integer = BitConverter.ToUInt32(WrittenFileArray, &H38)
+            'adjust total file length
+            Array.Copy(BitConverter.GetBytes(CUInt(WrittenFileArray.Length / &H10)), 0, WrittenFileArray, &H3C, 4)
+            'Get the header length
+            Dim FileNameLength As Integer = BitConverter.ToUInt32(WrittenFileArray, &H18)
+            FileNameLength += -(FileNameLength Mod &H800) + &H1000
+            For i As Integer = 0 To FileCount - 1
+                If i < NodeLocation Then
+                    'no change needed
+                ElseIf i = NodeLocation Then
+                    'Index Stays the same
+                    Array.Copy(BitConverter.GetBytes(CUInt(SentBytes.Length / &H100)), 0, WrittenFileArray, FileNameLength + i * &HC + &H4, 4)
+                Else 'size stays but index changes
+                    Dim OldIndex As UInt32 = BitConverter.ToUInt32(WrittenFileArray, FileNameLength + i * &HC)
+                    Dim TempIndex As UInt64 = OldIndex * &H800 + SizeDifference
+                    Array.Copy(BitConverter.GetBytes(CUInt(TempIndex / &H800)), 0, WrittenFileArray, FileNameLength + i * &HC, 4)
+                End If
+            Next
+        ElseIf ParentNodeTag.FileType = PackageType.EPK8 OrElse
+           ParentNodeTag.FileType = PackageType.EPAC Then
+            Dim HeaderLength As Integer = BitConverter.ToUInt32(WrittenFileArray, 4)
+            Dim index As Integer = 0
+            Dim DirectoryCount As Integer = 0
+            'DirectoryIndex
+            Do While index < HeaderLength - 1
+                Dim DirectoryContainsCount As Integer = 0
+                If PackageType.EPAC Then
+                    DirectoryContainsCount = BitConverter.ToUInt16(WrittenFileArray, &H800 + index + 4) / 3
+                ElseIf PackageType.EPK8 Then
+                    DirectoryContainsCount = BitConverter.ToUInt16(WrittenFileArray, &H800 + index + 4) / 4
+                End If
+                index += &HC
+                For i As Integer = 0 To DirectoryContainsCount - 1
+                    If DirectoryCount < DirectoryIndex Then
                         'no change needed
-                    ElseIf i = NodeLocation Then
-                        'Index Stays the same
-                        Array.Copy(BitConverter.GetBytes(CUInt(SentBytes.Length / &H100)), 0, WrittenFileArray, FileNameLength + i * &HC + &H4, 4)
-                    Else 'size stays but index changes
-                        Dim OldIndex As UInt32 = BitConverter.ToUInt32(WrittenFileArray, FileNameLength + i * &HC)
-                        Dim TempIndex As UInt64 = OldIndex * &H800 + SizeDifference
-                        Array.Copy(BitConverter.GetBytes(CUInt(TempIndex / &H800)), 0, WrittenFileArray, FileNameLength + i * &HC, 4)
-                    End If
-                Next
-            ElseIf ParentNodeTag.FileType = PackageType.EPK8 OrElse
-            ParentNodeTag.FileType = PackageType.EPAC Then
-                Dim HeaderLength As Integer = BitConverter.ToUInt32(WrittenFileArray, 4)
-                Dim index As Integer = 0
-                Dim DirectoryCount As Integer = 0
-                'DirectoryIndex
-                Do While index < HeaderLength - 1
-                    Dim DirectoryContainsCount As Integer = 0
-                    If PackageType.EPAC Then
-                        DirectoryContainsCount = BitConverter.ToUInt16(WrittenFileArray, &H800 + index + 4) / 3
-                    ElseIf PackageType.EPK8 Then
-                        DirectoryContainsCount = BitConverter.ToUInt16(WrittenFileArray, &H800 + index + 4) / 4
-                    End If
-                    index += &HC
-                    For i As Integer = 0 To DirectoryContainsCount - 1
-                        If DirectoryCount < DirectoryIndex Then
+                    ElseIf DirectoryCount = DirectoryIndex Then
+                        If i < NodeLocation Then
                             'no change needed
-                        ElseIf DirectoryCount = DirectoryIndex Then
-                            If i < NodeLocation Then
-                                'no change needed
-                            ElseIf i = NodeLocation Then
-                                'Index Stays the same
-                                Array.Copy(BitConverter.GetBytes(CUInt(SentBytes.Length / &H100)), 0, WrittenFileArray, &H800 + index + 12, 4)
-                            Else ' i > 
-                                Dim OldIndex As UInt32 = BitConverter.ToUInt32(WrittenFileArray, &H800 + index + 8)
-                                MessageBox.Show(Hex(OldIndex))
-                                Dim TempIndex As UInt64 = OldIndex * &H800 + SizeDifference
-                                MessageBox.Show(Hex(TempIndex) / &H800)
-                                Array.Copy(BitConverter.GetBytes(CUInt(TempIndex / &H800)), 0, WrittenFileArray, &H800 + index + 8, 4)
-                            End If
-                        Else ' directory > 
-                            Dim OldIndex As UInt32 = BitConverter.ToUInt32(WrittenFileArray, &H800 + index + 8)
-                            MessageBox.Show(Hex(OldIndex))
-                            Dim TempIndex As UInt64 = OldIndex * &H800 + SizeDifference
-                            MessageBox.Show(Hex(TempIndex / &H800))
+                        ElseIf i = NodeLocation Then
+                            'Index Stays the same
+                            Array.Copy(BitConverter.GetBytes(CUInt(SentBytes.Length / &H100)), 0, WrittenFileArray, &H800 + index + 12, 4)
+                        Else ' i > 
+                            Dim TempIndex As UInt64 = BitConverter.ToUInt32(WrittenFileArray, &H800 + index + 8) * &H800 + SizeDifference
                             Array.Copy(BitConverter.GetBytes(CUInt(TempIndex / &H800)), 0, WrittenFileArray, &H800 + index + 8, 4)
                         End If
-                        If PackageType.EPAC Then
-                            index += &HC
-                        ElseIf PackageType.EPK8 Then
-                            index += &H10
-                        End If
-                    Next
-                    DirectoryCount += 1
-                Loop
-            ElseIf ParentNodeTag.FileType = PackageType.SHDC Then
-                Dim TempHeaderCheck As Integer = BitConverter.ToUInt32(WrittenFileArray, &H18)
-                Dim TempHeaderStart As Integer = BitConverter.ToUInt32(WrittenFileArray, &H1C)
-                Dim TempHeaderLength As Integer = BitConverter.ToUInt32(WrittenFileArray, &H20)
-                If TempHeaderStart < TempHeaderCheck Then
-                    TempHeaderStart = TempHeaderCheck + &H10 + &H40
-                    If TempHeaderStart Mod &H10 > 0 Then
-                        TempHeaderStart = TempHeaderStart + &H10 - (TempHeaderStart Mod &H10)
+                    Else ' directory > 
+                        Dim TempIndex As UInt64 = BitConverter.ToUInt32(WrittenFileArray, &H800 + index + 8) * &H800 + SizeDifference
+                        Array.Copy(BitConverter.GetBytes(CUInt(TempIndex / &H800)), 0, WrittenFileArray, &H800 + index + 8, 4)
                     End If
-                End If
-                Dim PachPartsCount As Integer = (TempHeaderLength / &H10) '1 index
-                For i As Integer = 0 To PachPartsCount - 1
-                    Dim PartName As String = Hex(BitConverter.ToUInt32(WrittenFileArray, TempHeaderStart + (i * &H10)))
-                    'MessageBox.Show(PartName)
-                    If PartName = "FFFFFFFF" Then
-                        Continue For
-                    End If
-                    If i < NodeLocation Then
-                        'no change needed
-                    ElseIf i = NodeLocation Then
-                        'Index Stays the same
-                        Array.Copy(BitConverter.GetBytes(CULng(SentBytes.Length)), 0, WrittenFileArray, (TempHeaderStart + (i * &H10) + &H8), 8)
-                    Else ' i > NodeLocation
-                        'Size stays index changed
-                        Dim OldIndex As UInt32 = BitConverter.ToUInt32(WrittenFileArray, TempHeaderStart + (i * &H10) + &H4)
-                        Array.Copy(BitConverter.GetBytes(CUInt(OldIndex + SizeDifference)), 0, WrittenFileArray, (TempHeaderStart + (i * &H10) + &H4), 4)
+                    If PackageType.EPAC Then
+                        index += &HC
+                    ElseIf PackageType.EPK8 Then
+                        index += &H10
                     End If
                 Next
-            End If
-
-            If ParentNodeTag.Index = 0 AndAlso
-            ParentNodeTag.StoredData.Length = 0 Then
-                'File to be Written
-                Dim WrittenFile As String = Sentnode.ToolTipText
-                If My.Settings.BackupInjections Then
-                    File.Copy(WrittenFile, WrittenFile & ".bak", True)
+                DirectoryCount += 1
+            Loop
+        ElseIf ParentNodeTag.FileType = PackageType.SHDC Then
+            Dim TempHeaderCheck As Integer = BitConverter.ToUInt32(WrittenFileArray, &H18)
+            Dim TempHeaderStart As Integer = BitConverter.ToUInt32(WrittenFileArray, &H1C)
+            Dim TempHeaderLength As Integer = BitConverter.ToUInt32(WrittenFileArray, &H20)
+            If TempHeaderStart < TempHeaderCheck Then
+                TempHeaderStart = TempHeaderCheck + &H10 + &H40
+                If TempHeaderStart Mod &H10 > 0 Then
+                    TempHeaderStart = TempHeaderStart + &H10 - (TempHeaderStart Mod &H10)
                 End If
-                File.WriteAllBytes(WrittenFile, WrittenFileArray)
-                'resettreebranch
-                Dim TempName As String = ParentNode.Text
-                ParentNode.Nodes.Clear()
-                ParentNode.Text = TempName
-                ParentNode.ToolTipText = WrittenFile
-                ParentNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
-                    .Index = 0,
-                    .length = WrittenFileArray.Length,
-                    .StoredData = New Byte() {}}
-                CheckFile(ParentNode)
-            Else
-                'we must go higher
-                InjectIntoNode(Sentnode.Parent, WrittenFileArray)
             End If
-        Else
+            Dim PachPartsCount As Integer = (TempHeaderLength / &H10) '1 index
+            For i As Integer = 0 To PachPartsCount - 1
+                Dim PartName As String = Hex(BitConverter.ToUInt32(WrittenFileArray, TempHeaderStart + (i * &H10)))
+                'MessageBox.Show(PartName)
+                If PartName = "FFFFFFFF" Then
+                    Continue For
+                End If
+                If i < NodeLocation Then
+                    'no change needed
+                ElseIf i = NodeLocation Then
+                    'Index Stays the same
+                    Array.Copy(BitConverter.GetBytes(CULng(SentBytes.Length)), 0, WrittenFileArray, (TempHeaderStart + (i * &H10) + &H8), 8)
+                Else ' i > NodeLocation
+                    'Size stays index changed
+                    Dim OldIndex As UInt32 = BitConverter.ToUInt32(WrittenFileArray, TempHeaderStart + (i * &H10) + &H4)
+                    Array.Copy(BitConverter.GetBytes(CUInt(OldIndex + SizeDifference)), 0, WrittenFileArray, (TempHeaderStart + (i * &H10) + &H4), 4)
+                End If
+            Next
+        End If
+        If ParentNodeTag.Index = 0 AndAlso
+            ParentNodeTag.StoredData.Length = 0 Then
+            'File to be Written
             Dim WrittenFile As String = Sentnode.ToolTipText
             If My.Settings.BackupInjections Then
                 File.Copy(WrittenFile, WrittenFile & ".bak", True)
             End If
-            'TO DO ADD handle for injecting uncompressed bytes into compressed current as there is some issue.
-            File.WriteAllBytes(WrittenFile, SentBytes)
+            File.WriteAllBytes(WrittenFile, WrittenFileArray)
+            'Remove Save Pending Buttons when file written
+            SaveFileNoLongerPending()
+            'resettreebranch
+            Dim TempName As String = ParentNode.Text
+            ParentNode.Nodes.Clear()
+            ParentNode.Text = TempName
+            ParentNode.ToolTipText = WrittenFile
+            ParentNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
+                   .Index = 0,
+                    .length = WrittenFileArray.Length,
+                    .StoredData = New Byte() {}}
+            CheckFile(ParentNode)
+        Else
+            'we must go higher
+            InjectIntoNode(ParentNode, WrittenFileArray)
         End If
         Return True
     End Function
 #End Region
+#Region "Multi-View Controls"
+    'Commands that should be generic to be used across multiple tabs.
+    Private Sub StoreOldValue(sender As Object, e As EventArgs) Handles HexViewBitWidth.Enter,
+                                                                        TextViewBitWidth.Enter
+        OldValue = sender.text
+    End Sub
+    Sub SaveFileNoLongerPending()
+        ReadNode = Nothing
+        SavePending = False
+        SaveStringChangesToolStripMenuItem.Visible = False
+        SaveMiscChangesToolStripMenuItem.Visible = False
+    End Sub
+    Function ClearandGetClone(SentDataGrid) As DataGridViewRow
+        SentDataGrid.Rows.Clear()
+        SentDataGrid.Rows.Add()
+        Dim CloneRow As DataGridViewRow = SentDataGrid.Rows(0).Clone()
+        SentDataGrid.Rows.Clear()
+        Return CloneRow
+    End Function
+
+#End Region
 #Region "Hex View Controls"
-    Sub AddHexText(SelectedFilePath As TreeNode)
-        If File.Exists(SelectedFilePath.ToolTipText) Then
+    Sub AddHexText(SelectedNode As TreeNode)
+        If File.Exists(SelectedNode.ToolTipText) Then
             Dim bitwidth As Integer = 0
             If HexViewBitWidth.Text.Length > 0 Then
                 bitwidth = CInt(HexViewBitWidth.Text)
             Else
                 bitwidth = CInt(HexViewBitWidth.SelectedItem)
             End If
-            Dim NodeTag As NodeProperties = CType(SelectedFilePath.Tag, NodeProperties)
-            Dim Filebytes As Byte()
-            If NodeTag.StoredData.Length > 0 Then
-                Filebytes = NodeTag.StoredData
-            Else
-                Filebytes = File.ReadAllBytes(SelectedFilePath.ToolTipText)
-            End If
-            Dim HexLength As Long = 0
-            If NodeTag.length = 0 Then
-                HexLength = Filebytes.Length
-            Else
-                HexLength = NodeTag.length
-            End If
+            Dim NodeTag As NodeProperties = CType(SelectedNode.Tag, NodeProperties)
+            Dim Filebytes As Byte() = GetNodeBytes(SelectedNode)
             Dim ByteString As String = ""
-            Try
-                If HexLength < (&H1000 * My.Settings.HexViewLength) Then
-                    ByteString = (BitConverter.ToString(Filebytes, CInt(NodeTag.Index), HexLength).Replace("-", " "))
-                Else
-                    ByteString = (BitConverter.ToString(Filebytes, CInt(NodeTag.Index), (&H1000 * My.Settings.HexViewLength)).Replace("-", " "))
-                End If
-            Catch ex As Exception
-                MessageBox.Show(ex.Message)
-            End Try
-            'SelectedFilePath = SelectedFilePath.Replace(vbCr, "").Replace(vbLf, "")
+            If Filebytes.Length < (&H1000 * My.Settings.HexViewLength) Then
+                ByteString = (BitConverter.ToString(Filebytes, 0, Filebytes.Length).Replace("-", " "))
+            Else
+                ByteString = (BitConverter.ToString(Filebytes, 0, (&H1000 * My.Settings.HexViewLength)).Replace("-", " "))
+            End If
             Dim builder As New StringBuilder(ByteString)
             Dim startIndex = builder.Length - (builder.Length Mod bitwidth * 3)
             For i As Int32 = startIndex To (bitwidth * 3) Step -(bitwidth * 3)
@@ -1617,9 +1604,14 @@ Public Class MainForm
             Hex_Selected.Text = builder.ToString()
         End If
     End Sub
-    Private Sub ToolStripComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles HexViewBitWidth.TextChanged
-        If HexViewBitWidth.Text.Length > 0 AndAlso
-           CInt(HexViewBitWidth.Text) > 0 Then
+    Private Sub HexViewBitWidth_TextChanged(sender As Object, e As EventArgs) Handles HexViewBitWidth.TextChanged
+        If HexViewBitWidth.Text = "" Then
+            'Do Nothing 
+            Exit Sub
+        ElseIf Not IsNumeric(HexViewBitWidth.Text) Then
+            HexViewBitWidth.Text = OldValue
+            Exit Sub
+        ElseIf CInt(HexViewBitWidth.Text) > 0 Then
             If HexViewBitWidth.SelectedIndex > -1 Then
                 My.Settings.BitWidthIndex = HexViewBitWidth.SelectedIndex
                 TextViewBitWidth.SelectedIndex = HexViewBitWidth.SelectedIndex
@@ -1632,44 +1624,32 @@ Public Class MainForm
             End If
         End If
     End Sub
+
 #End Region
 #Region "Text View Controls"
-    Sub AddText(SelectedFilePath As TreeNode)
-        If File.Exists(SelectedFilePath.ToolTipText) Then
+    Sub AddText(SelectedNode As TreeNode)
+        If File.Exists(SelectedNode.ToolTipText) Then
             Dim bitwidth As Integer = 0
             If TextViewBitWidth.Text.Length > 0 Then
                 bitwidth = CInt(TextViewBitWidth.Text)
             Else
                 bitwidth = CInt(TextViewBitWidth.SelectedItem)
             End If
-            Dim NodeTag As NodeProperties = CType(SelectedFilePath.Tag, NodeProperties)
-            Dim Filebytes As Byte()
-            If NodeTag.StoredData.Length > 0 Then
-                Filebytes = NodeTag.StoredData
-            Else
-                Filebytes = File.ReadAllBytes(SelectedFilePath.ToolTipText)
-            End If
+            Dim NodeTag As NodeProperties = CType(SelectedNode.Tag, NodeProperties)
+            Dim Filebytes As Byte() = GetNodeBytes(SelectedNode)
             Dim TextString As String = ""
-            Dim HexLength As Long = 0
-            If NodeTag.length = 0 Then
-                HexLength = Filebytes.Length
-            Else
-                HexLength = NodeTag.length
-            End If
-            If HexLength < (&H1000 * My.Settings.HexViewLength) Then
-                TextString = New String(".", HexLength)
+            If NodeTag.length < (&H1000 * My.Settings.HexViewLength) Then
+                TextString = New String(".", NodeTag.length)
             Else
                 TextString = New String(".", (&H1000 * My.Settings.HexViewLength))
             End If
             Dim FirstBuilder As New StringBuilder(TextString)
             For i As Integer = 0 To TextString.Length - 1
-                If Filebytes(i + NodeTag.Index) > 31 AndAlso (Filebytes(i + NodeTag.Index) < 257) Then
-                    FirstBuilder(i) = Encoding.Default.GetChars(Filebytes, i + NodeTag.Index, 1)(0)
+                If Filebytes(i) > 31 AndAlso (Filebytes(i) < 257) Then
+                    FirstBuilder(i) = Encoding.Default.GetChars(Filebytes, i, 1)(0)
                 End If
             Next
-            TextString = FirstBuilder.ToString()
-            TextString = TextString.Replace(vbCr, ".").Replace(vbLf, ".")
-            Dim builder As New StringBuilder(TextString)
+            Dim builder As New StringBuilder(FirstBuilder.ToString().Replace(vbCr, ".").Replace(vbLf, "."))
             Dim startIndex = builder.Length - (builder.Length Mod bitwidth * 1)
             For i As Int32 = startIndex To (bitwidth * 1) Step -(bitwidth * 1)
                 builder.Insert(i, vbCr & vbLf)
@@ -1678,8 +1658,13 @@ Public Class MainForm
         End If
     End Sub
     Private Sub TextViewBitWidth_TextChanged(sender As Object, e As EventArgs) Handles TextViewBitWidth.TextChanged
-        If TextViewBitWidth.Text.Length > 0 AndAlso
-           CInt(TextViewBitWidth.Text) > 0 Then
+        If TextViewBitWidth.Text = "" Then
+            'Do Nothing 
+            Exit Sub
+        ElseIf Not IsNumeric(TextViewBitWidth.Text) Then
+            TextViewBitWidth.Text = OldValue
+            Exit Sub
+        ElseIf CInt(TextViewBitWidth.Text) > 0 Then
             If TextViewBitWidth.SelectedIndex > -1 Then
                 My.Settings.BitWidthIndex = TextViewBitWidth.SelectedIndex
                 HexViewBitWidth.SelectedIndex = TextViewBitWidth.SelectedIndex
@@ -1695,40 +1680,18 @@ Public Class MainForm
 
 #End Region
 #Region "String View Controls"
-    Sub CloseStringView()
-        If SavePending Then
-            If MessageBox.Show("Changes have not yet been saved.  Would you like to save them now?", "Save Changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
-                InjectIntoNode(ReadNode, BuildStringFile())
-            End If
-            SaveStringChangesToolStripMenuItem.Visible = False
-            SavePending = False
-        End If
-        ReadNode = Nothing
-        TabControl1.TabPages.Remove(StringView)
-    End Sub
     Dim StringFileOffset() As Integer
     Dim StringFileLength() As Integer
     Dim StringFileReference() As Integer
     Dim StringCount As Integer
     Sub FillStringView(SelectedData As TreeNode)
-        ReadNode = SelectedData
-        SizeChange = 0
         Dim Testing As String = ""
-        DataGridStringView.Rows.Clear()
-        DataGridStringView.Rows.Add()
-        Dim CloneRow As DataGridViewRow = DataGridStringView.Rows(0).Clone()
-        DataGridStringView.Rows.Clear()
+        'getting a generic row so we can create one for the collection
+        Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridStringView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
         Try
             Dim NodeTag As NodeProperties = CType(SelectedData.Tag, NodeProperties)
-            Dim StringBytes As Byte()
-            If NodeTag.StoredData.Length > 0 Then
-                StringBytes = NodeTag.StoredData
-            Else
-                Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
-                StringBytes = New Byte(NodeTag.length - 1) {}
-                Array.Copy(FileBytes, CInt(NodeTag.Index), StringBytes, 0, CInt(NodeTag.length))
-            End If
+            Dim StringBytes As Byte() = GetNodeBytes(SelectedData)
             StringCount = BitConverter.ToInt32(StringBytes, 4)
             StringCountToolStripMenuItem.Text = "String Count: " & StringCount
             ProgressBar1.Maximum = StringCount - 1
@@ -1743,12 +1706,16 @@ Public Class MainForm
                 StringFileReference(j) = BitConverter.ToInt32(StringBytes, 8 + j * 12 + 8)
                 Testing = StringFileReference(j)
                 'Trim all 00 chars so the strings don't end abrubtly in future manipulation
-                StringReferences(StringFileReference(j)) = Encoding.Default.GetString(StringBytes, StringFileOffset(j), StringFileLength(j)).TrimEnd(Chr(0))
+                Dim TempStringBytes As Byte() = New Byte(StringFileLength(j) - 1) {}
+                Array.Copy(StringBytes, StringFileOffset(j), TempStringBytes, 0, StringFileLength(j))
+                StringReferences(StringFileReference(j)) = Encoding.Default.GetString(TempStringBytes).TrimEnd(Chr(0))
                 Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
                 TempGridRow.Cells(0).Value = Hex(StringFileReference(j))
                 TempGridRow.Cells(1).Value = StringReferences(StringFileReference(j))
                 TempGridRow.Cells(2).Value = StringFileLength(j).ToString
-                TempGridRow.Cells(3).Value = False
+                TempGridRow.Cells(3).Value = "Add"
+                TempGridRow.Cells(4).Value = "Remove"
+                TempGridRow.Tag = TempStringBytes
                 WorkingCollection.Add(TempGridRow)
                 ProgressBar1.Value = j
             Next
@@ -1756,73 +1723,114 @@ Public Class MainForm
             MessageBox.Show(ex.Message & vbNewLine & Testing)
         End Try
         DataGridStringView.Rows.AddRange(WorkingCollection.ToArray())
-        AddHandler DataGridStringView.CellValueChanged, AddressOf DataGridStringView_CellValueChanged
-        AddHandler DataGridStringView.CellEnter, AddressOf DataGridStringView_CellEnter
     End Sub
+    Sub SortStringView()
+        Dim TempColumn As DataGridViewColumn = New DataGridViewTextBoxColumn With {.Name = "TempCol", .Visible = False}
+        DataGridStringView.Columns.Add(TempColumn)
+        Dim ColNum As Integer = DataGridStringView.Columns.IndexOf(TempColumn)
+        For Each TempRow As DataGridViewRow In DataGridStringView.Rows
+            Dim TempNumber As UInt32 = CUInt("&H" & TempRow.Cells(0).Value.ToString)
+            TempRow.Cells(ColNum).Value = TempNumber
+        Next
+        DataGridStringView.Sort(DataGridStringView.Columns(ColNum), System.ComponentModel.ListSortDirection.Ascending)
+        DataGridStringView.Columns.Remove(TempColumn)
+        SortStringsToolStripMenuItem.Visible = False
+    End Sub
+    Function CheckDuplicateStrings() As Boolean 'returns True for a dupe row
+        Dim BuiltList As List(Of Integer) = New List(Of Integer)
+        For i As Integer = 0 To DataGridStringView.Rows.Count - 1
+            Dim TempNumber As UInt32 = CUInt("&H" & DataGridStringView.Rows(i).Cells(0).Value.ToString)
+            If BuiltList.Contains(TempNumber) Then
+                MessageBox.Show("Duplicate string ID found at row " & i)
+                Return True
+            Else
+                BuiltList.Add(TempNumber)
+            End If
+        Next
+        Return False
+    End Function
     Private Sub SaveChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveStringChangesToolStripMenuItem.Click
-        InjectIntoNode(ReadNode, BuildStringFile())
-        ReadNode = Nothing
-        SaveStringChangesToolStripMenuItem.Visible = False
-        SavePending = False
+        SortStringView()
+        If Not CheckDuplicateStrings() Then
+            InjectIntoNode(ReadNode, BuildStringFile())
+        End If
     End Sub
-    Dim OldString As String = ""
+    Private Sub SortStringsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SortStringsToolStripMenuItem.Click
+        SortStringView()
+    End Sub
     Dim OldLength As Integer
     Dim LengthTheSame As Boolean = False
-    Dim ChangePending As Boolean = False
-
-    Private Sub DataGridStringView_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs)
-        If ChangePending Then
-            ChangePending = False
-            Exit Sub
+    Private Sub DataGridStringView_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridStringView.CellEnter
+        If e.ColumnIndex = 0 Then 'Hex Text Reference Editing
+            OldValue = DataGridStringView.Rows(e.RowIndex).Cells(0).Value
+        ElseIf e.ColumnIndex = 1 Then
+            OldValue = DataGridStringView.Rows(e.RowIndex).Cells(1).Value
+            OldLength = DataGridStringView.Rows(e.RowIndex).Cells(2).Value
+            LengthTheSame = (OldValue.Length + 1 = OldLength) 'If length is not the same then it might be a super string
+        ElseIf e.ColumnIndex = 2 Then
+            OldValue = DataGridStringView.Rows(e.RowIndex).Cells(2).Value
         End If
-        If e.ColumnIndex = 1 Then
+    End Sub
+    Private Sub DataGridStringView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridStringView.CellEndEdit
+        Dim MyCell As DataGridViewCell = DataGridStringView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+        If e.ColumnIndex = 0 Then 'Hexvalue
+            If Not HexCheck(MyCell.Value) Then
+                MyCell.Value = OldValue
+            Else
+                SortStringsToolStripMenuItem.Visible = True
+                SaveStringChangesToolStripMenuItem.Visible = True
+            End If
+        ElseIf e.ColumnIndex = 1 Then 'string text
             If LengthTheSame Then
-                SizeChange += (DataGridStringView.Rows(e.RowIndex).Cells(1).Value.length + 1) -
-                    DataGridStringView.Rows(e.RowIndex).Cells(2).Value
-                DataGridStringView.Rows(e.RowIndex).Cells(2).Value = DataGridStringView.Rows(e.RowIndex).Cells(1).Value.length + 1
+                DataGridStringView.Rows(e.RowIndex).Cells(2).Value = MyCell.Value.length + 1
             Else
                 If MessageBox.Show("String currently contains extra characters." & vbNewLine &
-                                  "Would you like to maintain the length",
-                                   "Potential Super String Detected!",
+                                  "Would you like to maintain the length", "Potential Super String Detected!",
                                    MessageBoxButtons.YesNo) = DialogResult.No Then
-                    ChangePending = True
-                    SizeChange += (DataGridStringView.Rows(e.RowIndex).Cells(1).Value.length + 1) -
-                                    DataGridStringView.Rows(e.RowIndex).Cells(2).Value
-                    DataGridStringView.Rows(e.RowIndex).Cells(2).Value = DataGridStringView.Rows(e.RowIndex).Cells(1).Value.length + 1
+                    DataGridStringView.Rows(e.RowIndex).Cells(2).Value = MyCell.Value.length + 1
                 Else 'check if new string is too long
-                    If DataGridStringView.Rows(e.RowIndex).Cells(2).Value < DataGridStringView.Rows(e.RowIndex).Cells(1).Value.length + 1 Then
+                    If DataGridStringView.Rows(e.RowIndex).Cells(2).Value < MyCell.Value.length + 1 Then
                         MessageBox.Show("String is too long, string will be truncated.")
-                        ChangePending = True
-                        DataGridStringView.Rows(e.RowIndex).Cells(1).Value =
-                            DataGridStringView.Rows(e.RowIndex).Cells(1).Value.ToString.Substring(0, DataGridStringView.Rows(e.RowIndex).Cells(2).Value - 1)
+                        MyCell.Value = MyCell.Value.ToString.Substring(0, DataGridStringView.Rows(e.RowIndex).Cells(2).Value - 1)
                     End If
                 End If
             End If
+            DataGridStringView.Rows(e.RowIndex).Tag = Encoding.Default.GetBytes(MyCell.Value + Chr(0)) 'Stores the new string as bytes in the tag
+            'this redim keeps the right length for a super string type string where there are several 0 chars at the end
+            ReDim Preserve DataGridStringView.Rows(e.RowIndex).Tag(DataGridStringView.Rows(e.RowIndex).Cells(2).Value - 1)
             SavePending = True
             SaveStringChangesToolStripMenuItem.Visible = True
-            DataGridStringView.Rows(e.RowIndex).Cells(3).Value = True
-        ElseIf e.ColumnIndex = 2 Then
-            If DataGridStringView.Rows(e.RowIndex).Cells(2).Value < DataGridStringView.Rows(e.RowIndex).Cells(1).Value.length + 1 Then
-                MessageBox.Show("String is too long, string will be truncated.")
-                DataGridStringView.Rows(e.RowIndex).Cells(1).Value =
-                            DataGridStringView.Rows(e.RowIndex).Cells(1).Value.ToString.Substring(0, DataGridStringView.Rows(e.RowIndex).Cells(2).Value - 1)
+        ElseIf e.ColumnIndex = 2 Then 'Adjusting Length only
+            If Not IsNumeric(MyCell.Value) OrElse
+               MyCell.Value < 1 Then
+                MyCell.Value = OldValue
+            Else
+                If MyCell.Value < DataGridStringView.Rows(e.RowIndex).Cells(1).Value.length + 1 Then
+                    MessageBox.Show("String is too long, string will be truncated.")
+                    DataGridStringView.Rows(e.RowIndex).Cells(1).Value =
+                                DataGridStringView.Rows(e.RowIndex).Cells(1).Value.ToString.Substring(0, MyCell.Value - 1) 'Truncates the String
+                    DataGridStringView.Rows(e.RowIndex).Tag = Encoding.Default.GetBytes(DataGridStringView.Rows(e.RowIndex).Cells(1).Value + Chr(0)) 'Stores the new string as bytes in the tag
+                Else 'Redim the tag to expand it
+                    ReDim Preserve DataGridStringView.Rows(e.RowIndex).Tag(MyCell.Value - 1)
+                End If
+                SavePending = True
+                SaveStringChangesToolStripMenuItem.Visible = True
             End If
-            SizeChange += DataGridStringView.Rows(e.RowIndex).Cells(2).Value - OldLength
-            SavePending = True
-            SaveStringChangesToolStripMenuItem.Visible = True
-            DataGridStringView.Rows(e.RowIndex).Cells(3).Value = True
+
         End If
     End Sub
-    Private Sub DataGridStringView_CellEnter(sender As Object, e As DataGridViewCellEventArgs)
-        If e.ColumnIndex = 1 Then
-            OldString = DataGridStringView.Rows(e.RowIndex).Cells(1).Value
-            OldLength = DataGridStringView.Rows(e.RowIndex).Cells(2).Value
-            LengthTheSame = (OldString.Length + 1 = OldLength)
-            'If Not LengthDif Then
-            'MessageBox.Show("Super String")
-            'End If
-        ElseIf e.ColumnIndex = 2 Then
-            OldLength = DataGridStringView.Rows(e.RowIndex).Cells(2).Value
+    Private Sub DataGridStringView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridStringView.CellContentClick
+        If e.ColumnIndex = 3 Then 'add button
+            Dim Duplicaterow As DataGridViewRow = DataGridStringView.Rows(e.RowIndex).Clone
+            For i As Integer = 0 To DataGridStringView.Rows(e.RowIndex).Cells.Count - 1
+                Duplicaterow.Cells(i).Value = DataGridStringView.Rows(e.RowIndex).Cells(i).Value
+            Next
+            Duplicaterow.Tag = DataGridStringView.Rows(e.RowIndex).Tag
+            DataGridStringView.Rows.Insert(e.RowIndex + 1, Duplicaterow)
+        ElseIf e.ColumnIndex = 4 Then 'Delete button
+            DataGridStringView.Rows.RemoveAt(e.RowIndex)
+        Else
+            'do nothing
         End If
     End Sub
     Private Sub ToolStripTextBoxSearch_Enter(sender As Object, e As EventArgs) Handles ToolStripTextBoxSearch.Enter
@@ -1830,7 +1838,6 @@ Public Class MainForm
             ToolStripTextBoxSearch.Text = ""
         End If
     End Sub
-
     Private Sub ToolStripTextBoxSearch_Leave(sender As Object, e As EventArgs) Handles ToolStripTextBoxSearch.Leave
         If ToolStripTextBoxSearch.Text = "" Then
             ToolStripTextBoxSearch.Text = "Search..."
@@ -1859,77 +1866,48 @@ Public Class MainForm
         DataGridStringView.Rows.AddRange(TemporaryCollection.ToArray)
     End Sub
     Private Function BuildStringFile() As Byte()
-        Dim NodeTag As NodeProperties = CType(ReadNode.Tag, NodeProperties)
-        Dim StringBytes As Byte()
-        If NodeTag.StoredData.Length > 0 Then
-            StringBytes = NodeTag.StoredData
-        Else
-            Dim FileBytes As Byte() = File.ReadAllBytes(ReadNode.ToolTipText)
-            StringBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), StringBytes, 0, CInt(NodeTag.length))
-        End If
-        'First get the string count and make a header
-        MessageBox.Show(SizeChange)
-        Dim ReturnedBytes As Byte() = New Byte(ReadNode.Tag.length + SizeChange) {}
-        Array.Copy(BitConverter.GetBytes(CUInt(StringCount)), 0, ReturnedBytes, 4, 4)
+        Dim StringCount As Integer = DataGridStringView.RowCount
+        Dim StringSum As Integer = 0
 
-        ProgressBar1.Maximum = StringCount - 1
-        ProgressBar1.Value = 0
-        Dim CurrentChange As Integer = 0
         For i As Integer = 0 To StringCount - 1
-            If DataGridStringView.Rows(i).Cells(3).Value = True Then
-                'index of string won't change
-                Array.Copy(BitConverter.GetBytes(StringFileOffset(i) + CurrentChange), 0, ReturnedBytes, 8 + i * 12 + 0, 4)
-                'String Length will be equal to cell 3 (2 in 0 index)
-                Array.Copy(BitConverter.GetBytes(CUInt(DataGridStringView.Rows(i).Cells(2).Value)), 0, ReturnedBytes, 8 + i * 12 + 4, 4)
-                'Reference Stays the same
-                Array.Copy(BitConverter.GetBytes(StringFileReference(i)), 0, ReturnedBytes, 8 + i * 12 + 8, 4)
-                'now we have to build the new string as bytes and inject it including a buffer so we need to make a temp byte array
-                Dim TempBytes As Byte() = Encoding.Default.GetBytes(DataGridStringView.Rows(i).Cells(1).Value.ToString)
-                ReDim Preserve TempBytes(DataGridStringView.Rows(i).Cells(2).Value)
-                Array.Copy(TempBytes, 0, ReturnedBytes, StringFileOffset(i) + CurrentChange, TempBytes.Length)
-                'Now add the length difference to the Current Change Value
-                CurrentChange += CUInt(DataGridStringView.Rows(i).Cells(2).Value) - StringFileLength(i)
-                'Subtracts for shorter strings and adds for longer strings
-            Else
-                Array.Copy(BitConverter.GetBytes(StringFileOffset(i) + CurrentChange), 0, ReturnedBytes, 8 + i * 12 + 0, 4)
-                Array.Copy(BitConverter.GetBytes(StringFileLength(i)), 0, ReturnedBytes, 8 + i * 12 + 4, 4)
-                Array.Copy(BitConverter.GetBytes(StringFileReference(i)), 0, ReturnedBytes, 8 + i * 12 + 8, 4)
-                'now copy the string bytes over since they didn't change
-                Array.Copy(StringBytes, StringFileOffset(i), ReturnedBytes, StringFileOffset(i) + CurrentChange, StringFileLength(i))
-            End If
+            StringSum += DataGridStringView.Rows(i).Cells(2).Value
+        Next
+        'First get the string count and make a header
+        Dim ReturnedBytes As Byte() = New Byte(&H8 + StringCount * &HC + StringSum - 2) {} 'String Sum adds on an extra 1 for the last string from my tests
+        'Building the header 0000 , string count
+        Array.Copy(BitConverter.GetBytes(CUInt(StringCount)), 0, ReturnedBytes, 4, 4)
+        ProgressBar1.Maximum = StringCount
+        ProgressBar1.Value = 0
+        Dim index As UInt32 = &H8 + StringCount * &HC
+        For i As Integer = 0 To StringCount - 1
+            'index of string won't change
+            Array.Copy(BitConverter.GetBytes(index), 0, ReturnedBytes, 8 + i * 12 + 0, 4)
+            'String Length will be equal to cell 3 (2 in 0 index)
+            Array.Copy(BitConverter.GetBytes(CUInt(DataGridStringView.Rows(i).Cells(2).Value)), 0, ReturnedBytes, 8 + i * 12 + 4, 4)
+            'Reference is set from the first cell
+            Array.Copy(BitConverter.GetBytes(CUInt("&h" & DataGridStringView.Rows(i).Cells(0).Value)), 0, ReturnedBytes, 8 + i * 12 + 8, 4)
+            'now we have to copy the string from the tag storage
+            Dim TempArray As Byte() = DataGridStringView.Rows(i).Tag ' Casting the Tag so the array handles it properly
+            Array.Copy(TempArray, 0, ReturnedBytes, index, CUInt(DataGridStringView.Rows(i).Cells(2).Value))
+            'Now add the lengthto the index
+            index += CUInt(DataGridStringView.Rows(i).Cells(2).Value)
             ProgressBar1.Value = i
         Next
         Return ReturnedBytes
     End Function
 #End Region
+    'Left off refactoring here
+    'Forms to Use CellEndEdit instead of Cell value changed as it fixes a lot of stupid handling issues.
     'TO DO Increase speed of datagrid population with collections
 #Region "Misc View Controls"
-    Sub CloseMiscView()
-        If SavePending Then
-            If MessageBox.Show("Changes have not yet been saved.  Would you like to save them now?", "Save Changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
-                InjectIntoNode(ReadNode, BuildMiscFile())
-            End If
-            SaveMiscChangesToolStripMenuItem.Visible = False
-            SavePending = False
-        End If
-        ReadNode = Nothing
-        RemoveHandler DataGridMiscView.CellValueChanged, AddressOf DataGridMiscView_CellValueChanged
-        TabControl1.TabPages.Remove(MiscView)
-    End Sub
     Sub FillMiscView(SelectedData As TreeNode)
         RemoveHandler DataGridMiscView.CellValueChanged, AddressOf DataGridMiscView_CellValueChanged
         ReadNode = SelectedData
-        SizeChange = 0
         DataGridMiscView.Rows.Clear()
         DataGridMiscView.Columns.Clear()
         Dim GameType As Integer = MiscViewType.SelectedIndex
         GetMiscColumns(GameType)
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
-        NodeTag.Index = CType(SelectedData.Tag, NodeProperties).Index
-        NodeTag.length = CType(SelectedData.Tag, NodeProperties).length
-        NodeTag.StoredData = CType(SelectedData.Tag, NodeProperties).StoredData
+        Dim NodeTag As NodeProperties = CType(SelectedData.Tag, NodeProperties)
         Dim MiscBytes As Byte()
         If NodeTag.StoredData.Length > 0 Then
             Dim FileBytes As Byte() = NodeTag.StoredData
@@ -1942,6 +1920,7 @@ Public Class MainForm
         End If
         Dim ArenaCount As Integer = BitConverter.ToInt32(MiscBytes, 0)
         For i As Integer = 0 To ArenaCount - 1
+            'Dim reader As Newtonsoft.Json.JsonTextReader = New JsonTextReader(New TextReader)
             Dim ArenaNum As String = Encoding.ASCII.GetString(MiscBytes, 25 + i * 32, 5)
             Dim TempIndex As Integer = BitConverter.ToInt32(MiscBytes, 40 + i * 32)
             Dim TempLength As Integer = BitConverter.ToInt32(MiscBytes, 36 + i * 32)
