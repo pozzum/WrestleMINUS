@@ -1,0 +1,32 @@
+﻿The Node Icon Files are 440pt BankGothic Font on a 256x256 Canvas Leters have a Gradient from #191919 to #646464
+0	Qu	-BIN
+		-Unchecked
+1	F	-FOLDER
+2	H	-HSPC
+3	8	-EPK8
+4	E	-EPAC
+5	S	-SHDC
+6	P	-PACH 
+		-PACHDIRECTORIES
+7	B	-BPE
+8	Z	-ZLIB
+9	O	-OODL
+10	T	-TextureLibrary
+11	A	-YANMPACK (ANIMATIONS)
+		-YANM
+		-OFOP
+12	Y	-YOBJ
+		-YOBJArray
+13	@	-STRING FILE
+14	D	-DDS
+15	M	-ARENAINFO (MISC)
+16	G	-SHOWINFO (STG)
+17	N	-NIBJ
+18	2	-BK2
+		-BIK
+19	C	-CostumeFile
+20	U	-MuscleFile
+21	K	-MaskFile
+22	V	-VMUM
+23	W	-TitleFile (WWE TITLE)
+'UNUSED SO FAR IJLQRX

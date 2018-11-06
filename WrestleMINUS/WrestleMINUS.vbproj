@@ -150,6 +150,31 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\2.png" />
+    <Content Include="Assets\8.png" />
+    <Content Include="Assets\A.png" />
+    <Content Include="Assets\AT.png" />
+    <Content Include="Assets\B.png" />
+    <Content Include="Assets\C.png" />
+    <Content Include="Assets\D.png" />
+    <Content Include="Assets\E.png" />
+    <Content Include="Assets\F.png" />
+    <Content Include="Assets\G.png" />
+    <Content Include="Assets\H.png" />
+    <Content Include="Assets\K.png" />
+    <Content Include="Assets\M.png" />
+    <Content Include="Assets\N.png" />
+    <Content Include="Assets\NodeIcons.txt" />
+    <Content Include="Assets\O.png" />
+    <Content Include="Assets\P.png" />
+    <Content Include="Assets\Qu.png" />
+    <Content Include="Assets\S.png" />
+    <Content Include="Assets\T.png" />
+    <Content Include="Assets\U.png" />
+    <Content Include="Assets\V.png" />
+    <Content Include="Assets\W.png" />
+    <Content Include="Assets\Y.png" />
+    <Content Include="Assets\Z.png" />
     <Content Include="W-.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

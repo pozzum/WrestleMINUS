@@ -53,6 +53,11 @@ Partial Class MainForm
         Me.TextViewFileName = New System.Windows.Forms.ToolStripMenuItem()
         Me.StringView = New System.Windows.Forms.TabPage()
         Me.DataGridStringView = New System.Windows.Forms.DataGridView()
+        Me.HexRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StringText = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Length = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AddString = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.DeleteString = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStripStringView = New System.Windows.Forms.MenuStrip()
         Me.StringCountToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripTextBoxSearch = New System.Windows.Forms.ToolStripTextBox()
@@ -282,11 +287,41 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.HexRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StringText = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Length = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AddString = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.DeleteString = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.Col_ArenaNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Stadium = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Advertisement = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_CornerPost = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_LED_CornerPost = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Rope = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Apron = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_LED_Apron = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Turnbuckle = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Barricade = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Fence = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_CeilingLighting = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Spotlight = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Stairs = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_CommentarySeat = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_RingMat = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_FloorMattress = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Crowd = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_CrowdSeatsPlace = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_CrowdSeatsModel = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_IBL = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Titantron = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Minitron = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Wall_L = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Wall_R = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Header = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Floor = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_MiscObjects = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_LightingType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_CornerPost_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Rope_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Apron_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Turnbuckle_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_RingMat_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_version = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -419,7 +454,7 @@ Partial Class MainForm
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.TabControl1)
         Me.SplitContainer1.Size = New System.Drawing.Size(1184, 450)
-        Me.SplitContainer1.SplitterDistance = 196
+        Me.SplitContainer1.SplitterDistance = 202
         Me.SplitContainer1.TabIndex = 1
         '
         'TreeView1
@@ -431,7 +466,7 @@ Partial Class MainForm
         Me.TreeView1.Name = "TreeView1"
         Me.TreeView1.SelectedImageIndex = 0
         Me.TreeView1.ShowNodeToolTips = True
-        Me.TreeView1.Size = New System.Drawing.Size(196, 403)
+        Me.TreeView1.Size = New System.Drawing.Size(202, 403)
         Me.TreeView1.TabIndex = 0
         '
         'ImageList1
@@ -445,15 +480,30 @@ Partial Class MainForm
         Me.ImageList1.Images.SetKeyName(4, "E.png")
         Me.ImageList1.Images.SetKeyName(5, "S.png")
         Me.ImageList1.Images.SetKeyName(6, "P.png")
-        Me.ImageList1.Images.SetKeyName(7, "O.png")
+        Me.ImageList1.Images.SetKeyName(7, "B.png")
         Me.ImageList1.Images.SetKeyName(8, "Z.png")
+        Me.ImageList1.Images.SetKeyName(9, "O.png")
+        Me.ImageList1.Images.SetKeyName(10, "T.png")
+        Me.ImageList1.Images.SetKeyName(11, "A.png")
+        Me.ImageList1.Images.SetKeyName(12, "Y.png")
+        Me.ImageList1.Images.SetKeyName(13, "AT.png")
+        Me.ImageList1.Images.SetKeyName(14, "D.png")
+        Me.ImageList1.Images.SetKeyName(15, "M.png")
+        Me.ImageList1.Images.SetKeyName(16, "G.png")
+        Me.ImageList1.Images.SetKeyName(17, "N.png")
+        Me.ImageList1.Images.SetKeyName(18, "2.png")
+        Me.ImageList1.Images.SetKeyName(19, "C.png")
+        Me.ImageList1.Images.SetKeyName(20, "U.png")
+        Me.ImageList1.Images.SetKeyName(21, "K.png")
+        Me.ImageList1.Images.SetKeyName(22, "V.png")
+        Me.ImageList1.Images.SetKeyName(23, "W.png")
         '
         'ProgressBar1
         '
         Me.ProgressBar1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.ProgressBar1.Location = New System.Drawing.Point(0, 427)
         Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(196, 23)
+        Me.ProgressBar1.Size = New System.Drawing.Size(202, 23)
         Me.ProgressBar1.TabIndex = 2
         '
         'MenuStripTreeView
@@ -461,7 +511,7 @@ Partial Class MainForm
         Me.MenuStripTreeView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CurrentViewToolStripMenuItem})
         Me.MenuStripTreeView.Location = New System.Drawing.Point(0, 0)
         Me.MenuStripTreeView.Name = "MenuStripTreeView"
-        Me.MenuStripTreeView.Size = New System.Drawing.Size(196, 24)
+        Me.MenuStripTreeView.Size = New System.Drawing.Size(202, 24)
         Me.MenuStripTreeView.TabIndex = 1
         Me.MenuStripTreeView.Text = "MenuStrip2"
         '
@@ -491,7 +541,7 @@ Partial Class MainForm
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(984, 450)
+        Me.TabControl1.Size = New System.Drawing.Size(978, 450)
         Me.TabControl1.TabIndex = 1
         '
         'HexView
@@ -501,7 +551,7 @@ Partial Class MainForm
         Me.HexView.Location = New System.Drawing.Point(4, 22)
         Me.HexView.Name = "HexView"
         Me.HexView.Padding = New System.Windows.Forms.Padding(3)
-        Me.HexView.Size = New System.Drawing.Size(976, 424)
+        Me.HexView.Size = New System.Drawing.Size(970, 424)
         Me.HexView.TabIndex = 0
         Me.HexView.Text = "Hex View"
         Me.HexView.UseVisualStyleBackColor = True
@@ -513,7 +563,7 @@ Partial Class MainForm
         Me.Hex_Selected.Location = New System.Drawing.Point(3, 30)
         Me.Hex_Selected.Name = "Hex_Selected"
         Me.Hex_Selected.ReadOnly = True
-        Me.Hex_Selected.Size = New System.Drawing.Size(970, 391)
+        Me.Hex_Selected.Size = New System.Drawing.Size(964, 391)
         Me.Hex_Selected.TabIndex = 2
         Me.Hex_Selected.Text = ""
         '
@@ -522,7 +572,7 @@ Partial Class MainForm
         Me.MenuStripHexView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HexViewBitWidth, Me.HexViewFileName})
         Me.MenuStripHexView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripHexView.Name = "MenuStripHexView"
-        Me.MenuStripHexView.Size = New System.Drawing.Size(970, 27)
+        Me.MenuStripHexView.Size = New System.Drawing.Size(964, 27)
         Me.MenuStripHexView.TabIndex = 1
         Me.MenuStripHexView.Text = "MenuStrip3"
         '
@@ -546,7 +596,7 @@ Partial Class MainForm
         Me.TextView.Location = New System.Drawing.Point(4, 22)
         Me.TextView.Name = "TextView"
         Me.TextView.Padding = New System.Windows.Forms.Padding(3)
-        Me.TextView.Size = New System.Drawing.Size(976, 424)
+        Me.TextView.Size = New System.Drawing.Size(970, 424)
         Me.TextView.TabIndex = 1
         Me.TextView.Text = "Text View"
         Me.TextView.UseVisualStyleBackColor = True
@@ -558,7 +608,7 @@ Partial Class MainForm
         Me.Text_Selected.Location = New System.Drawing.Point(3, 30)
         Me.Text_Selected.Name = "Text_Selected"
         Me.Text_Selected.ReadOnly = True
-        Me.Text_Selected.Size = New System.Drawing.Size(970, 391)
+        Me.Text_Selected.Size = New System.Drawing.Size(964, 391)
         Me.Text_Selected.TabIndex = 2
         Me.Text_Selected.Text = ""
         '
@@ -567,7 +617,7 @@ Partial Class MainForm
         Me.MenuStripTextView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TextViewBitWidth, Me.TextViewFileName})
         Me.MenuStripTextView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripTextView.Name = "MenuStripTextView"
-        Me.MenuStripTextView.Size = New System.Drawing.Size(970, 27)
+        Me.MenuStripTextView.Size = New System.Drawing.Size(964, 27)
         Me.MenuStripTextView.TabIndex = 0
         Me.MenuStripTextView.Text = "MenuStrip3"
         '
@@ -591,7 +641,7 @@ Partial Class MainForm
         Me.StringView.Location = New System.Drawing.Point(4, 22)
         Me.StringView.Name = "StringView"
         Me.StringView.Padding = New System.Windows.Forms.Padding(3)
-        Me.StringView.Size = New System.Drawing.Size(976, 424)
+        Me.StringView.Size = New System.Drawing.Size(970, 424)
         Me.StringView.TabIndex = 2
         Me.StringView.Text = "String Viewer"
         Me.StringView.UseVisualStyleBackColor = True
@@ -609,15 +659,52 @@ Partial Class MainForm
         Me.DataGridStringView.MultiSelect = False
         Me.DataGridStringView.Name = "DataGridStringView"
         Me.DataGridStringView.RowHeadersVisible = False
-        Me.DataGridStringView.Size = New System.Drawing.Size(970, 391)
+        Me.DataGridStringView.Size = New System.Drawing.Size(964, 391)
         Me.DataGridStringView.TabIndex = 2
+        '
+        'HexRef
+        '
+        Me.HexRef.FillWeight = 25.0!
+        Me.HexRef.HeaderText = "HexRef"
+        Me.HexRef.MaxInputLength = 8
+        Me.HexRef.Name = "HexRef"
+        Me.HexRef.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'StringText
+        '
+        Me.StringText.HeaderText = "String Text"
+        Me.StringText.MaxInputLength = 31
+        Me.StringText.Name = "StringText"
+        Me.StringText.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Length
+        '
+        Me.Length.FillWeight = 25.0!
+        Me.Length.HeaderText = "Length"
+        Me.Length.MaxInputLength = 10
+        Me.Length.Name = "Length"
+        Me.Length.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'AddString
+        '
+        Me.AddString.FillWeight = 10.0!
+        Me.AddString.HeaderText = "Add"
+        Me.AddString.Name = "AddString"
+        '
+        'DeleteString
+        '
+        Me.DeleteString.FillWeight = 10.0!
+        Me.DeleteString.HeaderText = "Delete"
+        Me.DeleteString.Name = "DeleteString"
+        Me.DeleteString.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DeleteString.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         '
         'MenuStripStringView
         '
         Me.MenuStripStringView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringCountToolStripMenuItem, Me.ToolStripTextBoxSearch, Me.SaveStringChangesToolStripMenuItem, Me.SortStringsToolStripMenuItem})
         Me.MenuStripStringView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripStringView.Name = "MenuStripStringView"
-        Me.MenuStripStringView.Size = New System.Drawing.Size(970, 27)
+        Me.MenuStripStringView.Size = New System.Drawing.Size(964, 27)
         Me.MenuStripStringView.TabIndex = 0
         Me.MenuStripStringView.Text = "MenuStrip2"
         '
@@ -655,7 +742,7 @@ Partial Class MainForm
         Me.MiscView.Location = New System.Drawing.Point(4, 22)
         Me.MiscView.Name = "MiscView"
         Me.MiscView.Padding = New System.Windows.Forms.Padding(3)
-        Me.MiscView.Size = New System.Drawing.Size(976, 424)
+        Me.MiscView.Size = New System.Drawing.Size(970, 424)
         Me.MiscView.TabIndex = 3
         Me.MiscView.Text = "Misc View"
         Me.MiscView.UseVisualStyleBackColor = True
@@ -667,11 +754,13 @@ Partial Class MainForm
         Me.DataGridMiscView.AllowUserToResizeRows = False
         Me.DataGridMiscView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
         Me.DataGridMiscView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridMiscView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Col_ArenaNumber, Me.Col_Stadium, Me.Col_Advertisement, Me.Col_CornerPost, Me.Col_LED_CornerPost, Me.Col_Rope, Me.Col_Apron, Me.Col_LED_Apron, Me.Col_Turnbuckle, Me.Col_Barricade, Me.Col_Fence, Me.Col_CeilingLighting, Me.Col_Spotlight, Me.Col_Stairs, Me.Col_CommentarySeat, Me.Col_RingMat, Me.Col_FloorMattress, Me.Col_Crowd, Me.Col_CrowdSeatsPlace, Me.Col_CrowdSeatsModel, Me.Col_IBL, Me.Col_Titantron, Me.Col_Minitron, Me.Col_Wall_L, Me.Col_Wall_R, Me.Col_Header, Me.Col_Floor, Me.Col_MiscObjects, Me.Col_LightingType, Me.Col_CornerPost_CM, Me.Col_Rope_CM, Me.Col_Apron_CM, Me.Col_Turnbuckle_CM, Me.Col_RingMat_CM, Me.Col_version})
         Me.DataGridMiscView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridMiscView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridMiscView.Name = "DataGridMiscView"
+        Me.DataGridMiscView.RowHeadersVisible = False
         Me.DataGridMiscView.RowHeadersWidth = 70
-        Me.DataGridMiscView.Size = New System.Drawing.Size(970, 391)
+        Me.DataGridMiscView.Size = New System.Drawing.Size(964, 391)
         Me.DataGridMiscView.TabIndex = 1
         '
         'MenuStripMiscView
@@ -679,7 +768,7 @@ Partial Class MainForm
         Me.MenuStripMiscView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MiscViewType, Me.SaveMiscChangesToolStripMenuItem})
         Me.MenuStripMiscView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripMiscView.Name = "MenuStripMiscView"
-        Me.MenuStripMiscView.Size = New System.Drawing.Size(970, 27)
+        Me.MenuStripMiscView.Size = New System.Drawing.Size(964, 27)
         Me.MenuStripMiscView.TabIndex = 0
         Me.MenuStripMiscView.Text = "MenuStrip2"
         '
@@ -705,7 +794,7 @@ Partial Class MainForm
         Me.ShowView.Location = New System.Drawing.Point(4, 22)
         Me.ShowView.Name = "ShowView"
         Me.ShowView.Padding = New System.Windows.Forms.Padding(3)
-        Me.ShowView.Size = New System.Drawing.Size(976, 424)
+        Me.ShowView.Size = New System.Drawing.Size(970, 424)
         Me.ShowView.TabIndex = 4
         Me.ShowView.Text = "Show View"
         Me.ShowView.UseVisualStyleBackColor = True
@@ -721,7 +810,7 @@ Partial Class MainForm
         Me.DataGridShowView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridShowView.Name = "DataGridShowView"
         Me.DataGridShowView.RowHeadersWidth = 60
-        Me.DataGridShowView.Size = New System.Drawing.Size(970, 391)
+        Me.DataGridShowView.Size = New System.Drawing.Size(964, 391)
         Me.DataGridShowView.TabIndex = 2
         '
         'StrName
@@ -953,7 +1042,7 @@ Partial Class MainForm
         Me.MenuStripShowView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ShowViewType})
         Me.MenuStripShowView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripShowView.Name = "MenuStripShowView"
-        Me.MenuStripShowView.Size = New System.Drawing.Size(970, 27)
+        Me.MenuStripShowView.Size = New System.Drawing.Size(964, 27)
         Me.MenuStripShowView.TabIndex = 0
         Me.MenuStripShowView.Text = "MenuStrip2"
         '
@@ -970,7 +1059,7 @@ Partial Class MainForm
         Me.NIBJView.Location = New System.Drawing.Point(4, 22)
         Me.NIBJView.Name = "NIBJView"
         Me.NIBJView.Padding = New System.Windows.Forms.Padding(3)
-        Me.NIBJView.Size = New System.Drawing.Size(976, 424)
+        Me.NIBJView.Size = New System.Drawing.Size(970, 424)
         Me.NIBJView.TabIndex = 5
         Me.NIBJView.Text = "NIBJView"
         Me.NIBJView.UseVisualStyleBackColor = True
@@ -984,7 +1073,7 @@ Partial Class MainForm
         Me.DataGridNIBJView.MultiSelect = False
         Me.DataGridNIBJView.Name = "DataGridNIBJView"
         Me.DataGridNIBJView.RowHeadersWidth = 60
-        Me.DataGridNIBJView.Size = New System.Drawing.Size(970, 391)
+        Me.DataGridNIBJView.Size = New System.Drawing.Size(964, 391)
         Me.DataGridNIBJView.TabIndex = 2
         '
         'MenuStripNIBJView
@@ -992,7 +1081,7 @@ Partial Class MainForm
         Me.MenuStripNIBJView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NIBJViewType, Me.FileAttributesToolStripMenuItem})
         Me.MenuStripNIBJView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripNIBJView.Name = "MenuStripNIBJView"
-        Me.MenuStripNIBJView.Size = New System.Drawing.Size(970, 27)
+        Me.MenuStripNIBJView.Size = New System.Drawing.Size(964, 27)
         Me.MenuStripNIBJView.TabIndex = 0
         Me.MenuStripNIBJView.Text = "MenuStrip2"
         '
@@ -1013,7 +1102,7 @@ Partial Class MainForm
         Me.PictureView.Controls.Add(Me.PictureBox2)
         Me.PictureView.Location = New System.Drawing.Point(4, 22)
         Me.PictureView.Name = "PictureView"
-        Me.PictureView.Size = New System.Drawing.Size(976, 424)
+        Me.PictureView.Size = New System.Drawing.Size(970, 424)
         Me.PictureView.TabIndex = 8
         Me.PictureView.Text = "Picture View"
         Me.PictureView.UseVisualStyleBackColor = True
@@ -1023,7 +1112,7 @@ Partial Class MainForm
         Me.PictureBox2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PictureBox2.Location = New System.Drawing.Point(0, 0)
         Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(976, 424)
+        Me.PictureBox2.Size = New System.Drawing.Size(970, 424)
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.PictureBox2.TabIndex = 2
         Me.PictureBox2.TabStop = False
@@ -1034,7 +1123,7 @@ Partial Class MainForm
         Me.ObjectView.Location = New System.Drawing.Point(4, 22)
         Me.ObjectView.Name = "ObjectView"
         Me.ObjectView.Padding = New System.Windows.Forms.Padding(3)
-        Me.ObjectView.Size = New System.Drawing.Size(976, 424)
+        Me.ObjectView.Size = New System.Drawing.Size(970, 424)
         Me.ObjectView.TabIndex = 7
         Me.ObjectView.Text = "Object View"
         Me.ObjectView.UseVisualStyleBackColor = True
@@ -1044,7 +1133,7 @@ Partial Class MainForm
         Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label1.Location = New System.Drawing.Point(3, 3)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(970, 418)
+        Me.Label1.Size = New System.Drawing.Size(964, 418)
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "To Be Added :("
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1056,7 +1145,7 @@ Partial Class MainForm
         Me.AttireView.Location = New System.Drawing.Point(4, 22)
         Me.AttireView.Name = "AttireView"
         Me.AttireView.Padding = New System.Windows.Forms.Padding(3)
-        Me.AttireView.Size = New System.Drawing.Size(976, 424)
+        Me.AttireView.Size = New System.Drawing.Size(970, 424)
         Me.AttireView.TabIndex = 9
         Me.AttireView.Text = "Attire View"
         Me.AttireView.UseVisualStyleBackColor = True
@@ -1069,7 +1158,7 @@ Partial Class MainForm
         Me.DataGridAttireView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridAttireView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridAttireView.Name = "DataGridAttireView"
-        Me.DataGridAttireView.Size = New System.Drawing.Size(970, 394)
+        Me.DataGridAttireView.Size = New System.Drawing.Size(964, 394)
         Me.DataGridAttireView.TabIndex = 1
         '
         'Pach
@@ -1461,7 +1550,7 @@ Partial Class MainForm
         Me.MenuStripAttireView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringLoadedAttireMenuItem, Me.PacsLoadedAttireMenuItem, Me.SaveChangesAttireMenuItem})
         Me.MenuStripAttireView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripAttireView.Name = "MenuStripAttireView"
-        Me.MenuStripAttireView.Size = New System.Drawing.Size(970, 24)
+        Me.MenuStripAttireView.Size = New System.Drawing.Size(964, 24)
         Me.MenuStripAttireView.TabIndex = 0
         Me.MenuStripAttireView.Text = "MenuStrip2"
         '
@@ -1493,7 +1582,7 @@ Partial Class MainForm
         Me.MuscleView.Location = New System.Drawing.Point(4, 22)
         Me.MuscleView.Name = "MuscleView"
         Me.MuscleView.Padding = New System.Windows.Forms.Padding(3)
-        Me.MuscleView.Size = New System.Drawing.Size(976, 424)
+        Me.MuscleView.Size = New System.Drawing.Size(970, 424)
         Me.MuscleView.TabIndex = 10
         Me.MuscleView.Text = "Muscle View"
         Me.MuscleView.UseVisualStyleBackColor = True
@@ -1507,7 +1596,7 @@ Partial Class MainForm
         Me.DataGridMuscleView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridMuscleView.Name = "DataGridMuscleView"
         Me.DataGridMuscleView.RowHeadersVisible = False
-        Me.DataGridMuscleView.Size = New System.Drawing.Size(970, 394)
+        Me.DataGridMuscleView.Size = New System.Drawing.Size(964, 394)
         Me.DataGridMuscleView.TabIndex = 2
         '
         'MenuStripMuscleView
@@ -1515,7 +1604,7 @@ Partial Class MainForm
         Me.MenuStripMuscleView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CloseToolStripMenuItem})
         Me.MenuStripMuscleView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripMuscleView.Name = "MenuStripMuscleView"
-        Me.MenuStripMuscleView.Size = New System.Drawing.Size(970, 24)
+        Me.MenuStripMuscleView.Size = New System.Drawing.Size(964, 24)
         Me.MenuStripMuscleView.TabIndex = 0
         Me.MenuStripMuscleView.Text = "MenuStrip3"
         '
@@ -1532,7 +1621,7 @@ Partial Class MainForm
         Me.MaskView.Location = New System.Drawing.Point(4, 22)
         Me.MaskView.Name = "MaskView"
         Me.MaskView.Padding = New System.Windows.Forms.Padding(3)
-        Me.MaskView.Size = New System.Drawing.Size(976, 424)
+        Me.MaskView.Size = New System.Drawing.Size(970, 424)
         Me.MaskView.TabIndex = 11
         Me.MaskView.Text = "Mask View"
         Me.MaskView.UseVisualStyleBackColor = True
@@ -1545,7 +1634,7 @@ Partial Class MainForm
         Me.DataGridMaskView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridMaskView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridMaskView.Name = "DataGridMaskView"
-        Me.DataGridMaskView.Size = New System.Drawing.Size(970, 394)
+        Me.DataGridMaskView.Size = New System.Drawing.Size(964, 394)
         Me.DataGridMaskView.TabIndex = 2
         '
         'Mask_Name
@@ -1578,7 +1667,7 @@ Partial Class MainForm
         '
         Me.MenuStripMaskView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripMaskView.Name = "MenuStripMaskView"
-        Me.MenuStripMaskView.Size = New System.Drawing.Size(970, 24)
+        Me.MenuStripMaskView.Size = New System.Drawing.Size(964, 24)
         Me.MenuStripMaskView.TabIndex = 0
         Me.MenuStripMaskView.Text = "MenuStrip2"
         '
@@ -1589,7 +1678,7 @@ Partial Class MainForm
         Me.ObjArrayView.Location = New System.Drawing.Point(4, 22)
         Me.ObjArrayView.Name = "ObjArrayView"
         Me.ObjArrayView.Padding = New System.Windows.Forms.Padding(3)
-        Me.ObjArrayView.Size = New System.Drawing.Size(976, 424)
+        Me.ObjArrayView.Size = New System.Drawing.Size(970, 424)
         Me.ObjArrayView.TabIndex = 12
         Me.ObjArrayView.Text = "Object Array View"
         Me.ObjArrayView.UseVisualStyleBackColor = True
@@ -1603,7 +1692,7 @@ Partial Class MainForm
         Me.DataGridObjArrayView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridObjArrayView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridObjArrayView.Name = "DataGridObjArrayView"
-        Me.DataGridObjArrayView.Size = New System.Drawing.Size(970, 394)
+        Me.DataGridObjArrayView.Size = New System.Drawing.Size(964, 394)
         Me.DataGridObjArrayView.TabIndex = 1
         '
         'ArrEnabled
@@ -1624,7 +1713,7 @@ Partial Class MainForm
         '
         Me.MenuStrip2.Location = New System.Drawing.Point(3, 3)
         Me.MenuStrip2.Name = "MenuStrip2"
-        Me.MenuStrip2.Size = New System.Drawing.Size(970, 24)
+        Me.MenuStrip2.Size = New System.Drawing.Size(964, 24)
         Me.MenuStrip2.TabIndex = 0
         Me.MenuStrip2.Text = "MenuStrip2"
         '
@@ -1634,7 +1723,7 @@ Partial Class MainForm
         Me.AssetView.Location = New System.Drawing.Point(4, 22)
         Me.AssetView.Name = "AssetView"
         Me.AssetView.Padding = New System.Windows.Forms.Padding(3)
-        Me.AssetView.Size = New System.Drawing.Size(976, 424)
+        Me.AssetView.Size = New System.Drawing.Size(970, 424)
         Me.AssetView.TabIndex = 13
         Me.AssetView.Text = "Asset View"
         Me.AssetView.UseVisualStyleBackColor = True
@@ -1647,7 +1736,7 @@ Partial Class MainForm
         Me.DataGridAssetView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridAssetView.Location = New System.Drawing.Point(3, 3)
         Me.DataGridAssetView.Name = "DataGridAssetView"
-        Me.DataGridAssetView.Size = New System.Drawing.Size(970, 418)
+        Me.DataGridAssetView.Size = New System.Drawing.Size(964, 418)
         Me.DataGridAssetView.TabIndex = 0
         '
         'PacNumber
@@ -1758,7 +1847,7 @@ Partial Class MainForm
         Me.TitleView.Location = New System.Drawing.Point(4, 22)
         Me.TitleView.Name = "TitleView"
         Me.TitleView.Padding = New System.Windows.Forms.Padding(3)
-        Me.TitleView.Size = New System.Drawing.Size(976, 424)
+        Me.TitleView.Size = New System.Drawing.Size(970, 424)
         Me.TitleView.TabIndex = 14
         Me.TitleView.Text = "Title View"
         Me.TitleView.UseVisualStyleBackColor = True
@@ -1774,7 +1863,7 @@ Partial Class MainForm
         Me.DataGridTitleView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridTitleView.Name = "DataGridTitleView"
         Me.DataGridTitleView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders
-        Me.DataGridTitleView.Size = New System.Drawing.Size(970, 391)
+        Me.DataGridTitleView.Size = New System.Drawing.Size(964, 391)
         Me.DataGridTitleView.TabIndex = 1
         '
         'TitleEnabled
@@ -1933,7 +2022,7 @@ Partial Class MainForm
         Me.MenuStrip3.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TitleGameComboBox, Me.StringLoadedTitleMenuItem, Me.PacsLoadedTitleMenuItem, Me.SaveChangesTitleMenuItem})
         Me.MenuStrip3.Location = New System.Drawing.Point(3, 3)
         Me.MenuStrip3.Name = "MenuStrip3"
-        Me.MenuStrip3.Size = New System.Drawing.Size(970, 27)
+        Me.MenuStrip3.Size = New System.Drawing.Size(964, 27)
         Me.MenuStrip3.TabIndex = 0
         Me.MenuStrip3.Text = "MenuStrip3"
         '
@@ -2257,42 +2346,285 @@ Partial Class MainForm
         '
         Me.SaveExtractAllDialog.FileName = "Save Files Here"
         '
-        'HexRef
+        'Col_ArenaNumber
         '
-        Me.HexRef.FillWeight = 25.0!
-        Me.HexRef.HeaderText = "HexRef"
-        Me.HexRef.MaxInputLength = 8
-        Me.HexRef.Name = "HexRef"
-        Me.HexRef.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_ArenaNumber.HeaderText = "ArenaNum"
+        Me.Col_ArenaNumber.MaxInputLength = 5
+        Me.Col_ArenaNumber.Name = "Col_ArenaNumber"
+        Me.Col_ArenaNumber.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_ArenaNumber.Width = 63
         '
-        'StringText
+        'Col_Stadium
         '
-        Me.StringText.HeaderText = "String Text"
-        Me.StringText.MaxInputLength = 31
-        Me.StringText.Name = "StringText"
-        Me.StringText.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Stadium.HeaderText = "Stadium"
+        Me.Col_Stadium.MaxInputLength = 3
+        Me.Col_Stadium.Name = "Col_Stadium"
+        Me.Col_Stadium.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Stadium.Width = 51
         '
-        'Length
+        'Col_Advertisement
         '
-        Me.Length.FillWeight = 25.0!
-        Me.Length.HeaderText = "Length"
-        Me.Length.MaxInputLength = 10
-        Me.Length.Name = "Length"
-        Me.Length.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Advertisement.HeaderText = "Advert"
+        Me.Col_Advertisement.MaxInputLength = 3
+        Me.Col_Advertisement.Name = "Col_Advertisement"
+        Me.Col_Advertisement.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Advertisement.Width = 44
         '
-        'AddString
+        'Col_CornerPost
         '
-        Me.AddString.FillWeight = 10.0!
-        Me.AddString.HeaderText = "Add"
-        Me.AddString.Name = "AddString"
+        Me.Col_CornerPost.HeaderText = "CornerPost"
+        Me.Col_CornerPost.MaxInputLength = 3
+        Me.Col_CornerPost.Name = "Col_CornerPost"
+        Me.Col_CornerPost.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_CornerPost.Width = 65
         '
-        'DeleteString
+        'Col_LED_CornerPost
         '
-        Me.DeleteString.FillWeight = 10.0!
-        Me.DeleteString.HeaderText = "Delete"
-        Me.DeleteString.Name = "DeleteString"
-        Me.DeleteString.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DeleteString.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.Col_LED_CornerPost.HeaderText = "LEDCorner"
+        Me.Col_LED_CornerPost.MaxInputLength = 3
+        Me.Col_LED_CornerPost.Name = "Col_LED_CornerPost"
+        Me.Col_LED_CornerPost.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_LED_CornerPost.Width = 65
+        '
+        'Col_Rope
+        '
+        Me.Col_Rope.HeaderText = "Rope"
+        Me.Col_Rope.MaxInputLength = 3
+        Me.Col_Rope.Name = "Col_Rope"
+        Me.Col_Rope.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Rope.Width = 39
+        '
+        'Col_Apron
+        '
+        Me.Col_Apron.HeaderText = "Apron"
+        Me.Col_Apron.MaxInputLength = 3
+        Me.Col_Apron.Name = "Col_Apron"
+        Me.Col_Apron.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Apron.Width = 41
+        '
+        'Col_LED_Apron
+        '
+        Me.Col_LED_Apron.HeaderText = "LEDApron"
+        Me.Col_LED_Apron.MaxInputLength = 3
+        Me.Col_LED_Apron.Name = "Col_LED_Apron"
+        Me.Col_LED_Apron.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_LED_Apron.Width = 62
+        '
+        'Col_Turnbuckle
+        '
+        Me.Col_Turnbuckle.HeaderText = "Turnbuckle"
+        Me.Col_Turnbuckle.MaxInputLength = 3
+        Me.Col_Turnbuckle.Name = "Col_Turnbuckle"
+        Me.Col_Turnbuckle.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Turnbuckle.Width = 67
+        '
+        'Col_Barricade
+        '
+        Me.Col_Barricade.HeaderText = "Barricade"
+        Me.Col_Barricade.MaxInputLength = 3
+        Me.Col_Barricade.Name = "Col_Barricade"
+        Me.Col_Barricade.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Barricade.Width = 58
+        '
+        'Col_Fence
+        '
+        Me.Col_Fence.HeaderText = "Fence"
+        Me.Col_Fence.MaxInputLength = 3
+        Me.Col_Fence.Name = "Col_Fence"
+        Me.Col_Fence.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Fence.Width = 43
+        '
+        'Col_CeilingLighting
+        '
+        Me.Col_CeilingLighting.HeaderText = "CLight"
+        Me.Col_CeilingLighting.MaxInputLength = 3
+        Me.Col_CeilingLighting.Name = "Col_CeilingLighting"
+        Me.Col_CeilingLighting.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_CeilingLighting.Width = 43
+        '
+        'Col_Spotlight
+        '
+        Me.Col_Spotlight.HeaderText = "Spotlight"
+        Me.Col_Spotlight.MaxInputLength = 3
+        Me.Col_Spotlight.Name = "Col_Spotlight"
+        Me.Col_Spotlight.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Spotlight.Width = 54
+        '
+        'Col_Stairs
+        '
+        Me.Col_Stairs.HeaderText = "Stairs"
+        Me.Col_Stairs.MaxInputLength = 3
+        Me.Col_Stairs.Name = "Col_Stairs"
+        Me.Col_Stairs.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Stairs.Width = 39
+        '
+        'Col_CommentarySeat
+        '
+        Me.Col_CommentarySeat.HeaderText = "ComSeat"
+        Me.Col_CommentarySeat.MaxInputLength = 3
+        Me.Col_CommentarySeat.Name = "Col_CommentarySeat"
+        Me.Col_CommentarySeat.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_CommentarySeat.Width = 56
+        '
+        'Col_RingMat
+        '
+        Me.Col_RingMat.HeaderText = "RingMat"
+        Me.Col_RingMat.MaxInputLength = 3
+        Me.Col_RingMat.Name = "Col_RingMat"
+        Me.Col_RingMat.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_RingMat.Width = 53
+        '
+        'Col_FloorMattress
+        '
+        Me.Col_FloorMattress.HeaderText = "FloorMat"
+        Me.Col_FloorMattress.MaxInputLength = 3
+        Me.Col_FloorMattress.Name = "Col_FloorMattress"
+        Me.Col_FloorMattress.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_FloorMattress.Width = 54
+        '
+        'Col_Crowd
+        '
+        Me.Col_Crowd.HeaderText = "Crowd"
+        Me.Col_Crowd.MaxInputLength = 3
+        Me.Col_Crowd.Name = "Col_Crowd"
+        Me.Col_Crowd.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Crowd.Width = 43
+        '
+        'Col_CrowdSeatsPlace
+        '
+        Me.Col_CrowdSeatsPlace.HeaderText = "CrSeatsPlace"
+        Me.Col_CrowdSeatsPlace.MaxInputLength = 3
+        Me.Col_CrowdSeatsPlace.Name = "Col_CrowdSeatsPlace"
+        Me.Col_CrowdSeatsPlace.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_CrowdSeatsPlace.Width = 77
+        '
+        'Col_CrowdSeatsModel
+        '
+        Me.Col_CrowdSeatsModel.HeaderText = "CrSeatsModel"
+        Me.Col_CrowdSeatsModel.MaxInputLength = 3
+        Me.Col_CrowdSeatsModel.Name = "Col_CrowdSeatsModel"
+        Me.Col_CrowdSeatsModel.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_CrowdSeatsModel.Width = 79
+        '
+        'Col_IBL
+        '
+        Me.Col_IBL.HeaderText = "IBL"
+        Me.Col_IBL.MaxInputLength = 3
+        Me.Col_IBL.Name = "Col_IBL"
+        Me.Col_IBL.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_IBL.Width = 29
+        '
+        'Col_Titantron
+        '
+        Me.Col_Titantron.HeaderText = "Titantron"
+        Me.Col_Titantron.MaxInputLength = 3
+        Me.Col_Titantron.Name = "Col_Titantron"
+        Me.Col_Titantron.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Titantron.Width = 55
+        '
+        'Col_Minitron
+        '
+        Me.Col_Minitron.HeaderText = "Minitron"
+        Me.Col_Minitron.MaxInputLength = 3
+        Me.Col_Minitron.Name = "Col_Minitron"
+        Me.Col_Minitron.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Minitron.Width = 50
+        '
+        'Col_Wall_L
+        '
+        Me.Col_Wall_L.HeaderText = "Wall_L"
+        Me.Col_Wall_L.MaxInputLength = 3
+        Me.Col_Wall_L.Name = "Col_Wall_L"
+        Me.Col_Wall_L.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Wall_L.Width = 46
+        '
+        'Col_Wall_R
+        '
+        Me.Col_Wall_R.HeaderText = "Wall_R"
+        Me.Col_Wall_R.MaxInputLength = 3
+        Me.Col_Wall_R.Name = "Col_Wall_R"
+        Me.Col_Wall_R.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Wall_R.Width = 48
+        '
+        'Col_Header
+        '
+        Me.Col_Header.HeaderText = "Header"
+        Me.Col_Header.MaxInputLength = 3
+        Me.Col_Header.Name = "Col_Header"
+        Me.Col_Header.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Header.Width = 48
+        '
+        'Col_Floor
+        '
+        Me.Col_Floor.HeaderText = "Floor"
+        Me.Col_Floor.MaxInputLength = 3
+        Me.Col_Floor.Name = "Col_Floor"
+        Me.Col_Floor.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Floor.Width = 36
+        '
+        'Col_MiscObjects
+        '
+        Me.Col_MiscObjects.HeaderText = "MiscO"
+        Me.Col_MiscObjects.MaxInputLength = 3
+        Me.Col_MiscObjects.Name = "Col_MiscObjects"
+        Me.Col_MiscObjects.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_MiscObjects.Width = 43
+        '
+        'Col_LightingType
+        '
+        Me.Col_LightingType.HeaderText = "Lighting"
+        Me.Col_LightingType.MaxInputLength = 3
+        Me.Col_LightingType.Name = "Col_LightingType"
+        Me.Col_LightingType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_LightingType.Width = 50
+        '
+        'Col_CornerPost_CM
+        '
+        Me.Col_CornerPost_CM.HeaderText = "CornerPost_CM"
+        Me.Col_CornerPost_CM.MaxInputLength = 3
+        Me.Col_CornerPost_CM.Name = "Col_CornerPost_CM"
+        Me.Col_CornerPost_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_CornerPost_CM.Width = 87
+        '
+        'Col_Rope_CM
+        '
+        Me.Col_Rope_CM.HeaderText = "Rope_CM"
+        Me.Col_Rope_CM.MaxInputLength = 3
+        Me.Col_Rope_CM.Name = "Col_Rope_CM"
+        Me.Col_Rope_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Rope_CM.Width = 61
+        '
+        'Col_Apron_CM
+        '
+        Me.Col_Apron_CM.HeaderText = "Apron_CM"
+        Me.Col_Apron_CM.MaxInputLength = 3
+        Me.Col_Apron_CM.Name = "Col_Apron_CM"
+        Me.Col_Apron_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Apron_CM.Width = 63
+        '
+        'Col_Turnbuckle_CM
+        '
+        Me.Col_Turnbuckle_CM.HeaderText = "Buckle_CM"
+        Me.Col_Turnbuckle_CM.MaxInputLength = 3
+        Me.Col_Turnbuckle_CM.Name = "Col_Turnbuckle_CM"
+        Me.Col_Turnbuckle_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Turnbuckle_CM.Width = 68
+        '
+        'Col_RingMat_CM
+        '
+        Me.Col_RingMat_CM.HeaderText = "RingMat_CM"
+        Me.Col_RingMat_CM.MaxInputLength = 3
+        Me.Col_RingMat_CM.Name = "Col_RingMat_CM"
+        Me.Col_RingMat_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_RingMat_CM.Width = 75
+        '
+        'Col_version
+        '
+        Me.Col_version.HeaderText = "version"
+        Me.Col_version.MaxInputLength = 3
+        Me.Col_version.Name = "Col_version"
+        Me.Col_version.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_version.Width = 47
         '
         'MainForm
         '
@@ -2660,4 +2992,39 @@ Partial Class MainForm
     Friend WithEvents Length As DataGridViewTextBoxColumn
     Friend WithEvents AddString As DataGridViewButtonColumn
     Friend WithEvents DeleteString As DataGridViewButtonColumn
+    Friend WithEvents Col_ArenaNumber As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Stadium As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Advertisement As DataGridViewTextBoxColumn
+    Friend WithEvents Col_CornerPost As DataGridViewTextBoxColumn
+    Friend WithEvents Col_LED_CornerPost As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Rope As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Apron As DataGridViewTextBoxColumn
+    Friend WithEvents Col_LED_Apron As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Turnbuckle As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Barricade As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Fence As DataGridViewTextBoxColumn
+    Friend WithEvents Col_CeilingLighting As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Spotlight As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Stairs As DataGridViewTextBoxColumn
+    Friend WithEvents Col_CommentarySeat As DataGridViewTextBoxColumn
+    Friend WithEvents Col_RingMat As DataGridViewTextBoxColumn
+    Friend WithEvents Col_FloorMattress As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Crowd As DataGridViewTextBoxColumn
+    Friend WithEvents Col_CrowdSeatsPlace As DataGridViewTextBoxColumn
+    Friend WithEvents Col_CrowdSeatsModel As DataGridViewTextBoxColumn
+    Friend WithEvents Col_IBL As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Titantron As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Minitron As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Wall_L As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Wall_R As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Header As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Floor As DataGridViewTextBoxColumn
+    Friend WithEvents Col_MiscObjects As DataGridViewTextBoxColumn
+    Friend WithEvents Col_LightingType As DataGridViewTextBoxColumn
+    Friend WithEvents Col_CornerPost_CM As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Rope_CM As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Apron_CM As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Turnbuckle_CM As DataGridViewTextBoxColumn
+    Friend WithEvents Col_RingMat_CM As DataGridViewTextBoxColumn
+    Friend WithEvents Col_version As DataGridViewTextBoxColumn
 End Class

@@ -48,6 +48,7 @@ Public Class OptionsMenu
         CheckBoxBackup.Checked = My.Settings.BackupInjections
         CheckBoxDeleteTempBMP.Checked = My.Settings.DeleteTempBMP
         CheckBoxTreeNodeIcons.Checked = My.Settings.UseTreeIcons
+        CheckBoxDetailedFileNames.Checked = My.Settings.UseDetailedFileNames
         TrackBarHexLength.Value = My.Settings.HexViewLength
         updateviewlength()
     End Sub
@@ -99,7 +100,9 @@ Public Class OptionsMenu
         My.Settings.UseTreeIcons = CheckBoxTreeNodeIcons.Checked
         MainForm.LoadIcons()
     End Sub
-
+    Private Sub CheckBoxDetailedFileNames_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxDetailedFileNames.CheckedChanged
+        My.Settings.UseDetailedFileNames = CheckBoxDetailedFileNames.Checked
+    End Sub
     Private Sub TrackBarHexLength_Scroll(sender As Object, e As EventArgs) Handles TrackBarHexLength.Scroll
         My.Settings.HexViewLength = TrackBarHexLength.Value
         updateviewlength()
@@ -119,5 +122,4 @@ Public Class OptionsMenu
         MainForm.PacNumbers = New Integer(1024) {}
         MainForm.PacNumbers(0) = -1
     End Sub
-
 End Class

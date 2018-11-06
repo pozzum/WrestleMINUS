@@ -50,5 +50,8 @@
     <Setting Name="DDSexeLocation" Type="System.String" Scope="User">
       <Value Profile="(Default)">Not Installed</Value>
     </Setting>
+    <Setting Name="UseDetailedFileNames" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

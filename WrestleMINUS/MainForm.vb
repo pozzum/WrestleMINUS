@@ -20,7 +20,6 @@ Public Class MainForm
     'Injection Properties used across multiple forms
     Dim SavePending As Boolean = False
     Dim ReadNode As TreeNode
-
     Dim OldValue
     Dim InformationLoaded As Boolean = False
 #Region "Main Form Functions"
@@ -546,6 +545,8 @@ Public Class MainForm
                         .length = BitConverter.ToUInt32(FileBytes, FileNameLength + i * &HC + &H4) * &H100,
                         .StoredData = NodeTag.StoredData,
                         .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
+                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                    TempNode.SelectedImageIndex = TempNode.ImageIndex
                     TempNode.Tag = TempNodeProps
                     HostNode.Nodes.Add(TempNode)
                 Next
@@ -576,9 +577,13 @@ Public Class MainForm
                         DirectoryNodeProps.length += TempNodeProps.length
                         index += &H10
                         TempNode.Tag = TempNodeProps
+                        TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                        TempNode.SelectedImageIndex = TempNode.ImageIndex
                         DirectoryTreeNode.Nodes.Add(TempNode)
                     Next
                     DirectoryTreeNode.Tag = DirectoryNodeProps
+                    DirectoryTreeNode.ImageIndex = GetImageIndex(DirectoryNodeProps.FileType)
+                    DirectoryTreeNode.SelectedImageIndex = DirectoryTreeNode.ImageIndex
                     HostNode.Nodes.Add(DirectoryTreeNode)
                 Loop
             Case PackageType.EPAC
@@ -608,9 +613,13 @@ Public Class MainForm
                         DirectoryNodeProps.length += TempNodeProps.length
                         index += &HC
                         TempNode.Tag = TempNodeProps
+                        TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                        TempNode.SelectedImageIndex = TempNode.ImageIndex
                         DirectoryTreeNode.Nodes.Add(TempNode)
                     Next
                     DirectoryTreeNode.Tag = DirectoryNodeProps
+                    DirectoryTreeNode.ImageIndex = GetImageIndex(DirectoryNodeProps.FileType)
+                    DirectoryTreeNode.SelectedImageIndex = DirectoryTreeNode.ImageIndex
                     HostNode.Nodes.Add(DirectoryTreeNode)
                 Loop
 #End Region
@@ -641,6 +650,8 @@ Public Class MainForm
                             .StoredData = NodeTag.StoredData,
                             .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
                         TempNode.Tag = TempNodeProps
+                        TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                        TempNode.SelectedImageIndex = TempNode.ImageIndex
                         HostNode.Nodes.Add(TempNode)
                     Catch ex As Exception
                         MessageBox.Show(ex.Message & vbNewLine &
@@ -660,6 +671,8 @@ Public Class MainForm
                         .StoredData = NodeTag.StoredData,
                         .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
                     TempNode.Tag = TempNodeProps
+                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                    TempNode.SelectedImageIndex = TempNode.ImageIndex
                     HostNode.Nodes.Add(TempNode)
                 Next
 #End Region
@@ -686,6 +699,8 @@ Public Class MainForm
                     .StoredData = output,
                     .FileType = CheckHeaderType(.Index, output)}
                 TempNode.Tag = TempNodeProps
+                TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                TempNode.SelectedImageIndex = TempNode.ImageIndex
                 HostNode.Nodes.Add(TempNode)
             Case PackageType.BPE
                 Dim UncompressedLength As Integer = BitConverter.ToUInt32(FileBytes, &HC)
@@ -712,6 +727,8 @@ Public Class MainForm
                     .StoredData = UncompressedBytes,
                     .FileType = CheckHeaderType(.Index, UncompressedBytes)}
                 TempNode.Tag = TempNodeProps
+                TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                TempNode.SelectedImageIndex = TempNode.ImageIndex
                 HostNode.Nodes.Add(TempNode)
             Case PackageType.OODL
                 Dim CompressedLength As Long = BitConverter.ToUInt32(FileBytes, &H14)
@@ -737,6 +754,8 @@ Public Class MainForm
                     .StoredData = UncompressedBytes,
                     .FileType = CheckHeaderType(.Index, UncompressedBytes)}
                 TempNode.Tag = TempNodeProps
+                TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                TempNode.SelectedImageIndex = TempNode.ImageIndex
                 HostNode.Nodes.Add(TempNode)
 #End Region
 #Region "Library Types"
@@ -753,6 +772,8 @@ Public Class MainForm
                         .StoredData = NodeTag.StoredData,
                         .FileType = PackageType.DDS}
                     TempNode.Tag = TempNodeProps
+                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                    TempNode.SelectedImageIndex = TempNode.ImageIndex
                     HostNode.Nodes.Add(TempNode)
                 Next
             Case PackageType.YANMPack
@@ -781,6 +802,8 @@ Public Class MainForm
                     End If
                     'add to list box
                     TempNode.Tag = TempNodeProps
+                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                    TempNode.SelectedImageIndex = TempNode.ImageIndex
                     HostNode.Nodes.Add(TempNode)
                     partcount = partcount + 1
                     HeadIndex = HeadIndex + &H28
@@ -970,10 +993,46 @@ Public Class MainForm
                 Return 6
             Case PackageType.PachDirectory
                 Return 6
-            Case PackageType.OODL
+            Case PackageType.BPE
                 Return 7
             Case PackageType.ZLIB
                 Return 8
+            Case PackageType.OODL
+                Return 9
+            Case PackageType.TextureLibrary
+                Return 10
+            Case PackageType.YANMPack
+                Return 11
+            Case PackageType.YANM
+                Return 11
+            Case PackageType.OFOP
+                Return 11
+            Case PackageType.YOBJ
+                Return 12
+            Case PackageType.YOBJArray
+                Return 12
+            Case PackageType.StringFile
+                Return 13
+            Case PackageType.DDS
+                Return 14
+            Case PackageType.ArenaInfo
+                Return 15
+            Case PackageType.ShowInfo
+                Return 16
+            Case PackageType.NIBJ
+                Return 17
+            Case PackageType.bk2
+                Return 18
+            Case PackageType.CostumeFile
+                Return 19
+            Case PackageType.MuscleFile
+                Return 20
+            Case PackageType.MaskFile
+                Return 21
+            Case PackageType.VMUM
+                Return 22
+            Case PackageType.TitleFile
+                Return 23
             Case Else
                 Return 0
         End Select
@@ -1277,7 +1336,11 @@ Public Class MainForm
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ExtractSaveFileDialog As SaveFileDialog = New SaveFileDialog()
         ExtractSaveFileDialog.InitialDirectory = Path.GetDirectoryName(TreeView1.SelectedNode.ToolTipText)
-        ExtractSaveFileDialog.FileName = TreeView1.SelectedNode.Text & "." & NodeTag.FileType.ToString
+        Dim FileExtention As String = ".bin"
+        If My.Settings.UseDetailedFileNames Then
+            FileExtention = "." & NodeTag.FileType.ToString
+        End If
+        ExtractSaveFileDialog.FileName = TreeView1.SelectedNode.Text & FileExtention
         If ExtractSaveFileDialog.ShowDialog() = DialogResult.OK Then
             extractnode(TreeView1.SelectedNode, ExtractSaveFileDialog.FileName)
         End If
@@ -1372,8 +1435,12 @@ Public Class MainForm
             Dim NodeTag As NodeProperties = CType(temporarynode.Tag, NodeProperties)
             If Not NodeTag.FileType = PackageType.Folder Then 'Folders aren't extractable but make new folders
                 If Not Path.GetFileName(temporarynode.ToolTipText) = temporarynode.Text Then 'if it's a file we don't want to copy it.
+                    Dim FileExtention As String = ".bin"
+                    If My.Settings.UseDetailedFileNames Then
+                        FileExtention = "." & NodeTag.FileType.ToString
+                    End If
                     extractnode(temporarynode, BaseFolder & AdditonalFolders &
-                                   temporarynode.Text & "." & NodeTag.FileType.ToString)
+                                   temporarynode.Text & FileExtention)
                 End If
             End If
             If temporarynode.GetNodeCount(False) > 0 Then
@@ -1389,6 +1456,9 @@ Public Class MainForm
     End Sub
     'First Pass but I feel like this can still be improved...
     Function InjectIntoNode(Sentnode As TreeNode, SentBytes As Byte()) As Boolean
+        If IsNothing(SentBytes) Then 'exits the function if no bytes are sent
+            Return False
+        End If
         Dim NodeTag As NodeProperties = CType(Sentnode.Tag, NodeProperties)
         Dim SizeDifference As Long = SentBytes.Length - NodeTag.length 'negative for shorter
         'checking File Type match
@@ -1423,12 +1493,12 @@ Public Class MainForm
                  ParentNodeTag.FileType = PackageType.EPAC Then
             If SizeDifference > 0 Then 'size is rounded to &h800 bytes for these types
                 SizeDifference += (&H800 - SizeDifference Mod &H800)
-            Else
+            ElseIf SizeDifference < 0 Then ' if it is 0 it stays 0
                 SizeDifference -= (&H800 - Math.Abs(SizeDifference) Mod &H800)
             End If
         End If
         'Create Byte Array of length
-        Dim WrittenFileArray As Byte() = New Byte(ParentNodeTag.length + SizeDifference) {}
+        Dim WrittenFileArray As Byte() = New Byte(ParentNodeTag.length + SizeDifference - 1) {}
         ' Write File Prior to new file
         Array.Copy(ParentBytes, 0, WrittenFileArray, 0, CInt(NodeTag.Index - ParentNodeTag.Index))
         'write new file
@@ -1446,8 +1516,8 @@ Public Class MainForm
         'Adjust Headers
         If ParentNodeTag.FileType = PackageType.HSPC Then
             Dim FileCount As Integer = BitConverter.ToUInt32(WrittenFileArray, &H38)
-            'adjust total file length
-            Array.Copy(BitConverter.GetBytes(CUInt(WrittenFileArray.Length / &H10)), 0, WrittenFileArray, &H3C, 4)
+            'adjust total file length TO DO Double Check This
+            Array.Copy(BitConverter.GetBytes(CUInt(WrittenFileArray.Length - &H2800)), 0, WrittenFileArray, &H3C, 4)
             'Get the header length
             Dim FileNameLength As Integer = BitConverter.ToUInt32(WrittenFileArray, &H18)
             FileNameLength += -(FileNameLength Mod &H800) + &H1000
@@ -1560,9 +1630,12 @@ Public Class MainForm
 #End Region
 #Region "Multi-View Controls"
     'Commands that should be generic to be used across multiple tabs.
-    Private Sub StoreOldValue(sender As Object, e As EventArgs) Handles HexViewBitWidth.Enter,
+    Private Sub StoreOldComboBoxValue(sender As Object, e As EventArgs) Handles HexViewBitWidth.Enter,
                                                                         TextViewBitWidth.Enter
         OldValue = sender.text
+    End Sub
+    Private Sub StoreOldDataGridViewValue(sender As DataGridView, e As DataGridViewCellEventArgs) Handles DataGridMiscView.CellEnter
+        OldValue = sender.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
     End Sub
     Sub SaveFileNoLongerPending()
         ReadNode = Nothing
@@ -1579,6 +1652,7 @@ Public Class MainForm
     End Function
 
 #End Region
+    'TO DO Request Direct Editing of Hex Edit View
 #Region "Hex View Controls"
     Sub AddHexText(SelectedNode As TreeNode)
         If File.Exists(SelectedNode.ToolTipText) Then
@@ -1680,6 +1754,7 @@ Public Class MainForm
 
 #End Region
 #Region "String View Controls"
+    'TO DO note with the rebuild these data arrays can most likely be removed as they are not referenced outside of the initial build anymore
     Dim StringFileOffset() As Integer
     Dim StringFileLength() As Integer
     Dim StringFileReference() As Integer
@@ -1868,15 +1943,14 @@ Public Class MainForm
     Private Function BuildStringFile() As Byte()
         Dim StringCount As Integer = DataGridStringView.RowCount
         Dim StringSum As Integer = 0
-
         For i As Integer = 0 To StringCount - 1
             StringSum += DataGridStringView.Rows(i).Cells(2).Value
         Next
         'First get the string count and make a header
-        Dim ReturnedBytes As Byte() = New Byte(&H8 + StringCount * &HC + StringSum - 2) {} 'String Sum adds on an extra 1 for the last string from my tests
+        Dim ReturnedBytes As Byte() = New Byte(&H8 + StringCount * &HC + StringSum - 1) {} 'String Sum adds on an extra 1 for the last string from my tests
         'Building the header 0000 , string count
         Array.Copy(BitConverter.GetBytes(CUInt(StringCount)), 0, ReturnedBytes, 4, 4)
-        ProgressBar1.Maximum = StringCount
+        ProgressBar1.Maximum = StringCount - 1
         ProgressBar1.Value = 0
         Dim index As UInt32 = &H8 + StringCount * &HC
         For i As Integer = 0 To StringCount - 1
@@ -1887,8 +1961,8 @@ Public Class MainForm
             'Reference is set from the first cell
             Array.Copy(BitConverter.GetBytes(CUInt("&h" & DataGridStringView.Rows(i).Cells(0).Value)), 0, ReturnedBytes, 8 + i * 12 + 8, 4)
             'now we have to copy the string from the tag storage
-            Dim TempArray As Byte() = DataGridStringView.Rows(i).Tag ' Casting the Tag so the array handles it properly
-            Array.Copy(TempArray, 0, ReturnedBytes, index, CUInt(DataGridStringView.Rows(i).Cells(2).Value))
+            Dim TempArray As Byte() = Encoding.Default.GetBytes(DataGridStringView.Rows(i).Cells(1).Value) 'DataGridStringView.Rows(i).Tag ' Casting the Tag so the array handles it properly
+            Array.Copy(TempArray, 0, ReturnedBytes, index, TempArray.Length) 'CUInt(DataGridStringView.Rows(i).Cells(2).Value))
             'Now add the lengthto the index
             index += CUInt(DataGridStringView.Rows(i).Cells(2).Value)
             ProgressBar1.Value = i
@@ -1899,448 +1973,494 @@ Public Class MainForm
     'Left off refactoring here
     'Forms to Use CellEndEdit instead of Cell value changed as it fixes a lot of stupid handling issues.
     'TO DO Increase speed of datagrid population with collections
+    'These is the potential for better programming using data binding datagrid views.
+    'To Do Read Node is disposed when injected.  Views Must be rebuilt once injected.
 #Region "Misc View Controls"
+    Public Class ArenaInformation
+        Public Stadium As Integer = -2
+        Public Advertisement As Integer = -2
+        Public CornerPost As Integer = -2
+        Public LED_CornerPost As Integer = -2
+        Public Rope As Integer = -2
+        Public Apron As Integer = -2
+        Public LED_Apron As Integer = -2
+        Public Turnbuckle As Integer = -2
+        Public Barricade As Integer = -2
+        Public Fence As Integer = -2
+        Public CeilingLighting As Integer = -2
+        Public Spotlight As Integer = -2
+        Public Stairs As Integer = -2
+        Public CommentarySeat As Integer = -2
+        Public RingMat As Integer = -2
+        Public FloorMattress As Integer = -2
+        Public Crowd As Integer = -2
+        Public CrowdSeatsPlace As Integer = -2
+        Public CrowdSeatsModel As Integer = -2
+        Public IBL As Integer = -2
+        Public Titantron As Integer = -2
+        Public Minitron As Integer = -2
+        Public Wall_L As Integer = -2
+        Public Wall_R As Integer = -2
+        Public Header As Integer = -2
+        Public Floor As Integer = -2
+        Public MiscObjects As Integer = -2
+        Public LightingType As Integer = -2
+        Public CornerPost_CM As Integer = -2
+        Public Rope_CM As Integer = -2
+        Public Apron_CM As Integer = -2
+        Public Turnbuckle_CM As Integer = -2
+        Public RingMat_CM As Integer = -2
+        Public version As String = "1.0"
+    End Class
     Sub FillMiscView(SelectedData As TreeNode)
-        RemoveHandler DataGridMiscView.CellValueChanged, AddressOf DataGridMiscView_CellValueChanged
-        ReadNode = SelectedData
+        Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridMiscView)
+        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
         DataGridMiscView.Rows.Clear()
-        DataGridMiscView.Columns.Clear()
-        Dim GameType As Integer = MiscViewType.SelectedIndex
-        GetMiscColumns(GameType)
-        Dim NodeTag As NodeProperties = CType(SelectedData.Tag, NodeProperties)
-        Dim MiscBytes As Byte()
-        If NodeTag.StoredData.Length > 0 Then
-            Dim FileBytes As Byte() = NodeTag.StoredData
-            MiscBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), MiscBytes, 0, CInt(NodeTag.length))
-        Else
-            Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
-            MiscBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), MiscBytes, 0, CInt(NodeTag.length))
-        End If
+        Dim MiscBytes As Byte() = GetNodeBytes(SelectedData)
         Dim ArenaCount As Integer = BitConverter.ToInt32(MiscBytes, 0)
+        ProgressBar1.Maximum = ArenaCount - 1
+        ProgressBar1.Value = 0
         For i As Integer = 0 To ArenaCount - 1
-            'Dim reader As Newtonsoft.Json.JsonTextReader = New JsonTextReader(New TextReader)
+            Dim DByteList As List(Of Boolean) = New List(Of Boolean)
             Dim ArenaNum As String = Encoding.ASCII.GetString(MiscBytes, 25 + i * 32, 5)
             Dim TempIndex As Integer = BitConverter.ToInt32(MiscBytes, 40 + i * 32)
             Dim TempLength As Integer = BitConverter.ToInt32(MiscBytes, 36 + i * 32)
-            Dim ArenaJson As String = Encoding.ASCII.GetString(MiscBytes, TempIndex, TempLength)
-            'MessageBox.Show(Arena_String)
-            Dim Stadium As String = ArenaJson.Substring(ArenaJson.IndexOf("Stadium") + 9,
-                                                        ArenaJson.IndexOf(",", ArenaJson.IndexOf("Stadium") + 9) - ArenaJson.IndexOf("Stadium") - 9)
-            Dim Advert As String = ArenaJson.Substring(ArenaJson.IndexOf("Advertisement") + 15,
-                                                       ArenaJson.IndexOf(",", ArenaJson.IndexOf("Advertisement") + 15) - ArenaJson.IndexOf("Advertisement") - 15)
-            Dim CornerPost As String = ArenaJson.Substring(ArenaJson.IndexOf("CornerPost") + 12,
-                                                           ArenaJson.IndexOf(",", ArenaJson.IndexOf("CornerPost") + 12) - ArenaJson.IndexOf("CornerPost") - 12)
-            Dim TempLEDCorner As Integer = ArenaJson.IndexOf("LED_CornerPost")
-            Dim LEDCorner As String = "-1"
-            If TempLEDCorner = -1 Then
-            Else
-                LEDCorner = ArenaJson.Substring(ArenaJson.IndexOf("LED_CornerPost") + 16, ArenaJson.IndexOf(",", ArenaJson.IndexOf("LED_CornerPost") + 16) - ArenaJson.IndexOf("LED_CornerPost") - 16)
-            End If
-            Dim Rope As String = ArenaJson.Substring(ArenaJson.IndexOf("Rope") + 6,
-                                                     ArenaJson.IndexOf(",", ArenaJson.IndexOf("Rope") + 6) - ArenaJson.IndexOf("Rope") - 6)
-            Dim Apron As String = ArenaJson.Substring(ArenaJson.IndexOf("Apron") + 7,
-                                                      ArenaJson.IndexOf(",", ArenaJson.IndexOf("Apron") + 7) - ArenaJson.IndexOf("Apron") - 7)
-            Dim TempLEDApron As Integer = ArenaJson.IndexOf("LED_Apron")
-            Dim LEDApron As String = "-1"
-            If TempLEDApron = -1 Then
-            Else
-                LEDApron = ArenaJson.Substring(ArenaJson.IndexOf("LED_Apron") + 11,
-                                               ArenaJson.IndexOf(",", ArenaJson.IndexOf("LED_Apron") + 11) - ArenaJson.IndexOf("LED_Apron") - 11)
-            End If
-            Dim Turnbuckle As String = ArenaJson.Substring(ArenaJson.IndexOf("Turnbuckle") + 12,
-                                                           ArenaJson.IndexOf(",", ArenaJson.IndexOf("Turnbuckle") + 12) - ArenaJson.IndexOf("Turnbuckle") - 12)
-            Dim Barricade As String = ArenaJson.Substring(ArenaJson.IndexOf("Barricade") + 11,
-                                                          ArenaJson.IndexOf(",", ArenaJson.IndexOf("Barricade") + 11) - ArenaJson.IndexOf("Barricade") - 11)
-            Dim Fence As String = ArenaJson.Substring(ArenaJson.IndexOf("Fence") + 7,
-                                                      ArenaJson.IndexOf(",", ArenaJson.IndexOf("Fence") + 7) - ArenaJson.IndexOf("Fence") - 7)
-            Dim CeilingLight As String = ArenaJson.Substring(ArenaJson.IndexOf("CeilingLighting") + 17,
-                                                             ArenaJson.IndexOf(",", ArenaJson.IndexOf("CeilingLighting") + 17) - ArenaJson.IndexOf("CeilingLighting") - 17)
-            Dim SpotLight As String = ArenaJson.Substring(ArenaJson.IndexOf("Spotlight") + 11,
-                                                          ArenaJson.IndexOf(",", ArenaJson.IndexOf("Spotlight") + 11) - ArenaJson.IndexOf("Spotlight") - 11)
-            Dim Stairs As String = ArenaJson.Substring(ArenaJson.IndexOf("Stairs") + 8,
-                                                       ArenaJson.IndexOf(",", ArenaJson.IndexOf("Stairs") + 8) - ArenaJson.IndexOf("Stairs") - 8)
-            Dim CommentarySeat As String = ArenaJson.Substring(ArenaJson.IndexOf("CommentarySeat") + 16,
-                                                               ArenaJson.IndexOf(",", ArenaJson.IndexOf("CommentarySeat") + 16) - ArenaJson.IndexOf("CommentarySeat") - 16)
-            Dim RingMat As String = ArenaJson.Substring(ArenaJson.IndexOf("RingMat") + 9,
-                                                        ArenaJson.IndexOf(",", ArenaJson.IndexOf("RingMat") + 9) - ArenaJson.IndexOf("RingMat") - 9)
-            Dim FloorMat As String = ArenaJson.Substring(ArenaJson.IndexOf("FloorMattress") + 15,
-                                                         ArenaJson.IndexOf(",", ArenaJson.IndexOf("FloorMattress") + 15) - ArenaJson.IndexOf("FloorMattress") - 15)
-            Dim Crowd As String = ArenaJson.Substring(ArenaJson.IndexOf("Crowd") + 7,
-                                                      ArenaJson.IndexOf(",", ArenaJson.IndexOf("Crowd") + 7) - ArenaJson.IndexOf("Crowd") - 7)
-            Dim TempCrowdSeatPlan As Integer = ArenaJson.IndexOf("Titantron")
-            Dim CrowdSeatPlan As String = "-1"
-            If Not TempCrowdSeatPlan = -1 Then
-                CrowdSeatPlan = ArenaJson.Substring(ArenaJson.IndexOf("CrowdSeatsPlace") + 17,
-                                                ArenaJson.IndexOf(",", ArenaJson.IndexOf("CrowdSeatsPlace") + 17) - ArenaJson.IndexOf("CrowdSeatsPlace") - 17)
-            End If
-            Dim TempCrowdSeatModel As Integer = ArenaJson.IndexOf("Titantron")
-            Dim CrowdSeatModel As String = "-1"
-            If Not TempCrowdSeatModel = -1 Then
-                CrowdSeatModel = ArenaJson.Substring(ArenaJson.IndexOf("CrowdSeatsModel") + 17,
-                                                ArenaJson.IndexOf(",", ArenaJson.IndexOf("CrowdSeatsModel") + 17) - ArenaJson.IndexOf("CrowdSeatsModel") - 17)
-            End If
-            Dim IBL As String = ArenaJson.Substring(ArenaJson.IndexOf("IBL") + 5,
-                                                    ArenaJson.IndexOf(",", ArenaJson.IndexOf("IBL") + 5) - ArenaJson.IndexOf("IBL") - 5)
-            Dim TempTitantron As Integer = ArenaJson.IndexOf("Titantron")
-            Dim Titantron As String = "-1"
-            If Not TempTitantron = -1 Then
-                Titantron = ArenaJson.Substring(ArenaJson.IndexOf("Titantron") + 11,
-                                                ArenaJson.IndexOf(",", ArenaJson.IndexOf("Titantron") + 11) - ArenaJson.IndexOf("Titantron") - 11)
-            End If
-            Dim TempMinitron As Integer = ArenaJson.IndexOf("Minitron")
-            Dim Minitron As String = "-1"
-            If TempMinitron = -1 Then
-            Else
-                Minitron = ArenaJson.Substring(ArenaJson.IndexOf("Minitron") + 10,
-                                               ArenaJson.IndexOf(",", ArenaJson.IndexOf("Minitron") + 10) - ArenaJson.IndexOf("Minitron") - 10)
-            End If
-            Dim TempWall_L As Integer = ArenaJson.IndexOf("Wall_L")
-            Dim Wall_L As String = "-1"
-            If TempWall_L = -1 Then
-            Else
-                Wall_L = ArenaJson.Substring(ArenaJson.IndexOf("Wall_L") + 8,
-                                             ArenaJson.IndexOf(",", ArenaJson.IndexOf("Wall_L") + 8) - ArenaJson.IndexOf("Wall_L") - 8)
-            End If
-            Dim TempWall_R As Integer = ArenaJson.IndexOf("Wall_R")
-            Dim Wall_R As String = "-1"
-            If TempWall_R = -1 Then
-            Else
-                Wall_R = ArenaJson.Substring(ArenaJson.IndexOf("Wall_R") + 8,
-                                             ArenaJson.IndexOf(",", ArenaJson.IndexOf("Wall_R") + 8) - ArenaJson.IndexOf("Wall_R") - 8)
-            End If
-            Dim TempHeader As Integer = ArenaJson.IndexOf("Header")
-            Dim Header As String = "-1"
-            If TempHeader = -1 Then
-            Else
-                Header = ArenaJson.Substring(ArenaJson.IndexOf("Header") + 8,
-                                             ArenaJson.IndexOf(",", ArenaJson.IndexOf("Header") + 8) - ArenaJson.IndexOf("Header") - 8)
-            End If
-            Dim TempFloor As Integer = ArenaJson.IndexOf("Floor""")
-            Dim Floor As String = "-1"
-            If TempFloor = -1 Then
-            Else
-                Floor = ArenaJson.Substring(ArenaJson.IndexOf("Floor""") + 7,
-                                            ArenaJson.IndexOf(",", ArenaJson.IndexOf("Floor""") + 7) - ArenaJson.IndexOf("Floor""") - 7)
-            End If
-            Dim TempMiscObject As Integer = ArenaJson.IndexOf("Floor""")
-            Dim MiscObject As String = "-1"
-            If TempMiscObject = -1 Then
-            Else
-                MiscObject = ArenaJson.Substring(ArenaJson.IndexOf("MiscObjects") + 13,
-                                                 ArenaJson.IndexOf(",", ArenaJson.IndexOf("MiscObjects") + 13) - ArenaJson.IndexOf("MiscObjects") - 13)
-            End If
-            Dim TempLightType As Integer = ArenaJson.IndexOf("LightingType")
-            Dim LightingType As String = "-1"
-            If TempLightType = -1 Then
-            Else
-                LightingType = ArenaJson.Substring(ArenaJson.IndexOf("LightingType") + 14,
-                                                   ArenaJson.IndexOf(",", ArenaJson.IndexOf("LightingType") + 14) - ArenaJson.IndexOf("LightingType") - 14)
-            End If
-            Dim TempCornerCM As Integer = ArenaJson.IndexOf("CornerPost_CM")
-            Dim CornerPost_CM As String = "0"
-            If TempCornerCM = -1 Then
-            Else
-                CornerPost_CM = ArenaJson.Substring(ArenaJson.IndexOf("CornerPost_CM") + 15,
-                                                    ArenaJson.IndexOf(",", ArenaJson.IndexOf("CornerPost_CM") + 15) - ArenaJson.IndexOf("CornerPost_CM") - 15)
-            End If
-            Dim TempRopeCM As Integer = ArenaJson.IndexOf("Rope_CM")
-            Dim Rope_CM As String = "0"
-            If TempRopeCM = -1 Then
-            Else
-                Rope_CM = ArenaJson.Substring(ArenaJson.IndexOf("Rope_CM") + 9,
-                                              ArenaJson.IndexOf(",", ArenaJson.IndexOf("Rope_CM") + 9) - ArenaJson.IndexOf("Rope_CM") - 9)
-            End If
-            Dim TempApronCM As Integer = ArenaJson.IndexOf("Apron_CM")
-            Dim Apron_CM As String = "0"
-            If TempApronCM = -1 Then
-            Else
-                Apron_CM = ArenaJson.Substring(ArenaJson.IndexOf("Apron_CM") + 10,
-                                               ArenaJson.IndexOf(",", ArenaJson.IndexOf("Apron_CM") + 10) - ArenaJson.IndexOf("Apron_CM") - 10)
-            End If
-            Dim TempTurnCM As Integer = ArenaJson.IndexOf("Turnbuckle_CM")
-            Dim Turnbuckle_CM As String = "0"
-            If TempTurnCM = -1 Then
-            Else
-                Turnbuckle_CM = ArenaJson.Substring(ArenaJson.IndexOf("Turnbuckle_CM") + 15,
-                                                    ArenaJson.IndexOf(",", ArenaJson.IndexOf("Turnbuckle_CM") + 15) - ArenaJson.IndexOf("Turnbuckle_CM") - 15)
-            End If
-            Dim TempRinmMatCM As Integer = ArenaJson.IndexOf("Turnbuckle_CM")
-            Dim RingMat_CM As String = "0"
-            If TempRinmMatCM = -1 Then
-            Else
-                RingMat_CM = ArenaJson.Substring(ArenaJson.IndexOf("RingMat_CM") + 12,
-                                                 ArenaJson.IndexOf(",", ArenaJson.IndexOf("RingMat_CM") + 12) - ArenaJson.IndexOf("RingMat_CM") - 12)
-            End If
-            Dim version As String = ArenaJson.Substring(ArenaJson.IndexOf("version") + 9,
-                                                        ArenaJson.IndexOf("}", ArenaJson.IndexOf("version") + 9) - ArenaJson.IndexOf("version") - 9)
-            'MessageBox.Show(temparena)
-            'If GameType = 0 Then '2K15
-            'DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, Rope, Apron, Turnbuckle, Barricade, Fence,
-            'CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, IBL, version)
-            'ElseIf GameType = 1 Then '2K16
-            'DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
-            '                       CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, IBL, Titantron, Minitron, Wall_L,
-            '                       Wall_R, Header, Floor, MiscObject, version)
-            'ElseIf GameType = 2 Then '2K17 
-            '   DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
-            '  CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, IBL, Titantron, Minitron, Wall_L,
-            ' Wall_R, Header, Floor, MiscObject, version)
-            'If GameType < 4 Then '2K18
-            'DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, LEDCorner, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
-            'CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, IBL, Titantron, Minitron, Wall_L,
-            'Wall_R, Header, Floor, MiscObject, LightingType, CornerPost_CM, Rope_CM, Apron_CM, Turnbuckle_CM, RingMat_CM, 100) 'version)
-            'Else '2K19
-            DataGridMiscView.Rows.Add(Stadium, Advert, CornerPost, LEDCorner, Rope, Apron, LEDApron, Turnbuckle, Barricade, Fence,
-                                       CeilingLight, SpotLight, Stairs, CommentarySeat, RingMat, FloorMat, Crowd, CrowdSeatPlan, CrowdSeatModel, IBL, Titantron, Minitron, Wall_L,
-                                       Wall_R, Header, Floor, MiscObject, LightingType, CornerPost_CM, Rope_CM, Apron_CM, Turnbuckle_CM, RingMat_CM, version)
-            'End If
-            DataGridMiscView.Rows.Item(i).HeaderCell.Value = ArenaNum
+            Dim ArenaArray As Byte() = New Byte(TempLength - 1) {}
+            Array.Copy(MiscBytes, TempIndex, ArenaArray, 0, TempLength)
+            Dim ArenaJson As String = Encoding.ASCII.GetString(ArenaArray)
+            Dim TempArena As ArenaInformation = ParseJsonToArena(ArenaJson)
+            Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
+            TempGridRow.Cells(0).Value = ArenaNum
+            TempGridRow.Cells(1).Value = TempArena.Stadium
+            TempGridRow.Cells(2).Value = TempArena.Advertisement
+            TempGridRow.Cells(3).Value = TempArena.CornerPost
+            TempGridRow.Cells(4).Value = TempArena.LED_CornerPost
+            TempGridRow.Cells(5).Value = TempArena.Rope
+            TempGridRow.Cells(6).Value = TempArena.Apron
+            TempGridRow.Cells(7).Value = TempArena.LED_Apron
+            TempGridRow.Cells(8).Value = TempArena.Turnbuckle
+            TempGridRow.Cells(9).Value = TempArena.Barricade
+            TempGridRow.Cells(10).Value = TempArena.Fence
+            TempGridRow.Cells(11).Value = TempArena.CeilingLighting
+            TempGridRow.Cells(12).Value = TempArena.Spotlight
+            TempGridRow.Cells(13).Value = TempArena.Stairs
+            TempGridRow.Cells(14).Value = TempArena.CommentarySeat
+            TempGridRow.Cells(15).Value = TempArena.RingMat
+            TempGridRow.Cells(16).Value = TempArena.FloorMattress
+            TempGridRow.Cells(17).Value = TempArena.Crowd
+            TempGridRow.Cells(18).Value = TempArena.CrowdSeatsPlace
+            TempGridRow.Cells(19).Value = TempArena.CrowdSeatsModel
+            TempGridRow.Cells(20).Value = TempArena.IBL
+            TempGridRow.Cells(21).Value = TempArena.Titantron
+            TempGridRow.Cells(22).Value = TempArena.Minitron
+            TempGridRow.Cells(23).Value = TempArena.Wall_L
+            TempGridRow.Cells(24).Value = TempArena.Wall_R
+            TempGridRow.Cells(25).Value = TempArena.Header
+            TempGridRow.Cells(26).Value = TempArena.Floor
+            TempGridRow.Cells(27).Value = TempArena.MiscObjects
+            TempGridRow.Cells(28).Value = TempArena.LightingType
+            TempGridRow.Cells(29).Value = TempArena.CornerPost_CM
+            TempGridRow.Cells(30).Value = TempArena.Rope_CM
+            TempGridRow.Cells(31).Value = TempArena.Apron_CM
+            TempGridRow.Cells(32).Value = TempArena.Turnbuckle_CM
+            TempGridRow.Cells(33).Value = TempArena.RingMat_CM
+            TempGridRow.Cells(34).Value = TempArena.version
+            'Build the D byte list for error handling
+            For K As Integer = 0 To ArenaArray.Length - 1
+                If ArenaArray(K) = &HA Then
+                    If ArenaArray(K - 1) = &HD Then
+                        DByteList.Add(True)
+                    Else
+                        DByteList.Add(False)
+                    End If
+                End If
+            Next
+            TempGridRow.Tag = DByteList
+            WorkingCollection.Add(TempGridRow)
+            ProgressBar1.Value = i
         Next
-        AddHandler DataGridMiscView.CellValueChanged, AddressOf DataGridMiscView_CellValueChanged
+        DataGridMiscView.Rows.AddRange(WorkingCollection.ToArray)
+        GetMiscColumns(MiscViewType.SelectedIndex)
     End Sub
+    Function ParseJsonToArena(ArenaJson As String) As ArenaInformation
+        Dim reader As Newtonsoft.Json.JsonTextReader = New JsonTextReader(New StringReader(ArenaJson))
+        reader.Read() 'Skips the first null value
+        Dim ReturnedArena As ArenaInformation = New ArenaInformation
+        While reader.Read
+            Dim TemporaryArenaPart As String = reader.Value
+            reader.Read()
+            Select Case TemporaryArenaPart
+                Case "Stadium"
+                    ReturnedArena.Stadium = reader.Value
+                Case "Advertisement"
+                    ReturnedArena.Advertisement = reader.Value
+                Case "CornerPost"
+                    ReturnedArena.CornerPost = reader.Value
+                Case "LED_CornerPost"
+                    ReturnedArena.LED_CornerPost = reader.Value
+                Case "Rope"
+                    ReturnedArena.Rope = reader.Value
+                Case "Apron"
+                    ReturnedArena.Apron = reader.Value
+                Case "LED_Apron"
+                    ReturnedArena.LED_Apron = reader.Value
+                Case "Turnbuckle"
+                    ReturnedArena.Turnbuckle = reader.Value
+                Case "Barricade"
+                    ReturnedArena.Barricade = reader.Value
+                Case "Fence"
+                    ReturnedArena.Fence = reader.Value
+                Case "CeilingLighting"
+                    ReturnedArena.CeilingLighting = reader.Value
+                Case "Spotlight"
+                    ReturnedArena.Spotlight = reader.Value
+                Case "Stairs"
+                    ReturnedArena.Stairs = reader.Value
+                Case "CommentarySeat"
+                    ReturnedArena.CommentarySeat = reader.Value
+                Case "RingMat"
+                    ReturnedArena.RingMat = reader.Value
+                Case "FloorMattress"
+                    ReturnedArena.FloorMattress = reader.Value
+                Case "Crowd"
+                    ReturnedArena.Crowd = reader.Value
+                Case "CrowdSeatsPlace"
+                    ReturnedArena.CrowdSeatsPlace = reader.Value
+                Case "CrowdSeatsModel"
+                    ReturnedArena.CrowdSeatsModel = reader.Value
+                Case "IBL"
+                    ReturnedArena.IBL = reader.Value
+                Case "Titantron"
+                    ReturnedArena.Titantron = reader.Value
+                Case "Minitron"
+                    ReturnedArena.Minitron = reader.Value
+                Case "Wall_L"
+                    ReturnedArena.Wall_L = reader.Value
+                Case "Wall_R"
+                    ReturnedArena.Wall_R = reader.Value
+                Case "Header"
+                    ReturnedArena.Header = reader.Value
+                Case "Floor"
+                    ReturnedArena.Floor = reader.Value
+                Case "MiscObjects"
+                    ReturnedArena.MiscObjects = reader.Value
+                Case "LightingType"
+                    ReturnedArena.LightingType = reader.Value
+                Case "CornerPost_CM"
+                    ReturnedArena.CornerPost_CM = reader.Value
+                Case "Rope_CM"
+                    ReturnedArena.Rope_CM = reader.Value
+                Case "Apron_CM"
+                    ReturnedArena.Apron_CM = reader.Value
+                Case "Turnbuckle_CM"
+                    ReturnedArena.Turnbuckle_CM = reader.Value
+                Case "RingMat_CM"
+                    ReturnedArena.RingMat_CM = reader.Value
+                Case "version"
+                    ReturnedArena.version = reader.Value
+                Case ""
+                    'Skip because null type
+                Case Else
+                    MessageBox.Show("Unknown Obejct: " & TemporaryArenaPart)
+            End Select
+        End While
+        Return ReturnedArena
+    End Function
     Sub GetMiscColumns(MenuIndex As Integer)
-        Dim ArenaParts As DataGridViewColumnCollection = DataGridMiscView.Columns
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "Stadium",
-                       .Name = "Stadium"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "Advert",
-                       .Name = "Advert"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "CornerPost",
-                       .Name = "CornerPost"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "LEDCorner",
-                       .Name = "LEDCorner"})
-        If Not MenuIndex > 2 Then '2K18 and Beyond
-            ArenaParts(3).Visible = False
-        End If
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "Rope",
-                       .Name = "Rope"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "Apron",
-                       .Name = "Apron"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "LEDApron",
-                       .Name = "LEDApron"})
-        If Not MenuIndex > 0 Then '2K18 and Beyond
-            ArenaParts(6).Visible = False
-        End If
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "Turnbuckle",
-                       .Name = "Turnbuckle"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "Barricade",
-                       .Name = "Barricade"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "Fence",
-                       .Name = "Fence"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "CeilingL",
-                       .Name = "CeilingL"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "SpotL",
-                       .Name = "SpotL"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "Stairs",
-                       .Name = "Stairs"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "ComSeat",
-                       .Name = "ComSeat"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "RingMat",
-                       .Name = "RingMat"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "FloorMat",
-                       .Name = "FloorMat"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "Crowd",
-                       .Name = "Crowd"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "CSPlace",
-                       .Name = "CSPlace"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "CSModel",
-                       .Name = "CSModel"})
-        If Not MenuIndex > 3 Then '2K19 and Beyond
-            ArenaParts(17).Visible = False
-            ArenaParts(18).Visible = False
-        End If
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "IBL",
-                       .Name = "IBL"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                         .HeaderText = "Titantron",
-                         .Name = "Titantron"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                                   .HeaderText = "Minitron",
-                                   .Name = "Minitron"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                                   .HeaderText = "Wall_L",
-                                  .Name = "Wall_L"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                                   .HeaderText = "Wall_R",
-                                  .Name = "Wall_R"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                                  .HeaderText = "Header",
-                                   .Name = "Header"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                                   .HeaderText = "Floor",
-                                   .Name = "Floor"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                                   .HeaderText = "MiscO",
-                                   .Name = "MiscO"})
         If Not MenuIndex > 0 Then '2K16 and Beyond
-            ArenaParts(20).Visible = False
-            ArenaParts(21).Visible = False
-            ArenaParts(22).Visible = False
-            ArenaParts(23).Visible = False
-            ArenaParts(24).Visible = False
-            ArenaParts(25).Visible = False
-            ArenaParts(26).Visible = False
+            DataGridMiscView.Columns("Col_LED_Apron").Visible = False
+            DataGridMiscView.Columns("Col_Titantron").Visible = False
+            DataGridMiscView.Columns("Col_Minitron").Visible = False
+            DataGridMiscView.Columns("Col_Wall_L").Visible = False
+            DataGridMiscView.Columns("Col_Wall_R").Visible = False
+            DataGridMiscView.Columns("Col_Header").Visible = False
+            DataGridMiscView.Columns("Col_Floor").Visible = False
+            DataGridMiscView.Columns("Col_MiscObjects").Visible = False
+        Else
+            DataGridMiscView.Columns("Col_LED_Apron").Visible = True
+            DataGridMiscView.Columns("Col_Titantron").Visible = True
+            DataGridMiscView.Columns("Col_Minitron").Visible = True
+            DataGridMiscView.Columns("Col_Wall_L").Visible = True
+            DataGridMiscView.Columns("Col_Wall_R").Visible = True
+            DataGridMiscView.Columns("Col_Header").Visible = True
+            DataGridMiscView.Columns("Col_Floor").Visible = True
+            DataGridMiscView.Columns("Col_MiscObjects").Visible = True
+            If Not MenuIndex > 2 Then '2K18 and Beyond
+                DataGridMiscView.Columns("Col_LED_CornerPost").Visible = False
+                DataGridMiscView.Columns("Col_LightingType").Visible = False
+            Else
+                DataGridMiscView.Columns("Col_LED_CornerPost").Visible = True
+                DataGridMiscView.Columns("Col_LightingType").Visible = True
+                If Not MenuIndex > 3 Then '2K19 and Beyond
+                    DataGridMiscView.Columns("Col_CrowdSeatsPlace").Visible = False
+                    DataGridMiscView.Columns("Col_CrowdSeatsModel").Visible = False
+                    DataGridMiscView.Columns("Col_CornerPost_CM").Visible = False
+                    DataGridMiscView.Columns("Col_Rope_CM").Visible = False
+                    DataGridMiscView.Columns("Col_Apron_CM").Visible = False
+                    DataGridMiscView.Columns("Col_Turnbuckle_CM").Visible = False
+                    DataGridMiscView.Columns("Col_RingMat_CM").Visible = False
+                Else
+                    DataGridMiscView.Columns("Col_CrowdSeatsPlace").Visible = True
+                    DataGridMiscView.Columns("Col_CrowdSeatsModel").Visible = True
+                    DataGridMiscView.Columns("Col_CornerPost_CM").Visible = True
+                    DataGridMiscView.Columns("Col_Rope_CM").Visible = True
+                    DataGridMiscView.Columns("Col_Apron_CM").Visible = True
+                    DataGridMiscView.Columns("Col_Turnbuckle_CM").Visible = True
+                    DataGridMiscView.Columns("Col_RingMat_CM").Visible = True
+                End If
+            End If
         End If
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                          .HeaderText = "LightT",
-                          .Name = "LightT"})
-        If Not MenuIndex > 2 Then '2K18 and Beyond
-            ArenaParts(27).Visible = False
-        End If
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                   .HeaderText = "CornerCM",
-                   .Name = "CornerCM"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "RopeCM",
-                       .Name = "RopeCM"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                   .HeaderText = "ApronCM",
-                   .Name = "ApronCM"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                          .HeaderText = "TurnbCM",
-                           .Name = "TurnbCM"})
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                      .HeaderText = "RingMatCM",
-                       .Name = "RingMatCM"})
-        If Not MenuIndex > 2 Then '2K18 and Beyond
-            ArenaParts(28).Visible = False
-            ArenaParts(29).Visible = False
-            ArenaParts(30).Visible = False
-            ArenaParts(31).Visible = False
-            ArenaParts(32).Visible = False
-        End If
-        ArenaParts.Add(New DataGridViewTextBoxColumn() With {
-                       .HeaderText = "Version",
-                       .Name = "Version"})
     End Sub
     Private Sub MiscViewType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles MiscViewType.SelectedIndexChanged
-        If SavePending Then
-            MessageBox.Show("Any changes will be lost", "Continue format change?", MessageBoxButtons.YesNo)
+        'Locked to 2K19 for now
+        If Not MiscViewType.SelectedIndex = 4 Then
+            MiscViewType.SelectedIndex = 4
+            Exit Sub
         End If
-        My.Settings.MiscModeIndex = MiscViewType.SelectedIndex
-        If TreeView1.SelectedNode IsNot Nothing Then
-            FillMiscView(TreeView1.SelectedNode)
+        If Not My.Settings.MiscModeIndex = MiscViewType.SelectedIndex Then 'checks if the index is actually changed, or just being reverted
+            If SavePending Then
+                If MessageBox.Show("Any changes will be lost", "Continue format change?", MessageBoxButtons.YesNo) = DialogResult.No Then
+                    MiscViewType.SelectedIndex = My.Settings.MiscModeIndex
+                    Exit Sub
+                End If
+            End If
+            My.Settings.MiscModeIndex = MiscViewType.SelectedIndex
+            If TreeView1.SelectedNode IsNot Nothing Then
+                FillMiscView(TreeView1.SelectedNode)
+            End If
         End If
     End Sub
-    Private Sub DataGridMiscView_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs)
-        SavePending = True
-        SaveMiscChangesToolStripMenuItem.Visible = True
+    Private Sub DataGridMiscView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridMiscView.CellEndEdit
+        Dim MyCell As DataGridViewCell = DataGridMiscView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+        If OldValue = -2 Then
+            MyCell.Value = OldValue
+            Exit Sub
+        End If
+        If Not IsNumeric(MyCell.Value) OrElse
+               MyCell.Value < -1 Then
+            MyCell.Value = OldValue
+        Else
+            SavePending = True
+            SaveMiscChangesToolStripMenuItem.Visible = True
+        End If
     End Sub
     Private Sub SaveChangesToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles SaveMiscChangesToolStripMenuItem.Click
         InjectIntoNode(ReadNode, BuildMiscFile())
-        ReadNode = Nothing
-        SaveMiscChangesToolStripMenuItem.Visible = False
-        SavePending = False
     End Sub
     Private Function BuildMiscFile() As Byte()
-        Dim Active_Offset As Integer
+        Dim Active_Offset As Integer = &H10 + &H20 * DataGridMiscView.RowCount
         Dim Temp_Array As Byte() = New Byte(&H20000) {}
         Temp_Array(0) = DataGridMiscView.RowCount
         Temp_Array(5) = 1
         Temp_Array(&HC) = &H10
         For i As Integer = 0 To DataGridMiscView.RowCount - 1
-            If i = 0 Then
-                Active_Offset = &H10 + &H20 * DataGridMiscView.RowCount
-            End If
             'Making the header 
             Dim Part_Head_Array As Byte() = New Byte(&H20) {}
             'Adding the text parts.
-            Dim ArenaInfoBytes As Byte() = Encoding.ASCII.GetBytes("arenaInfo" & DataGridMiscView.Rows.Item(i).HeaderCell.Value)
+            Dim ArenaInfoBytes As Byte() = Encoding.ASCII.GetBytes("arenaInfo" & DataGridMiscView.Rows(i).Cells(0).Value)
             Buffer.BlockCopy(ArenaInfoBytes, 0, Part_Head_Array, 0, ArenaInfoBytes.Length)
             Buffer.BlockCopy(Encoding.ASCII.GetBytes("jsn"), 0, Part_Head_Array, &H10, 3)
             'Build the Arena String
-            Dim Part_String As String = buildarena(i)
-            'MessageBox.Show(Part_String)
+            Dim Part_String As String = BuildJsonArenaFile(i)
+            'if there is a builder error this will exit the function without writing the file.
+            If Part_String = "" Then
+                Return Nothing
+            End If
             'Add the Length to the Header
-            Dim Length_Array As Byte() = System.BitConverter.GetBytes(Part_String.Length)
-            'Array.Reverse(Length_Array, 0, Length_Array.Length)
-            Buffer.BlockCopy(Length_Array, 0, Part_Head_Array, &H14, 4)
+            Buffer.BlockCopy(BitConverter.GetBytes(Part_String.Length), 0, Part_Head_Array, &H14, 4)
             'Add the offset to the header
-            Dim Offset_Array As Byte() = System.BitConverter.GetBytes(Active_Offset)
-            'Array.Reverse(Offset_Array, 0, Offset_Array.Length)
-            Buffer.BlockCopy(Offset_Array, 0, Part_Head_Array, &H18, 4)
+            Buffer.BlockCopy(BitConverter.GetBytes(Active_Offset), 0, Part_Head_Array, &H18, 4)
             'injecting the header
             Buffer.BlockCopy(Part_Head_Array, 0, Temp_Array, &H10 + &H20 * i, &H20)
             'Adding the ArenaInfo to the ararry
             Buffer.BlockCopy(Encoding.ASCII.GetBytes(Part_String), 0, Temp_Array, Active_Offset, Part_String.Length)
             'Updating the Active Offset
-            Active_Offset = Active_Offset + Part_String.Length + (16 - Part_String.Length Mod 16)
+            Active_Offset += Part_String.Length
+            If Part_String.Length Mod 16 > 0 Then
+                Active_Offset += 16 - Part_String.Length Mod 16
+            End If
         Next
-        Dim Final_Array As Byte() = New Byte(Active_Offset - 1) {}
-        Buffer.BlockCopy(Temp_Array, 0, Final_Array, 0, Active_Offset)
-        Return Final_Array
+        ReDim Preserve Temp_Array(Active_Offset - 1)
+        'Dim Final_Array As Byte() = New Byte(Active_Offset - 1) {}
+        'Buffer.BlockCopy(Temp_Array, 0, Final_Array, 0, Active_Offset)
+        Return Temp_Array
     End Function
-    Function buildarena(index As Integer) As String
-        ' Chr(&H7B) = { Chr(&HD) = Carriage return Chr(&HA) = Line feed
-        Dim Temp_String As String = Chr(&H7B) & Chr(&HD) & Chr(&HA) & "    " & """Stadium"":" & DataGridMiscView(0, index).Value.ToString & ","
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Advertisement"":" & DataGridMiscView(1, index).Value.ToString & ","
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CornerPost"":" & DataGridMiscView(2, index).Value.ToString & ","
-        If MiscViewType.SelectedIndex > 2 Then '2K18 and Beyond
-            Temp_String = Temp_String & Chr(&HA) & "    " & """LED_CornerPost"":" & DataGridMiscView(3, index).Value.ToString & ","
-        End If
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Rope"":" & DataGridMiscView(4, index).Value.ToString & ","
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Apron"":" & DataGridMiscView(5, index).Value.ToString & ","
-        If MiscViewType.SelectedIndex > 0 Then '2K16 and Beyond
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """LED_Apron"":" & DataGridMiscView(6, index).Value.ToString & ","
-        End If
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Turnbuckle"":" & DataGridMiscView(7, index).Value.ToString & ","
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Barricade"":" & DataGridMiscView(8, index).Value.ToString & ","
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Fence"":" & DataGridMiscView(9, index).Value.ToString & ","
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CeilingLighting"":" & DataGridMiscView(10, index).Value.ToString & ","
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Spotlight"":" & DataGridMiscView(11, index).Value.ToString & ","
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Stairs"":" & DataGridMiscView(12, index).Value.ToString & ","
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CommentarySeat"":" & DataGridMiscView(13, index).Value.ToString & ","
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """RingMat"":" & DataGridMiscView(14, index).Value.ToString & ","
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """FloorMattress"":" & DataGridMiscView(15, index).Value.ToString & ","
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Crowd"":" & DataGridMiscView(16, index).Value.ToString & ","
-        If MiscViewType.SelectedIndex > 3 Then '2K19 and Beyond
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CrowdSeatsPlace"":" & DataGridMiscView(17, index).Value.ToString & ","
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CrowdSeatsModel"":" & DataGridMiscView(18, index).Value.ToString & ","
-        End If
-        Temp_String = Temp_String & Chr(&HA) & "    " & """IBL"":" & DataGridMiscView(19, index).Value.ToString & ","
-        If MiscViewType.SelectedIndex > 0 Then '2K16 and Beyond
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Titantron"":" & DataGridMiscView(20, index).Value.ToString & ","
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Minitron"":" & DataGridMiscView(21, index).Value.ToString & ","
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Wall_L"":" & DataGridMiscView(22, index).Value.ToString & ","
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Wall_R"":" & DataGridMiscView(23, index).Value.ToString & ","
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Header"":" & DataGridMiscView(24, index).Value.ToString & ","
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Floor"":" & DataGridMiscView(25, index).Value.ToString & ","
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """MiscObjects"":" & DataGridMiscView(26, index).Value.ToString & ","
-        End If
-        If MiscViewType.SelectedIndex > 2 Then '2K18 and Beyond
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """LightingType"":" & DataGridMiscView(27, index).Value.ToString & ","
-        End If
-        If MiscViewType.SelectedIndex > 2 Then '2K18 and Beyond
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """CornerPost_CM"":" & DataGridMiscView(28, index).Value.ToString & ","
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Rope_CM"":" & DataGridMiscView(29, index).Value.ToString & ","
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Apron_CM"":" & DataGridMiscView(30, index).Value.ToString & ","
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """Turnbuckle_CM"":" & DataGridMiscView(31, index).Value.ToString & ","
-            Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """RingMat_CM"":" & DataGridMiscView(32, index).Value.ToString & ","
-        End If
-        Temp_String = Temp_String & Chr(&HD) & Chr(&HA) & "    " & """version"":" & DataGridMiscView(33, index).Value.ToString
-        Temp_String = Temp_String & Chr(&HA) & Chr(&H7D) & Chr(&HA) & Chr(&H0)
-        Return Temp_String
+    Function JsonWriterArenaFile(Index As Integer) As String
+        'TO DO TEST 2K18 - 2K15
+        'This is to be tested for 2k18 - 2k15 before allowing it in a release
+        Dim TempStringBuilder As StringBuilder = New StringBuilder()
+        Dim TempStringWriter As StringWriter = New StringWriter(TempStringBuilder)
+        Using ActualWriter As JsonWriter = New JsonTextWriter(TempStringWriter)
+            ActualWriter.Formatting = Formatting.Indented
+            ActualWriter.WriteStartObject()
+            ActualWriter.WritePropertyName("Stadium")
+            ActualWriter.WriteValue(DataGridMiscView(1, Index).Value)
+            ActualWriter.WritePropertyName("Advertisement")
+            ActualWriter.WriteValue(DataGridMiscView(2, Index).Value)
+            ActualWriter.WritePropertyName("CornerPost")
+            ActualWriter.WriteValue(DataGridMiscView(3, Index).Value)
+            ActualWriter.WritePropertyName("LED_CornerPost")
+            ActualWriter.WriteValue(DataGridMiscView(4, Index).Value)
+            ActualWriter.WritePropertyName("Rope")
+            ActualWriter.WriteValue(DataGridMiscView(5, Index).Value)
+            ActualWriter.WritePropertyName("Apron")
+            ActualWriter.WriteValue(DataGridMiscView(6, Index).Value)
+            ActualWriter.WritePropertyName("LED_Apron")
+            ActualWriter.WriteValue(DataGridMiscView(7, Index).Value)
+            ActualWriter.WritePropertyName("Turnbuckle")
+            ActualWriter.WriteValue(DataGridMiscView(8, Index).Value)
+            ActualWriter.WritePropertyName("Barricade")
+            ActualWriter.WriteValue(DataGridMiscView(9, Index).Value)
+            ActualWriter.WritePropertyName("Fence")
+            ActualWriter.WriteValue(DataGridMiscView(10, Index).Value)
+            ActualWriter.WritePropertyName("CeilingLighting")
+            ActualWriter.WriteValue(DataGridMiscView(11, Index).Value)
+            ActualWriter.WritePropertyName("Spotlight")
+            ActualWriter.WriteValue(DataGridMiscView(12, Index).Value)
+            ActualWriter.WritePropertyName("Stairs")
+            ActualWriter.WriteValue(DataGridMiscView(13, Index).Value)
+            ActualWriter.WritePropertyName("RingMat")
+            ActualWriter.WriteValue(DataGridMiscView(14, Index).Value)
+            ActualWriter.WritePropertyName("FloorMattress")
+            ActualWriter.WriteValue(DataGridMiscView(15, Index).Value)
+            ActualWriter.WritePropertyName("Crowd")
+            ActualWriter.WriteValue(DataGridMiscView(16, Index).Value)
+            ActualWriter.WritePropertyName("CrowdSeatsPlace")
+            ActualWriter.WriteValue(DataGridMiscView(17, Index).Value)
+            ActualWriter.WritePropertyName("CrowdSeatsModel")
+            ActualWriter.WriteValue(DataGridMiscView(18, Index).Value)
+            ActualWriter.WritePropertyName("IBL")
+            ActualWriter.WriteValue(DataGridMiscView(19, Index).Value)
+            ActualWriter.WritePropertyName("Titantron")
+            ActualWriter.WriteValue(DataGridMiscView(20, Index).Value)
+            ActualWriter.WritePropertyName("Minitron")
+            ActualWriter.WriteValue(DataGridMiscView(21, Index).Value)
+            ActualWriter.WritePropertyName("Wall_L")
+            ActualWriter.WriteValue(DataGridMiscView(22, Index).Value)
+            ActualWriter.WritePropertyName("Wall_R")
+            ActualWriter.WriteValue(DataGridMiscView(23, Index).Value)
+            ActualWriter.WritePropertyName("Header")
+            ActualWriter.WriteValue(DataGridMiscView(24, Index).Value)
+            ActualWriter.WritePropertyName("Floor")
+            ActualWriter.WriteValue(DataGridMiscView(25, Index).Value)
+            ActualWriter.WritePropertyName("MiscObjects")
+            ActualWriter.WriteValue(DataGridMiscView(26, Index).Value)
+            ActualWriter.WritePropertyName("LightingType")
+            ActualWriter.WriteValue(DataGridMiscView(27, Index).Value)
+            ActualWriter.WritePropertyName("CornerPost_CM")
+            ActualWriter.WriteValue(DataGridMiscView(28, Index).Value)
+            ActualWriter.WritePropertyName("Rope_CM")
+            ActualWriter.WriteValue(DataGridMiscView(29, Index).Value)
+            ActualWriter.WritePropertyName("Apron_CM")
+            ActualWriter.WriteValue(DataGridMiscView(30, Index).Value)
+            ActualWriter.WritePropertyName("Turnbuckle_CM")
+            ActualWriter.WriteValue(DataGridMiscView(31, Index).Value)
+            ActualWriter.WritePropertyName("RingMat_CM")
+            ActualWriter.WriteValue(DataGridMiscView(32, Index).Value)
+            ActualWriter.WritePropertyName("version")
+            ActualWriter.WriteValue(DataGridMiscView(33, Index).Value)
+            ActualWriter.WriteEndObject()
+        End Using
+        Return TempStringBuilder.ToString()
+    End Function
+    Function BuildJsonArenaFile(index As Integer) As String
+        Try
+            Dim DListAray As List(Of Boolean) = DataGridMiscView.Rows(index).Tag
+            ' Chr(&H7B) = { Chr(&HD) = Carriage return Chr(&HA) = Line feed
+            Dim TempItemCount As Integer = 0
+            Dim Temp_String As String = Chr(&H7B)
+            If DListAray(TempItemCount + 0) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Stadium"":" & DataGridMiscView(1, index).Value.ToString & ","
+            If DListAray(TempItemCount + 1) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Advertisement"":" & DataGridMiscView(2, index).Value.ToString & ","
+            If DListAray(TempItemCount + 2) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """CornerPost"":" & DataGridMiscView(3, index).Value.ToString & ","
+            If Not DataGridMiscView(4, index).Value = -2 Then
+                If DListAray(TempItemCount + 3) Then Temp_String += Chr(&HD)
+                Temp_String += Chr(&HA) & "    " & """LED_CornerPost"":" & DataGridMiscView(4, index).Value.ToString & ","
+                TempItemCount += 1
+            End If
+            If DListAray(TempItemCount + 3) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Rope"":" & DataGridMiscView(5, index).Value.ToString & ","
+            If DListAray(TempItemCount + 4) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Apron"":" & DataGridMiscView(6, index).Value.ToString & ","
+            If Not DataGridMiscView(7, index).Value = -2 Then
+                If DListAray(TempItemCount + 5) Then Temp_String += Chr(&HD)
+                Temp_String += Chr(&HA) & "    " & """LED_Apron"":" & DataGridMiscView(7, index).Value.ToString & ","
+                TempItemCount += 1
+            End If
+            If DListAray(TempItemCount + 5) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Turnbuckle"":" & DataGridMiscView(8, index).Value.ToString & ","
+            If DListAray(TempItemCount + 6) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Barricade"":" & DataGridMiscView(9, index).Value.ToString & ","
+            If DListAray(TempItemCount + 7) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Fence"":" & DataGridMiscView(10, index).Value.ToString & ","
+            If DListAray(TempItemCount + 8) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """CeilingLighting"":" & DataGridMiscView(11, index).Value.ToString & ","
+            If DListAray(TempItemCount + 9) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Spotlight"":" & DataGridMiscView(12, index).Value.ToString & ","
+            If DListAray(TempItemCount + 10) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Stairs"":" & DataGridMiscView(13, index).Value.ToString & ","
+            If DListAray(TempItemCount + 11) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """CommentarySeat"":" & DataGridMiscView(14, index).Value.ToString & ","
+            If DListAray(TempItemCount + 12) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """RingMat"":" & DataGridMiscView(15, index).Value.ToString & ","
+            If DListAray(TempItemCount + 13) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """FloorMattress"":" & DataGridMiscView(16, index).Value.ToString & ","
+            If DListAray(TempItemCount + 14) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Crowd"":" & DataGridMiscView(17, index).Value.ToString & ","
+            If Not DataGridMiscView(18, index).Value = -2 Then
+                If DListAray(TempItemCount + 15) Then Temp_String += Chr(&HD)
+                Temp_String += Chr(&HA) & "    " & """CrowdSeatsPlace"":" & DataGridMiscView(18, index).Value.ToString & ","
+                If DListAray(TempItemCount + 16) Then Temp_String += Chr(&HD)
+                Temp_String += Chr(&HA) & "    " & """CrowdSeatsModel"":" & DataGridMiscView(19, index).Value.ToString & ","
+                TempItemCount += 2
+            End If
+            If DListAray(TempItemCount + 15) Then Temp_String += Chr(&HD)
+            Temp_String = Temp_String & Chr(&HA) & "    " & """IBL"":" & DataGridMiscView(20, index).Value.ToString & ","
+            If DListAray(TempItemCount + 16) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Titantron"":" & DataGridMiscView(21, index).Value.ToString & ","
+            If DListAray(TempItemCount + 17) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Minitron"":" & DataGridMiscView(22, index).Value.ToString & ","
+            If DListAray(TempItemCount + 18) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Wall_L"":" & DataGridMiscView(23, index).Value.ToString & ","
+            If DListAray(TempItemCount + 19) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Wall_R"":" & DataGridMiscView(24, index).Value.ToString & ","
+            If DListAray(TempItemCount + 20) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Header"":" & DataGridMiscView(25, index).Value.ToString & ","
+            If DListAray(TempItemCount + 21) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """Floor"":" & DataGridMiscView(26, index).Value.ToString & ","
+            If DListAray(TempItemCount + 22) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """MiscObjects"":" & DataGridMiscView(27, index).Value.ToString & ","
+            If Not DataGridMiscView(28, index).Value.ToString = -2 Then
+                If DListAray(TempItemCount + 23) Then Temp_String += Chr(&HD)
+                Temp_String += Chr(&HA) & "    " & """LightingType"":" & DataGridMiscView(28, index).Value.ToString & ","
+                TempItemCount += 1
+            End If
+            If Not DataGridMiscView(29, index).Value.ToString = -2 Then
+                If DListAray(TempItemCount + 23) Then Temp_String += Chr(&HD)
+                Temp_String += Chr(&HA) & "    " & """CornerPost_CM"":" & DataGridMiscView(29, index).Value.ToString & ","
+                If DListAray(TempItemCount + 24) Then Temp_String += Chr(&HD)
+                Temp_String += Chr(&HA) & "    " & """Rope_CM"":" & DataGridMiscView(30, index).Value.ToString & ","
+                If DListAray(TempItemCount + 25) Then Temp_String += Chr(&HD)
+                Temp_String += Chr(&HA) & "    " & """Apron_CM"":" & DataGridMiscView(31, index).Value.ToString & ","
+                If DListAray(TempItemCount + 26) Then Temp_String += Chr(&HD)
+                Temp_String += Chr(&HA) & "    " & """Turnbuckle_CM"":" & DataGridMiscView(32, index).Value.ToString & ","
+                If DListAray(TempItemCount + 27) Then Temp_String += Chr(&HD)
+                Temp_String += Chr(&HA) & "    " & """RingMat_CM"":" & DataGridMiscView(33, index).Value.ToString & ","
+                TempItemCount += 5
+            End If
+            If DListAray(TempItemCount + 23) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & "    " & """version"":" & """" & DataGridMiscView(34, index).Value.ToString & """"
+            If DListAray(TempItemCount + 24) Then Temp_String += Chr(&HD)
+            Temp_String += Chr(&HA) & Chr(&H7D)
+            If DListAray(TempItemCount + 25) Then Temp_String += Chr(&HD) 'DListAray(TempItemCount + 17)
+            Temp_String += Chr(&HA)
+            Return Temp_String
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+            Return ""
+        End Try
     End Function
 #End Region
     'Build Injector
