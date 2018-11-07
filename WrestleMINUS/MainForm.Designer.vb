@@ -65,50 +65,49 @@ Partial Class MainForm
         Me.SortStringsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MiscView = New System.Windows.Forms.TabPage()
         Me.DataGridMiscView = New System.Windows.Forms.DataGridView()
+        Me.Col_ArenaNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Stadium = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Advertisement = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_CornerPost = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_LED_CornerPost = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Rope = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Apron = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_LED_Apron = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Turnbuckle = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Barricade = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Fence = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_CeilingLighting = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Spotlight = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Stairs = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_CommentarySeat = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_RingMat = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_FloorMattress = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Crowd = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_CrowdSeatsPlace = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_CrowdSeatsModel = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_IBL = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Titantron = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Minitron = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Wall_L = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Wall_R = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Header = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Floor = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_MiscObjects = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_LightingType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_CornerPost_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Rope_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Apron_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_Turnbuckle_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_RingMat_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Col_version = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripMiscView = New System.Windows.Forms.MenuStrip()
         Me.MiscViewType = New System.Windows.Forms.ToolStripComboBox()
         Me.SaveMiscChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowView = New System.Windows.Forms.TabPage()
         Me.DataGridShowView = New System.Windows.Forms.DataGridView()
-        Me.StrName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.S1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.S2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.S3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.S4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.A1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.A2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.B = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.C1 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.C2 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.C3 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.C4 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.C5 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.Stage = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.D1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.D2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Crowd = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.E1 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.E2 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.E3 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.Ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Filter = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.F1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.F2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.G1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.G2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.H1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.H2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.H3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.H4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Bar = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Unknown = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.I1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.I2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.I3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Live = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.J = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripShowView = New System.Windows.Forms.MenuStrip()
         Me.ShowViewType = New System.Windows.Forms.ToolStripComboBox()
+        Me.StringLoadedShowMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NIBJView = New System.Windows.Forms.TabPage()
         Me.DataGridNIBJView = New System.Windows.Forms.DataGridView()
         Me.MenuStripNIBJView = New System.Windows.Forms.MenuStrip()
@@ -287,41 +286,47 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.Col_ArenaNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Stadium = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Advertisement = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_CornerPost = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_LED_CornerPost = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Rope = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Apron = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_LED_Apron = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Turnbuckle = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Barricade = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Fence = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_CeilingLighting = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Spotlight = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Stairs = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_CommentarySeat = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_RingMat = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_FloorMattress = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Crowd = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_CrowdSeatsPlace = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_CrowdSeatsModel = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_IBL = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Titantron = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Minitron = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Wall_L = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Wall_R = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Header = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Floor = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_MiscObjects = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_LightingType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_CornerPost_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Rope_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Apron_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_Turnbuckle_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_RingMat_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Col_version = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SaveShowChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.StrName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowStringName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowSelectNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SelectNumSecond = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.A1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.A2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.B1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.B2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.B3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.C1 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.C2 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.C3 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.C4 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.C5 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.C6 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.C7 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.C8 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Stage = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.D1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.D2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.D3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.D4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.D5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Filter = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.F1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.F2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.F3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.F4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.H1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.H2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.H3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.H4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Bar = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Unknown = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.I1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.I2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.I3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Live = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.J = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -763,6 +768,286 @@ Partial Class MainForm
         Me.DataGridMiscView.Size = New System.Drawing.Size(964, 391)
         Me.DataGridMiscView.TabIndex = 1
         '
+        'Col_ArenaNumber
+        '
+        Me.Col_ArenaNumber.HeaderText = "ArenaNum"
+        Me.Col_ArenaNumber.MaxInputLength = 5
+        Me.Col_ArenaNumber.Name = "Col_ArenaNumber"
+        Me.Col_ArenaNumber.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_ArenaNumber.Width = 63
+        '
+        'Col_Stadium
+        '
+        Me.Col_Stadium.HeaderText = "Stadium"
+        Me.Col_Stadium.MaxInputLength = 3
+        Me.Col_Stadium.Name = "Col_Stadium"
+        Me.Col_Stadium.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Stadium.Width = 51
+        '
+        'Col_Advertisement
+        '
+        Me.Col_Advertisement.HeaderText = "Advert"
+        Me.Col_Advertisement.MaxInputLength = 3
+        Me.Col_Advertisement.Name = "Col_Advertisement"
+        Me.Col_Advertisement.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Advertisement.Width = 44
+        '
+        'Col_CornerPost
+        '
+        Me.Col_CornerPost.HeaderText = "CornerPost"
+        Me.Col_CornerPost.MaxInputLength = 3
+        Me.Col_CornerPost.Name = "Col_CornerPost"
+        Me.Col_CornerPost.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_CornerPost.Width = 65
+        '
+        'Col_LED_CornerPost
+        '
+        Me.Col_LED_CornerPost.HeaderText = "LEDCorner"
+        Me.Col_LED_CornerPost.MaxInputLength = 3
+        Me.Col_LED_CornerPost.Name = "Col_LED_CornerPost"
+        Me.Col_LED_CornerPost.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_LED_CornerPost.Width = 65
+        '
+        'Col_Rope
+        '
+        Me.Col_Rope.HeaderText = "Rope"
+        Me.Col_Rope.MaxInputLength = 3
+        Me.Col_Rope.Name = "Col_Rope"
+        Me.Col_Rope.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Rope.Width = 39
+        '
+        'Col_Apron
+        '
+        Me.Col_Apron.HeaderText = "Apron"
+        Me.Col_Apron.MaxInputLength = 3
+        Me.Col_Apron.Name = "Col_Apron"
+        Me.Col_Apron.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Apron.Width = 41
+        '
+        'Col_LED_Apron
+        '
+        Me.Col_LED_Apron.HeaderText = "LEDApron"
+        Me.Col_LED_Apron.MaxInputLength = 3
+        Me.Col_LED_Apron.Name = "Col_LED_Apron"
+        Me.Col_LED_Apron.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_LED_Apron.Width = 62
+        '
+        'Col_Turnbuckle
+        '
+        Me.Col_Turnbuckle.HeaderText = "Turnbuckle"
+        Me.Col_Turnbuckle.MaxInputLength = 3
+        Me.Col_Turnbuckle.Name = "Col_Turnbuckle"
+        Me.Col_Turnbuckle.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Turnbuckle.Width = 67
+        '
+        'Col_Barricade
+        '
+        Me.Col_Barricade.HeaderText = "Barricade"
+        Me.Col_Barricade.MaxInputLength = 3
+        Me.Col_Barricade.Name = "Col_Barricade"
+        Me.Col_Barricade.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Barricade.Width = 58
+        '
+        'Col_Fence
+        '
+        Me.Col_Fence.HeaderText = "Fence"
+        Me.Col_Fence.MaxInputLength = 3
+        Me.Col_Fence.Name = "Col_Fence"
+        Me.Col_Fence.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Fence.Width = 43
+        '
+        'Col_CeilingLighting
+        '
+        Me.Col_CeilingLighting.HeaderText = "CLight"
+        Me.Col_CeilingLighting.MaxInputLength = 3
+        Me.Col_CeilingLighting.Name = "Col_CeilingLighting"
+        Me.Col_CeilingLighting.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_CeilingLighting.Width = 43
+        '
+        'Col_Spotlight
+        '
+        Me.Col_Spotlight.HeaderText = "Spotlight"
+        Me.Col_Spotlight.MaxInputLength = 3
+        Me.Col_Spotlight.Name = "Col_Spotlight"
+        Me.Col_Spotlight.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Spotlight.Width = 54
+        '
+        'Col_Stairs
+        '
+        Me.Col_Stairs.HeaderText = "Stairs"
+        Me.Col_Stairs.MaxInputLength = 3
+        Me.Col_Stairs.Name = "Col_Stairs"
+        Me.Col_Stairs.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Stairs.Width = 39
+        '
+        'Col_CommentarySeat
+        '
+        Me.Col_CommentarySeat.HeaderText = "ComSeat"
+        Me.Col_CommentarySeat.MaxInputLength = 3
+        Me.Col_CommentarySeat.Name = "Col_CommentarySeat"
+        Me.Col_CommentarySeat.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_CommentarySeat.Width = 56
+        '
+        'Col_RingMat
+        '
+        Me.Col_RingMat.HeaderText = "RingMat"
+        Me.Col_RingMat.MaxInputLength = 3
+        Me.Col_RingMat.Name = "Col_RingMat"
+        Me.Col_RingMat.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_RingMat.Width = 53
+        '
+        'Col_FloorMattress
+        '
+        Me.Col_FloorMattress.HeaderText = "FloorMat"
+        Me.Col_FloorMattress.MaxInputLength = 3
+        Me.Col_FloorMattress.Name = "Col_FloorMattress"
+        Me.Col_FloorMattress.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_FloorMattress.Width = 54
+        '
+        'Col_Crowd
+        '
+        Me.Col_Crowd.HeaderText = "Crowd"
+        Me.Col_Crowd.MaxInputLength = 3
+        Me.Col_Crowd.Name = "Col_Crowd"
+        Me.Col_Crowd.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Crowd.Width = 43
+        '
+        'Col_CrowdSeatsPlace
+        '
+        Me.Col_CrowdSeatsPlace.HeaderText = "CrSeatsPlace"
+        Me.Col_CrowdSeatsPlace.MaxInputLength = 3
+        Me.Col_CrowdSeatsPlace.Name = "Col_CrowdSeatsPlace"
+        Me.Col_CrowdSeatsPlace.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_CrowdSeatsPlace.Width = 77
+        '
+        'Col_CrowdSeatsModel
+        '
+        Me.Col_CrowdSeatsModel.HeaderText = "CrSeatsModel"
+        Me.Col_CrowdSeatsModel.MaxInputLength = 3
+        Me.Col_CrowdSeatsModel.Name = "Col_CrowdSeatsModel"
+        Me.Col_CrowdSeatsModel.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_CrowdSeatsModel.Width = 79
+        '
+        'Col_IBL
+        '
+        Me.Col_IBL.HeaderText = "IBL"
+        Me.Col_IBL.MaxInputLength = 3
+        Me.Col_IBL.Name = "Col_IBL"
+        Me.Col_IBL.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_IBL.Width = 29
+        '
+        'Col_Titantron
+        '
+        Me.Col_Titantron.HeaderText = "Titantron"
+        Me.Col_Titantron.MaxInputLength = 3
+        Me.Col_Titantron.Name = "Col_Titantron"
+        Me.Col_Titantron.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Titantron.Width = 55
+        '
+        'Col_Minitron
+        '
+        Me.Col_Minitron.HeaderText = "Minitron"
+        Me.Col_Minitron.MaxInputLength = 3
+        Me.Col_Minitron.Name = "Col_Minitron"
+        Me.Col_Minitron.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Minitron.Width = 50
+        '
+        'Col_Wall_L
+        '
+        Me.Col_Wall_L.HeaderText = "Wall_L"
+        Me.Col_Wall_L.MaxInputLength = 3
+        Me.Col_Wall_L.Name = "Col_Wall_L"
+        Me.Col_Wall_L.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Wall_L.Width = 46
+        '
+        'Col_Wall_R
+        '
+        Me.Col_Wall_R.HeaderText = "Wall_R"
+        Me.Col_Wall_R.MaxInputLength = 3
+        Me.Col_Wall_R.Name = "Col_Wall_R"
+        Me.Col_Wall_R.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Wall_R.Width = 48
+        '
+        'Col_Header
+        '
+        Me.Col_Header.HeaderText = "Header"
+        Me.Col_Header.MaxInputLength = 3
+        Me.Col_Header.Name = "Col_Header"
+        Me.Col_Header.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Header.Width = 48
+        '
+        'Col_Floor
+        '
+        Me.Col_Floor.HeaderText = "Floor"
+        Me.Col_Floor.MaxInputLength = 3
+        Me.Col_Floor.Name = "Col_Floor"
+        Me.Col_Floor.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Floor.Width = 36
+        '
+        'Col_MiscObjects
+        '
+        Me.Col_MiscObjects.HeaderText = "MiscO"
+        Me.Col_MiscObjects.MaxInputLength = 3
+        Me.Col_MiscObjects.Name = "Col_MiscObjects"
+        Me.Col_MiscObjects.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_MiscObjects.Width = 43
+        '
+        'Col_LightingType
+        '
+        Me.Col_LightingType.HeaderText = "Lighting"
+        Me.Col_LightingType.MaxInputLength = 3
+        Me.Col_LightingType.Name = "Col_LightingType"
+        Me.Col_LightingType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_LightingType.Width = 50
+        '
+        'Col_CornerPost_CM
+        '
+        Me.Col_CornerPost_CM.HeaderText = "CornerPost_CM"
+        Me.Col_CornerPost_CM.MaxInputLength = 3
+        Me.Col_CornerPost_CM.Name = "Col_CornerPost_CM"
+        Me.Col_CornerPost_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_CornerPost_CM.Width = 87
+        '
+        'Col_Rope_CM
+        '
+        Me.Col_Rope_CM.HeaderText = "Rope_CM"
+        Me.Col_Rope_CM.MaxInputLength = 3
+        Me.Col_Rope_CM.Name = "Col_Rope_CM"
+        Me.Col_Rope_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Rope_CM.Width = 61
+        '
+        'Col_Apron_CM
+        '
+        Me.Col_Apron_CM.HeaderText = "Apron_CM"
+        Me.Col_Apron_CM.MaxInputLength = 3
+        Me.Col_Apron_CM.Name = "Col_Apron_CM"
+        Me.Col_Apron_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Apron_CM.Width = 63
+        '
+        'Col_Turnbuckle_CM
+        '
+        Me.Col_Turnbuckle_CM.HeaderText = "Buckle_CM"
+        Me.Col_Turnbuckle_CM.MaxInputLength = 3
+        Me.Col_Turnbuckle_CM.Name = "Col_Turnbuckle_CM"
+        Me.Col_Turnbuckle_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_Turnbuckle_CM.Width = 68
+        '
+        'Col_RingMat_CM
+        '
+        Me.Col_RingMat_CM.HeaderText = "RingMat_CM"
+        Me.Col_RingMat_CM.MaxInputLength = 3
+        Me.Col_RingMat_CM.Name = "Col_RingMat_CM"
+        Me.Col_RingMat_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_RingMat_CM.Width = 75
+        '
+        'Col_version
+        '
+        Me.Col_version.HeaderText = "version"
+        Me.Col_version.MaxInputLength = 3
+        Me.Col_version.Name = "Col_version"
+        Me.Col_version.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Col_version.Width = 47
+        '
         'MenuStripMiscView
         '
         Me.MenuStripMiscView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MiscViewType, Me.SaveMiscChangesToolStripMenuItem})
@@ -805,7 +1090,7 @@ Partial Class MainForm
         Me.DataGridShowView.AllowUserToDeleteRows = False
         Me.DataGridShowView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.DataGridShowView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridShowView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.StrName, Me.S1, Me.S2, Me.S3, Me.S4, Me.A1, Me.A2, Me.B, Me.C1, Me.C2, Me.C3, Me.C4, Me.C5, Me.Stage, Me.D1, Me.D2, Me.Crowd, Me.E1, Me.E2, Me.E3, Me.Ref, Me.Filter, Me.F1, Me.F2, Me.G1, Me.G2, Me.H1, Me.H2, Me.H3, Me.H4, Me.Bar, Me.Unknown, Me.I1, Me.I2, Me.I3, Me.Live, Me.J})
+        Me.DataGridShowView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.StrName, Me.ShowStringName, Me.ShowSelectNum, Me.SelectNumSecond, Me.A1, Me.A2, Me.B1, Me.B2, Me.B3, Me.C1, Me.C2, Me.C3, Me.C4, Me.C5, Me.C6, Me.C7, Me.C8, Me.Stage, Me.D1, Me.D2, Me.D3, Me.D4, Me.D5, Me.Ref, Me.Filter, Me.F1, Me.F2, Me.F3, Me.F4, Me.H1, Me.H2, Me.H3, Me.H4, Me.Bar, Me.Unknown, Me.I1, Me.I2, Me.I3, Me.Live, Me.J})
         Me.DataGridShowView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridShowView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridShowView.Name = "DataGridShowView"
@@ -813,233 +1098,9 @@ Partial Class MainForm
         Me.DataGridShowView.Size = New System.Drawing.Size(964, 391)
         Me.DataGridShowView.TabIndex = 2
         '
-        'StrName
-        '
-        Me.StrName.HeaderText = "StrName"
-        Me.StrName.Name = "StrName"
-        Me.StrName.Width = 73
-        '
-        'S1
-        '
-        Me.S1.HeaderText = "S1"
-        Me.S1.Name = "S1"
-        Me.S1.Width = 45
-        '
-        'S2
-        '
-        Me.S2.HeaderText = "S2"
-        Me.S2.Name = "S2"
-        Me.S2.Width = 45
-        '
-        'S3
-        '
-        Me.S3.HeaderText = "S3"
-        Me.S3.Name = "S3"
-        Me.S3.Width = 45
-        '
-        'S4
-        '
-        Me.S4.HeaderText = "S4"
-        Me.S4.Name = "S4"
-        Me.S4.Width = 45
-        '
-        'A1
-        '
-        Me.A1.HeaderText = "A1"
-        Me.A1.Name = "A1"
-        Me.A1.Width = 45
-        '
-        'A2
-        '
-        Me.A2.HeaderText = "A2"
-        Me.A2.Name = "A2"
-        Me.A2.Width = 45
-        '
-        'B
-        '
-        Me.B.HeaderText = "B"
-        Me.B.Name = "B"
-        Me.B.Width = 39
-        '
-        'C1
-        '
-        Me.C1.HeaderText = "C1"
-        Me.C1.Name = "C1"
-        Me.C1.Width = 26
-        '
-        'C2
-        '
-        Me.C2.HeaderText = "C2"
-        Me.C2.Name = "C2"
-        Me.C2.Width = 26
-        '
-        'C3
-        '
-        Me.C3.HeaderText = "C3"
-        Me.C3.Name = "C3"
-        Me.C3.Width = 26
-        '
-        'C4
-        '
-        Me.C4.HeaderText = "C4"
-        Me.C4.Name = "C4"
-        Me.C4.Width = 26
-        '
-        'C5
-        '
-        Me.C5.HeaderText = "C5"
-        Me.C5.Name = "C5"
-        Me.C5.Width = 26
-        '
-        'Stage
-        '
-        Me.Stage.HeaderText = "Stage"
-        Me.Stage.Name = "Stage"
-        Me.Stage.Width = 60
-        '
-        'D1
-        '
-        Me.D1.HeaderText = "D1"
-        Me.D1.Name = "D1"
-        Me.D1.Width = 46
-        '
-        'D2
-        '
-        Me.D2.HeaderText = "D2"
-        Me.D2.Name = "D2"
-        Me.D2.Width = 46
-        '
-        'Crowd
-        '
-        Me.Crowd.HeaderText = "Crowd"
-        Me.Crowd.Name = "Crowd"
-        Me.Crowd.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Crowd.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.Crowd.Width = 62
-        '
-        'E1
-        '
-        Me.E1.HeaderText = "E1"
-        Me.E1.Name = "E1"
-        Me.E1.Width = 26
-        '
-        'E2
-        '
-        Me.E2.HeaderText = "E2"
-        Me.E2.Name = "E2"
-        Me.E2.Width = 26
-        '
-        'E3
-        '
-        Me.E3.HeaderText = "E3"
-        Me.E3.Name = "E3"
-        Me.E3.Width = 26
-        '
-        'Ref
-        '
-        Me.Ref.HeaderText = "Ref"
-        Me.Ref.Name = "Ref"
-        Me.Ref.Width = 49
-        '
-        'Filter
-        '
-        Me.Filter.HeaderText = "Filter"
-        Me.Filter.Name = "Filter"
-        Me.Filter.Width = 54
-        '
-        'F1
-        '
-        Me.F1.HeaderText = "F1"
-        Me.F1.Name = "F1"
-        Me.F1.Width = 44
-        '
-        'F2
-        '
-        Me.F2.HeaderText = "F2"
-        Me.F2.Name = "F2"
-        Me.F2.Width = 44
-        '
-        'G1
-        '
-        Me.G1.HeaderText = "G1"
-        Me.G1.Name = "G1"
-        Me.G1.Width = 46
-        '
-        'G2
-        '
-        Me.G2.HeaderText = "G2"
-        Me.G2.Name = "G2"
-        Me.G2.Width = 46
-        '
-        'H1
-        '
-        Me.H1.HeaderText = "H1"
-        Me.H1.Name = "H1"
-        Me.H1.Width = 46
-        '
-        'H2
-        '
-        Me.H2.HeaderText = "H2"
-        Me.H2.Name = "H2"
-        Me.H2.Width = 46
-        '
-        'H3
-        '
-        Me.H3.HeaderText = "H3"
-        Me.H3.Name = "H3"
-        Me.H3.Width = 46
-        '
-        'H4
-        '
-        Me.H4.HeaderText = "H4"
-        Me.H4.Name = "H4"
-        Me.H4.Width = 46
-        '
-        'Bar
-        '
-        Me.Bar.HeaderText = "Bar"
-        Me.Bar.Name = "Bar"
-        Me.Bar.Width = 48
-        '
-        'Unknown
-        '
-        Me.Unknown.HeaderText = "Unkown"
-        Me.Unknown.Name = "Unknown"
-        Me.Unknown.Width = 72
-        '
-        'I1
-        '
-        Me.I1.HeaderText = "I1"
-        Me.I1.Name = "I1"
-        Me.I1.Width = 41
-        '
-        'I2
-        '
-        Me.I2.HeaderText = "I2"
-        Me.I2.Name = "I2"
-        Me.I2.Width = 41
-        '
-        'I3
-        '
-        Me.I3.HeaderText = "I3"
-        Me.I3.Name = "I3"
-        Me.I3.Width = 41
-        '
-        'Live
-        '
-        Me.Live.HeaderText = "Live"
-        Me.Live.Name = "Live"
-        Me.Live.Width = 52
-        '
-        'J
-        '
-        Me.J.HeaderText = "J"
-        Me.J.Name = "J"
-        Me.J.Width = 37
-        '
         'MenuStripShowView
         '
-        Me.MenuStripShowView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ShowViewType})
+        Me.MenuStripShowView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ShowViewType, Me.StringLoadedShowMenuItem, Me.SaveShowChangesToolStripMenuItem})
         Me.MenuStripShowView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripShowView.Name = "MenuStripShowView"
         Me.MenuStripShowView.Size = New System.Drawing.Size(964, 27)
@@ -1048,9 +1109,16 @@ Partial Class MainForm
         '
         'ShowViewType
         '
+        Me.ShowViewType.Enabled = False
         Me.ShowViewType.Items.AddRange(New Object() {"2K15", "2K16", "2K17", "2K18", "2K19"})
         Me.ShowViewType.Name = "ShowViewType"
         Me.ShowViewType.Size = New System.Drawing.Size(121, 23)
+        '
+        'StringLoadedShowMenuItem
+        '
+        Me.StringLoadedShowMenuItem.Name = "StringLoadedShowMenuItem"
+        Me.StringLoadedShowMenuItem.Size = New System.Drawing.Size(95, 23)
+        Me.StringLoadedShowMenuItem.Text = "String Loaded:"
         '
         'NIBJView
         '
@@ -2071,7 +2139,7 @@ Partial Class MainForm
         '
         'OpenFileDialog1
         '
-        Me.OpenFileDialog1.FileName = "OpenFileDialog1"
+        Me.OpenFileDialog1.FileName = "*.*"
         Me.OpenFileDialog1.Multiselect = True
         '
         'TreeViewContext
@@ -2346,285 +2414,285 @@ Partial Class MainForm
         '
         Me.SaveExtractAllDialog.FileName = "Save Files Here"
         '
-        'Col_ArenaNumber
-        '
-        Me.Col_ArenaNumber.HeaderText = "ArenaNum"
-        Me.Col_ArenaNumber.MaxInputLength = 5
-        Me.Col_ArenaNumber.Name = "Col_ArenaNumber"
-        Me.Col_ArenaNumber.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_ArenaNumber.Width = 63
+        'SaveShowChangesToolStripMenuItem
         '
-        'Col_Stadium
-        '
-        Me.Col_Stadium.HeaderText = "Stadium"
-        Me.Col_Stadium.MaxInputLength = 3
-        Me.Col_Stadium.Name = "Col_Stadium"
-        Me.Col_Stadium.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Stadium.Width = 51
+        Me.SaveShowChangesToolStripMenuItem.Name = "SaveShowChangesToolStripMenuItem"
+        Me.SaveShowChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 23)
+        Me.SaveShowChangesToolStripMenuItem.Text = "Save Changes"
+        Me.SaveShowChangesToolStripMenuItem.Visible = False
         '
-        'Col_Advertisement
-        '
-        Me.Col_Advertisement.HeaderText = "Advert"
-        Me.Col_Advertisement.MaxInputLength = 3
-        Me.Col_Advertisement.Name = "Col_Advertisement"
-        Me.Col_Advertisement.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Advertisement.Width = 44
+        'StrName
         '
-        'Col_CornerPost
-        '
-        Me.Col_CornerPost.HeaderText = "CornerPost"
-        Me.Col_CornerPost.MaxInputLength = 3
-        Me.Col_CornerPost.Name = "Col_CornerPost"
-        Me.Col_CornerPost.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_CornerPost.Width = 65
+        Me.StrName.HeaderText = "StrName"
+        Me.StrName.MaxInputLength = 8
+        Me.StrName.Name = "StrName"
+        Me.StrName.Width = 73
         '
-        'Col_LED_CornerPost
-        '
-        Me.Col_LED_CornerPost.HeaderText = "LEDCorner"
-        Me.Col_LED_CornerPost.MaxInputLength = 3
-        Me.Col_LED_CornerPost.Name = "Col_LED_CornerPost"
-        Me.Col_LED_CornerPost.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_LED_CornerPost.Width = 65
+        'ShowStringName
         '
-        'Col_Rope
-        '
-        Me.Col_Rope.HeaderText = "Rope"
-        Me.Col_Rope.MaxInputLength = 3
-        Me.Col_Rope.Name = "Col_Rope"
-        Me.Col_Rope.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Rope.Width = 39
+        Me.ShowStringName.HeaderText = "Name"
+        Me.ShowStringName.Name = "ShowStringName"
+        Me.ShowStringName.ReadOnly = True
+        Me.ShowStringName.Width = 60
         '
-        'Col_Apron
-        '
-        Me.Col_Apron.HeaderText = "Apron"
-        Me.Col_Apron.MaxInputLength = 3
-        Me.Col_Apron.Name = "Col_Apron"
-        Me.Col_Apron.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Apron.Width = 41
+        'ShowSelectNum
         '
-        'Col_LED_Apron
-        '
-        Me.Col_LED_Apron.HeaderText = "LEDApron"
-        Me.Col_LED_Apron.MaxInputLength = 3
-        Me.Col_LED_Apron.Name = "Col_LED_Apron"
-        Me.Col_LED_Apron.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_LED_Apron.Width = 62
+        Me.ShowSelectNum.HeaderText = "SelectNum"
+        Me.ShowSelectNum.MaxInputLength = 3
+        Me.ShowSelectNum.Name = "ShowSelectNum"
+        Me.ShowSelectNum.Width = 84
         '
-        'Col_Turnbuckle
-        '
-        Me.Col_Turnbuckle.HeaderText = "Turnbuckle"
-        Me.Col_Turnbuckle.MaxInputLength = 3
-        Me.Col_Turnbuckle.Name = "Col_Turnbuckle"
-        Me.Col_Turnbuckle.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Turnbuckle.Width = 67
+        'SelectNumSecond
         '
-        'Col_Barricade
-        '
-        Me.Col_Barricade.HeaderText = "Barricade"
-        Me.Col_Barricade.MaxInputLength = 3
-        Me.Col_Barricade.Name = "Col_Barricade"
-        Me.Col_Barricade.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Barricade.Width = 58
+        Me.SelectNumSecond.HeaderText = "SelectNum"
+        Me.SelectNumSecond.MaxInputLength = 3
+        Me.SelectNumSecond.Name = "SelectNumSecond"
+        Me.SelectNumSecond.Width = 84
         '
-        'Col_Fence
-        '
-        Me.Col_Fence.HeaderText = "Fence"
-        Me.Col_Fence.MaxInputLength = 3
-        Me.Col_Fence.Name = "Col_Fence"
-        Me.Col_Fence.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Fence.Width = 43
+        'A1
         '
-        'Col_CeilingLighting
-        '
-        Me.Col_CeilingLighting.HeaderText = "CLight"
-        Me.Col_CeilingLighting.MaxInputLength = 3
-        Me.Col_CeilingLighting.Name = "Col_CeilingLighting"
-        Me.Col_CeilingLighting.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_CeilingLighting.Width = 43
+        Me.A1.HeaderText = "A1"
+        Me.A1.MaxInputLength = 3
+        Me.A1.Name = "A1"
+        Me.A1.Width = 45
         '
-        'Col_Spotlight
-        '
-        Me.Col_Spotlight.HeaderText = "Spotlight"
-        Me.Col_Spotlight.MaxInputLength = 3
-        Me.Col_Spotlight.Name = "Col_Spotlight"
-        Me.Col_Spotlight.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Spotlight.Width = 54
+        'A2
         '
-        'Col_Stairs
-        '
-        Me.Col_Stairs.HeaderText = "Stairs"
-        Me.Col_Stairs.MaxInputLength = 3
-        Me.Col_Stairs.Name = "Col_Stairs"
-        Me.Col_Stairs.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Stairs.Width = 39
+        Me.A2.HeaderText = "A2"
+        Me.A2.MaxInputLength = 3
+        Me.A2.Name = "A2"
+        Me.A2.Width = 45
         '
-        'Col_CommentarySeat
-        '
-        Me.Col_CommentarySeat.HeaderText = "ComSeat"
-        Me.Col_CommentarySeat.MaxInputLength = 3
-        Me.Col_CommentarySeat.Name = "Col_CommentarySeat"
-        Me.Col_CommentarySeat.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_CommentarySeat.Width = 56
+        'B1
         '
-        'Col_RingMat
-        '
-        Me.Col_RingMat.HeaderText = "RingMat"
-        Me.Col_RingMat.MaxInputLength = 3
-        Me.Col_RingMat.Name = "Col_RingMat"
-        Me.Col_RingMat.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_RingMat.Width = 53
+        Me.B1.HeaderText = "B1"
+        Me.B1.MaxInputLength = 4
+        Me.B1.Name = "B1"
+        Me.B1.Width = 45
         '
-        'Col_FloorMattress
-        '
-        Me.Col_FloorMattress.HeaderText = "FloorMat"
-        Me.Col_FloorMattress.MaxInputLength = 3
-        Me.Col_FloorMattress.Name = "Col_FloorMattress"
-        Me.Col_FloorMattress.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_FloorMattress.Width = 54
+        'B2
         '
-        'Col_Crowd
-        '
-        Me.Col_Crowd.HeaderText = "Crowd"
-        Me.Col_Crowd.MaxInputLength = 3
-        Me.Col_Crowd.Name = "Col_Crowd"
-        Me.Col_Crowd.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Crowd.Width = 43
+        Me.B2.HeaderText = "B2"
+        Me.B2.MaxInputLength = 4
+        Me.B2.Name = "B2"
+        Me.B2.Width = 45
         '
-        'Col_CrowdSeatsPlace
-        '
-        Me.Col_CrowdSeatsPlace.HeaderText = "CrSeatsPlace"
-        Me.Col_CrowdSeatsPlace.MaxInputLength = 3
-        Me.Col_CrowdSeatsPlace.Name = "Col_CrowdSeatsPlace"
-        Me.Col_CrowdSeatsPlace.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_CrowdSeatsPlace.Width = 77
+        'B3
         '
-        'Col_CrowdSeatsModel
-        '
-        Me.Col_CrowdSeatsModel.HeaderText = "CrSeatsModel"
-        Me.Col_CrowdSeatsModel.MaxInputLength = 3
-        Me.Col_CrowdSeatsModel.Name = "Col_CrowdSeatsModel"
-        Me.Col_CrowdSeatsModel.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_CrowdSeatsModel.Width = 79
+        Me.B3.HeaderText = "B3"
+        Me.B3.MaxInputLength = 4
+        Me.B3.Name = "B3"
+        Me.B3.Width = 45
         '
-        'Col_IBL
-        '
-        Me.Col_IBL.HeaderText = "IBL"
-        Me.Col_IBL.MaxInputLength = 3
-        Me.Col_IBL.Name = "Col_IBL"
-        Me.Col_IBL.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_IBL.Width = 29
+        'C1
         '
-        'Col_Titantron
-        '
-        Me.Col_Titantron.HeaderText = "Titantron"
-        Me.Col_Titantron.MaxInputLength = 3
-        Me.Col_Titantron.Name = "Col_Titantron"
-        Me.Col_Titantron.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Titantron.Width = 55
+        Me.C1.HeaderText = "C1"
+        Me.C1.Name = "C1"
+        Me.C1.Width = 26
         '
-        'Col_Minitron
-        '
-        Me.Col_Minitron.HeaderText = "Minitron"
-        Me.Col_Minitron.MaxInputLength = 3
-        Me.Col_Minitron.Name = "Col_Minitron"
-        Me.Col_Minitron.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Minitron.Width = 50
-        '
-        'Col_Wall_L
-        '
-        Me.Col_Wall_L.HeaderText = "Wall_L"
-        Me.Col_Wall_L.MaxInputLength = 3
-        Me.Col_Wall_L.Name = "Col_Wall_L"
-        Me.Col_Wall_L.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Wall_L.Width = 46
-        '
-        'Col_Wall_R
-        '
-        Me.Col_Wall_R.HeaderText = "Wall_R"
-        Me.Col_Wall_R.MaxInputLength = 3
-        Me.Col_Wall_R.Name = "Col_Wall_R"
-        Me.Col_Wall_R.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Wall_R.Width = 48
-        '
-        'Col_Header
-        '
-        Me.Col_Header.HeaderText = "Header"
-        Me.Col_Header.MaxInputLength = 3
-        Me.Col_Header.Name = "Col_Header"
-        Me.Col_Header.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Header.Width = 48
-        '
-        'Col_Floor
-        '
-        Me.Col_Floor.HeaderText = "Floor"
-        Me.Col_Floor.MaxInputLength = 3
-        Me.Col_Floor.Name = "Col_Floor"
-        Me.Col_Floor.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Floor.Width = 36
-        '
-        'Col_MiscObjects
-        '
-        Me.Col_MiscObjects.HeaderText = "MiscO"
-        Me.Col_MiscObjects.MaxInputLength = 3
-        Me.Col_MiscObjects.Name = "Col_MiscObjects"
-        Me.Col_MiscObjects.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_MiscObjects.Width = 43
-        '
-        'Col_LightingType
-        '
-        Me.Col_LightingType.HeaderText = "Lighting"
-        Me.Col_LightingType.MaxInputLength = 3
-        Me.Col_LightingType.Name = "Col_LightingType"
-        Me.Col_LightingType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_LightingType.Width = 50
-        '
-        'Col_CornerPost_CM
-        '
-        Me.Col_CornerPost_CM.HeaderText = "CornerPost_CM"
-        Me.Col_CornerPost_CM.MaxInputLength = 3
-        Me.Col_CornerPost_CM.Name = "Col_CornerPost_CM"
-        Me.Col_CornerPost_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_CornerPost_CM.Width = 87
-        '
-        'Col_Rope_CM
-        '
-        Me.Col_Rope_CM.HeaderText = "Rope_CM"
-        Me.Col_Rope_CM.MaxInputLength = 3
-        Me.Col_Rope_CM.Name = "Col_Rope_CM"
-        Me.Col_Rope_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Rope_CM.Width = 61
-        '
-        'Col_Apron_CM
-        '
-        Me.Col_Apron_CM.HeaderText = "Apron_CM"
-        Me.Col_Apron_CM.MaxInputLength = 3
-        Me.Col_Apron_CM.Name = "Col_Apron_CM"
-        Me.Col_Apron_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Apron_CM.Width = 63
-        '
-        'Col_Turnbuckle_CM
-        '
-        Me.Col_Turnbuckle_CM.HeaderText = "Buckle_CM"
-        Me.Col_Turnbuckle_CM.MaxInputLength = 3
-        Me.Col_Turnbuckle_CM.Name = "Col_Turnbuckle_CM"
-        Me.Col_Turnbuckle_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_Turnbuckle_CM.Width = 68
-        '
-        'Col_RingMat_CM
-        '
-        Me.Col_RingMat_CM.HeaderText = "RingMat_CM"
-        Me.Col_RingMat_CM.MaxInputLength = 3
-        Me.Col_RingMat_CM.Name = "Col_RingMat_CM"
-        Me.Col_RingMat_CM.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_RingMat_CM.Width = 75
-        '
-        'Col_version
-        '
-        Me.Col_version.HeaderText = "version"
-        Me.Col_version.MaxInputLength = 3
-        Me.Col_version.Name = "Col_version"
-        Me.Col_version.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Col_version.Width = 47
+        'C2
+        '
+        Me.C2.HeaderText = "C2"
+        Me.C2.Name = "C2"
+        Me.C2.Width = 26
+        '
+        'C3
+        '
+        Me.C3.HeaderText = "C3"
+        Me.C3.Name = "C3"
+        Me.C3.Width = 26
+        '
+        'C4
+        '
+        Me.C4.HeaderText = "C4"
+        Me.C4.Name = "C4"
+        Me.C4.Width = 26
+        '
+        'C5
+        '
+        Me.C5.HeaderText = "C5"
+        Me.C5.Name = "C5"
+        Me.C5.Width = 26
+        '
+        'C6
+        '
+        Me.C6.HeaderText = "C6"
+        Me.C6.Name = "C6"
+        Me.C6.Width = 26
+        '
+        'C7
+        '
+        Me.C7.HeaderText = "C7"
+        Me.C7.Name = "C7"
+        Me.C7.Width = 26
+        '
+        'C8
+        '
+        Me.C8.HeaderText = "C8"
+        Me.C8.Name = "C8"
+        Me.C8.Width = 26
+        '
+        'Stage
+        '
+        Me.Stage.HeaderText = "Stage"
+        Me.Stage.MaxInputLength = 1
+        Me.Stage.Name = "Stage"
+        Me.Stage.Width = 60
+        '
+        'D1
+        '
+        Me.D1.HeaderText = "D1"
+        Me.D1.MaxInputLength = 1
+        Me.D1.Name = "D1"
+        Me.D1.Width = 46
+        '
+        'D2
+        '
+        Me.D2.HeaderText = "D2"
+        Me.D2.MaxInputLength = 1
+        Me.D2.Name = "D2"
+        Me.D2.Width = 46
+        '
+        'D3
+        '
+        Me.D3.HeaderText = "D3"
+        Me.D3.MaxInputLength = 1
+        Me.D3.Name = "D3"
+        Me.D3.Width = 46
+        '
+        'D4
+        '
+        Me.D4.HeaderText = "D4"
+        Me.D4.MaxInputLength = 1
+        Me.D4.Name = "D4"
+        Me.D4.Width = 46
+        '
+        'D5
+        '
+        Me.D5.HeaderText = "D5"
+        Me.D5.MaxInputLength = 1
+        Me.D5.Name = "D5"
+        Me.D5.Width = 46
+        '
+        'Ref
+        '
+        Me.Ref.HeaderText = "Ref"
+        Me.Ref.MaxInputLength = 1
+        Me.Ref.Name = "Ref"
+        Me.Ref.Width = 49
+        '
+        'Filter
+        '
+        Me.Filter.HeaderText = "Filter"
+        Me.Filter.MaxInputLength = 12
+        Me.Filter.Name = "Filter"
+        Me.Filter.Width = 54
+        '
+        'F1
+        '
+        Me.F1.HeaderText = "F1"
+        Me.F1.MaxInputLength = 8
+        Me.F1.Name = "F1"
+        Me.F1.Width = 44
+        '
+        'F2
+        '
+        Me.F2.HeaderText = "F2"
+        Me.F2.MaxInputLength = 2
+        Me.F2.Name = "F2"
+        Me.F2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.F2.Width = 44
+        '
+        'F3
+        '
+        Me.F3.HeaderText = "F3"
+        Me.F3.MaxInputLength = 1
+        Me.F3.Name = "F3"
+        Me.F3.Width = 44
+        '
+        'F4
+        '
+        Me.F4.HeaderText = "F4"
+        Me.F4.MaxInputLength = 1
+        Me.F4.Name = "F4"
+        Me.F4.Width = 44
+        '
+        'H1
+        '
+        Me.H1.HeaderText = "H1"
+        Me.H1.MaxInputLength = 1
+        Me.H1.Name = "H1"
+        Me.H1.Width = 46
+        '
+        'H2
+        '
+        Me.H2.HeaderText = "H2"
+        Me.H2.MaxInputLength = 1
+        Me.H2.Name = "H2"
+        Me.H2.Width = 46
+        '
+        'H3
+        '
+        Me.H3.HeaderText = "H3"
+        Me.H3.MaxInputLength = 1
+        Me.H3.Name = "H3"
+        Me.H3.Width = 46
+        '
+        'H4
+        '
+        Me.H4.HeaderText = "H4"
+        Me.H4.MaxInputLength = 1
+        Me.H4.Name = "H4"
+        Me.H4.Width = 46
+        '
+        'Bar
+        '
+        Me.Bar.HeaderText = "Bar"
+        Me.Bar.MaxInputLength = 1
+        Me.Bar.Name = "Bar"
+        Me.Bar.Width = 48
+        '
+        'Unknown
+        '
+        Me.Unknown.HeaderText = "Unkown"
+        Me.Unknown.MaxInputLength = 68
+        Me.Unknown.Name = "Unknown"
+        Me.Unknown.Width = 72
+        '
+        'I1
+        '
+        Me.I1.HeaderText = "I1"
+        Me.I1.MaxInputLength = 1
+        Me.I1.Name = "I1"
+        Me.I1.Width = 41
+        '
+        'I2
+        '
+        Me.I2.HeaderText = "I2"
+        Me.I2.MaxInputLength = 1
+        Me.I2.Name = "I2"
+        Me.I2.Width = 41
+        '
+        'I3
+        '
+        Me.I3.HeaderText = "I3"
+        Me.I3.MaxInputLength = 2
+        Me.I3.Name = "I3"
+        Me.I3.Width = 41
+        '
+        'Live
+        '
+        Me.Live.HeaderText = "Live"
+        Me.Live.MaxInputLength = 1
+        Me.Live.Name = "Live"
+        Me.Live.Width = 52
+        '
+        'J
+        '
+        Me.J.HeaderText = "J"
+        Me.J.MaxInputLength = 1
+        Me.J.Name = "J"
+        Me.J.Width = 37
         '
         'MainForm
         '
@@ -2745,43 +2813,6 @@ Partial Class MainForm
     Friend WithEvents MenuStripShowView As MenuStrip
     Friend WithEvents ShowViewType As ToolStripComboBox
     Friend WithEvents DataGridShowView As DataGridView
-    Friend WithEvents StrName As DataGridViewTextBoxColumn
-    Friend WithEvents S1 As DataGridViewTextBoxColumn
-    Friend WithEvents S2 As DataGridViewTextBoxColumn
-    Friend WithEvents S3 As DataGridViewTextBoxColumn
-    Friend WithEvents S4 As DataGridViewTextBoxColumn
-    Friend WithEvents A1 As DataGridViewTextBoxColumn
-    Friend WithEvents A2 As DataGridViewTextBoxColumn
-    Friend WithEvents B As DataGridViewTextBoxColumn
-    Friend WithEvents C1 As DataGridViewCheckBoxColumn
-    Friend WithEvents C2 As DataGridViewCheckBoxColumn
-    Friend WithEvents C3 As DataGridViewCheckBoxColumn
-    Friend WithEvents C4 As DataGridViewCheckBoxColumn
-    Friend WithEvents C5 As DataGridViewCheckBoxColumn
-    Friend WithEvents Stage As DataGridViewTextBoxColumn
-    Friend WithEvents D1 As DataGridViewTextBoxColumn
-    Friend WithEvents D2 As DataGridViewTextBoxColumn
-    Friend WithEvents Crowd As DataGridViewCheckBoxColumn
-    Friend WithEvents E1 As DataGridViewCheckBoxColumn
-    Friend WithEvents E2 As DataGridViewCheckBoxColumn
-    Friend WithEvents E3 As DataGridViewCheckBoxColumn
-    Friend WithEvents Ref As DataGridViewTextBoxColumn
-    Friend WithEvents Filter As DataGridViewTextBoxColumn
-    Friend WithEvents F1 As DataGridViewTextBoxColumn
-    Friend WithEvents F2 As DataGridViewTextBoxColumn
-    Friend WithEvents G1 As DataGridViewTextBoxColumn
-    Friend WithEvents G2 As DataGridViewTextBoxColumn
-    Friend WithEvents H1 As DataGridViewTextBoxColumn
-    Friend WithEvents H2 As DataGridViewTextBoxColumn
-    Friend WithEvents H3 As DataGridViewTextBoxColumn
-    Friend WithEvents H4 As DataGridViewTextBoxColumn
-    Friend WithEvents Bar As DataGridViewTextBoxColumn
-    Friend WithEvents Unknown As DataGridViewTextBoxColumn
-    Friend WithEvents I1 As DataGridViewTextBoxColumn
-    Friend WithEvents I2 As DataGridViewTextBoxColumn
-    Friend WithEvents I3 As DataGridViewTextBoxColumn
-    Friend WithEvents Live As DataGridViewTextBoxColumn
-    Friend WithEvents J As DataGridViewTextBoxColumn
     Friend WithEvents NIBJView As TabPage
     Friend WithEvents MenuStripNIBJView As MenuStrip
     Friend WithEvents DataGridNIBJView As DataGridView
@@ -3027,4 +3058,46 @@ Partial Class MainForm
     Friend WithEvents Col_Turnbuckle_CM As DataGridViewTextBoxColumn
     Friend WithEvents Col_RingMat_CM As DataGridViewTextBoxColumn
     Friend WithEvents Col_version As DataGridViewTextBoxColumn
+    Friend WithEvents StringLoadedShowMenuItem As ToolStripMenuItem
+    Friend WithEvents SaveShowChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents StrName As DataGridViewTextBoxColumn
+    Friend WithEvents ShowStringName As DataGridViewTextBoxColumn
+    Friend WithEvents ShowSelectNum As DataGridViewTextBoxColumn
+    Friend WithEvents SelectNumSecond As DataGridViewTextBoxColumn
+    Friend WithEvents A1 As DataGridViewTextBoxColumn
+    Friend WithEvents A2 As DataGridViewTextBoxColumn
+    Friend WithEvents B1 As DataGridViewTextBoxColumn
+    Friend WithEvents B2 As DataGridViewTextBoxColumn
+    Friend WithEvents B3 As DataGridViewTextBoxColumn
+    Friend WithEvents C1 As DataGridViewCheckBoxColumn
+    Friend WithEvents C2 As DataGridViewCheckBoxColumn
+    Friend WithEvents C3 As DataGridViewCheckBoxColumn
+    Friend WithEvents C4 As DataGridViewCheckBoxColumn
+    Friend WithEvents C5 As DataGridViewCheckBoxColumn
+    Friend WithEvents C6 As DataGridViewCheckBoxColumn
+    Friend WithEvents C7 As DataGridViewCheckBoxColumn
+    Friend WithEvents C8 As DataGridViewCheckBoxColumn
+    Friend WithEvents Stage As DataGridViewTextBoxColumn
+    Friend WithEvents D1 As DataGridViewTextBoxColumn
+    Friend WithEvents D2 As DataGridViewTextBoxColumn
+    Friend WithEvents D3 As DataGridViewTextBoxColumn
+    Friend WithEvents D4 As DataGridViewTextBoxColumn
+    Friend WithEvents D5 As DataGridViewTextBoxColumn
+    Friend WithEvents Ref As DataGridViewTextBoxColumn
+    Friend WithEvents Filter As DataGridViewTextBoxColumn
+    Friend WithEvents F1 As DataGridViewTextBoxColumn
+    Friend WithEvents F2 As DataGridViewTextBoxColumn
+    Friend WithEvents F3 As DataGridViewTextBoxColumn
+    Friend WithEvents F4 As DataGridViewTextBoxColumn
+    Friend WithEvents H1 As DataGridViewTextBoxColumn
+    Friend WithEvents H2 As DataGridViewTextBoxColumn
+    Friend WithEvents H3 As DataGridViewTextBoxColumn
+    Friend WithEvents H4 As DataGridViewTextBoxColumn
+    Friend WithEvents Bar As DataGridViewTextBoxColumn
+    Friend WithEvents Unknown As DataGridViewTextBoxColumn
+    Friend WithEvents I1 As DataGridViewTextBoxColumn
+    Friend WithEvents I2 As DataGridViewTextBoxColumn
+    Friend WithEvents I3 As DataGridViewTextBoxColumn
+    Friend WithEvents Live As DataGridViewTextBoxColumn
+    Friend WithEvents J As DataGridViewTextBoxColumn
 End Class
