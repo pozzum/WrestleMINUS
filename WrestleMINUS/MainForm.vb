@@ -1653,7 +1653,9 @@ Public Class MainForm
                                                                         TextViewBitWidth.Enter
         OldValue = sender.text
     End Sub
-    Private Sub StoreOldDataGridViewValue(sender As DataGridView, e As DataGridViewCellEventArgs) Handles DataGridMiscView.CellEnter, DataGridShowView.CellEnter
+    Private Sub StoreOldDataGridViewValue(sender As DataGridView, e As DataGridViewCellEventArgs) Handles DataGridMiscView.CellEnter,
+                                                                                                    DataGridShowView.CellEnter,
+                                                                                                    DataGridNIBJView.CellEnter
         OldValue = sender.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
     End Sub
     Sub SaveFileNoLongerPending()
@@ -2477,10 +2479,6 @@ Public Class MainForm
         End Try
     End Function
 #End Region
-    'Left off refactoring here
-    'Forms to Use CellEndEdit instead of Cell value changed as it fixes a lot of stupid handling issues.
-    'TO DO Increase speed of datagrid population with collections
-    'These is the potential for better programming using data binding datagrid views.
 #Region "Show View Controls"
     Sub FillShowView(SelectedData As TreeNode)
         '&h74 2K15 (&h4e), 2K16 (&h78) 2K17 (&h79),
@@ -2705,63 +2703,93 @@ Public Class MainForm
     Sub FillNIBJView(SelectedData As TreeNode)
         DataGridNIBJView.Rows.Clear()
         DataGridNIBJView.Columns.Clear()
-        Dim GameType As Integer = NIBJViewType.SelectedIndex
-        'GetNIJBColumns(GameType)
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
-        NodeTag.Index = CType(SelectedData.Tag, NodeProperties).Index
-        NodeTag.length = CType(SelectedData.Tag, NodeProperties).length
-        NodeTag.StoredData = CType(SelectedData.Tag, NodeProperties).StoredData
-        Dim NIJBBytes As Byte()
-        If NodeTag.StoredData.Length > 0 Then
-            Dim FileBytes As Byte() = NodeTag.StoredData
-            NIJBBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), NIJBBytes, 0, CInt(NodeTag.length))
-        Else
-            Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
-            NIJBBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), NIJBBytes, 0, CInt(NodeTag.length))
-        End If
+        Dim NodeTag As NodeProperties = CType(SelectedData.Tag, NodeProperties)
+        Dim NIJBBytes As Byte() = GetNodeBytes(SelectedData)
+        Dim HeaderByte As Integer = BitConverter.ToInt32(NIJBBytes, &H4) '64 for Parm Light
         Dim LightCount As Integer = BitConverter.ToInt32(NIJBBytes, &H8)
         Dim ShowCount As Integer = BitConverter.ToInt32(NIJBBytes, &HC)
-        Dim Folder As String = Encoding.Default.GetChars(NIJBBytes, &H10, &H10)
-        Dim Properties As String = Encoding.Default.GetChars(NIJBBytes, &H20, &H10)
-        FileAttributesToolStripMenuItem.Text = Folder & " > " & Properties
-        For i As Integer = 0 To LightCount - 1
-            DataGridNIBJView.Columns.Add("Column" & i, Encoding.ASCII.GetString(NIJBBytes, &H30 + i * &H20, &H10))
-        Next
-        For i As Integer = 0 To ShowCount - 1
-            DataGridNIBJView.Rows.Add()
-            For j As Integer = 0 To LightCount - 1
-                DataGridNIBJView(j, i).Value = Strings.Right(Hex(BitConverter.ToInt32(NIJBBytes, &H30 + &H20 * LightCount + i * 4 + j * 4 * ShowCount)).PadRight(8, "0"), 8)
-                DataGridNIBJView.Rows(i).Cells(j).Style.BackColor = ColorTranslator.FromHtml("#" & (DataGridNIBJView(j, i).Value.ToString.Substring(2, 6)))
-                Dim FontColor As String = Hex(&HFF - NIJBBytes(&H30 + &H20 * LightCount + i * 4 + j * 4 * ShowCount + 2)).PadLeft(2, "0") &
-                    Hex(&HFF - NIJBBytes(&H30 + &H20 * LightCount + i * 4 + j * 4 * ShowCount + 1)).PadLeft(2, "0") &
-                    Hex(&HFF - NIJBBytes(&H30 + &H20 * LightCount + i * 4 + j * 4 * ShowCount)).PadLeft(2, "0")
-                DataGridNIBJView.Rows(i).Cells(j).Style.ForeColor = ColorTranslator.FromHtml("#" & FontColor)
-            Next
-            DataGridNIBJView.Rows(i).HeaderCell.Value = i.ToString
-        Next
+        Select Case HeaderByte
+            Case &H64 'parameter file
+                Dim Folder As String = Encoding.Default.GetChars(NIJBBytes, &H10, &H10)
+                Dim Properties As String = Encoding.Default.GetChars(NIJBBytes, &H20, &H10)
+                FileAttributesToolStripMenuItem.Text = Folder & " > " & Properties
+                For i As Integer = 0 To LightCount - 1
+                    Dim TempNewColumn As DataGridTextBoxColumn = New DataGridTextBoxColumn()
+                    DataGridNIBJView.Columns.Add("Column" & i, Encoding.ASCII.GetString(NIJBBytes, &H30 + i * &H20, &H10))
+                Next
+                Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridNIBJView)
+                Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+                ProgressBar1.Maximum = ShowCount - 1
+                ProgressBar1.Value = 0
+                For i As Integer = 0 To ShowCount - 1
+                    DataGridNIBJView.Rows.Add()
+                    For j As Integer = 0 To LightCount - 1
+                        DataGridNIBJView(j, i).Value = Strings.Right(Hex(BitConverter.ToInt32(NIJBBytes, &H30 + &H20 * LightCount + i * 4 + j * 4 * ShowCount)).PadRight(8, "0"), 8)
+                        DataGridNIBJView.Rows(i).Cells(j).Style.BackColor = ColorTranslator.FromHtml("#" & (DataGridNIBJView(j, i).Value.ToString.Substring(2, 6)))
+                        Dim FontColor As String = Hex(&HFF - NIJBBytes(&H30 + &H20 * LightCount + i * 4 + j * 4 * ShowCount + 2)).PadLeft(2, "0") &
+                            Hex(&HFF - NIJBBytes(&H30 + &H20 * LightCount + i * 4 + j * 4 * ShowCount + 1)).PadLeft(2, "0") &
+                            Hex(&HFF - NIJBBytes(&H30 + &H20 * LightCount + i * 4 + j * 4 * ShowCount)).PadLeft(2, "0")
+                        DataGridNIBJView.Rows(i).Cells(j).Style.ForeColor = ColorTranslator.FromHtml("#" & FontColor)
+                    Next
+                    DataGridNIBJView.Rows(i).HeaderCell.Value = i.ToString
+                    ProgressBar1.Value = i
+                Next
+            Case &H67
+                FileAttributesToolStripMenuItem.Text = "Unreadable Type"
+                If LightCount = 0 Then
+                    DataGridNIBJView.Columns.Add("Color0", "Color0")
+                Else
+                    For i As Integer = 0 To LightCount - 1
+                        DataGridNIBJView.Columns.Add("Column" & i, Encoding.ASCII.GetString(NIJBBytes, &H10 + i * &H40, &H10))
+                    Next
+                End If
+            Case &H6A
+                FileAttributesToolStripMenuItem.Text = "Unreadable Type"
+                If LightCount = 0 Then
+                    DataGridNIBJView.Columns.Add("Color0", "Color0")
+                End If
+        End Select
     End Sub
+    Private Sub DataGridNIBJView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridNIBJView.CellEndEdit
+        Dim MyCell As DataGridViewCell = DataGridNIBJView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+        If Not HexCheck(MyCell.Value) OrElse
+            MyCell.Value.ToString.Length > 8 Then
+            MyCell.Value = OldValue
+        Else
+            If MyCell.Value.ToString.Length < 8 Then
+                MyCell.Value = MyCell.Value.ToString.PadRight(8, "0")
+            End If
+            MyCell.Style.BackColor = ColorTranslator.FromHtml("#" & (MyCell.Value.ToString.Substring(2, 6)))
+            Dim FontColor As Color = ColorTranslator.FromHtml("#" & Hex(&HFF - MyCell.Style.BackColor.R).PadLeft(2, "0") &
+                                                              Hex(&HFF - MyCell.Style.BackColor.G).PadLeft(2, "0") &
+                                                              Hex(&HFF - MyCell.Style.BackColor.B).PadLeft(2, "0"))
+            MyCell.Style.ForeColor = FontColor
+            SavePending = True
+            SaveNIBJChangesToolStripMenuItem.Visible = True
+        End If
+    End Sub
+    Private Sub SaveNIBJChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveNIBJChangesToolStripMenuItem.Click
+        InjectIntoNode(ReadNode, BuildNIBJFile())
+    End Sub
+    Private Function BuildNIBJFile() As Byte()
+        Dim ShowBytes As Byte() = GetNodeBytes(ReadNode)
+        Dim ReturnedBytes As Byte() = New Byte(ShowBytes.Length - 1) {}
+        Dim LightCount As Integer = DataGridNIBJView.ColumnCount
+        Dim ShowCount As Integer = DataGridNIBJView.RowCount
+        Array.Copy(ShowBytes, ReturnedBytes, &H30 + LightCount * &H20)
+        For i As Integer = 0 To LightCount - 1
+            For j As Integer = 0 To ShowCount - 1
+                Array.Copy(BitConverter.GetBytes(CUInt("&h" & DataGridNIBJView.Rows(j).Cells(i).Value)), 0,
+                ReturnedBytes, &H30 + (LightCount * &H20) + (i * ShowCount * 4) + (j * 4), 4)
+            Next
+        Next
+        Return ReturnedBytes
+    End Function
 #End Region
 #Region "Picture View Controls"
     Dim CreatedImages As List(Of String)
     Sub LoadPicture(SelectedData As TreeNode)
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
-        NodeTag.Index = CType(SelectedData.Tag, NodeProperties).Index
-        NodeTag.length = CType(SelectedData.Tag, NodeProperties).length
-        NodeTag.StoredData = CType(SelectedData.Tag, NodeProperties).StoredData
-        Dim PictureBytes As Byte()
-        If NodeTag.StoredData.Length > 0 Then
-            Dim FileBytes As Byte() = NodeTag.StoredData
-            PictureBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), PictureBytes, 0, CInt(NodeTag.length))
-        Else
-            Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
-            PictureBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), PictureBytes, 0, CInt(NodeTag.length))
-        End If
+        Dim PictureBytes As Byte() = GetNodeBytes(SelectedData)
         Dim ImageStream As MemoryStream = New MemoryStream(PictureBytes)
         Dim TempName As String = Path.GetTempFileName
         FileSystem.Rename(TempName, TempName + ".dds")
@@ -2804,6 +2832,10 @@ Public Class MainForm
     End Sub
 #End Region
     'Attire Editor Built
+    'Left off refactoring here
+    'Forms to Use CellEndEdit instead of Cell value changed as it fixes a lot of stupid handling issues.
+    'TO DO Increase speed of datagrid population with collections
+    'These is the potential for better programming using data binding datagrid views.
 #Region "Attire Editor View"
     Sub CloseAttireView()
         If SavePending Then
