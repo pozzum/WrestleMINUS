@@ -1655,7 +1655,8 @@ Public Class MainForm
     End Sub
     Private Sub StoreOldDataGridViewValue(sender As DataGridView, e As DataGridViewCellEventArgs) Handles DataGridMiscView.CellEnter,
                                                                                                     DataGridShowView.CellEnter,
-                                                                                                    DataGridNIBJView.CellEnter
+                                                                                                    DataGridNIBJView.CellEnter,
+                                                                                                    DataGridAttireView.CellEnter
         OldValue = sender.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
     End Sub
     Sub SaveFileNoLongerPending()
@@ -1776,8 +1777,6 @@ Public Class MainForm
 
 #End Region
 #Region "String View Controls"
-    'TO DO note with the rebuild these data arrays can most likely be removed as they are not referenced outside of the initial build anymore
-
     Sub FillStringView(SelectedData As TreeNode)
         Dim Testing As String = ""
         'getting a generic row so we can create one for the collection
@@ -2700,6 +2699,7 @@ Public Class MainForm
     End Function
 #End Region
 #Region "NIJB View Controls"
+    'TO DO Build out other NIBJ Types
     Sub FillNIBJView(SelectedData As TreeNode)
         DataGridNIBJView.Rows.Clear()
         DataGridNIBJView.Columns.Clear()
@@ -2831,26 +2831,11 @@ Public Class MainForm
         CreatedImages.Clear()
     End Sub
 #End Region
-    'Attire Editor Built
-    'Left off refactoring here
-    'Forms to Use CellEndEdit instead of Cell value changed as it fixes a lot of stupid handling issues.
-    'TO DO Increase speed of datagrid population with collections
-    'These is the potential for better programming using data binding datagrid views.
 #Region "Attire Editor View"
-    Sub CloseAttireView()
-        If SavePending Then
-            If MessageBox.Show("Changes have not yet been saved.  Would you like to save them now?", "Save Changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
-                InjectIntoNode(ReadNode, BuildAttireFile())
-            End If
-            SaveChangesAttireMenuItem.Visible = False
-            SavePending = False
-        End If
-        ReadNode = Nothing
-        TabControl1.TabPages.Remove(AttireView)
-    End Sub
     Sub LoadAttires(SelectedData As TreeNode)
-        ReadNode = SelectedData
-        DataGridAttireView.Rows.Clear()
+        RemoveHandler DataGridAttireView.RowsAdded, AddressOf DataGridAttireView_RowsAdded
+        Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridAttireView)
+        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
         Dim StringRead As Boolean = False
         If Not StringReferences(0) = "String Not Read" Then
             StringRead = True
@@ -2861,23 +2846,8 @@ Public Class MainForm
             PacsRead = True
         End If
         PacsLoadedAttireMenuItem.Text = "Pacs Loaded: " & PacsRead.ToString
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
-        NodeTag.Index = CType(SelectedData.Tag, NodeProperties).Index
-        NodeTag.length = CType(SelectedData.Tag, NodeProperties).length
-        NodeTag.StoredData = CType(SelectedData.Tag, NodeProperties).StoredData
-        Dim AttireBytes As Byte()
-        If NodeTag.StoredData.Length > 0 Then
-            Dim FileBytes As Byte() = NodeTag.StoredData
-            AttireBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), AttireBytes, 0, CInt(NodeTag.length))
-        Else
-            Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
-            AttireBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), AttireBytes, 0, CInt(NodeTag.length))
-        End If
+        Dim AttireBytes As Byte() = GetNodeBytes(SelectedData)
         Dim WrestlerCount As Integer = BitConverter.ToInt32(AttireBytes, &H8)
-        Dim AttireCol As DataGridViewColumnCollection = DataGridAttireView.Columns
         Dim WrestlerPacs(WrestlerCount - 1) As Integer
         Dim AttireCount(WrestlerCount - 1) As Integer
         Dim AttireNames((WrestlerCount) * 10 - 1) As Integer
@@ -2895,6 +2865,17 @@ Public Class MainForm
             Next
         Next
         If StringRead Then 'True
+            'Hide Strings
+            DataGridAttireView.Columns(3).Visible = True
+            DataGridAttireView.Columns(8).Visible = True
+            DataGridAttireView.Columns(13).Visible = True
+            DataGridAttireView.Columns(18).Visible = True
+            DataGridAttireView.Columns(23).Visible = True
+            DataGridAttireView.Columns(28).Visible = True
+            DataGridAttireView.Columns(33).Visible = True
+            DataGridAttireView.Columns(38).Visible = True
+            DataGridAttireView.Columns(43).Visible = True
+            DataGridAttireView.Columns(48).Visible = True
             If PacsRead Then 'Strings and Pacs Read
             Else 'Strings Read Only
 
@@ -2912,66 +2893,104 @@ Public Class MainForm
             DataGridAttireView.Columns(43).Visible = False
             DataGridAttireView.Columns(48).Visible = False
         End If
+        ProgressBar1.Maximum = WrestlerCount - 1
+        ProgressBar1.Value = 0
         For i As Integer = 0 To WrestlerCount - 1
-            DataGridAttireView.Rows.Add(WrestlerPacs(i), AttireCount(i),
-                                       Hex(AttireNames(i * 10 + 0)), StringReferences(AttireNames(i * 10 + 0)), AttireEnabled(i * 10 + 0), AttireManager(i * 10 + 0), AttireUnlockNumber(i * 10 + 0),
-                                        Hex(AttireNames(i * 10 + 1)), StringReferences(AttireNames(i * 10 + 1)), AttireEnabled(i * 10 + 1), AttireManager(i * 10 + 1), AttireUnlockNumber(i * 10 + 1),
-                                        Hex(AttireNames(i * 10 + 2)), StringReferences(AttireNames(i * 10 + 2)), AttireEnabled(i * 10 + 2), AttireManager(i * 10 + 2), AttireUnlockNumber(i * 10 + 2),
-                                        Hex(AttireNames(i * 10 + 3)), StringReferences(AttireNames(i * 10 + 3)), AttireEnabled(i * 10 + 3), AttireManager(i * 10 + 3), AttireUnlockNumber(i * 10 + 3),
-                                        Hex(AttireNames(i * 10 + 4)), StringReferences(AttireNames(i * 10 + 4)), AttireEnabled(i * 10 + 4), AttireManager(i * 10 + 4), AttireUnlockNumber(i * 10 + 4),
-                                        Hex(AttireNames(i * 10 + 5)), StringReferences(AttireNames(i * 10 + 5)), AttireEnabled(i * 10 + 5), AttireManager(i * 10 + 5), AttireUnlockNumber(i * 10 + 5),
-                                        Hex(AttireNames(i * 10 + 6)), StringReferences(AttireNames(i * 10 + 6)), AttireEnabled(i * 10 + 6), AttireManager(i * 10 + 6), AttireUnlockNumber(i * 10 + 6),
-                                        Hex(AttireNames(i * 10 + 7)), StringReferences(AttireNames(i * 10 + 7)), AttireEnabled(i * 10 + 7), AttireManager(i * 10 + 7), AttireUnlockNumber(i * 10 + 7),
-                                        Hex(AttireNames(i * 10 + 8)), StringReferences(AttireNames(i * 10 + 8)), AttireEnabled(i * 10 + 8), AttireManager(i * 10 + 8), AttireUnlockNumber(i * 10 + 8),
-                                        Hex(AttireNames(i * 10 + 9)), StringReferences(AttireNames(i * 10 + 9)), AttireEnabled(i * 10 + 9), AttireManager(i * 10 + 9), AttireUnlockNumber(i * 10 + 9))
+            Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
+            TempGridRow.Cells(0).Value = WrestlerPacs(i)
+            TempGridRow.Cells(1).Value = AttireCount(i)
+            TempGridRow.Cells(2).Value = Hex(AttireNames(i * 10 + 0))
+            TempGridRow.Cells(3).Value = StringReferences(AttireNames(i * 10 + 0))
+            TempGridRow.Cells(4).Value = AttireEnabled(i * 10 + 0)
+            TempGridRow.Cells(5).Value = AttireManager(i * 10 + 0)
+            TempGridRow.Cells(6).Value = AttireUnlockNumber(i * 10 + 0)
+            TempGridRow.Cells(7).Value = Hex(AttireNames(i * 10 + 1))
+            TempGridRow.Cells(8).Value = StringReferences(AttireNames(i * 10 + 1))
+            TempGridRow.Cells(9).Value = AttireEnabled(i * 10 + 1)
+            TempGridRow.Cells(10).Value = AttireManager(i * 10 + 1)
+            TempGridRow.Cells(11).Value = AttireUnlockNumber(i * 10 + 1)
+            TempGridRow.Cells(12).Value = Hex(AttireNames(i * 10 + 2))
+            TempGridRow.Cells(13).Value = StringReferences(AttireNames(i * 10 + 2))
+            TempGridRow.Cells(14).Value = AttireEnabled(i * 10 + 2)
+            TempGridRow.Cells(15).Value = AttireManager(i * 10 + 2)
+            TempGridRow.Cells(16).Value = AttireUnlockNumber(i * 10 + 2)
+            TempGridRow.Cells(17).Value = Hex(AttireNames(i * 10 + 3))
+            TempGridRow.Cells(18).Value = StringReferences(AttireNames(i * 10 + 3))
+            TempGridRow.Cells(19).Value = AttireEnabled(i * 10 + 3)
+            TempGridRow.Cells(20).Value = AttireManager(i * 10 + 3)
+            TempGridRow.Cells(21).Value = AttireUnlockNumber(i * 10 + 3)
+            TempGridRow.Cells(22).Value = Hex(AttireNames(i * 10 + 4))
+            TempGridRow.Cells(23).Value = StringReferences(AttireNames(i * 10 + 4))
+            TempGridRow.Cells(24).Value = AttireEnabled(i * 10 + 4)
+            TempGridRow.Cells(25).Value = AttireManager(i * 10 + 4)
+            TempGridRow.Cells(26).Value = AttireUnlockNumber(i * 10 + 4)
+            TempGridRow.Cells(27).Value = Hex(AttireNames(i * 10 + 5))
+            TempGridRow.Cells(28).Value = StringReferences(AttireNames(i * 10 + 5))
+            TempGridRow.Cells(29).Value = AttireEnabled(i * 10 + 5)
+            TempGridRow.Cells(30).Value = AttireManager(i * 10 + 5)
+            TempGridRow.Cells(31).Value = AttireUnlockNumber(i * 10 + 5)
+            TempGridRow.Cells(32).Value = Hex(AttireNames(i * 10 + 6))
+            TempGridRow.Cells(33).Value = StringReferences(AttireNames(i * 10 + 6))
+            TempGridRow.Cells(34).Value = AttireEnabled(i * 10 + 6)
+            TempGridRow.Cells(35).Value = AttireManager(i * 10 + 6)
+            TempGridRow.Cells(36).Value = AttireUnlockNumber(i * 10 + 6)
+            TempGridRow.Cells(37).Value = Hex(AttireNames(i * 10 + 7))
+            TempGridRow.Cells(38).Value = StringReferences(AttireNames(i * 10 + 7))
+            TempGridRow.Cells(39).Value = AttireEnabled(i * 10 + 7)
+            TempGridRow.Cells(40).Value = AttireManager(i * 10 + 7)
+            TempGridRow.Cells(41).Value = AttireUnlockNumber(i * 10 + 7)
+            TempGridRow.Cells(42).Value = Hex(AttireNames(i * 10 + 8))
+            TempGridRow.Cells(43).Value = StringReferences(AttireNames(i * 10 + 8))
+            TempGridRow.Cells(44).Value = AttireEnabled(i * 10 + 8)
+            TempGridRow.Cells(45).Value = AttireManager(i * 10 + 8)
+            TempGridRow.Cells(46).Value = AttireUnlockNumber(i * 10 + 8)
+            TempGridRow.Cells(47).Value = Hex(AttireNames(i * 10 + 9))
+            TempGridRow.Cells(48).Value = StringReferences(AttireNames(i * 10 + 9))
+            TempGridRow.Cells(49).Value = AttireEnabled(i * 10 + 9)
+            TempGridRow.Cells(50).Value = AttireManager(i * 10 + 9)
+            TempGridRow.Cells(51).Value = AttireUnlockNumber(i * 10 + 9)
             If i > 99 Then
-                DataGridAttireView.Rows(i).HeaderCell.Value = "UNREAD"
+                TempGridRow.HeaderCell.Value = "UNREAD"
             Else
-                DataGridAttireView.Rows(i).HeaderCell.Value = ""
+                TempGridRow.HeaderCell.Value = ""
             End If
+            ProgressBar1.Value = i
+            WorkingCollection.Add(TempGridRow)
         Next
-        AddHandler DataGridAttireView.CellValueChanged, AddressOf DataGridAttireView_CellValueChanged
-        AddHandler DataGridAttireView.CellEnter, AddressOf DataGridAttireView_CellEnter
+        DataGridAttireView.Rows.AddRange(WorkingCollection.ToArray())
         AddHandler DataGridAttireView.RowsAdded, AddressOf DataGridAttireView_RowsAdded
     End Sub
-    Private Sub DataGridAttireView_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs)
+    Private Sub DataGridAttireView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridAttireView.CellEndEdit
+        Dim MyCell As DataGridViewCell = DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         If e.ColumnIndex = 0 Then 'Pac Number, Verify Number <= 1024
-            If Not IsNumeric(DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) Then
-                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
-            ElseIf CInt(DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) < 0 OrElse
-               CInt(DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) > 1024 Then
-                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            If Not IsNumeric(MyCell.Value) Then
+                MyCell.Value = OldValue
+            ElseIf CInt(MyCell.Value) < 0 OrElse
+               CInt(MyCell.Value) > 1024 Then
+                MyCell.Value = OldValue
             End If
         ElseIf e.ColumnIndex = 1 Then 'Attire Count, Verify Number <= 10
-            If Not IsNumeric(DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) Then
-                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
-            ElseIf CInt(DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) < 0 OrElse
-               CInt(DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) > 10 Then
-                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            If Not IsNumeric(MyCell.Value) Then
+                MyCell.Value = OldValue
+            ElseIf CInt(MyCell.Value) < 0 OrElse
+               CInt(MyCell.Value) > 10 Then
+                MyCell.Value = OldValue
             End If
-            'ADD IN Disable Attires past number
-            'If DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value < 10 Then
-            'For i As Integer = DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value To 9
-            'DataGridAttireView.Rows(e.RowIndex).Cells(1 + i * 5).ReadOnly = True
-            'Next
-            'End If
         ElseIf ((e.ColumnIndex - 2) Mod 5) = 0 Then 'Attire Name
-            Dim HexString As String = DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
-            Dim hexcheck As Boolean = HexString.All(Function(c) "0123456789abcdefABCDEF".Contains(c))
-            If Not hexcheck Then
-                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
-            ElseIf StringReferences(CUInt("&H" & HexString)) > &HFFFFF Then
-                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            If Not HexCheck(MyCell.Value) Then
+                MyCell.Value = OldValue
+            ElseIf StringReferences(CUInt("&H" & MyCell.Value)) > &HFFFFF Then
+                MyCell.Value = OldValue
             Else
-                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = StringReferences(CUInt("&H" & HexString))
+                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = StringReferences(CUInt("&H" & MyCell.Value))
             End If
         ElseIf ((e.ColumnIndex - 2) Mod 5) = 1 Then 'Attire String Does Nothing
         ElseIf ((e.ColumnIndex - 2) Mod 5) = 2 Then 'Enabled Changed
-            If DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value Then 'if enabled checked
+            If MyCell.Value Then 'if enabled checked
                 DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = False 'unchecks manager
             End If
         ElseIf ((e.ColumnIndex - 2) Mod 5) = 3 Then 'Manager Changed
-            If DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value Then 'if manager checked
+            If MyCell.Value Then 'if manager checked
                 DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex - 1).Value = False 'unchecks enabled
             End If
         ElseIf ((e.ColumnIndex - 2) Mod 5) = 4 Then 'UnlockMode Program Only
@@ -2979,25 +2998,24 @@ Public Class MainForm
         SavePending = True
         SaveChangesAttireMenuItem.Visible = True
     End Sub
-    Private Sub DataGridAttireView_CellEnter(sender As Object, e As DataGridViewCellEventArgs)
-        OldValue = DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
-    End Sub
     Private Sub DataGridAttireView_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs)
-        Dim NewRow As DataGridViewRow = DataGridAttireView.Rows(e.RowIndex - 1)
-        NewRow.Cells(0).Value = 0
-        NewRow.Cells(0).ValueType = GetType(System.Int32)
-        NewRow.Cells(1).Value = 10
-        For i As Integer = 0 To 9
-            NewRow.Cells(2 + i * 5).Value = Hex(&H50A2 + i)
-            NewRow.Cells(2 + i * 5 + 1).Value = StringReferences(&H50A2 + i)
-            NewRow.Cells(2 + i * 5 + 2).Value = True
-            NewRow.Cells(2 + i * 5 + 3).Value = False
-            NewRow.Cells(2 + i * 5 + 4).Value = UInt32.MaxValue
-        Next
-        If e.RowIndex > 99 Then
-            NewRow.HeaderCell.Value = "UNREAD"
-        Else
-            NewRow.HeaderCell.Value = ""
+        If DataGridAttireView.RowCount > 1 Then
+            Dim NewRow As DataGridViewRow = DataGridAttireView.Rows(e.RowIndex - 1)
+            NewRow.Cells(0).Value = 0
+            NewRow.Cells(0).ValueType = GetType(System.Int32)
+            NewRow.Cells(1).Value = 10
+            For i As Integer = 0 To 9
+                NewRow.Cells(2 + i * 5).Value = Hex(&H50A2 + i)
+                NewRow.Cells(2 + i * 5 + 1).Value = StringReferences(&H50A2 + i)
+                NewRow.Cells(2 + i * 5 + 2).Value = True
+                NewRow.Cells(2 + i * 5 + 3).Value = False
+                NewRow.Cells(2 + i * 5 + 4).Value = UInt32.MaxValue
+            Next
+            If e.RowIndex > 99 Then
+                NewRow.HeaderCell.Value = "UNREAD"
+            Else
+                NewRow.HeaderCell.Value = ""
+            End If
         End If
     End Sub
     Private Sub DataGridAttireView_Sorted(sender As Object, e As EventArgs) Handles DataGridAttireView.Sorted
@@ -3016,7 +3034,6 @@ Public Class MainForm
     End Sub
     Private Sub SaveAttireChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesAttireMenuItem.Click
         InjectIntoNode(ReadNode, BuildAttireFile())
-        SaveChangesAttireMenuItem.Visible = False
     End Sub
     Private Function BuildAttireFile() As Byte()
         Dim ReturnedBytes As Byte() = New Byte(&HC + ((DataGridAttireView.RowCount - 1) * &HA8) - 1) {}
@@ -3032,7 +3049,6 @@ Public Class MainForm
             'Attire Count
             Array.Copy(BitConverter.GetBytes(CUInt(DataGridAttireView.Rows(i).Cells(1).Value)), 0, ReturnedBytes, &HC + i * &HA8 + 4, 4)
             For K As Integer = 0 To 9
-
                 Array.Copy(BitConverter.GetBytes(CUInt("&H" & (DataGridAttireView.Rows(i).Cells(2 + K * 5).Value.ToString))), 0, ReturnedBytes, &HC + i * &HA8 + K * &H10 + 8, 4)
                 'Unlock Info
                 Array.Copy(BitConverter.GetBytes(CUInt(DataGridAttireView.Rows(i).Cells(6 + K * 5).Value.ToString)), 0, ReturnedBytes, &HC + i * &HA8 + K * &H10 + 12, 4)
@@ -3047,31 +3063,15 @@ Public Class MainForm
     End Function
 #End Region
 #Region "Muscle View Controls"
+    'TO DO Streamline intergration with Object models whenever Object viewer is actually built.
     Sub LoadMuscles(SelectedData As TreeNode)
-
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag.FileType = CType(SelectedData.Tag, NodeProperties).FileType
-        NodeTag.Index = CType(SelectedData.Tag, NodeProperties).Index
-        NodeTag.length = CType(SelectedData.Tag, NodeProperties).length
-        NodeTag.StoredData = CType(SelectedData.Tag, NodeProperties).StoredData
-        Dim MuscleBytes As Byte()
-        If NodeTag.StoredData.Length > 0 Then
-            Dim FileBytes As Byte() = NodeTag.StoredData
-            MuscleBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), MuscleBytes, 0, CInt(NodeTag.length))
-        Else
-            Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
-            MuscleBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), MuscleBytes, 0, CInt(NodeTag.length))
-        End If
-
+        Dim MuscleBytes As Byte() = GetNodeBytes(SelectedData)
         If DataGridMuscleView.ColumnCount = 0 Then
             DataGridMuscleView.Columns.Add("Name", "Name")
             DataGridMuscleView.Columns.Add("Number1", Path.GetFileNameWithoutExtension(SelectedData.ToolTipText))
         Else
             DataGridMuscleView.Columns.Add("Number" & DataGridMuscleView.ColumnCount, Path.GetFileNameWithoutExtension(SelectedData.ToolTipText))
         End If
-        'MessageBox.Show(fileLength)
         Dim MuscleCount As Integer = BitConverter.ToInt32(MuscleBytes, &HC)
         Dim ActiveIndex As Long = &H14
         For i As Integer = 0 To MuscleCount - 1
@@ -3080,32 +3080,34 @@ Public Class MainForm
             If DataGridMuscleView.ColumnCount = 2 Then
                 DataGridMuscleView.Rows.Add(MuscleName, i)
             Else
-                'MessageBox.Show(getrow(MuscleName))
-                DataGridMuscleView(DataGridMuscleView.ColumnCount - 1, GetMuscleRow(MuscleName)).Value = i
+                If GetMuscleRow(MuscleName) = -1 Then
+                    DataGridMuscleView.Rows.Add(MuscleName)
+                    DataGridMuscleView(DataGridMuscleView.ColumnCount - 1, DataGridMuscleView.RowCount - 1).Value = i
+                Else
+                    DataGridMuscleView(DataGridMuscleView.ColumnCount - 1, GetMuscleRow(MuscleName)).Value = i
+                End If
             End If
-            'DataGridView1.Rows.Item(i - 1).HeaderCell.Value = i
         Next
-
     End Sub
     Function GetMuscleRow(MuscleName As String)
         For i As Integer = 0 To DataGridMuscleView.RowCount - 1
-            'MessageBox.Show(i)
-            'MessageBox.Show(DataGridView1(0, i).Value)
             If DataGridMuscleView(0, i).Value = MuscleName Then
                 Return i
             End If
         Next
         Return -1
     End Function
-
     Private Sub CloseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseToolStripMenuItem.Click
         If TabControl1.TabPages.Contains(MuscleView) Then
             TabControl1.SelectedIndex = 0
             TabControl1.TabPages.Remove(MuscleView)
-
         End If
     End Sub
 #End Region
+    'Left off refactoring here
+    'Forms to Use CellEndEdit instead of Cell value changed as it fixes a lot of stupid handling issues.
+    'TO DO Increase speed of datagrid population with collections
+    'These is the potential for better programming using data binding datagrid views.
 #Region "Mask View Controls"
     Sub LoadMask(SelectedData As TreeNode)
         Dim NodeTag As NodeProperties = New NodeProperties
