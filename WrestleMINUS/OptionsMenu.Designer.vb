@@ -54,6 +54,7 @@ Partial Class OptionsMenu
         Me.TextBoxDDSExe = New System.Windows.Forms.TextBox()
         Me.LabelDSSExe = New System.Windows.Forms.Label()
         Me.CheckBoxDetailedFileNames = New System.Windows.Forms.CheckBox()
+        Me.CheckBoxOODLBypass = New System.Windows.Forms.CheckBox()
         CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -240,7 +241,7 @@ Partial Class OptionsMenu
         'TrackBarHexLength
         '
         Me.TrackBarHexLength.LargeChange = 100
-        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 406)
+        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 421)
         Me.TrackBarHexLength.Maximum = 500
         Me.TrackBarHexLength.Minimum = 1
         Me.TrackBarHexLength.Name = "TrackBarHexLength"
@@ -253,7 +254,7 @@ Partial Class OptionsMenu
         'LabelHexLength
         '
         Me.LabelHexLength.AutoSize = True
-        Me.LabelHexLength.Location = New System.Drawing.Point(12, 390)
+        Me.LabelHexLength.Location = New System.Drawing.Point(12, 405)
         Me.LabelHexLength.Name = "LabelHexLength"
         Me.LabelHexLength.Size = New System.Drawing.Size(140, 13)
         Me.LabelHexLength.TabIndex = 22
@@ -261,7 +262,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetStrings
         '
-        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 441)
+        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 456)
         Me.ButtonResetStrings.Name = "ButtonResetStrings"
         Me.ButtonResetStrings.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetStrings.TabIndex = 23
@@ -270,7 +271,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetPacs
         '
-        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 441)
+        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 456)
         Me.ButtonResetPacs.Name = "ButtonResetPacs"
         Me.ButtonResetPacs.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetPacs.TabIndex = 24
@@ -342,11 +343,22 @@ Partial Class OptionsMenu
         Me.CheckBoxDetailedFileNames.Text = "Extract With Detailed Extensions"
         Me.CheckBoxDetailedFileNames.UseVisualStyleBackColor = True
         '
+        'CheckBoxOODLBypass
+        '
+        Me.CheckBoxOODLBypass.AutoSize = True
+        Me.CheckBoxOODLBypass.Location = New System.Drawing.Point(15, 387)
+        Me.CheckBoxOODLBypass.Name = "CheckBoxOODLBypass"
+        Me.CheckBoxOODLBypass.Size = New System.Drawing.Size(139, 17)
+        Me.CheckBoxOODLBypass.TabIndex = 32
+        Me.CheckBoxOODLBypass.Text = "Bypass Oodle Warnings"
+        Me.CheckBoxOODLBypass.UseVisualStyleBackColor = True
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 476)
+        Me.ClientSize = New System.Drawing.Size(284, 491)
+        Me.Controls.Add(Me.CheckBoxOODLBypass)
         Me.Controls.Add(Me.CheckBoxDetailedFileNames)
         Me.Controls.Add(Me.ButtonDownloadDDSexe)
         Me.Controls.Add(Me.ButtonSelectDDSexe)
@@ -419,4 +431,5 @@ Partial Class OptionsMenu
     Friend WithEvents TextBoxDDSExe As TextBox
     Friend WithEvents LabelDSSExe As Label
     Friend WithEvents CheckBoxDetailedFileNames As CheckBox
+    Friend WithEvents CheckBoxOODLBypass As CheckBox
 End Class

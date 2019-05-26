@@ -746,6 +746,19 @@ Public Class MainForm
                 HostNode.Nodes.Add(TempNode)
             Case PackageType.OODL
                 Dim CompressedLength As Long = BitConverter.ToUInt32(FileBytes, &H14)
+                If Not CompressedLength = FileBytes.Length - &H18 Then
+                    If My.Settings.BypassOODLWarn Then
+                        CompressedLength = FileBytes.Length - &H18
+                    Else
+                        Dim result = MessageBox.Show("OODL Compression Length Mis-Match" & vbNewLine &
+                                      "Auto-detect compressed length?", "OODL Header Issue", MessageBoxButtons.YesNoCancel)
+                        If result = DialogResult.Cancel Then
+                            Exit Sub
+                        ElseIf result = DialogResult.Yes Then
+                            CompressedLength = FileBytes.Length - &H18
+                        End If
+                    End If
+                End If
                 Dim CompressedBytes As Byte() = New Byte(CompressedLength - 1) {}
                 Dim LengthDiff As Int32 = FileBytes.Length - CompressedBytes.Length
                 Array.Copy(FileBytes, LengthDiff, CompressedBytes, 0, CInt(CompressedBytes.Length))

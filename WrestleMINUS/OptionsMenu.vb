@@ -50,6 +50,7 @@ Public Class OptionsMenu
         CheckBoxTreeNodeIcons.Checked = My.Settings.UseTreeIcons
         CheckBoxDetailedFileNames.Checked = My.Settings.UseDetailedFileNames
         TrackBarHexLength.Value = My.Settings.HexViewLength
+        CheckBoxOODLBypass.Checked = My.Settings.BypassOODLWarn
         updateviewlength()
     End Sub
     Private Sub ButtonSelectHome_Click(sender As Object, e As EventArgs) Handles ButtonSelectHome.Click
@@ -102,6 +103,9 @@ Public Class OptionsMenu
     End Sub
     Private Sub CheckBoxDetailedFileNames_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxDetailedFileNames.CheckedChanged
         My.Settings.UseDetailedFileNames = CheckBoxDetailedFileNames.Checked
+    End Sub
+    Private Sub CheckBoxOODLBypass_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxOODLBypass.CheckedChanged
+        My.Settings.BypassOODLWarn = CheckBoxOODLBypass.Checked
     End Sub
     Private Sub TrackBarHexLength_Scroll(sender As Object, e As EventArgs) Handles TrackBarHexLength.Scroll
         My.Settings.HexViewLength = TrackBarHexLength.Value
