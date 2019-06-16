@@ -153,6 +153,7 @@ Partial Class MainForm
         Me.DataGridNIBJView = New System.Windows.Forms.DataGridView()
         Me.MenuStripNIBJView = New System.Windows.Forms.MenuStrip()
         Me.FileAttributesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveNIBJChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PictureView = New System.Windows.Forms.TabPage()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.ObjectView = New System.Windows.Forms.TabPage()
@@ -289,6 +290,7 @@ Partial Class MainForm
         Me.ExtractAllInPlaceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExtractAllToToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.InjectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InjectBPEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CrawlToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -326,7 +328,8 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.SaveNIBJChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InjectZLIBToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InjectOODLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -1439,6 +1442,13 @@ Partial Class MainForm
         Me.FileAttributesToolStripMenuItem.Size = New System.Drawing.Size(92, 20)
         Me.FileAttributesToolStripMenuItem.Text = "File Attributes"
         '
+        'SaveNIBJChangesToolStripMenuItem
+        '
+        Me.SaveNIBJChangesToolStripMenuItem.Name = "SaveNIBJChangesToolStripMenuItem"
+        Me.SaveNIBJChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 20)
+        Me.SaveNIBJChangesToolStripMenuItem.Text = "Save Changes"
+        Me.SaveNIBJChangesToolStripMenuItem.Visible = False
+        '
         'PictureView
         '
         Me.PictureView.Controls.Add(Me.PictureBox2)
@@ -2418,50 +2428,56 @@ Partial Class MainForm
         '
         'TreeViewContext
         '
-        Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem1, Me.OpenWithToolStripMenuItem, Me.ExtractToolStripMenuItem, Me.ExtractAllInPlaceToolStripMenuItem, Me.ExtractAllToToolStripMenuItem, Me.InjectToolStripMenuItem, Me.CrawlToolStripMenuItem})
+        Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem1, Me.OpenWithToolStripMenuItem, Me.ExtractToolStripMenuItem, Me.ExtractAllInPlaceToolStripMenuItem, Me.ExtractAllToToolStripMenuItem, Me.InjectToolStripMenuItem, Me.InjectBPEToolStripMenuItem, Me.InjectZLIBToolStripMenuItem, Me.InjectOODLToolStripMenuItem, Me.CrawlToolStripMenuItem})
         Me.TreeViewContext.Name = "TreeViewContext"
-        Me.TreeViewContext.Size = New System.Drawing.Size(171, 158)
+        Me.TreeViewContext.Size = New System.Drawing.Size(181, 246)
         '
         'OpenToolStripMenuItem1
         '
         Me.OpenToolStripMenuItem1.Name = "OpenToolStripMenuItem1"
-        Me.OpenToolStripMenuItem1.Size = New System.Drawing.Size(170, 22)
+        Me.OpenToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
         Me.OpenToolStripMenuItem1.Text = "Open"
         '
         'OpenWithToolStripMenuItem
         '
         Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.OpenWithToolStripMenuItem.Text = "Open With..."
         '
         'ExtractToolStripMenuItem
         '
         Me.ExtractToolStripMenuItem.Name = "ExtractToolStripMenuItem"
-        Me.ExtractToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.ExtractToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ExtractToolStripMenuItem.Text = "Extract"
         '
         'ExtractAllInPlaceToolStripMenuItem
         '
         Me.ExtractAllInPlaceToolStripMenuItem.Name = "ExtractAllInPlaceToolStripMenuItem"
-        Me.ExtractAllInPlaceToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.ExtractAllInPlaceToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ExtractAllInPlaceToolStripMenuItem.Text = "Extract All In Place"
         '
         'ExtractAllToToolStripMenuItem
         '
         Me.ExtractAllToToolStripMenuItem.Name = "ExtractAllToToolStripMenuItem"
-        Me.ExtractAllToToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.ExtractAllToToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ExtractAllToToolStripMenuItem.Text = "Extract All To..."
         '
         'InjectToolStripMenuItem
         '
         Me.InjectToolStripMenuItem.Name = "InjectToolStripMenuItem"
-        Me.InjectToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.InjectToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.InjectToolStripMenuItem.Text = "Inject"
+        '
+        'InjectBPEToolStripMenuItem
+        '
+        Me.InjectBPEToolStripMenuItem.Name = "InjectBPEToolStripMenuItem"
+        Me.InjectBPEToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.InjectBPEToolStripMenuItem.Text = "Inject as BPE"
         '
         'CrawlToolStripMenuItem
         '
         Me.CrawlToolStripMenuItem.Name = "CrawlToolStripMenuItem"
-        Me.CrawlToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.CrawlToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.CrawlToolStripMenuItem.Text = "Crawl"
         '
         'DataGridViewTextBoxColumn1
@@ -2688,12 +2704,17 @@ Partial Class MainForm
         '
         Me.SaveExtractAllDialog.FileName = "Save Files Here"
         '
-        'SaveNIBJChangesToolStripMenuItem
+        'InjectZLIBToolStripMenuItem
         '
-        Me.SaveNIBJChangesToolStripMenuItem.Name = "SaveNIBJChangesToolStripMenuItem"
-        Me.SaveNIBJChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 20)
-        Me.SaveNIBJChangesToolStripMenuItem.Text = "Save Changes"
-        Me.SaveNIBJChangesToolStripMenuItem.Visible = False
+        Me.InjectZLIBToolStripMenuItem.Name = "InjectZLIBToolStripMenuItem"
+        Me.InjectZLIBToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.InjectZLIBToolStripMenuItem.Text = "Inject as ZLIB"
+        '
+        'InjectOODLToolStripMenuItem
+        '
+        Me.InjectOODLToolStripMenuItem.Name = "InjectOODLToolStripMenuItem"
+        Me.InjectOODLToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.InjectOODLToolStripMenuItem.Text = "Inject as OODL"
         '
         'MainForm
         '
@@ -3101,4 +3122,7 @@ Partial Class MainForm
     Friend WithEvents Live As DataGridViewTextBoxColumn
     Friend WithEvents J As DataGridViewTextBoxColumn
     Friend WithEvents SaveNIBJChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents InjectBPEToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents InjectZLIBToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents InjectOODLToolStripMenuItem As ToolStripMenuItem
 End Class

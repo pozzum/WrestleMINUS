@@ -25,6 +25,7 @@ These are types of compression the game uses.
 This is a "byte pair encoding" compression type the oldest compression type the game uses.  
 The program Currently relies on a program called [Unrrbpe](http://asmodean.reverse.net/pages/unrrbpe.html)   
 Future versions may incorporate [XHP-Creation's YukesBPE.dll](https://github.com/xhp-creations/YukesBPE)  
+BPE Compression is achived by a program called [bpe.exe](https://www.tapatalk.com/groups/legendsofmodding/bpe-compression-tool-t3741.html#p22164) by Victhrash36
 ##### ZLIB:
 This a microsoft file zip type.  [The source Code for the Dll required is here.](http://www.codeplex.com/DotNetZip)
 ##### OODL:

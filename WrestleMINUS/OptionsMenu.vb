@@ -18,6 +18,12 @@ Public Class OptionsMenu
         Else
             LabelRadVideo.ForeColor = Color.Black
         End If
+        TextBoxBPEExe.Text = My.Settings.BPEExePath
+        If Not File.Exists(My.Settings.BPEExePath) Then
+            LabelBPEExe.ForeColor = Color.Red
+        Else
+            LabelBPEExe.ForeColor = Color.Black
+        End If
         TextBoxUnrrbpe.Text = My.Settings.UnrrbpePath
         If Not File.Exists(My.Settings.UnrrbpePath) Then
             LabelUnrrbpe.ForeColor = Color.Red
@@ -41,9 +47,12 @@ Public Class OptionsMenu
             LabelOodle.Text = "Oodle DLL Loaded: False"
             LabelOodle.ForeColor = Color.Red
             ButtonOodleSelect.Visible = True
+            ComboBoxCompLevel.Enabled = False
         Else
             LabelOodle.ForeColor = Color.Black
         End If
+        ComboBoxCompLevel.Items.AddRange(System.Enum.GetNames(GetType(MainForm.OodleCompressionLevel)))
+        ComboBoxCompLevel.SelectedIndex = My.Settings.OODLCompressionLevel
         CheckBoxLoadHome.Checked = My.Settings.LoadHomeOnLaunch
         CheckBoxBackup.Checked = My.Settings.BackupInjections
         CheckBoxDeleteTempBMP.Checked = My.Settings.DeleteTempBMP
@@ -61,14 +70,24 @@ Public Class OptionsMenu
         MainForm.GetTexConvExe(True)
         LoadSettings()
     End Sub
+    Private Sub ButtonDownloadRadVideo_Click(sender As Object, e As EventArgs) Handles ButtonDownloadRadVideo.Click
+        Process.Start("http://www.radgametools.com/bnkdown.htm")
+    End Sub
     Private Sub ButtonSelectRadVideo_Click(sender As Object, e As EventArgs) Handles ButtonSelectRadVideo.Click
         MainForm.GetRadVideo(True)
         LoadSettings()
     End Sub
-    Private Sub ButtonDownloadRadVideo_Click(sender As Object, e As EventArgs) Handles ButtonDownloadRadVideo.Click
-        Process.Start("http://www.radgametools.com/bnkdown.htm")
+    'I am banned from this site so I can't actually get it..
+    Private Sub ButtonDownloadBPEExe_Click(sender As Object, e As EventArgs) Handles ButtonDownloadBPEExe.Click
+        Process.Start("https://www.tapatalk.com/groups/legendsofmodding/bpe-compression-tool-t3741.html#p22164")
     End Sub
-
+    Private Sub ButtonSelectBPEExe_Click(sender As Object, e As EventArgs) Handles ButtonSelectBPEExe.Click
+        MainForm.GetBPEExe(True)
+        LoadSettings()
+    End Sub
+    Private Sub ButtonDownloadUnrrbpe_Click(sender As Object, e As EventArgs) Handles ButtonDownloadUnrrbpe.Click
+        Process.Start("http://asmodean.reverse.net/pages/unrrbpe.html")
+    End Sub
     Private Sub ButtonSelectUnrrbpe_Click(sender As Object, e As EventArgs) Handles ButtonSelectUnrrbpe.Click
         MainForm.GetUnrrbpe(True)
         LoadSettings()
@@ -77,14 +96,14 @@ Public Class OptionsMenu
         MainForm.GetDDSexe(True)
         LoadSettings()
     End Sub
-    Private Sub ButtonDownloadUnrrbpe_Click(sender As Object, e As EventArgs) Handles ButtonDownloadUnrrbpe.Click
-        Process.Start("http://asmodean.reverse.net/pages/unrrbpe.html")
-    End Sub
     Private Sub ButtonSelectZlib_Click(sender As Object, e As EventArgs) Handles ButtonSelectZlib.Click
         MainForm.CheckIconicZlib(True)
     End Sub
     Private Sub ButtonOodleSelect_Click(sender As Object, e As EventArgs) Handles ButtonOodleSelect.Click
         MainForm.CheckOodle(True)
+    End Sub
+    Private Sub ComboBoxCompLevel_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBoxCompLevel.SelectedIndexChanged
+        My.Settings.OODLCompressionLevel = ComboBoxCompLevel.SelectedIndex
     End Sub
     Private Sub CheckBoxLoadHome_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxLoadHome.CheckedChanged
         My.Settings.LoadHomeOnLaunch = CheckBoxLoadHome.Checked

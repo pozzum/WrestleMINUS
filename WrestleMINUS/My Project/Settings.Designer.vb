@@ -269,6 +269,30 @@ Namespace My
                 Me("BypassOODLWarn") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("6")>  _
+        Public Property OODLCompressionLevel() As Integer
+            Get
+                Return CType(Me("OODLCompressionLevel"),Integer)
+            End Get
+            Set
+                Me("OODLCompressionLevel") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property BPEExePath() As String
+            Get
+                Return CType(Me("BPEExePath"),String)
+            End Get
+            Set
+                Me("BPEExePath") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
