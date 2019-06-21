@@ -222,12 +222,17 @@ Partial Class MainForm
         Me.CloseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MaskView = New System.Windows.Forms.TabPage()
         Me.DataGridMaskView = New System.Windows.Forms.DataGridView()
-        Me.Mask_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Start_Face = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.End_Face = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Add_Mask = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.Del_Mask = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStripMaskView = New System.Windows.Forms.MenuStrip()
+        Me.ImportFacesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportScriptToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveMaskChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TekkenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TutorialVideoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DSImportScriptToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DSSelectionScriptToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DSExportScriptToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AznTutorialToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ObjArrayView = New System.Windows.Forms.TabPage()
         Me.DataGridObjArrayView = New System.Windows.Forms.DataGridView()
         Me.ArrEnabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
@@ -291,6 +296,8 @@ Partial Class MainForm
         Me.ExtractAllToToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.InjectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.InjectBPEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InjectZLIBToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InjectOODLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CrawlToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -328,8 +335,11 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.InjectZLIBToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.InjectOODLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Mask_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Start_Face = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.End_Face = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Add_Mask = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.Del_Mask = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -364,6 +374,7 @@ Partial Class MainForm
         Me.MenuStripMuscleView.SuspendLayout()
         Me.MaskView.SuspendLayout()
         CType(Me.DataGridMaskView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MenuStripMaskView.SuspendLayout()
         Me.ObjArrayView.SuspendLayout()
         CType(Me.DataGridObjArrayView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.AssetView.SuspendLayout()
@@ -1989,39 +2000,78 @@ Partial Class MainForm
         Me.DataGridMaskView.Size = New System.Drawing.Size(964, 394)
         Me.DataGridMaskView.TabIndex = 2
         '
-        'Mask_Name
-        '
-        Me.Mask_Name.HeaderText = "Mask_Name"
-        Me.Mask_Name.Name = "Mask_Name"
-        Me.Mask_Name.ReadOnly = True
-        '
-        'Start_Face
-        '
-        Me.Start_Face.HeaderText = "Start Face"
-        Me.Start_Face.Name = "Start_Face"
-        '
-        'End_Face
-        '
-        Me.End_Face.HeaderText = "End Face"
-        Me.End_Face.Name = "End_Face"
-        '
-        'Add_Mask
-        '
-        Me.Add_Mask.HeaderText = "Add"
-        Me.Add_Mask.Name = "Add_Mask"
-        '
-        'Del_Mask
-        '
-        Me.Del_Mask.HeaderText = "Delete"
-        Me.Del_Mask.Name = "Del_Mask"
-        '
         'MenuStripMaskView
         '
+        Me.MenuStripMaskView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportFacesToolStripMenuItem, Me.ExportScriptToolStripMenuItem, Me.SaveMaskChangesToolStripMenuItem, Me.ToolStripMenuItem2})
         Me.MenuStripMaskView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripMaskView.Name = "MenuStripMaskView"
         Me.MenuStripMaskView.Size = New System.Drawing.Size(964, 24)
         Me.MenuStripMaskView.TabIndex = 0
         Me.MenuStripMaskView.Text = "MenuStrip2"
+        '
+        'ImportFacesToolStripMenuItem
+        '
+        Me.ImportFacesToolStripMenuItem.Name = "ImportFacesToolStripMenuItem"
+        Me.ImportFacesToolStripMenuItem.Size = New System.Drawing.Size(87, 20)
+        Me.ImportFacesToolStripMenuItem.Text = "Import Faces"
+        '
+        'ExportScriptToolStripMenuItem
+        '
+        Me.ExportScriptToolStripMenuItem.Name = "ExportScriptToolStripMenuItem"
+        Me.ExportScriptToolStripMenuItem.Size = New System.Drawing.Size(85, 20)
+        Me.ExportScriptToolStripMenuItem.Text = "Export Faces"
+        '
+        'SaveMaskChangesToolStripMenuItem
+        '
+        Me.SaveMaskChangesToolStripMenuItem.Name = "SaveMaskChangesToolStripMenuItem"
+        Me.SaveMaskChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 20)
+        Me.SaveMaskChangesToolStripMenuItem.Text = "Save Changes"
+        Me.SaveMaskChangesToolStripMenuItem.Visible = False
+        '
+        'ToolStripMenuItem2
+        '
+        Me.ToolStripMenuItem2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.ToolStripMenuItem2.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TekkenToolStripMenuItem, Me.AznTutorialToolStripMenuItem})
+        Me.ToolStripMenuItem2.Image = CType(resources.GetObject("ToolStripMenuItem2.Image"), System.Drawing.Image)
+        Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(28, 20)
+        '
+        'TekkenToolStripMenuItem
+        '
+        Me.TekkenToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TutorialVideoToolStripMenuItem, Me.DSImportScriptToolStripMenuItem, Me.DSSelectionScriptToolStripMenuItem, Me.DSExportScriptToolStripMenuItem})
+        Me.TekkenToolStripMenuItem.Name = "TekkenToolStripMenuItem"
+        Me.TekkenToolStripMenuItem.Size = New System.Drawing.Size(137, 22)
+        Me.TekkenToolStripMenuItem.Text = "Tekken"
+        '
+        'TutorialVideoToolStripMenuItem
+        '
+        Me.TutorialVideoToolStripMenuItem.Name = "TutorialVideoToolStripMenuItem"
+        Me.TutorialVideoToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.TutorialVideoToolStripMenuItem.Text = "Tutorial Video"
+        '
+        'DSImportScriptToolStripMenuItem
+        '
+        Me.DSImportScriptToolStripMenuItem.Name = "DSImportScriptToolStripMenuItem"
+        Me.DSImportScriptToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.DSImportScriptToolStripMenuItem.Text = "3DS Import Script"
+        '
+        'DSSelectionScriptToolStripMenuItem
+        '
+        Me.DSSelectionScriptToolStripMenuItem.Name = "DSSelectionScriptToolStripMenuItem"
+        Me.DSSelectionScriptToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.DSSelectionScriptToolStripMenuItem.Text = "3DS Selection Script"
+        '
+        'DSExportScriptToolStripMenuItem
+        '
+        Me.DSExportScriptToolStripMenuItem.Name = "DSExportScriptToolStripMenuItem"
+        Me.DSExportScriptToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.DSExportScriptToolStripMenuItem.Text = "3DS Export Script"
+        '
+        'AznTutorialToolStripMenuItem
+        '
+        Me.AznTutorialToolStripMenuItem.Name = "AznTutorialToolStripMenuItem"
+        Me.AznTutorialToolStripMenuItem.Size = New System.Drawing.Size(137, 22)
+        Me.AznTutorialToolStripMenuItem.Text = "Azn Tutorial"
         '
         'ObjArrayView
         '
@@ -2430,54 +2480,66 @@ Partial Class MainForm
         '
         Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem1, Me.OpenWithToolStripMenuItem, Me.ExtractToolStripMenuItem, Me.ExtractAllInPlaceToolStripMenuItem, Me.ExtractAllToToolStripMenuItem, Me.InjectToolStripMenuItem, Me.InjectBPEToolStripMenuItem, Me.InjectZLIBToolStripMenuItem, Me.InjectOODLToolStripMenuItem, Me.CrawlToolStripMenuItem})
         Me.TreeViewContext.Name = "TreeViewContext"
-        Me.TreeViewContext.Size = New System.Drawing.Size(181, 246)
+        Me.TreeViewContext.Size = New System.Drawing.Size(172, 224)
         '
         'OpenToolStripMenuItem1
         '
         Me.OpenToolStripMenuItem1.Name = "OpenToolStripMenuItem1"
-        Me.OpenToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
+        Me.OpenToolStripMenuItem1.Size = New System.Drawing.Size(171, 22)
         Me.OpenToolStripMenuItem1.Text = "Open"
         '
         'OpenWithToolStripMenuItem
         '
         Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.OpenWithToolStripMenuItem.Text = "Open With..."
         '
         'ExtractToolStripMenuItem
         '
         Me.ExtractToolStripMenuItem.Name = "ExtractToolStripMenuItem"
-        Me.ExtractToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExtractToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.ExtractToolStripMenuItem.Text = "Extract"
         '
         'ExtractAllInPlaceToolStripMenuItem
         '
         Me.ExtractAllInPlaceToolStripMenuItem.Name = "ExtractAllInPlaceToolStripMenuItem"
-        Me.ExtractAllInPlaceToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExtractAllInPlaceToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.ExtractAllInPlaceToolStripMenuItem.Text = "Extract All In Place"
         '
         'ExtractAllToToolStripMenuItem
         '
         Me.ExtractAllToToolStripMenuItem.Name = "ExtractAllToToolStripMenuItem"
-        Me.ExtractAllToToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExtractAllToToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.ExtractAllToToolStripMenuItem.Text = "Extract All To..."
         '
         'InjectToolStripMenuItem
         '
         Me.InjectToolStripMenuItem.Name = "InjectToolStripMenuItem"
-        Me.InjectToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.InjectToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.InjectToolStripMenuItem.Text = "Inject"
         '
         'InjectBPEToolStripMenuItem
         '
         Me.InjectBPEToolStripMenuItem.Name = "InjectBPEToolStripMenuItem"
-        Me.InjectBPEToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.InjectBPEToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.InjectBPEToolStripMenuItem.Text = "Inject as BPE"
+        '
+        'InjectZLIBToolStripMenuItem
+        '
+        Me.InjectZLIBToolStripMenuItem.Name = "InjectZLIBToolStripMenuItem"
+        Me.InjectZLIBToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.InjectZLIBToolStripMenuItem.Text = "Inject as ZLIB"
+        '
+        'InjectOODLToolStripMenuItem
+        '
+        Me.InjectOODLToolStripMenuItem.Name = "InjectOODLToolStripMenuItem"
+        Me.InjectOODLToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.InjectOODLToolStripMenuItem.Text = "Inject as OODL"
         '
         'CrawlToolStripMenuItem
         '
         Me.CrawlToolStripMenuItem.Name = "CrawlToolStripMenuItem"
-        Me.CrawlToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CrawlToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.CrawlToolStripMenuItem.Text = "Crawl"
         '
         'DataGridViewTextBoxColumn1
@@ -2704,17 +2766,30 @@ Partial Class MainForm
         '
         Me.SaveExtractAllDialog.FileName = "Save Files Here"
         '
-        'InjectZLIBToolStripMenuItem
+        'Mask_Name
         '
-        Me.InjectZLIBToolStripMenuItem.Name = "InjectZLIBToolStripMenuItem"
-        Me.InjectZLIBToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.InjectZLIBToolStripMenuItem.Text = "Inject as ZLIB"
+        Me.Mask_Name.HeaderText = "Mask_Name"
+        Me.Mask_Name.Name = "Mask_Name"
         '
-        'InjectOODLToolStripMenuItem
+        'Start_Face
         '
-        Me.InjectOODLToolStripMenuItem.Name = "InjectOODLToolStripMenuItem"
-        Me.InjectOODLToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.InjectOODLToolStripMenuItem.Text = "Inject as OODL"
+        Me.Start_Face.HeaderText = "Start Face"
+        Me.Start_Face.Name = "Start_Face"
+        '
+        'End_Face
+        '
+        Me.End_Face.HeaderText = "End Face"
+        Me.End_Face.Name = "End_Face"
+        '
+        'Add_Mask
+        '
+        Me.Add_Mask.HeaderText = "Add"
+        Me.Add_Mask.Name = "Add_Mask"
+        '
+        'Del_Mask
+        '
+        Me.Del_Mask.HeaderText = "Delete"
+        Me.Del_Mask.Name = "Del_Mask"
         '
         'MainForm
         '
@@ -2782,6 +2857,8 @@ Partial Class MainForm
         Me.MaskView.ResumeLayout(False)
         Me.MaskView.PerformLayout()
         CType(Me.DataGridMaskView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MenuStripMaskView.ResumeLayout(False)
+        Me.MenuStripMaskView.PerformLayout()
         Me.ObjArrayView.ResumeLayout(False)
         Me.ObjArrayView.PerformLayout()
         CType(Me.DataGridObjArrayView, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2860,11 +2937,6 @@ Partial Class MainForm
     Friend WithEvents CloseToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents MaskView As TabPage
     Friend WithEvents DataGridMaskView As DataGridView
-    Friend WithEvents Mask_Name As DataGridViewTextBoxColumn
-    Friend WithEvents Start_Face As DataGridViewTextBoxColumn
-    Friend WithEvents End_Face As DataGridViewTextBoxColumn
-    Friend WithEvents Add_Mask As DataGridViewButtonColumn
-    Friend WithEvents Del_Mask As DataGridViewButtonColumn
     Friend WithEvents MenuStripMaskView As MenuStrip
     Friend WithEvents ObjArrayView As TabPage
     Friend WithEvents MenuStrip2 As MenuStrip
@@ -3125,4 +3197,19 @@ Partial Class MainForm
     Friend WithEvents InjectBPEToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents InjectZLIBToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents InjectOODLToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExportScriptToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ImportFacesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SaveMaskChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem2 As ToolStripMenuItem
+    Friend WithEvents TekkenToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents TutorialVideoToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DSImportScriptToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DSSelectionScriptToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DSExportScriptToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AznTutorialToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents Mask_Name As DataGridViewTextBoxColumn
+    Friend WithEvents Start_Face As DataGridViewTextBoxColumn
+    Friend WithEvents End_Face As DataGridViewTextBoxColumn
+    Friend WithEvents Add_Mask As DataGridViewButtonColumn
+    Friend WithEvents Del_Mask As DataGridViewButtonColumn
 End Class
