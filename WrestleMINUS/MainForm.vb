@@ -11,6 +11,7 @@ Imports System.Threading 'Multithreading
 Imports System.Runtime.Serialization.Formatters.Binary 'Binary Formatter
 Imports Newtonsoft.Json
 Imports System.Text.RegularExpressions 'Regular Expressions for text matches
+Imports FontAwesome.Sharp
 Public Class MainForm
 #Region "Oodle Stuff"
     Public Enum OodleFormat As UInt32
@@ -123,6 +124,7 @@ Public Class MainForm
 #Region "Main Form Functions"
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = Me.Text & " Ver: " & My.Application.Info.Version.ToString
+        LoadFontAwesomeIcons()
         CheckUpdate()
         SettingsCheck()
         HideTabs(Nothing)
@@ -134,6 +136,12 @@ Public Class MainForm
         ElseIf My.Settings.LoadHomeOnLaunch Then
             LoadHome()
         End If
+    End Sub
+    Sub LoadFontAwesomeIcons()
+        LoadHomeToolStripMenuItem.Image = IconChar.Home.ToBitmap(16, Color.Black)
+        OpenToolStripMenuItem.Image = IconChar.FolderOpen.ToBitmap(16, Color.Black)
+        ExitToolStripMenuItem.Image = IconChar.WindowClose.ToBitmap(16, Color.Black)
+        'https://fontawesome.com/cheatsheet?from=io
     End Sub
     Sub SettingsCheck()
         If My.Settings.UpgradeRequired = True Then
@@ -1240,6 +1248,7 @@ Public Class MainForm
         Process.Start("https://github.com/pozzum/WrestleMINUS/issues")
     End Sub
 #End Region
+    'Some Issue with Menus not properly populating.. when you first select Text View..
 #Region "TreeView Population"
     Sub LoadParameters()
         InformationLoaded = False
@@ -1378,9 +1387,11 @@ Public Class MainForm
     'moving functions from on tree view to on tab select to reduce load times during tree movement on keyboard
     Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
         If InformationLoaded = False Then
+            InformationLoaded = True
             Select Case e.TabPage.Name
                 Case StringView.Name
                     FillStringView(ReadNode)
+                    InformationLoaded = False
                 Case MiscView.Name
                     FillMiscView(ReadNode)
                 Case ShowView.Name
@@ -1402,9 +1413,7 @@ Public Class MainForm
                 Case TitleView.Name
                     LoadTitleFileView(ReadNode)
             End Select
-            InformationLoaded = True
         End If
-
     End Sub
     Function GetTabType(SelectedType As PackageType) As TabPage
         Select Case SelectedType
@@ -2019,7 +2028,8 @@ Public Class MainForm
     Private Sub StoreOldDataGridViewValue(sender As DataGridView, e As DataGridViewCellEventArgs) Handles DataGridMiscView.CellEnter,
                                                                                                     DataGridShowView.CellEnter,
                                                                                                     DataGridNIBJView.CellEnter,
-                                                                                                    DataGridAttireView.CellEnter
+                                                                                                    DataGridAttireView.CellEnter,
+                                                                                                    DataGridObjArrayView.CellEnter
         OldValue = sender.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
     End Sub
     Sub SaveFileNoLongerPending()
@@ -3635,7 +3645,7 @@ Public Class MainForm
         DataGridMaskView.Rows.AddRange(WorkingCollection.ToArray())
         SaveMaskChangesToolStripMenuItem.Visible = True
     End Sub
-    Private Sub ImportFacesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportFacesToolStripMenuItem.Click
+    Private Sub ImportMasksFromTXTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportMasksFromTXTToolStripMenuItem.Click
         Dim OpenTxtFile As OpenFileDialog = New OpenFileDialog With {
             .FileName = "CE_mask_list.txt",
             .Filter = "Text File|*.txt|All files (*.*)|*.*"}
@@ -3645,7 +3655,7 @@ Public Class MainForm
             End If
         End If
     End Sub
-    Private Sub ExportScriptToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportScriptToolStripMenuItem.Click
+    Private Sub ExportMaskstoTXTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportMaskstoTXTToolStripMenuItem.Click
         Dim SaveTxtFile As SaveFileDialog = New SaveFileDialog With {
             .FileName = "CE_mask_list.txt",
             .Filter = "Text File|*.txt|All files (*.*)|*.*"}
@@ -3928,8 +3938,6 @@ Public Class MainForm
             Else
                 'do nothing because a not button column at this time.
             End If
-            'MessageBox.Show(e.ColumnIndex & vbNewLine &  e.RowIndex)
-            'TODO - Button Clicked - Execute Code Here
         End If
     End Sub
     Private Sub DataGridMaskView_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridMaskView.CellEnter
@@ -3993,43 +4001,227 @@ Public Class MainForm
     End Sub
 #End Region
 #End Region
+#Region "Object Array Controls"
+    Sub LoadObjectArrayView(SelectedData As TreeNode)
+        Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridObjArrayView)
+        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
+        Dim ObjArrayBytes As Byte() = GetNodeBytes(SelectedData)
+        Dim ChairCount As Integer = BitConverter.ToInt32(ObjArrayBytes, &HC)
+        Dim ParentStrings As String() = New String(ChairCount) {}
+        ParentStrings(0) = "Base Object"
+        For i As Integer = 0 To ChairCount - 1
+            Dim ItemString As String = Encoding.ASCII.GetString(ObjArrayBytes, &H20 + ChairCount * 8 + i * &H30, &H10).Trim()
+            Dim InternalItemCount As Int32 = BitConverter.ToInt32(ObjArrayBytes, &H48 + ChairCount * 8 + i * &H30)
+            Dim StartIndex As Int32 = BitConverter.ToInt32(ObjArrayBytes, &H4C + ChairCount * 8 + i * &H30)
+            TempGridRow = CloneRow.Clone()
+            If InternalItemCount > 0 Then
+                For j As Integer = StartIndex To StartIndex + InternalItemCount
+                    ParentStrings(j) = ItemString
+                Next
+            End If
+            TempGridRow.Cells(0).Value = i 'Absolute Index
+            TempGridRow.Cells(0).Style.BackColor = SystemColors.Control
+            TempGridRow.Cells(0).Style.ForeColor = SystemColors.ControlText
+            TempGridRow.Cells(1).Value = ParentStrings(i)  'Parent
+            TempGridRow.Cells(1).Style.BackColor = SystemColors.Control
+            TempGridRow.Cells(1).Style.ForeColor = SystemColors.ControlText
+            TempGridRow.Cells(2).Value = BitConverter.ToInt32(ObjArrayBytes, &H24 + i * 8) 'Number
+            TempGridRow.Cells(3).Value = BitConverter.ToBoolean(ObjArrayBytes, &H20 + i * 8) 'Enabled
+            If InternalItemCount > 0 Then
+                TempGridRow.Cells(3).ReadOnly = True
+                TempGridRow.Cells(3).Style.BackColor = SystemColors.Control
+                TempGridRow.Cells(3).Style.ForeColor = SystemColors.ControlText
+            End If
+            TempGridRow.Cells(4).Value = ItemString  'Object Name
+            TempGridRow.Cells(5).Value = BitConverter.ToSingle(ObjArrayBytes, &H30 + ChairCount * 8 + i * &H30) 'X Float
+            TempGridRow.Cells(6).Value = BitConverter.ToSingle(ObjArrayBytes, &H34 + ChairCount * 8 + i * &H30) 'Y Float
+            TempGridRow.Cells(7).Value = BitConverter.ToSingle(ObjArrayBytes, &H38 + ChairCount * 8 + i * &H30) 'Z Float
+            TempGridRow.Cells(8).Value = BitConverter.ToSingle(ObjArrayBytes, &H3C + ChairCount * 8 + i * &H30) 'RX Float
+            TempGridRow.Cells(9).Value = BitConverter.ToSingle(ObjArrayBytes, &H40 + ChairCount * 8 + i * &H30) 'RY Float
+            TempGridRow.Cells(10).Value = BitConverter.ToSingle(ObjArrayBytes, &H44 + ChairCount * 8 + i * &H30) 'RZ Float
+            TempGridRow.Cells(11).Value = InternalItemCount 'Item Count
+            TempGridRow.Cells(11).Style.BackColor = SystemColors.Control
+            TempGridRow.Cells(11).Style.ForeColor = SystemColors.ControlText
+            TempGridRow.Cells(12).Value = StartIndex 'Start Index
+            TempGridRow.Cells(12).Style.BackColor = SystemColors.Control
+            TempGridRow.Cells(12).Style.ForeColor = SystemColors.ControlText
+            WorkingCollection.Add(TempGridRow)
+        Next
+        DataGridObjArrayView.Rows.AddRange(WorkingCollection.ToArray())
+    End Sub
+    Sub LoadObjectArrayView(CSVString As String())
+        'Line 0 should be the header lione and ignored
+        Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridObjArrayView)
+        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
+        For i As Integer = 1 To CSVString.Count - 1
+            TempGridRow = CloneRow.Clone()
+            Dim CSVValues As String() = CSVString(i).Split(",")
+            Dim InternalItemCount As Int32 = CSVValues(11)
+            TempGridRow.Cells(0).Value = CSVValues(0)
+            TempGridRow.Cells(0).Style.BackColor = SystemColors.Control
+            TempGridRow.Cells(0).Style.ForeColor = SystemColors.ControlText
+            TempGridRow.Cells(1).Value = CSVValues(1)
+            TempGridRow.Cells(1).Style.BackColor = SystemColors.Control
+            TempGridRow.Cells(1).Style.ForeColor = SystemColors.ControlText
+            TempGridRow.Cells(2).Value = CSVValues(2) 'Number
+            TempGridRow.Cells(3).Value = CSVValues(3) 'Enabled
+            If InternalItemCount > 0 Then
+                TempGridRow.Cells(3).ReadOnly = True
+                TempGridRow.Cells(3).Style.BackColor = SystemColors.Control
+                TempGridRow.Cells(3).Style.ForeColor = SystemColors.ControlText
+            End If
+            TempGridRow.Cells(4).Value = CSVValues(4)  'Object Name
+            TempGridRow.Cells(5).Value = CSVValues(5) 'X Float
+            TempGridRow.Cells(6).Value = CSVValues(6) 'Y Float
+            TempGridRow.Cells(7).Value = CSVValues(7) 'Z Float
+            TempGridRow.Cells(8).Value = CSVValues(8) 'RX Float
+            TempGridRow.Cells(9).Value = CSVValues(9) 'RY Float
+            TempGridRow.Cells(10).Value = CSVValues(10) 'RZ Float
+            TempGridRow.Cells(11).Value = InternalItemCount 'Item Count
+            TempGridRow.Cells(11).Style.BackColor = SystemColors.Control
+            TempGridRow.Cells(11).Style.ForeColor = SystemColors.ControlText
+            TempGridRow.Cells(12).Value = CSVValues(12) 'Start Index
+            TempGridRow.Cells(12).Style.BackColor = SystemColors.Control
+            TempGridRow.Cells(12).Style.ForeColor = SystemColors.ControlText
+            WorkingCollection.Add(TempGridRow)
+        Next
+        DataGridObjArrayView.Rows.AddRange(WorkingCollection.ToArray())
+    End Sub
+    Private Sub DataGridObjArrayView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridObjArrayView.CellEndEdit
+        Dim MyCell As DataGridViewCell = DataGridObjArrayView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+        Select Case e.ColumnIndex
+            'Case 0 OrElse 1 'Index and Parent are Read Only
+            Case 2 'Integer Object Number 
+                If Not IsNumeric(MyCell.Value) Then
+                    MyCell.Value = OldValue
+                ElseIf Not (Math.Floor(MyCell.Value) = Math.Ceiling(MyCell.Value)) Then
+                    MyCell.Value = OldValue
+                End If
+            'Case 3 Check Box does not have an invalid state to reset
+            Case 4 'String for object name
+                If MyCell.Value.ToString.Trim().ToString.Length > 16 Then
+                    MyCell.Value = OldValue
+                Else
+                    MyCell.Value = MyCell.Value.ToString.Trim()
+                    MyCell.Value = MyCell.Value.ToString.Replace(" ", "")
+                End If
+            Case > 4 'Single Number Values
+                If Not IsNumeric(MyCell.Value) Then
+                    MyCell.Value = OldValue
+                End If
+                'Case 11 OrElse 12 'Item Count and Starting Index Should be Changed by User. Only by Add / Delete Buttons.
+        End Select
+        SaveYOBJArrayChangesToolStripMenuItem.Visible = True
+    End Sub
+    Private Sub SaveYOBJArrayChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveYOBJArrayChangesToolStripMenuItem.Click
+        InjectIntoNode(ReadNode, BuildYOBJArrayFile())
+    End Sub
+    Private Function BuildYOBJArrayFile() As Byte()
+        Dim ShowBytes As Byte() = GetNodeBytes(ReadNode)
+        Dim ReturnedBytes As Byte() = New Byte(&H20 + ((&H30 + &H8) * DataGridObjArrayView.Rows.Count) - 1) {}
+        Dim ContainerCount As UInt32 = 0
+        Dim ObjectCount As UInt32 = 0
+        For i As Integer = 0 To DataGridObjArrayView.Rows.Count - 1
+            If CInt(DataGridObjArrayView.Rows(i).Cells(11).Value) > 0 Then
+                ContainerCount += 1
+            Else
+                ObjectCount = DataGridObjArrayView.Rows.Count - ContainerCount
+                Exit For
+            End If
+        Next
+        'File Header
+        Array.Copy(New Byte() {&HEA, &HA1, &H59, &H0, &H1, &H0, &H0, &H0, &H1, &H0, &H0, &H0}, 0, ReturnedBytes, 0, &HC)
+        'total Containers + Objects
+        Array.Copy(BitConverter.GetBytes(CUInt(DataGridObjArrayView.Rows.Count)), 0, ReturnedBytes, &HC, 4)
+        'Container Count
+        Array.Copy(BitConverter.GetBytes(ContainerCount), 0, ReturnedBytes, &H10, 4)
+        'Object Count
+        Array.Copy(BitConverter.GetBytes(ObjectCount), 0, ReturnedBytes, &H14, 4)
+        Dim DataIndex As UInt32 = &H20 + (DataGridObjArrayView.Rows.Count * 8)
+        For i As Integer = 0 To DataGridObjArrayView.Rows.Count - 1
+            'enabled First
+            If DataGridObjArrayView.Rows(i).Cells(3).Value Then
+                ReturnedBytes(&H20 + i * 8) = 1
+            Else
+                ReturnedBytes(&H20 + i * 8) = 0
+            End If
+            'Item Number
+            Array.Copy(BitConverter.GetBytes(CUInt(DataGridObjArrayView.Rows(i).Cells(2).Value)), 0, ReturnedBytes, &H24 + i * 8, 4)
+            'Name
+            Array.Copy(Encoding.ASCII.GetBytes(DataGridObjArrayView.Rows(i).Cells(4).Value), 0, ReturnedBytes, DataIndex + i * &H30, &H10)
+            'X Float
+            Array.Copy(BitConverter.GetBytes(CSng(DataGridObjArrayView.Rows(i).Cells(5).Value)), 0, ReturnedBytes, DataIndex + &H10 + (i * &H30), 4)
+            'Y Float
+            Array.Copy(BitConverter.GetBytes(CSng(DataGridObjArrayView.Rows(i).Cells(6).Value)), 0, ReturnedBytes, DataIndex + &H14 + (i * &H30), 4)
+            'Z Float
+            Array.Copy(BitConverter.GetBytes(CSng(DataGridObjArrayView.Rows(i).Cells(7).Value)), 0, ReturnedBytes, DataIndex + &H18 + (i * &H30), 4)
+            'RX Float
+            Array.Copy(BitConverter.GetBytes(CSng(DataGridObjArrayView.Rows(i).Cells(8).Value)), 0, ReturnedBytes, DataIndex + &H1C + (i * &H30), 4)
+            'RY Float
+            Array.Copy(BitConverter.GetBytes(CSng(DataGridObjArrayView.Rows(i).Cells(9).Value)), 0, ReturnedBytes, DataIndex + &H20 + (i * &H30), 4)
+            'RZ Float
+            Array.Copy(BitConverter.GetBytes(CSng(DataGridObjArrayView.Rows(i).Cells(10).Value)), 0, ReturnedBytes, DataIndex + &H24 + (i * &H30), 4)
+            'Item Count
+            Array.Copy(BitConverter.GetBytes(CUInt(DataGridObjArrayView.Rows(i).Cells(11).Value)), 0, ReturnedBytes, DataIndex + &H28 + (i * &H30), 4)
+            'Start Index
+            Array.Copy(BitConverter.GetBytes(CUInt(DataGridObjArrayView.Rows(i).Cells(12).Value)), 0, ReturnedBytes, DataIndex + &H2C + (i * &H30), 4)
+        Next
+        Return ReturnedBytes
+    End Function
+    Private Sub ExportYOBJArrayToCSVToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportYOBJArrayToCSVToolStripMenuItem.Click
+        Dim SaveCSVFile As SaveFileDialog = New SaveFileDialog With {
+            .FileName = "Object Array.csv",
+            .Filter = "Comma Seperated Values|*.csv|All files (*.*)|*.*"}
+        If SaveCSVFile.ShowDialog = DialogResult.OK Then
+            Dim headers = (From header As DataGridViewColumn In DataGridObjArrayView.Columns.Cast(Of DataGridViewColumn)()
+                           Select header.HeaderText).ToArray
+            Dim rows As List(Of String) = New List(Of String)
+            For Each temprow As DataGridViewRow In DataGridObjArrayView.Rows
+                If Not temprow.IsNewRow Then
+                    Dim Tempstring As String = ""
+                    For Each tempcell As DataGridViewCell In temprow.Cells
+                        If temprow.Cells.IndexOf(tempcell) = 0 Then
+                            Tempstring = tempcell.Value
+                        ElseIf tempcell.ValueType = GetType(CheckBox) Then
+                            If tempcell.Value Then
+                                Tempstring += ",1"
+                            Else
+                                Tempstring += ",0"
+                            End If
+                        Else
+                            Tempstring += "," & tempcell.Value.ToString.Trim()
+                        End If
+                    Next
+                    rows.Add(Tempstring)
+                End If
+            Next
+            Using sw As New IO.StreamWriter(SaveCSVFile.FileName)
+                sw.WriteLine(String.Join(",", headers))
+                For Each r In rows
+                    sw.WriteLine(r)
+                Next
+            End Using
+            MessageBox.Show("File Saved")
+        End If
+    End Sub
+    Private Sub ImportYOBJArrayFromCSVToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportYOBJArrayFromCSVToolStripMenuItem.Click
+        Dim OpenCSVFile As OpenFileDialog = New OpenFileDialog With {
+            .FileName = "Object Array.csv",
+            .Filter = "Comma Seperated Values|*.csv|All files (*.*)|*.*"}
+        If OpenCSVFile.ShowDialog = System.Windows.Forms.DialogResult.OK Then
+            If File.Exists(OpenCSVFile.FileName) Then
+                LoadObjectArrayView(File.ReadAllLines(OpenCSVFile.FileName))
+                SaveYOBJArrayChangesToolStripMenuItem.Visible = True
+            End If
+        End If
+    End Sub
+#End Region
     'Left off refactoring here
     'Forms to Use CellEndEdit instead of Cell value changed as it fixes a lot of stupid handling issues.
     'TO DO Increase speed of datagrid population with collections
     'These is the potential for better programming using data binding datagrid views.
-#Region "Object Array Controls"
-    Sub LoadObjectArrayView(SelectedData As TreeNode)
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag = CType(SelectedData.Tag, NodeProperties)
-        Dim ObjArrayBytes As Byte()
-        If NodeTag.StoredData.Length > 0 Then
-            Dim FileBytes As Byte() = NodeTag.StoredData
-            ObjArrayBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), ObjArrayBytes, 0, CInt(NodeTag.length))
-        Else
-            Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
-            ObjArrayBytes = New Byte(NodeTag.length - 1) {}
-            Array.Copy(FileBytes, CInt(NodeTag.Index), ObjArrayBytes, 0, CInt(NodeTag.length))
-        End If
-        Dim ChairCount As Integer = BitConverter.ToInt32(ObjArrayBytes, &HC)
-        DataGridObjArrayView.Rows.Clear()
-        For i As Integer = 0 To ChairCount - 1
-            DataGridObjArrayView.Rows.Add(
-            BitConverter.ToInt32(ObjArrayBytes, &H24 + i * 8), 'Number
-            BitConverter.ToBoolean(ObjArrayBytes, &H20 + i * 8), 'Enabled
-            Encoding.ASCII.GetString(ObjArrayBytes, &H20 + ChairCount * 8 + i * &H30, &H10), 'Chair Name
-            BitConverter.ToSingle(ObjArrayBytes, &H30 + ChairCount * 8 + i * &H30), 'X Float
-            BitConverter.ToSingle(ObjArrayBytes, &H34 + ChairCount * 8 + i * &H30), 'Y Float
-            BitConverter.ToSingle(ObjArrayBytes, &H38 + ChairCount * 8 + i * &H30), 'Z Float
-            BitConverter.ToSingle(ObjArrayBytes, &H3C + ChairCount * 8 + i * &H30), 'RX Float
-            BitConverter.ToSingle(ObjArrayBytes, &H40 + ChairCount * 8 + i * &H30), 'RY Float
-            BitConverter.ToSingle(ObjArrayBytes, &H44 + ChairCount * 8 + i * &H30), 'RZ Float
-            BitConverter.ToInt32(ObjArrayBytes, &H48 + ChairCount * 8 + i * &H30), 'D1 Decimal
-            BitConverter.ToInt32(ObjArrayBytes, &H4C + ChairCount * 8 + i * &H30)) 'D2 Decimal 
-        Next
-    End Sub
-
-#End Region
 #Region "Asset View Controls"
     'TO Add Saving to this menu
     Sub LoadAssetFileView(SelectedData As TreeNode)
@@ -4076,7 +4268,6 @@ Public Class MainForm
                                         HeaderNum, WallNum, RampNum, WallRightNum, WallLeftNum, Check4, Check5, Check6, FileName)
         Next
     End Sub
-
 #End Region
     'TO DO... Combine some of these redundent Close view functions...
 #Region "Title View"

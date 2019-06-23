@@ -222,9 +222,14 @@ Partial Class MainForm
         Me.CloseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MaskView = New System.Windows.Forms.TabPage()
         Me.DataGridMaskView = New System.Windows.Forms.DataGridView()
+        Me.Mask_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Start_Face = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.End_Face = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Add_Mask = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.Del_Mask = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStripMaskView = New System.Windows.Forms.MenuStrip()
-        Me.ImportFacesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExportScriptToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ImportMasksFromTXTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportMaskstoTXTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SaveMaskChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.TekkenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -235,9 +240,23 @@ Partial Class MainForm
         Me.AznTutorialToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ObjArrayView = New System.Windows.Forms.TabPage()
         Me.DataGridObjArrayView = New System.Windows.Forms.DataGridView()
+        Me.YobjArryIndex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjArrayParent = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Number = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ArrEnabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.ChairName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.X = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Y = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Z = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RX = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RY = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RZ = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ContainedYobjArray = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StartIndexYobjArray = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStrip2 = New System.Windows.Forms.MenuStrip()
+        Me.ImportYOBJArrayFromCSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportYOBJArrayToCSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveYOBJArrayChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AssetView = New System.Windows.Forms.TabPage()
         Me.DataGridAssetView = New System.Windows.Forms.DataGridView()
         Me.PacNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -335,11 +354,6 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.Mask_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Start_Face = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.End_Face = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Add_Mask = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.Del_Mask = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -377,6 +391,7 @@ Partial Class MainForm
         Me.MenuStripMaskView.SuspendLayout()
         Me.ObjArrayView.SuspendLayout()
         CType(Me.DataGridObjArrayView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MenuStrip2.SuspendLayout()
         Me.AssetView.SuspendLayout()
         CType(Me.DataGridAssetView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TitleView.SuspendLayout()
@@ -2000,26 +2015,55 @@ Partial Class MainForm
         Me.DataGridMaskView.Size = New System.Drawing.Size(964, 394)
         Me.DataGridMaskView.TabIndex = 2
         '
+        'Mask_Name
+        '
+        Me.Mask_Name.HeaderText = "Mask_Name"
+        Me.Mask_Name.Name = "Mask_Name"
+        '
+        'Start_Face
+        '
+        Me.Start_Face.HeaderText = "Start Face"
+        Me.Start_Face.Name = "Start_Face"
+        '
+        'End_Face
+        '
+        Me.End_Face.HeaderText = "End Face"
+        Me.End_Face.Name = "End_Face"
+        '
+        'Add_Mask
+        '
+        Me.Add_Mask.HeaderText = "Add"
+        Me.Add_Mask.Name = "Add_Mask"
+        Me.Add_Mask.Text = "Add"
+        Me.Add_Mask.UseColumnTextForButtonValue = True
+        '
+        'Del_Mask
+        '
+        Me.Del_Mask.HeaderText = "Delete"
+        Me.Del_Mask.Name = "Del_Mask"
+        Me.Del_Mask.Text = "Delete"
+        Me.Del_Mask.UseColumnTextForButtonValue = True
+        '
         'MenuStripMaskView
         '
-        Me.MenuStripMaskView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportFacesToolStripMenuItem, Me.ExportScriptToolStripMenuItem, Me.SaveMaskChangesToolStripMenuItem, Me.ToolStripMenuItem2})
+        Me.MenuStripMaskView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportMasksFromTXTToolStripMenuItem, Me.ExportMaskstoTXTToolStripMenuItem, Me.SaveMaskChangesToolStripMenuItem, Me.ToolStripMenuItem2})
         Me.MenuStripMaskView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripMaskView.Name = "MenuStripMaskView"
         Me.MenuStripMaskView.Size = New System.Drawing.Size(964, 24)
         Me.MenuStripMaskView.TabIndex = 0
         Me.MenuStripMaskView.Text = "MenuStrip2"
         '
-        'ImportFacesToolStripMenuItem
+        'ImportMasksFromTXTToolStripMenuItem
         '
-        Me.ImportFacesToolStripMenuItem.Name = "ImportFacesToolStripMenuItem"
-        Me.ImportFacesToolStripMenuItem.Size = New System.Drawing.Size(87, 20)
-        Me.ImportFacesToolStripMenuItem.Text = "Import Faces"
+        Me.ImportMasksFromTXTToolStripMenuItem.Name = "ImportMasksFromTXTToolStripMenuItem"
+        Me.ImportMasksFromTXTToolStripMenuItem.Size = New System.Drawing.Size(142, 20)
+        Me.ImportMasksFromTXTToolStripMenuItem.Text = "Import Masks from TXT"
         '
-        'ExportScriptToolStripMenuItem
+        'ExportMaskstoTXTToolStripMenuItem
         '
-        Me.ExportScriptToolStripMenuItem.Name = "ExportScriptToolStripMenuItem"
-        Me.ExportScriptToolStripMenuItem.Size = New System.Drawing.Size(85, 20)
-        Me.ExportScriptToolStripMenuItem.Text = "Export Faces"
+        Me.ExportMaskstoTXTToolStripMenuItem.Name = "ExportMaskstoTXTToolStripMenuItem"
+        Me.ExportMaskstoTXTToolStripMenuItem.Size = New System.Drawing.Size(125, 20)
+        Me.ExportMaskstoTXTToolStripMenuItem.Text = "Export Masks to TXT"
         '
         'SaveMaskChangesToolStripMenuItem
         '
@@ -2088,14 +2132,36 @@ Partial Class MainForm
         'DataGridObjArrayView
         '
         Me.DataGridObjArrayView.AllowUserToAddRows = False
+        Me.DataGridObjArrayView.AllowUserToDeleteRows = False
         Me.DataGridObjArrayView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.DataGridObjArrayView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridObjArrayView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ArrEnabled, Me.ChairName})
+        Me.DataGridObjArrayView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.YobjArryIndex, Me.ObjArrayParent, Me.Number, Me.ArrEnabled, Me.ChairName, Me.X, Me.Y, Me.Z, Me.RX, Me.RY, Me.RZ, Me.ContainedYobjArray, Me.StartIndexYobjArray})
         Me.DataGridObjArrayView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridObjArrayView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridObjArrayView.Name = "DataGridObjArrayView"
+        Me.DataGridObjArrayView.RowHeadersVisible = False
         Me.DataGridObjArrayView.Size = New System.Drawing.Size(964, 394)
         Me.DataGridObjArrayView.TabIndex = 1
+        '
+        'YobjArryIndex
+        '
+        Me.YobjArryIndex.HeaderText = "Index"
+        Me.YobjArryIndex.Name = "YobjArryIndex"
+        Me.YobjArryIndex.ReadOnly = True
+        Me.YobjArryIndex.Width = 58
+        '
+        'ObjArrayParent
+        '
+        Me.ObjArrayParent.HeaderText = "Parent"
+        Me.ObjArrayParent.Name = "ObjArrayParent"
+        Me.ObjArrayParent.ReadOnly = True
+        Me.ObjArrayParent.Width = 63
+        '
+        'Number
+        '
+        Me.Number.HeaderText = "Number"
+        Me.Number.Name = "Number"
+        Me.Number.Width = 69
         '
         'ArrEnabled
         '
@@ -2106,18 +2172,89 @@ Partial Class MainForm
         'ChairName
         '
         Me.ChairName.HeaderText = "Name"
+        Me.ChairName.MaxInputLength = 16
         Me.ChairName.Name = "ChairName"
         Me.ChairName.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.ChairName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.ChairName.Width = 41
         '
+        'X
+        '
+        Me.X.HeaderText = "X"
+        Me.X.Name = "X"
+        Me.X.Width = 39
+        '
+        'Y
+        '
+        Me.Y.HeaderText = "Y"
+        Me.Y.Name = "Y"
+        Me.Y.Width = 39
+        '
+        'Z
+        '
+        Me.Z.HeaderText = "Z"
+        Me.Z.Name = "Z"
+        Me.Z.Width = 39
+        '
+        'RX
+        '
+        Me.RX.HeaderText = "RX"
+        Me.RX.Name = "RX"
+        Me.RX.Width = 47
+        '
+        'RY
+        '
+        Me.RY.HeaderText = "RY"
+        Me.RY.Name = "RY"
+        Me.RY.Width = 47
+        '
+        'RZ
+        '
+        Me.RZ.HeaderText = "RZ"
+        Me.RZ.Name = "RZ"
+        Me.RZ.Width = 47
+        '
+        'ContainedYobjArray
+        '
+        Me.ContainedYobjArray.HeaderText = "Objects"
+        Me.ContainedYobjArray.Name = "ContainedYobjArray"
+        Me.ContainedYobjArray.ReadOnly = True
+        Me.ContainedYobjArray.Width = 68
+        '
+        'StartIndexYobjArray
+        '
+        Me.StartIndexYobjArray.HeaderText = "Start Index"
+        Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
+        Me.StartIndexYobjArray.ReadOnly = True
+        Me.StartIndexYobjArray.Width = 83
+        '
         'MenuStrip2
         '
+        Me.MenuStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportYOBJArrayFromCSVToolStripMenuItem, Me.ExportYOBJArrayToCSVToolStripMenuItem, Me.SaveYOBJArrayChangesToolStripMenuItem})
         Me.MenuStrip2.Location = New System.Drawing.Point(3, 3)
         Me.MenuStrip2.Name = "MenuStrip2"
         Me.MenuStrip2.Size = New System.Drawing.Size(964, 24)
         Me.MenuStrip2.TabIndex = 0
         Me.MenuStrip2.Text = "MenuStrip2"
+        '
+        'ImportYOBJArrayFromCSVToolStripMenuItem
+        '
+        Me.ImportYOBJArrayFromCSVToolStripMenuItem.Name = "ImportYOBJArrayFromCSVToolStripMenuItem"
+        Me.ImportYOBJArrayFromCSVToolStripMenuItem.Size = New System.Drawing.Size(108, 20)
+        Me.ImportYOBJArrayFromCSVToolStripMenuItem.Text = "Import from CSV"
+        '
+        'ExportYOBJArrayToCSVToolStripMenuItem
+        '
+        Me.ExportYOBJArrayToCSVToolStripMenuItem.Name = "ExportYOBJArrayToCSVToolStripMenuItem"
+        Me.ExportYOBJArrayToCSVToolStripMenuItem.Size = New System.Drawing.Size(91, 20)
+        Me.ExportYOBJArrayToCSVToolStripMenuItem.Text = "Export to CSV"
+        '
+        'SaveYOBJArrayChangesToolStripMenuItem
+        '
+        Me.SaveYOBJArrayChangesToolStripMenuItem.Name = "SaveYOBJArrayChangesToolStripMenuItem"
+        Me.SaveYOBJArrayChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 20)
+        Me.SaveYOBJArrayChangesToolStripMenuItem.Text = "Save Changes"
+        Me.SaveYOBJArrayChangesToolStripMenuItem.Visible = False
         '
         'AssetView
         '
@@ -2766,31 +2903,6 @@ Partial Class MainForm
         '
         Me.SaveExtractAllDialog.FileName = "Save Files Here"
         '
-        'Mask_Name
-        '
-        Me.Mask_Name.HeaderText = "Mask_Name"
-        Me.Mask_Name.Name = "Mask_Name"
-        '
-        'Start_Face
-        '
-        Me.Start_Face.HeaderText = "Start Face"
-        Me.Start_Face.Name = "Start_Face"
-        '
-        'End_Face
-        '
-        Me.End_Face.HeaderText = "End Face"
-        Me.End_Face.Name = "End_Face"
-        '
-        'Add_Mask
-        '
-        Me.Add_Mask.HeaderText = "Add"
-        Me.Add_Mask.Name = "Add_Mask"
-        '
-        'Del_Mask
-        '
-        Me.Del_Mask.HeaderText = "Delete"
-        Me.Del_Mask.Name = "Del_Mask"
-        '
         'MainForm
         '
         Me.AllowDrop = True
@@ -2862,6 +2974,8 @@ Partial Class MainForm
         Me.ObjArrayView.ResumeLayout(False)
         Me.ObjArrayView.PerformLayout()
         CType(Me.DataGridObjArrayView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MenuStrip2.ResumeLayout(False)
+        Me.MenuStrip2.PerformLayout()
         Me.AssetView.ResumeLayout(False)
         CType(Me.DataGridAssetView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TitleView.ResumeLayout(False)
@@ -2942,8 +3056,6 @@ Partial Class MainForm
     Friend WithEvents MenuStrip2 As MenuStrip
     Friend WithEvents DataGridObjArrayView As DataGridView
     Friend WithEvents ChairNum As NumericUpDownColumn
-    Friend WithEvents ArrEnabled As DataGridViewCheckBoxColumn
-    Friend WithEvents ChairName As DataGridViewTextBoxColumn
     Friend WithEvents ArrX As NumericUpDownColumn
     Friend WithEvents ArrY As NumericUpDownColumn
     Friend WithEvents ArrZ As NumericUpDownColumn
@@ -3197,8 +3309,8 @@ Partial Class MainForm
     Friend WithEvents InjectBPEToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents InjectZLIBToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents InjectOODLToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ExportScriptToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ImportFacesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExportMaskstoTXTToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ImportMasksFromTXTToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SaveMaskChangesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem2 As ToolStripMenuItem
     Friend WithEvents TekkenToolStripMenuItem As ToolStripMenuItem
@@ -3207,9 +3319,25 @@ Partial Class MainForm
     Friend WithEvents DSSelectionScriptToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents DSExportScriptToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AznTutorialToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SaveYOBJArrayChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExportYOBJArrayToCSVToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Mask_Name As DataGridViewTextBoxColumn
     Friend WithEvents Start_Face As DataGridViewTextBoxColumn
     Friend WithEvents End_Face As DataGridViewTextBoxColumn
     Friend WithEvents Add_Mask As DataGridViewButtonColumn
     Friend WithEvents Del_Mask As DataGridViewButtonColumn
+    Friend WithEvents YobjArryIndex As DataGridViewTextBoxColumn
+    Friend WithEvents ObjArrayParent As DataGridViewTextBoxColumn
+    Friend WithEvents Number As DataGridViewTextBoxColumn
+    Friend WithEvents ArrEnabled As DataGridViewCheckBoxColumn
+    Friend WithEvents ChairName As DataGridViewTextBoxColumn
+    Friend WithEvents X As DataGridViewTextBoxColumn
+    Friend WithEvents Y As DataGridViewTextBoxColumn
+    Friend WithEvents Z As DataGridViewTextBoxColumn
+    Friend WithEvents RX As DataGridViewTextBoxColumn
+    Friend WithEvents RY As DataGridViewTextBoxColumn
+    Friend WithEvents RZ As DataGridViewTextBoxColumn
+    Friend WithEvents ContainedYobjArray As DataGridViewTextBoxColumn
+    Friend WithEvents StartIndexYobjArray As DataGridViewTextBoxColumn
+    Friend WithEvents ImportYOBJArrayFromCSVToolStripMenuItem As ToolStripMenuItem
 End Class
