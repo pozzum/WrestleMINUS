@@ -24,6 +24,10 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -240,19 +244,6 @@ Partial Class MainForm
         Me.AznTutorialToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ObjArrayView = New System.Windows.Forms.TabPage()
         Me.DataGridObjArrayView = New System.Windows.Forms.DataGridView()
-        Me.YobjArryIndex = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjArrayParent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Number = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ArrEnabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.ChairName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.X = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Y = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Z = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RX = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RY = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RZ = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ContainedYobjArray = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StartIndexYobjArray = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStrip2 = New System.Windows.Forms.MenuStrip()
         Me.ImportYOBJArrayFromCSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportYOBJArrayToCSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -354,6 +345,21 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
+        Me.YobjArryIndex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjArrayParent = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Number = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ArrEnabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ChairName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.X = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Y = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Z = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RX = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RY = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RZ = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ContainedYobjArray = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StartIndexYobjArray = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Add_Obj_Array = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.Del_Obj_Array = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -1117,7 +1123,7 @@ Partial Class MainForm
         '
         Me.DataGridShowView.AllowUserToAddRows = False
         Me.DataGridShowView.AllowUserToDeleteRows = False
-        Me.DataGridShowView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DataGridShowView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
         Me.DataGridShowView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridShowView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.StrName, Me.ShowStringName, Me.ShowSelectNum, Me.SelectNumSecond, Me.A1, Me.A2, Me.B1, Me.B2, Me.B3, Me.C1, Me.C2, Me.C3, Me.C4, Me.C5, Me.C6, Me.C7, Me.C8, Me.Stage, Me.D1, Me.D2, Me.D3, Me.D4, Me.D5, Me.Ref, Me.Filter, Me.F1, Me.F2, Me.F3, Me.F4, Me.H1, Me.H2, Me.H3, Me.H4, Me.Bar, Me.Unknown, Me.I1, Me.I2, Me.I3, Me.Live, Me.J})
         Me.DataGridShowView.Dock = System.Windows.Forms.DockStyle.Fill
@@ -1530,7 +1536,7 @@ Partial Class MainForm
         '
         'DataGridAttireView
         '
-        Me.DataGridAttireView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DataGridAttireView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
         Me.DataGridAttireView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridAttireView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Pach, Me.Count, Me.Attire0Ref, Me.Attire0String, Me.Attire0Enabled, Me.Attire0Manager, Me.Attire0Unlock, Me.Attire1Ref, Me.Attire1String, Me.Attire1Enabled, Me.Attire1Manager, Me.Attire1Unlock, Me.Attire2Ref, Me.Attire2String, Me.Attire2Enabled, Me.Attire2Manager, Me.Attire2Unlock, Me.Attire3Ref, Me.Attire3String, Me.Attire3Enabled, Me.Attire3Manager, Me.Attire3Unlock, Me.Attire4Ref, Me.Attire4String, Me.Attire4Enabled, Me.Attire4Manager, Me.Attire4Unlock, Me.Attire5Ref, Me.Attire5String, Me.Attire5Enabled, Me.Attire5Manager, Me.Attire5Unlock, Me.Attire6Ref, Me.Attire6String, Me.Attire6Enabled, Me.Attire6Manager, Me.Attire6Unlock, Me.Attire7Ref, Me.Attire7String, Me.Attire7Enabled, Me.Attire7Manager, Me.Attire7Unlock, Me.Attire8Ref, Me.Attire8String, Me.Attire8Enabled, Me.Attire8Manager, Me.Attire8Unlock, Me.Attire9Ref, Me.Attire9String, Me.Attire9Enabled, Me.Attire9Manager, Me.Attire9Unlock})
         Me.DataGridAttireView.Dock = System.Windows.Forms.DockStyle.Fill
@@ -2133,100 +2139,15 @@ Partial Class MainForm
         '
         Me.DataGridObjArrayView.AllowUserToAddRows = False
         Me.DataGridObjArrayView.AllowUserToDeleteRows = False
-        Me.DataGridObjArrayView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DataGridObjArrayView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
         Me.DataGridObjArrayView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridObjArrayView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.YobjArryIndex, Me.ObjArrayParent, Me.Number, Me.ArrEnabled, Me.ChairName, Me.X, Me.Y, Me.Z, Me.RX, Me.RY, Me.RZ, Me.ContainedYobjArray, Me.StartIndexYobjArray})
+        Me.DataGridObjArrayView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.YobjArryIndex, Me.ObjArrayParent, Me.Number, Me.ArrEnabled, Me.ChairName, Me.X, Me.Y, Me.Z, Me.RX, Me.RY, Me.RZ, Me.ContainedYobjArray, Me.StartIndexYobjArray, Me.Add_Obj_Array, Me.Del_Obj_Array})
         Me.DataGridObjArrayView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridObjArrayView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridObjArrayView.Name = "DataGridObjArrayView"
         Me.DataGridObjArrayView.RowHeadersVisible = False
         Me.DataGridObjArrayView.Size = New System.Drawing.Size(964, 394)
         Me.DataGridObjArrayView.TabIndex = 1
-        '
-        'YobjArryIndex
-        '
-        Me.YobjArryIndex.HeaderText = "Index"
-        Me.YobjArryIndex.Name = "YobjArryIndex"
-        Me.YobjArryIndex.ReadOnly = True
-        Me.YobjArryIndex.Width = 58
-        '
-        'ObjArrayParent
-        '
-        Me.ObjArrayParent.HeaderText = "Parent"
-        Me.ObjArrayParent.Name = "ObjArrayParent"
-        Me.ObjArrayParent.ReadOnly = True
-        Me.ObjArrayParent.Width = 63
-        '
-        'Number
-        '
-        Me.Number.HeaderText = "Number"
-        Me.Number.Name = "Number"
-        Me.Number.Width = 69
-        '
-        'ArrEnabled
-        '
-        Me.ArrEnabled.HeaderText = "Enabled"
-        Me.ArrEnabled.Name = "ArrEnabled"
-        Me.ArrEnabled.Width = 52
-        '
-        'ChairName
-        '
-        Me.ChairName.HeaderText = "Name"
-        Me.ChairName.MaxInputLength = 16
-        Me.ChairName.Name = "ChairName"
-        Me.ChairName.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.ChairName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.ChairName.Width = 41
-        '
-        'X
-        '
-        Me.X.HeaderText = "X"
-        Me.X.Name = "X"
-        Me.X.Width = 39
-        '
-        'Y
-        '
-        Me.Y.HeaderText = "Y"
-        Me.Y.Name = "Y"
-        Me.Y.Width = 39
-        '
-        'Z
-        '
-        Me.Z.HeaderText = "Z"
-        Me.Z.Name = "Z"
-        Me.Z.Width = 39
-        '
-        'RX
-        '
-        Me.RX.HeaderText = "RX"
-        Me.RX.Name = "RX"
-        Me.RX.Width = 47
-        '
-        'RY
-        '
-        Me.RY.HeaderText = "RY"
-        Me.RY.Name = "RY"
-        Me.RY.Width = 47
-        '
-        'RZ
-        '
-        Me.RZ.HeaderText = "RZ"
-        Me.RZ.Name = "RZ"
-        Me.RZ.Width = 47
-        '
-        'ContainedYobjArray
-        '
-        Me.ContainedYobjArray.HeaderText = "Objects"
-        Me.ContainedYobjArray.Name = "ContainedYobjArray"
-        Me.ContainedYobjArray.ReadOnly = True
-        Me.ContainedYobjArray.Width = 68
-        '
-        'StartIndexYobjArray
-        '
-        Me.StartIndexYobjArray.HeaderText = "Start Index"
-        Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
-        Me.StartIndexYobjArray.ReadOnly = True
-        Me.StartIndexYobjArray.Width = 83
         '
         'MenuStrip2
         '
@@ -2269,7 +2190,7 @@ Partial Class MainForm
         '
         'DataGridAssetView
         '
-        Me.DataGridAssetView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DataGridAssetView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
         Me.DataGridAssetView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridAssetView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.PacNumber, Me.AttireNum, Me.AudioNum, Me.Check2, Me.Check3, Me.FileOffset, Me.TitantronNum, Me.MiniNum, Me.HeaderNum, Me.WallNum, Me.RampNum, Me.WallRightNum, Me.WallLeftNum, Me.Check4, Me.Check5, Me.Check6, Me.FileName})
         Me.DataGridAssetView.Dock = System.Windows.Forms.DockStyle.Fill
@@ -2395,7 +2316,7 @@ Partial Class MainForm
         '
         Me.DataGridTitleView.AllowUserToAddRows = False
         Me.DataGridTitleView.AllowUserToDeleteRows = False
-        Me.DataGridTitleView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DataGridTitleView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
         Me.DataGridTitleView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridTitleView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.TitleEnabled, Me.PropRef, Me.MenuNumber, Me.Name1, Me.Name1Full, Me.Name2, Me.Name2Full, Me.Name3, Me.Name3Full, Me.MyWWE1, Me.MyWWE2, Me.Uni1, Me.Uni2, Me.Temp1, Me.Temp2, Me.Female, Me.TagTeam, Me.Cruiserweight, Me.UnlockNum, Me.Temp4})
         Me.DataGridTitleView.Dock = System.Windows.Forms.DockStyle.Fill
@@ -2903,6 +2824,125 @@ Partial Class MainForm
         '
         Me.SaveExtractAllDialog.FileName = "Save Files Here"
         '
+        'YobjArryIndex
+        '
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle5
+        Me.YobjArryIndex.HeaderText = "Index"
+        Me.YobjArryIndex.Name = "YobjArryIndex"
+        Me.YobjArryIndex.ReadOnly = True
+        Me.YobjArryIndex.Width = 58
+        '
+        'ObjArrayParent
+        '
+        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle6
+        Me.ObjArrayParent.HeaderText = "Parent"
+        Me.ObjArrayParent.MinimumWidth = 100
+        Me.ObjArrayParent.Name = "ObjArrayParent"
+        Me.ObjArrayParent.ReadOnly = True
+        '
+        'Number
+        '
+        Me.Number.HeaderText = "Number"
+        Me.Number.Name = "Number"
+        Me.Number.Width = 69
+        '
+        'ArrEnabled
+        '
+        Me.ArrEnabled.HeaderText = "Enabled"
+        Me.ArrEnabled.Name = "ArrEnabled"
+        Me.ArrEnabled.Width = 52
+        '
+        'ChairName
+        '
+        Me.ChairName.HeaderText = "Name"
+        Me.ChairName.MaxInputLength = 16
+        Me.ChairName.MinimumWidth = 100
+        Me.ChairName.Name = "ChairName"
+        Me.ChairName.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ChairName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'X
+        '
+        Me.X.HeaderText = "X"
+        Me.X.MinimumWidth = 60
+        Me.X.Name = "X"
+        Me.X.Width = 60
+        '
+        'Y
+        '
+        Me.Y.HeaderText = "Y"
+        Me.Y.MinimumWidth = 60
+        Me.Y.Name = "Y"
+        Me.Y.Width = 60
+        '
+        'Z
+        '
+        Me.Z.HeaderText = "Z"
+        Me.Z.MinimumWidth = 60
+        Me.Z.Name = "Z"
+        Me.Z.Width = 60
+        '
+        'RX
+        '
+        Me.RX.HeaderText = "RX"
+        Me.RX.MinimumWidth = 60
+        Me.RX.Name = "RX"
+        Me.RX.Width = 60
+        '
+        'RY
+        '
+        Me.RY.HeaderText = "RY"
+        Me.RY.MinimumWidth = 60
+        Me.RY.Name = "RY"
+        Me.RY.Width = 60
+        '
+        'RZ
+        '
+        Me.RZ.HeaderText = "RZ"
+        Me.RZ.MinimumWidth = 60
+        Me.RZ.Name = "RZ"
+        Me.RZ.Width = 60
+        '
+        'ContainedYobjArray
+        '
+        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle7
+        Me.ContainedYobjArray.HeaderText = "Objects"
+        Me.ContainedYobjArray.Name = "ContainedYobjArray"
+        Me.ContainedYobjArray.ReadOnly = True
+        Me.ContainedYobjArray.Width = 68
+        '
+        'StartIndexYobjArray
+        '
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle8
+        Me.StartIndexYobjArray.HeaderText = "Start Index"
+        Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
+        Me.StartIndexYobjArray.ReadOnly = True
+        Me.StartIndexYobjArray.Width = 83
+        '
+        'Add_Obj_Array
+        '
+        Me.Add_Obj_Array.HeaderText = "Add"
+        Me.Add_Obj_Array.MinimumWidth = 100
+        Me.Add_Obj_Array.Name = "Add_Obj_Array"
+        Me.Add_Obj_Array.Text = "Add"
+        Me.Add_Obj_Array.UseColumnTextForButtonValue = True
+        '
+        'Del_Obj_Array
+        '
+        Me.Del_Obj_Array.HeaderText = "Delete"
+        Me.Del_Obj_Array.MinimumWidth = 100
+        Me.Del_Obj_Array.Name = "Del_Obj_Array"
+        Me.Del_Obj_Array.Text = "Delete"
+        Me.Del_Obj_Array.UseColumnTextForButtonValue = True
+        '
         'MainForm
         '
         Me.AllowDrop = True
@@ -3326,6 +3366,7 @@ Partial Class MainForm
     Friend WithEvents End_Face As DataGridViewTextBoxColumn
     Friend WithEvents Add_Mask As DataGridViewButtonColumn
     Friend WithEvents Del_Mask As DataGridViewButtonColumn
+    Friend WithEvents ImportYOBJArrayFromCSVToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents YobjArryIndex As DataGridViewTextBoxColumn
     Friend WithEvents ObjArrayParent As DataGridViewTextBoxColumn
     Friend WithEvents Number As DataGridViewTextBoxColumn
@@ -3339,5 +3380,6 @@ Partial Class MainForm
     Friend WithEvents RZ As DataGridViewTextBoxColumn
     Friend WithEvents ContainedYobjArray As DataGridViewTextBoxColumn
     Friend WithEvents StartIndexYobjArray As DataGridViewTextBoxColumn
-    Friend WithEvents ImportYOBJArrayFromCSVToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents Add_Obj_Array As DataGridViewButtonColumn
+    Friend WithEvents Del_Obj_Array As DataGridViewButtonColumn
 End Class

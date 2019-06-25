@@ -2046,7 +2046,9 @@ Public Class MainForm
         SentDataGrid.Rows.Clear()
         Return CloneRow
     End Function
-
+    Dim ReadOnlyCellStyle As DataGridViewCellStyle = New DataGridViewCellStyle With {
+        .BackColor = SystemColors.Control,
+        .ForeColor = SystemColors.ControlText}
 #End Region
     'TO DO Request Direct Editing of Hex Edit View
 #Region "Hex View Controls"
@@ -2286,16 +2288,20 @@ Public Class MainForm
         End If
     End Sub
     Private Sub DataGridStringView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridStringView.CellContentClick
-        If e.ColumnIndex = 3 Then 'add button
-            Dim Duplicaterow As DataGridViewRow = DataGridStringView.Rows(e.RowIndex).Clone
-            For i As Integer = 0 To DataGridStringView.Rows(e.RowIndex).Cells.Count - 1
-                Duplicaterow.Cells(i).Value = DataGridStringView.Rows(e.RowIndex).Cells(i).Value
-            Next
-            Duplicaterow.Tag = DataGridStringView.Rows(e.RowIndex).Tag
-            DataGridStringView.Rows.Insert(e.RowIndex + 1, Duplicaterow)
-        ElseIf e.ColumnIndex = 4 Then 'Delete button
-            DataGridStringView.Rows.RemoveAt(e.RowIndex)
-        Else
+        Dim senderGrid = DirectCast(sender, DataGridView)
+        If TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewButtonColumn Then
+            If e.ColumnIndex = 3 Then 'add button
+                Dim Duplicaterow As DataGridViewRow = DataGridStringView.Rows(e.RowIndex).Clone
+                For i As Integer = 0 To DataGridStringView.Rows(e.RowIndex).Cells.Count - 1
+                    Duplicaterow.Cells(i).Value = DataGridStringView.Rows(e.RowIndex).Cells(i).Value
+                Next
+                Duplicaterow.Tag = DataGridStringView.Rows(e.RowIndex).Tag
+                DataGridStringView.Rows.Insert(e.RowIndex + 1, Duplicaterow)
+            ElseIf e.ColumnIndex = 4 Then 'Delete button
+                DataGridStringView.Rows.RemoveAt(e.RowIndex)
+            Else
+                'do nothing
+            End If
             'do nothing
         End If
     End Sub
@@ -4002,6 +4008,7 @@ Public Class MainForm
 #End Region
 #End Region
 #Region "Object Array Controls"
+    Dim ObjArrayContainerCount As Integer = 0
     Sub LoadObjectArrayView(SelectedData As TreeNode)
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridObjArrayView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
@@ -4010,28 +4017,25 @@ Public Class MainForm
         Dim ChairCount As Integer = BitConverter.ToInt32(ObjArrayBytes, &HC)
         Dim ParentStrings As String() = New String(ChairCount) {}
         ParentStrings(0) = "Base Object"
+        ObjArrayContainerCount = 0
         For i As Integer = 0 To ChairCount - 1
             Dim ItemString As String = Encoding.ASCII.GetString(ObjArrayBytes, &H20 + ChairCount * 8 + i * &H30, &H10).Trim()
             Dim InternalItemCount As Int32 = BitConverter.ToInt32(ObjArrayBytes, &H48 + ChairCount * 8 + i * &H30)
             Dim StartIndex As Int32 = BitConverter.ToInt32(ObjArrayBytes, &H4C + ChairCount * 8 + i * &H30)
             TempGridRow = CloneRow.Clone()
             If InternalItemCount > 0 Then
+                ObjArrayContainerCount += 1
                 For j As Integer = StartIndex To StartIndex + InternalItemCount
                     ParentStrings(j) = ItemString
                 Next
             End If
             TempGridRow.Cells(0).Value = i 'Absolute Index
-            TempGridRow.Cells(0).Style.BackColor = SystemColors.Control
-            TempGridRow.Cells(0).Style.ForeColor = SystemColors.ControlText
             TempGridRow.Cells(1).Value = ParentStrings(i)  'Parent
-            TempGridRow.Cells(1).Style.BackColor = SystemColors.Control
-            TempGridRow.Cells(1).Style.ForeColor = SystemColors.ControlText
             TempGridRow.Cells(2).Value = BitConverter.ToInt32(ObjArrayBytes, &H24 + i * 8) 'Number
             TempGridRow.Cells(3).Value = BitConverter.ToBoolean(ObjArrayBytes, &H20 + i * 8) 'Enabled
             If InternalItemCount > 0 Then
                 TempGridRow.Cells(3).ReadOnly = True
-                TempGridRow.Cells(3).Style.BackColor = SystemColors.Control
-                TempGridRow.Cells(3).Style.ForeColor = SystemColors.ControlText
+                TempGridRow.Cells(3).Style = ReadOnlyCellStyle
             End If
             TempGridRow.Cells(4).Value = ItemString  'Object Name
             TempGridRow.Cells(5).Value = BitConverter.ToSingle(ObjArrayBytes, &H30 + ChairCount * 8 + i * &H30) 'X Float
@@ -4041,11 +4045,7 @@ Public Class MainForm
             TempGridRow.Cells(9).Value = BitConverter.ToSingle(ObjArrayBytes, &H40 + ChairCount * 8 + i * &H30) 'RY Float
             TempGridRow.Cells(10).Value = BitConverter.ToSingle(ObjArrayBytes, &H44 + ChairCount * 8 + i * &H30) 'RZ Float
             TempGridRow.Cells(11).Value = InternalItemCount 'Item Count
-            TempGridRow.Cells(11).Style.BackColor = SystemColors.Control
-            TempGridRow.Cells(11).Style.ForeColor = SystemColors.ControlText
             TempGridRow.Cells(12).Value = StartIndex 'Start Index
-            TempGridRow.Cells(12).Style.BackColor = SystemColors.Control
-            TempGridRow.Cells(12).Style.ForeColor = SystemColors.ControlText
             WorkingCollection.Add(TempGridRow)
         Next
         DataGridObjArrayView.Rows.AddRange(WorkingCollection.ToArray())
@@ -4055,22 +4055,19 @@ Public Class MainForm
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridObjArrayView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
         Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
+        ObjArrayContainerCount = 0
         For i As Integer = 1 To CSVString.Count - 1
             TempGridRow = CloneRow.Clone()
             Dim CSVValues As String() = CSVString(i).Split(",")
             Dim InternalItemCount As Int32 = CSVValues(11)
             TempGridRow.Cells(0).Value = CSVValues(0)
-            TempGridRow.Cells(0).Style.BackColor = SystemColors.Control
-            TempGridRow.Cells(0).Style.ForeColor = SystemColors.ControlText
             TempGridRow.Cells(1).Value = CSVValues(1)
-            TempGridRow.Cells(1).Style.BackColor = SystemColors.Control
-            TempGridRow.Cells(1).Style.ForeColor = SystemColors.ControlText
             TempGridRow.Cells(2).Value = CSVValues(2) 'Number
             TempGridRow.Cells(3).Value = CSVValues(3) 'Enabled
             If InternalItemCount > 0 Then
+                ObjArrayContainerCount += 1
                 TempGridRow.Cells(3).ReadOnly = True
-                TempGridRow.Cells(3).Style.BackColor = SystemColors.Control
-                TempGridRow.Cells(3).Style.ForeColor = SystemColors.ControlText
+                TempGridRow.Cells(3).Style = ReadOnlyCellStyle
             End If
             TempGridRow.Cells(4).Value = CSVValues(4)  'Object Name
             TempGridRow.Cells(5).Value = CSVValues(5) 'X Float
@@ -4080,11 +4077,7 @@ Public Class MainForm
             TempGridRow.Cells(9).Value = CSVValues(9) 'RY Float
             TempGridRow.Cells(10).Value = CSVValues(10) 'RZ Float
             TempGridRow.Cells(11).Value = InternalItemCount 'Item Count
-            TempGridRow.Cells(11).Style.BackColor = SystemColors.Control
-            TempGridRow.Cells(11).Style.ForeColor = SystemColors.ControlText
             TempGridRow.Cells(12).Value = CSVValues(12) 'Start Index
-            TempGridRow.Cells(12).Style.BackColor = SystemColors.Control
-            TempGridRow.Cells(12).Style.ForeColor = SystemColors.ControlText
             WorkingCollection.Add(TempGridRow)
         Next
         DataGridObjArrayView.Rows.AddRange(WorkingCollection.ToArray())
@@ -4106,6 +4099,15 @@ Public Class MainForm
                 Else
                     MyCell.Value = MyCell.Value.ToString.Trim()
                     MyCell.Value = MyCell.Value.ToString.Replace(" ", "")
+                    'if it's a container object we need to update the relevent names on the datagrid..
+                    If CInt(DataGridObjArrayView.Rows(e.RowIndex).Cells(11).Value) > 0 Then
+                        'It is a container file and we need to update the lines
+                        Dim StartIndex As Integer = CInt(DataGridObjArrayView.Rows(e.RowIndex).Cells(12).Value)
+                        Dim EndingIndex As Integer = StartIndex + CInt(DataGridObjArrayView.Rows(e.RowIndex).Cells(11).Value) - 1
+                        For i As Integer = StartIndex To EndingIndex
+                            DataGridObjArrayView.Rows(i).Cells(1).Value = MyCell.Value
+                        Next
+                    End If
                 End If
             Case > 4 'Single Number Values
                 If Not IsNumeric(MyCell.Value) Then
@@ -4114,6 +4116,144 @@ Public Class MainForm
                 'Case 11 OrElse 12 'Item Count and Starting Index Should be Changed by User. Only by Add / Delete Buttons.
         End Select
         SaveYOBJArrayChangesToolStripMenuItem.Visible = True
+    End Sub
+    Private Sub DataGridObjArrayView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridObjArrayView.CellContentClick
+        Dim senderGrid = DirectCast(sender, DataGridView)
+        If TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewButtonColumn AndAlso
+           e.RowIndex >= 0 Then
+            If e.ColumnIndex = 13 Then 'add button
+                If CInt(DataGridObjArrayView.Rows(e.RowIndex).Cells(11).Value) > 0 Then
+                    'Container Object We need to add at least 1 Sub items
+                    AddObjArrayContainer(e.RowIndex)
+                Else
+                    'Individual Item that we need to update within the container
+                    AddObjArrayIndividualObject(e.RowIndex)
+                End If
+            ElseIf e.ColumnIndex = 14 Then 'Delete button
+                    If CInt(DataGridObjArrayView.Rows(e.RowIndex).Cells(11).Value) > 0 Then
+                        'Container Object We also need to delete the sub objects
+                        DeleteObjArrayContainer(e.RowIndex)
+                    Else
+                        'Individual Item we will need to update the container object.
+                        DeleteObjArrayIndividualObject(e.RowIndex)
+                    End If
+                Else
+                    'do nothing
+                End If
+        End If
+    End Sub
+    Sub AddObjArrayContainer(index As Integer)
+        'This function adds a new container object with 1 item at the location of index+1
+        Dim Duplicaterow As DataGridViewRow = DataGridObjArrayView.Rows(index).Clone
+        For i As Integer = 0 To DataGridObjArrayView.Rows(index).Cells.Count - 1
+            Duplicaterow.Cells(i).Value = DataGridObjArrayView.Rows(index).Cells(i).Value
+        Next
+        'change Start Index and Container Count
+        Duplicaterow.Cells(11).Value = 1
+        Duplicaterow.Cells(12).Value = DataGridObjArrayView.Rows(index + 1).Cells(12).Value
+        'Add +1 because we add a row before the command is actually called..
+        Dim LastItemOfPreviousContainerToCopy As Integer = CInt(DataGridObjArrayView.Rows(index + 1).Cells(12).Value) + 1
+        DataGridObjArrayView.Rows.Insert(index + 1, Duplicaterow)
+        For i As Integer = 0 To ObjArrayContainerCount
+            'if the start index is beyond or equal to the added object we need to +1 to the start index
+            If CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) >= index Then
+                'if the index matches then the added item was added to the previous 
+                DataGridObjArrayView.Rows(i).Cells(12).Value = CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) + 1
+            End If
+        Next
+        For i As Integer = index + 1 To DataGridObjArrayView.Rows.Count - 1
+            'Update Absolute Index
+            DataGridObjArrayView.Rows(i).Cells(0).Value = CInt(DataGridObjArrayView.Rows(i).Cells(0).Value) + 1
+        Next
+        MessageBox.Show("Adding Sub Object " & LastItemOfPreviousContainerToCopy)
+        AddObjArrayIndividualObject(LastItemOfPreviousContainerToCopy, True)
+    End Sub
+    Sub AddObjArrayIndividualObject(index As Integer, Optional NewContainer As Boolean = False)
+        'This function adds a duplicate row at index + 1, but index + 1 has to have true index updated as well
+        Dim Duplicaterow As DataGridViewRow = DataGridObjArrayView.Rows(index).Clone
+        For i As Integer = 0 To DataGridObjArrayView.Rows(index).Cells.Count - 1
+            Duplicaterow.Cells(i).Value = DataGridObjArrayView.Rows(index).Cells(i).Value
+        Next
+        DataGridObjArrayView.Rows.Insert(index + 1, Duplicaterow)
+        'This function runs after the index is actually added
+        For i As Integer = index + 1 To DataGridObjArrayView.Rows.Count - 1
+            'Update Absolute Index
+            DataGridObjArrayView.Rows(i).Cells(0).Value = CInt(DataGridObjArrayView.Rows(i).Cells(0).Value) + 1
+        Next
+        For i As Integer = 0 To ObjArrayContainerCount
+            'if the start index is beyond or equal to the added object we need to +1 to the start index
+            If CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) > index Then
+                DataGridObjArrayView.Rows(i).Cells(12).Value = CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) + 1
+            ElseIf CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) = index Then
+                MessageBox.Show("Matched Index")
+                'if the index matches then the added item was added to the previous container... or it's a new container
+                If Not NewContainer Then
+                    DataGridObjArrayView.Rows(i).Cells(12).Value = CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) + 1
+                ElseIf Not CInt(DataGridObjArrayView.Rows(i).Cells(11).Value) = 1 Then
+                    DataGridObjArrayView.Rows(i).Cells(12).Value = CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) + 1
+                End If
+            ElseIf CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) + CInt(DataGridObjArrayView.Rows(i).Cells(11).Value) >= index Then
+                If Not NewContainer Then
+                    'this means that this is the container that contains the added object so we need to increase the item count
+                    DataGridObjArrayView.Rows(i).Cells(11).Value = CInt(DataGridObjArrayView.Rows(i).Cells(11).Value) + 1
+                End If
+            End If
+        Next
+    End Sub
+    Sub DeleteObjArrayContainer(index As Integer)
+        'This function runs before the container is actually deleted
+        If CInt(DataGridObjArrayView.Rows(index).Cells(11).Value) > 0 Then
+            Dim LastContainedObject As Integer = (CInt(DataGridObjArrayView.Rows(index).Cells(12).Value) + CInt(DataGridObjArrayView.Rows(index).Cells(11).Value) - 1)
+            Dim FirstContainedObject As Integer = CInt(DataGridObjArrayView.Rows(index).Cells(12).Value)
+            'MessageBox.Show(LastContainedObject & " to " & FirstContainedObject)
+            For i As Integer = LastContainedObject To FirstContainedObject Step -1
+                MessageBox.Show("Deleting Object " & i)
+                DeleteObjArrayIndividualObject(i)
+            Next
+            'we want to skip the last 2 lines so we don't accidently delete 2 rows because the last for will call the delete container again
+        Else
+            MessageBox.Show("Deleting Container")
+            For i As Integer = index + 1 To DataGridObjArrayView.Rows.Count - 1
+                'Update Absolute Index
+                DataGridObjArrayView.Rows(i).Cells(0).Value = CInt(DataGridObjArrayView.Rows(i).Cells(0).Value) - 1
+            Next
+            'Try To update containers
+            For i As Integer = 0 To ObjArrayContainerCount
+                'if the start index is beyond the deleted object  we need to -1 to the start index
+                If CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) > index Then
+                    DataGridObjArrayView.Rows(i).Cells(12).Value = CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) - 1
+                End If
+            Next
+            MessageBox.Show("Deleting Container Line")
+            DataGridObjArrayView.Rows.RemoveAt(index)
+            ObjArrayContainerCount -= 1
+        End If
+    End Sub
+    Sub DeleteObjArrayIndividualObject(index As Integer)
+        'This function runs before the index is actually deleted
+        For i As Integer = index + 1 To DataGridObjArrayView.Rows.Count - 1
+            'Update Absolute Index
+            DataGridObjArrayView.Rows(i).Cells(0).Value = CInt(DataGridObjArrayView.Rows(i).Cells(0).Value) - 1
+        Next
+        Dim DeleteContainer As Boolean = False
+        Dim ContainertoDelete As Integer = -1
+        'Try to update containers
+        For i As Integer = 0 To ObjArrayContainerCount
+            'if the start index is beyond the deleted object  we need to -1 to the start index
+            If CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) > index Then
+                DataGridObjArrayView.Rows(i).Cells(12).Value = CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) - 1
+            ElseIf CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) + CInt(DataGridObjArrayView.Rows(i).Cells(11).Value) > index Then
+                'this means that this is the container that contains the deleted object so we need to reduce the idem count
+                DataGridObjArrayView.Rows(i).Cells(11).Value = CInt(DataGridObjArrayView.Rows(i).Cells(11).Value) - 1
+                'if the updated container item count = 0 we will want to delete the container as well
+                If CInt(DataGridObjArrayView.Rows(i).Cells(11).Value) = 0 Then
+                    DeleteContainer = True
+                    ContainertoDelete = i
+                End If
+            End If
+        Next
+        DataGridObjArrayView.Rows.RemoveAt(index)
+        If DeleteContainer Then DeleteObjArrayContainer(ContainertoDelete)
     End Sub
     Private Sub SaveYOBJArrayChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveYOBJArrayChangesToolStripMenuItem.Click
         InjectIntoNode(ReadNode, BuildYOBJArrayFile())
