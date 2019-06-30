@@ -293,6 +293,18 @@ Namespace My
                 Me("BPEExePath") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property DecompresstoFolder() As Boolean
+            Get
+                Return CType(Me("DecompresstoFolder"),Boolean)
+            End Get
+            Set
+                Me("DecompresstoFolder") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

@@ -13,7 +13,7 @@ Imports Newtonsoft.Json
 Imports System.Text.RegularExpressions 'Regular Expressions for text matches
 Imports FontAwesome.Sharp
 Public Class MainForm
-#Region "Oodle Stuff"
+#Region "Compression & Decompress"
     Public Enum OodleFormat As UInt32
         LZH
         LZHLW
@@ -45,6 +45,34 @@ Public Class MainForm
             a As UInt32, b As UInt32, c As ULong, d As UInt32, e As UInt32, f As UInt32, g As UInt32, h As UInt32, i As UInt32, threadModule As UInt32) As Integer
     Private Declare Function OodleLZ_Compress Lib "oo2core_6_win64" (format As OodleFormat, buffer As Byte(), bufferSize As Long, outputBuffer As Byte(), level As OodleCompressionLevel, a As UInt32, b As UInt32, b As UInt32, d As ULong, threadModule As UInt32) As Integer
     'U32 compsize = (U32)OodleLZ_Compress(g_compressor, rawbufbase+dataoffset, bytesread, compbuf, (OodleLZ_CompressionLevel)g_level, &compressoptions, rawbufbase+dataoffset-contextsize, NULL, g_scratchmemory, g_scratchmemsize);
+    Function GetUncompressedOodleBytes(SentBytes As Byte())
+        Dim CompressedLength As Long = BitConverter.ToUInt32(SentBytes, &H14)
+        If Not CompressedLength = SentBytes.Length - &H18 Then
+            If My.Settings.BypassOODLWarn Then
+                CompressedLength = SentBytes.Length - &H18
+            Else
+                Dim result = MessageBox.Show("OODL Compression Length Mis-Match" & vbNewLine &
+                              "Auto-detect compressed length?", "OODL Header Issue", MessageBoxButtons.YesNoCancel)
+                If result = DialogResult.Cancel Then
+                    Return Nothing
+                ElseIf result = DialogResult.Yes Then
+                    CompressedLength = SentBytes.Length - &H18
+                End If
+            End If
+        End If
+        Dim CompressedBytes As Byte() = New Byte(CompressedLength - 1) {}
+        Dim LengthDiff As Int32 = SentBytes.Length - CompressedBytes.Length
+        Array.Copy(SentBytes, LengthDiff, CompressedBytes, 0, CInt(CompressedBytes.Length))
+        Dim UncompressedLength As Long = BitConverter.ToUInt32(SentBytes, &H10)
+        Dim UncompressedBytes As Byte() = New Byte(UncompressedLength - 1) {}
+        Try
+            OodleLZ_Decompress(CompressedBytes, CompressedLength, UncompressedBytes, UncompressedLength,
+                               0, 0, 0, 0, 0, 0, 0, 0, 0, 3)
+        Catch ex As Exception
+            Return Nothing
+        End Try
+        Return UncompressedBytes
+    End Function
     Function GetCompressedOodleBytes(SentBytes As Byte())
         Dim CompressedBuffer As Byte() = New Byte(SentBytes.LongLength - 1) {}
         Dim CompressedLength As Long = 0
@@ -61,6 +89,19 @@ Public Class MainForm
         Array.Copy(BitConverter.GetBytes(CUInt(CompressedLength)), 0, OodleFileBytes, &H14, 4)
         Array.Copy(CompressedBuffer, 0, OodleFileBytes, &H18, CompressedLength)
         Return OodleFileBytes
+    End Function
+    Function GetUncompressedZlibBytes(SentBytes As Byte())
+        Dim CompressedLength As UInt32 = BitConverter.ToUInt32(SentBytes, 8)
+        Dim UncompressedLength As UInt32 = BitConverter.ToUInt32(SentBytes, 12)
+        Dim input As Byte() = New Byte(CompressedLength - 1) {}
+        Array.Copy(SentBytes, 16, input, 0, CInt(SentBytes.Length - 16))
+        Dim output As Byte() = New Byte(UncompressedLength - 1) {}
+        Try
+            output = ZlibStream.UncompressBuffer(input)
+        Catch ex As Exception
+            Return Nothing
+        End Try
+        Return output
     End Function
     Function GetCompressedZlibBytes(SentBytes As Byte())
         Dim CompressedBuffer As Byte() = New Byte(SentBytes.LongLength - 1) {}
@@ -83,6 +124,23 @@ Public Class MainForm
         Array.Copy(CompressedBuffer, 0, ZlibFileBytes, &H10, CompressedBuffer.Length)
         'BreakFunction(ZlibFileBytes)
         Return ZlibFileBytes
+    End Function
+    Function GetUncompressedBPEBytes(SentBytes As Byte())
+        Dim UncompressedLength As Integer = BitConverter.ToUInt32(SentBytes, &HC)
+        Dim UncompressedBytes As Byte() = New Byte(UncompressedLength) {}
+        Try
+            Dim TempInput As String = Path.GetTempFileName
+            Dim TempOutput As String = Path.GetTempFileName
+            File.WriteAllBytes(TempInput, SentBytes)
+            Process.Start(My.Settings.UnrrbpePath, TempInput & " " & TempOutput).WaitForExit()
+            UncompressedBytes = File.ReadAllBytes(TempOutput)
+            File.Delete(TempInput)
+            File.Delete(TempOutput)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+            Return Nothing
+        End Try
+        Return UncompressedBytes
     End Function
     Function GetCompressedBPEBytes(SentBytes As Byte())
         Dim CompressedBuffer As Byte() = New Byte(SentBytes.LongLength - 1) {}
@@ -138,10 +196,15 @@ Public Class MainForm
         End If
     End Sub
     Sub LoadFontAwesomeIcons()
-        LoadHomeToolStripMenuItem.Image = IconChar.Home.ToBitmap(16, Color.Black)
-        OpenToolStripMenuItem.Image = IconChar.FolderOpen.ToBitmap(16, Color.Black)
-        ExitToolStripMenuItem.Image = IconChar.WindowClose.ToBitmap(16, Color.Black)
-        'https://fontawesome.com/cheatsheet?from=io
+        If CheckFontAwesome() Then
+            LoadHomeToolStripMenuItem.Image = IconChar.Home.ToBitmap(16, Color.Black)
+            OpenToolStripMenuItem.Image = IconChar.FolderOpen.ToBitmap(16, Color.Black)
+            ExitToolStripMenuItem.Image = IconChar.WindowClose.ToBitmap(16, Color.Black)
+            BPECompressionToolStripMenuItem.Image = IconChar.CompressArrowsAlt.ToBitmap(16, Color.Black)
+            ZLIBCompressionToolStripMenuItem.Image = IconChar.CompressArrowsAlt.ToBitmap(16, Color.Black)
+            OODLCompressionToolStripMenuItem.Image = IconChar.CompressArrowsAlt.ToBitmap(16, Color.Black)
+            'https://fontawesome.com/cheatsheet?from=io
+        End If
     End Sub
     Sub SettingsCheck()
         If My.Settings.UpgradeRequired = True Then
@@ -159,13 +222,31 @@ Public Class MainForm
         If My.Settings.RADVideoToolPath = "" Then
             GetRadVideo()
         End If
-        If My.Settings.BPEExePath = "" Then
-            GetBPEExe()
+        CheckUnrrbpe()
+        CheckDDSexe()
+        'Tool Menu Compress in place
+        Dim CompressOptions As Integer = ToolsToolStripMenuItem.DropDownItems.Count
+        If CheckBPEExe() Then
+            BPECompressionToolStripMenuItem.Visible = True
+        Else
+            BPECompressionToolStripMenuItem.Visible = False
+            CompressOptions -= 1
         End If
-        If My.Settings.UnrrbpePath = "" Then
-            GetUnrrbpe()
+        If CheckIconicZlib() Then
+            ZLIBCompressionToolStripMenuItem.Visible = True
+        Else
+            ZLIBCompressionToolStripMenuItem.Visible = False
+            CompressOptions -= 1
         End If
-        GetDDSexe()
+        If CheckOodle() Then
+            OODLCompressionToolStripMenuItem.Visible = True
+        Else
+            OODLCompressionToolStripMenuItem.Visible = False
+            CompressOptions -= 1
+        End If
+        If CompressOptions = 0 Then
+            ToolsToolStripMenuItem.Visible = False
+        End If
         HexViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         TextViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         MiscViewType.SelectedIndex = My.Settings.MiscModeIndex
@@ -216,8 +297,6 @@ Public Class MainForm
                 PacNumbers(0) = -1
             End If
         End If
-        CheckIconicZlib()
-        CheckOodle()
         My.Settings.Save()
     End Sub
     Dim MuscleViewStartupRemoved As Boolean = False
@@ -265,13 +344,11 @@ Public Class MainForm
                             SaveFileNoLongerPending()
                         End If
                     End If
-
                     TabControl1.TabPages.Remove(TempTabPage)
             End Select
         Next
         Return DialogResult.OK
     End Function
-
     Sub CheckUpdate()
         Dim checkUpdateThread = New Thread(AddressOf OnlineVersion.CheckUpdate)
         checkUpdateThread.SetApartmentState(ApartmentState.STA)
@@ -377,12 +454,12 @@ Public Class MainForm
             End If
         End If
     End Sub
-    Public Sub GetBPEExe(Optional FromOptions As Boolean = False)
+    Public Function CheckBPEExe(Optional FromOptions As Boolean = False)
         Dim AppDataStorage As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
         If FromOptions = False Then
             If File.Exists(AppDataStorage & Path.DirectorySeparatorChar & "bpe.exe") Then
                 My.Settings.BPEExePath = AppDataStorage & Path.DirectorySeparatorChar & "bpe.exe"
-                Exit Sub
+                Return True
             Else
                 If MessageBox.Show("Would you like to navigate to ""bpe.exe""" & vbNewLine &
                     "this would be in any ""Pac Editor"" install folder.",
@@ -390,7 +467,7 @@ Public Class MainForm
                        MessageBoxButtons.YesNo) = DialogResult.No Then
                     MessageBox.Show("Download link can be found in the options menu.")
                     My.Settings.BPEExePath = "Not Installed"
-                    Exit Sub
+                    Return False
                 End If
             End If
         End If
@@ -407,23 +484,32 @@ Public Class MainForm
                         FolderCheck(AppDataStorage)
                         File.Copy(BPEExeOpenDialog.FileName, AppDataStorage & Path.DirectorySeparatorChar & "bpe.exe", True)
                         My.Settings.BPEExePath = AppDataStorage & Path.DirectorySeparatorChar & "bpe.exe"
+                        Return True
                     Else
                         My.Settings.BPEExePath = BPEExeOpenDialog.FileName
+                        Return True
                     End If
                 Else
                     My.Settings.BPEExePath = BPEExeOpenDialog.FileName
+                    Return True
                 End If
             Else
-                    MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                Return False
             End If
         End If
-    End Sub
-    Public Sub GetUnrrbpe(Optional FromOptions As Boolean = False)
+        If My.Settings.BPEExePath = "Not Installed" Then
+            Return False
+        Else
+            Return True
+        End If
+    End Function
+    Public Function CheckUnrrbpe(Optional FromOptions As Boolean = False)
         Dim AppDataStorage As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
         If FromOptions = False Then
             If File.Exists(AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe") Then
                 My.Settings.UnrrbpePath = AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe"
-                Exit Sub
+                Return True
             Else
                 If MessageBox.Show("Would you like to navigate to ""unrrbpe.exe""" & vbNewLine &
                     "this would be in any ""X-Packer"" install folder.",
@@ -431,7 +517,7 @@ Public Class MainForm
                        MessageBoxButtons.YesNo) = DialogResult.No Then
                     MessageBox.Show("Download link can be found in the options menu.")
                     My.Settings.UnrrbpePath = "Not Installed"
-                    Exit Sub
+                    Return False
                 End If
             End If
         End If
@@ -448,18 +534,27 @@ Public Class MainForm
                         FolderCheck(AppDataStorage)
                         File.Copy(UnrrbpeOpenDialog.FileName, AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe", True)
                         My.Settings.UnrrbpePath = AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe"
+                        Return True
                     Else
                         My.Settings.UnrrbpePath = UnrrbpeOpenDialog.FileName
+                        Return True
                     End If
                 Else
                     My.Settings.UnrrbpePath = UnrrbpeOpenDialog.FileName
+                    Return True
                 End If
             Else
                 MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                Return False
             End If
         End If
-    End Sub
-    Public Sub GetDDSexe(Optional FromOptions As Boolean = False)
+        If My.Settings.UnrrbpePath = "Not Installed" Then
+            Return False
+        Else
+            Return True
+        End If
+    End Function
+    Public Sub CheckDDSexe(Optional FromOptions As Boolean = False)
         If FromOptions Then
             Dim DDSOpenExeOpenDialog As New OpenFileDialog With {.FileName = "*.exe", .Title = "Select exe for opening DDS files"}
             If Not My.Settings.DDSexeLocation = "Not Installed" Then
@@ -467,6 +562,8 @@ Public Class MainForm
             End If
             If DDSOpenExeOpenDialog.ShowDialog = DialogResult.OK Then
                 My.Settings.DDSexeLocation = DDSOpenExeOpenDialog.FileName
+            Else
+                OpenWithToolStripMenuItem.Text = "Open With..."
             End If
         ElseIf File.Exists(My.Settings.DDSexeLocation) Then
             OpenWithToolStripMenuItem.Text = "Open With " & Path.GetFileNameWithoutExtension(My.Settings.DDSexeLocation)
@@ -512,6 +609,37 @@ Public Class MainForm
                         If Path.GetFileName(OodleOpenDialog.FileName) = "oo2core_6_win64.dll" Then
                             File.Copy(OodleOpenDialog.FileName, Application.StartupPath &
                                       Path.DirectorySeparatorChar & "oo2core_6_win64.dll")
+                            Return True
+                        Else
+                            MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                            Return False
+                        End If
+                    Else
+                        Return False
+                    End If
+                End If
+            End If
+        Else
+            Return True
+        End If
+    End Function
+    Public Function CheckFontAwesome(Optional FromOptions As Boolean = False) As Boolean
+        If Not File.Exists(Application.StartupPath & Path.DirectorySeparatorChar & "FontAwesome.Sharp.dll") Then
+            Dim TestLocation As String = Path.GetDirectoryName(My.Settings.ExeLocation) & Path.DirectorySeparatorChar & "FontAwesome.Sharp.dll"
+            If File.Exists(TestLocation) Then
+                File.Copy(TestLocation,
+                      Path.GetDirectoryName(Application.ExecutablePath) & Path.DirectorySeparatorChar & "FontAwesome.Sharp.dll", True)
+                Return True
+            Else
+                If Not FromOptions Then
+                    MessageBox.Show("Oodle Dll Not loaded")
+                    Return False
+                Else
+                    Dim OodleOpenDialog As New OpenFileDialog With {.FileName = "FontAwesome.Sharp.dll", .Title = "FontAwesome.Sharp.dll"}
+                    If OodleOpenDialog.ShowDialog = DialogResult.OK Then
+                        If Path.GetFileName(OodleOpenDialog.FileName) = "FontAwesome.Sharp.dll" Then
+                            File.Copy(OodleOpenDialog.FileName, Application.StartupPath &
+                                      Path.DirectorySeparatorChar & "FontAwesome.Sharp.dll")
                             Return True
                         Else
                             MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
@@ -846,100 +974,85 @@ Public Class MainForm
 #End Region
 #Region "Compression Types"
             Case PackageType.ZLIB
-                Dim CompressedLength As UInt32 = BitConverter.ToUInt32(FileBytes, 8)
-                Dim UncompressedLength As UInt32 = BitConverter.ToUInt32(FileBytes, 12)
-                Dim input As Byte() = New Byte(CompressedLength - 1) {}
-                Array.Copy(FileBytes, 16, input, 0, CInt(NodeTag.length - 16))
-                Dim output As Byte() = New Byte(UncompressedLength - 1) {}
-                Try
-                    output = ZlibStream.UncompressBuffer(input)
-                Catch ex As Exception
-                    MessageBox.Show(ex.Message)
+                Dim UncompressedBytes As Byte() = Nothing
+                If CheckIconicZlib() Then
+                    UncompressedBytes = GetUncompressedZlibBytes(FileBytes)
+                End If
+                'Dim CompressedLength As UInt32 = BitConverter.ToUInt32(FileBytes, 8)
+                'Dim UncompressedLength As UInt32 = BitConverter.ToUInt32(FileBytes, 12)
+                'Dim input As Byte() = New Byte(CompressedLength - 1) {}
+                'Array.Copy(FileBytes, 16, input, 0, CInt(NodeTag.length - 16))
+                'Dim output As Byte() = New Byte(UncompressedLength - 1) {}
+                'Try
+                '    output = ZlibStream.UncompressBuffer(input)
+                'Catch ex As Exception
+                '    MessageBox.Show(ex.Message)
+                '    NodeTag.FileType = PackageType.bin
+                '    HostNode.Tag = NodeTag
+                '    Exit Sub
+                'End Try
+                If IsNothing(UncompressedBytes) Then
                     NodeTag.FileType = PackageType.bin
                     HostNode.Tag = NodeTag
                     Exit Sub
-                End Try
-                Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
-                TempNode.ToolTipText = HostNode.ToolTipText
-                Dim TempNodeProps As NodeProperties = New NodeProperties With {
-                    .Index = 0,
-                    .length = output.Length,
-                    .StoredData = output,
-                    .FileType = CheckHeaderType(.Index, output)}
-                TempNode.Tag = TempNodeProps
-                TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
-                TempNode.SelectedImageIndex = TempNode.ImageIndex
-                HostNode.Nodes.Add(TempNode)
+                Else
+                    Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
+                    TempNode.ToolTipText = HostNode.ToolTipText
+                    Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .Index = 0,
+                        .length = UncompressedBytes.Length,
+                        .StoredData = UncompressedBytes,
+                        .FileType = CheckHeaderType(.Index, UncompressedBytes)}
+                    TempNode.Tag = TempNodeProps
+                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                    TempNode.SelectedImageIndex = TempNode.ImageIndex
+                    HostNode.Nodes.Add(TempNode)
+                End If
             Case PackageType.BPE
                 'TODO add unBPE Check Here..
-                Dim UncompressedLength As Integer = BitConverter.ToUInt32(FileBytes, &HC)
-                Dim UncompressedBytes As Byte() = New Byte(UncompressedLength) {}
-                Try
-                    Dim TempInput As String = Path.GetTempFileName
-                    Dim TempOutput As String = Path.GetTempFileName
-                    File.WriteAllBytes(TempInput, FileBytes)
-                    Process.Start(My.Settings.UnrrbpePath, TempInput & " " & TempOutput).WaitForExit()
-                    UncompressedBytes = File.ReadAllBytes(TempOutput)
-                    File.Delete(TempInput)
-                    File.Delete(TempOutput)
-                Catch ex As Exception
-                    MessageBox.Show(ex.Message)
-                    NodeTag.FileType = PackageType.bin
-                    HostNode.Tag = NodeTag
-                    Exit Sub
-                End Try
-                Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
-                TempNode.ToolTipText = HostNode.ToolTipText
-                Dim TempNodeProps As NodeProperties = New NodeProperties With {
-                    .Index = 0,
-                    .length = UncompressedBytes.Length,
-                    .StoredData = UncompressedBytes,
-                    .FileType = CheckHeaderType(.Index, UncompressedBytes)}
-                TempNode.Tag = TempNodeProps
-                TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
-                TempNode.SelectedImageIndex = TempNode.ImageIndex
-                HostNode.Nodes.Add(TempNode)
-            Case PackageType.OODL
-                'TODO add OODL Check Here..
-                Dim CompressedLength As Long = BitConverter.ToUInt32(FileBytes, &H14)
-                If Not CompressedLength = FileBytes.Length - &H18 Then
-                    If My.Settings.BypassOODLWarn Then
-                        CompressedLength = FileBytes.Length - &H18
-                    Else
-                        Dim result = MessageBox.Show("OODL Compression Length Mis-Match" & vbNewLine &
-                                      "Auto-detect compressed length?", "OODL Header Issue", MessageBoxButtons.YesNoCancel)
-                        If result = DialogResult.Cancel Then
-                            Exit Sub
-                        ElseIf result = DialogResult.Yes Then
-                            CompressedLength = FileBytes.Length - &H18
-                        End If
-                    End If
+                Dim UncompressedBytes As Byte() = Nothing
+                If CheckUnrrbpe() Then
+                    UncompressedBytes = GetUncompressedBPEBytes(FileBytes)
                 End If
-                Dim CompressedBytes As Byte() = New Byte(CompressedLength - 1) {}
-                Dim LengthDiff As Int32 = FileBytes.Length - CompressedBytes.Length
-                Array.Copy(FileBytes, LengthDiff, CompressedBytes, 0, CInt(CompressedBytes.Length))
-                Dim UncompressedLength As Long = BitConverter.ToUInt32(FileBytes, &H10)
-                Dim UncompressedBytes As Byte() = New Byte(UncompressedLength - 1) {}
-                Try
-                    OodleLZ_Decompress(CompressedBytes, CompressedLength, UncompressedBytes, UncompressedLength,
-                                       0, 0, 0, 0, 0, 0, 0, 0, 0, 3)
-                Catch ex As Exception
-                    MessageBox.Show(ex.Message)
+                If IsNothing(UncompressedBytes) Then
                     NodeTag.FileType = PackageType.bin
                     HostNode.Tag = NodeTag
                     Exit Sub
-                End Try
-                Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
-                TempNode.ToolTipText = HostNode.ToolTipText
-                Dim TempNodeProps As NodeProperties = New NodeProperties With {
-                    .Index = 0,
-                    .length = UncompressedBytes.Length,
-                    .StoredData = UncompressedBytes,
-                    .FileType = CheckHeaderType(.Index, UncompressedBytes)}
-                TempNode.Tag = TempNodeProps
-                TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
-                TempNode.SelectedImageIndex = TempNode.ImageIndex
-                HostNode.Nodes.Add(TempNode)
+                Else
+                    Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
+                    TempNode.ToolTipText = HostNode.ToolTipText
+                    Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .Index = 0,
+                        .length = UncompressedBytes.Length,
+                        .StoredData = UncompressedBytes,
+                        .FileType = CheckHeaderType(.Index, UncompressedBytes)}
+                    TempNode.Tag = TempNodeProps
+                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                    TempNode.SelectedImageIndex = TempNode.ImageIndex
+                    HostNode.Nodes.Add(TempNode)
+                End If
+            Case PackageType.OODL
+                Dim UncompressedBytes As Byte() = Nothing
+                If CheckOodle() Then
+                    UncompressedBytes = GetUncompressedOodleBytes(FileBytes)
+                End If
+                If IsNothing(UncompressedBytes) Then
+                    NodeTag.FileType = PackageType.bin
+                    HostNode.Tag = NodeTag
+                    Exit Sub
+                Else
+                    Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
+                    TempNode.ToolTipText = HostNode.ToolTipText
+                    Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .Index = 0,
+                        .length = UncompressedBytes.Length,
+                        .StoredData = UncompressedBytes,
+                        .FileType = CheckHeaderType(.Index, UncompressedBytes)}
+                    TempNode.Tag = TempNodeProps
+                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                    TempNode.SelectedImageIndex = TempNode.ImageIndex
+                    HostNode.Nodes.Add(TempNode)
+                End If
 #End Region
 #Region "Library Types"
             Case PackageType.TextureLibrary
@@ -1027,7 +1140,6 @@ Public Class MainForm
         HostNode.ImageIndex = GetImageIndex(NodeTag.FileType)
         HostNode.SelectedImageIndex = HostNode.ImageIndex
         HostNode.Tag = NodeTag
-
     End Sub
     Function CheckHeaderType(Index As Long, ByVal ByteArray As Byte()) As PackageType
         'To be split into 2 seperate functions once all processes are added
@@ -1227,8 +1339,12 @@ Public Class MainForm
         LoadHome()
     End Sub
     Private Sub OpenToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenToolStripMenuItem.Click
-        If OpenFileDialog1.ShowDialog = DialogResult.OK Then
-            SelectedFiles = OpenFileDialog1.FileNames
+        If OpenFileOrFolderDialog.ShowDialog = DialogResult.OK Then
+            Dim DialogSelection As String() = OpenFileOrFolderDialog.FileNames
+            For i As Integer = 0 To DialogSelection.Count - 1
+                DialogSelection(i) = DialogSelection(i).Replace("Select Items", "")
+            Next '"Select Items"
+            SelectedFiles = DialogSelection
             LoadParameters()
         End If
     End Sub
@@ -1236,8 +1352,263 @@ Public Class MainForm
         Application.Exit()
     End Sub
     Private Sub OptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsToolStripMenuItem.Click
-        OptionsMenu.Show()
+        OptionsMenu.Show() '
     End Sub
+#Region "Tool Compression Toolstrip"
+    Private Sub BPEBatchCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BPEBatchCompressToolStripMenuItem.Click
+        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
+            .Multiselect = True,
+            .FileName = "File(s) to Compress"}
+        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim SelectedFiles As String() = CompressOpenFileDialog.FileNames
+            For i As Integer = 0 To SelectedFiles.Count - 1
+                CompressBPEToFile(SelectedFiles(i))
+            Next
+            MessageBox.Show("Compression Complete")
+        End If
+    End Sub
+    Private Sub BPESingleCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BPESingleCompressToolStripMenuItem.Click
+        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
+            .FileName = "File to Compress"}
+        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim CompressSaveFileDialog As SaveFileDialog = New SaveFileDialog With {
+                .InitialDirectory = Path.GetDirectoryName(CompressOpenFileDialog.FileName),
+                .FileName = Path.GetFileNameWithoutExtension(CompressOpenFileDialog.FileName) & ".bpe",
+                .Title = "Save File Locaiton"}
+            If CompressSaveFileDialog.ShowDialog() = DialogResult.OK Then
+                If CompressBPEToFile(CompressOpenFileDialog.FileName(), CompressSaveFileDialog.FileName()) Then
+                    MessageBox.Show("Compression Complete")
+                End If
+            End If
+        End If
+    End Sub
+    Function CompressBPEToFile(FiletoRead As String, Optional FiletoWrite As String = "")
+        If File.Exists(FiletoRead) Then
+            Dim FileBytes As Byte() = File.ReadAllBytes(FiletoRead)
+            Dim ExistingFileType As PackageType = CheckHeaderType(0, FileBytes)
+            If ExistingFileType = PackageType.BPE Then
+                MessageBox.Show("File is already a BPE")
+            Else
+                Dim BytesToCompress As Byte() = Nothing
+                If ExistingFileType = PackageType.OODL Then
+                    Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as OODL" & vbNewLine & "Decompress before compression?",
+                                                                 "File Already Compressed", MessageBoxButtons.YesNoCancel)
+                    If Result = DialogResult.Yes Then
+                        BytesToCompress = GetUncompressedOodleBytes(FileBytes)
+                    ElseIf Result = DialogResult.No Then
+                        BytesToCompress = FileBytes
+                    ElseIf Result = DialogResult.Cancel Then
+                        Return False
+                    End If
+                ElseIf ExistingFileType = PackageType.ZLIB Then
+                    Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as ZLIB" & vbNewLine & "Decompress before compression?",
+                                                                 "File Already Compressed", MessageBoxButtons.YesNoCancel)
+                    If Result = DialogResult.Yes Then
+                        BytesToCompress = GetUncompressedZlibBytes(FileBytes)
+                    ElseIf Result = DialogResult.No Then
+                        BytesToCompress = FileBytes
+                    ElseIf Result = DialogResult.Cancel Then
+                        Return False
+                    End If
+                Else
+                    BytesToCompress = FileBytes
+                End If
+                Dim CompressedBytes As Byte() = Nothing
+                CompressedBytes = GetCompressedBPEBytes(BytesToCompress)
+                If IsNothing(CompressedBytes) Then
+                    MessageBox.Show("Failure to get compressed bytes for " & Path.GetFileName(FiletoRead))
+                    Return False
+                Else
+                    'Write bytes to file
+                    Dim SaveLocation As String = ""
+                    If FiletoWrite = "" Then
+                        SaveLocation = Path.GetDirectoryName(FiletoRead) & Path.DirectorySeparatorChar & Path.GetFileNameWithoutExtension(FiletoRead) & ".bpe"
+                        If File.Exists(SaveLocation) Then
+                            'We need to Backup the file in this case... this really shouldn't happen because bpe is skipped
+                            File.Move(SaveLocation, SaveLocation.Replace(".bpe", ".bpe.bak"))
+                        End If
+                    Else
+                        SaveLocation = FiletoWrite
+                    End If
+                    File.WriteAllBytes(SaveLocation, CompressedBytes)
+                    Return True
+                End If
+            End If
+        Else
+            MessageBox.Show("File " & Path.GetFileName(FiletoRead) & " Does Not Exist")
+        End If
+        Return False
+    End Function
+    Private Sub ZLIBBatchCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZLIBBatchCompressToolStripMenuItem.Click
+        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
+            .Multiselect = True,
+            .FileName = "File(s) to Compress"}
+        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim SelectedFiles As String() = CompressOpenFileDialog.FileNames
+            For i As Integer = 0 To SelectedFiles.Count - 1
+                CompressZLIBToFile(SelectedFiles(i))
+            Next
+            MessageBox.Show("Compression Complete")
+        End If
+    End Sub
+    Private Sub ZLIBSingleCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZLIBSingleCompressToolStripMenuItem.Click
+        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
+            .FileName = "File to Compress"}
+        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim CompressSaveFileDialog As SaveFileDialog = New SaveFileDialog With {
+                .InitialDirectory = Path.GetDirectoryName(CompressOpenFileDialog.FileName),
+                .FileName = Path.GetFileNameWithoutExtension(CompressOpenFileDialog.FileName) & ".zlib",
+                .Title = "Save File Locaiton"}
+            If CompressSaveFileDialog.ShowDialog() = DialogResult.OK Then
+                If CompressZLIBToFile(CompressOpenFileDialog.FileName(), CompressSaveFileDialog.FileName()) Then
+                    MessageBox.Show("Compression Complete")
+                End If
+            End If
+        End If
+    End Sub
+    Function CompressZLIBToFile(FiletoRead As String, Optional FiletoWrite As String = "")
+        If File.Exists(FiletoRead) Then
+            Dim FileBytes As Byte() = File.ReadAllBytes(FiletoRead)
+            Dim ExistingFileType As PackageType = CheckHeaderType(0, FileBytes)
+            If ExistingFileType = PackageType.ZLIB Then
+                MessageBox.Show("File is already a ZLIB")
+            Else
+                Dim BytesToCompress As Byte() = Nothing
+                If ExistingFileType = PackageType.OODL Then
+                    Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as OODL" & vbNewLine & "Decompress before compression?",
+                                                                 "File Already Compressed", MessageBoxButtons.YesNoCancel)
+                    If Result = DialogResult.Yes Then
+                        BytesToCompress = GetUncompressedOodleBytes(FileBytes)
+                    ElseIf Result = DialogResult.No Then
+                        BytesToCompress = FileBytes
+                    ElseIf Result = DialogResult.Cancel Then
+                        Return False
+                    End If
+                ElseIf ExistingFileType = PackageType.BPE Then
+                    Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as BPE" & vbNewLine & "Decompress before compression?",
+                                                                 "File Already Compressed", MessageBoxButtons.YesNoCancel)
+                    If Result = DialogResult.Yes Then
+                        BytesToCompress = GetUncompressedBPEBytes(FileBytes)
+                    ElseIf Result = DialogResult.No Then
+                        BytesToCompress = FileBytes
+                    ElseIf Result = DialogResult.Cancel Then
+                        Return False
+                    End If
+                Else
+                    BytesToCompress = FileBytes
+                End If
+                Dim CompressedBytes As Byte() = Nothing
+                CompressedBytes = GetCompressedZlibBytes(BytesToCompress)
+                If IsNothing(CompressedBytes) Then
+                    MessageBox.Show("Failure to get compressed bytes for " & Path.GetFileName(FiletoRead))
+                    Return False
+                Else
+                    'Write bytes to file
+                    Dim SaveLocation As String = ""
+                    If FiletoWrite = "" Then
+                        SaveLocation = Path.GetDirectoryName(FiletoRead) & Path.DirectorySeparatorChar & Path.GetFileNameWithoutExtension(FiletoRead) & ".zlib"
+                        If File.Exists(SaveLocation) Then
+                            'We need to Backup the file in this case... this really shouldn't happen because bpe is skipped
+                            File.Move(SaveLocation, SaveLocation.Replace(".zlib", ".zlib.bak"))
+                        End If
+                    Else
+                        SaveLocation = FiletoWrite
+                    End If
+                    File.WriteAllBytes(SaveLocation, CompressedBytes)
+                    Return True
+                End If
+            End If
+        Else
+            MessageBox.Show("File " & Path.GetFileName(FiletoRead) & " Does Not Exist")
+        End If
+        Return False
+    End Function
+    Private Sub OODLBatchCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OODLBatchCompressToolStripMenuItem.Click
+        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
+            .Multiselect = True,
+            .FileName = "File(s) to Compress"}
+        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim SelectedFiles As String() = CompressOpenFileDialog.FileNames
+            For i As Integer = 0 To SelectedFiles.Count - 1
+                CompressOODLToFile(SelectedFiles(i))
+            Next
+            MessageBox.Show("Compression Complete")
+        End If
+    End Sub
+    Private Sub OODLSingleCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OODLSingleCompressToolStripMenuItem.Click
+        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
+            .FileName = "File to Compress"}
+        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim CompressSaveFileDialog As SaveFileDialog = New SaveFileDialog With {
+                .InitialDirectory = Path.GetDirectoryName(CompressOpenFileDialog.FileName),
+                .FileName = Path.GetFileNameWithoutExtension(CompressOpenFileDialog.FileName) & ".oodl",
+                .Title = "Save File Locaiton"}
+            If CompressSaveFileDialog.ShowDialog() = DialogResult.OK Then
+                If CompressOODLToFile(CompressOpenFileDialog.FileName(), CompressSaveFileDialog.FileName()) Then
+                    MessageBox.Show("Compression Complete")
+                End If
+            End If
+        End If
+    End Sub
+    Function CompressOODLToFile(FiletoRead As String, Optional FiletoWrite As String = "")
+        If File.Exists(FiletoRead) Then
+            Dim FileBytes As Byte() = File.ReadAllBytes(FiletoRead)
+            Dim ExistingFileType As PackageType = CheckHeaderType(0, FileBytes)
+            If ExistingFileType = PackageType.OODL Then
+                MessageBox.Show("File is already a ZLIB")
+            Else
+                Dim BytesToCompress As Byte() = Nothing
+                If ExistingFileType = PackageType.ZLIB Then
+                    Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as ZLIB" & vbNewLine & "Decompress before compression?",
+                                                                 "File Already Compressed", MessageBoxButtons.YesNoCancel)
+                    If Result = DialogResult.Yes Then
+                        BytesToCompress = GetUncompressedZlibBytes(FileBytes)
+                    ElseIf Result = DialogResult.No Then
+                        BytesToCompress = FileBytes
+                    ElseIf Result = DialogResult.Cancel Then
+                        Return False
+                    End If
+                ElseIf ExistingFileType = PackageType.BPE Then
+                    Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as BPE" & vbNewLine & "Decompress before compression?",
+                                                                 "File Already Compressed", MessageBoxButtons.YesNoCancel)
+                    If Result = DialogResult.Yes Then
+                        BytesToCompress = GetUncompressedBPEBytes(FileBytes)
+                    ElseIf Result = DialogResult.No Then
+                        BytesToCompress = FileBytes
+                    ElseIf Result = DialogResult.Cancel Then
+                        Return False
+                    End If
+                Else
+                    BytesToCompress = FileBytes
+                End If
+                Dim CompressedBytes As Byte() = Nothing
+                CompressedBytes = GetCompressedOodleBytes(BytesToCompress)
+                If IsNothing(CompressedBytes) Then
+                    MessageBox.Show("Failure to get compressed bytes for " & Path.GetFileName(FiletoRead))
+                    Return False
+                Else
+                    'Write bytes to file
+                    Dim SaveLocation As String = ""
+                    If FiletoWrite = "" Then
+                        SaveLocation = Path.GetDirectoryName(FiletoRead) & Path.DirectorySeparatorChar & Path.GetFileNameWithoutExtension(FiletoRead) & ".oodl"
+                        If File.Exists(SaveLocation) Then
+                            'We need to Backup the file in this case... this really shouldn't happen because bpe is skipped
+                            File.Move(SaveLocation, SaveLocation.Replace(".oodl", ".oodl.bak"))
+                        End If
+                    Else
+                        SaveLocation = FiletoWrite
+                    End If
+                    File.WriteAllBytes(SaveLocation, CompressedBytes)
+                    Return True
+                End If
+            End If
+        Else
+            MessageBox.Show("File " & Path.GetFileName(FiletoRead) & " Does Not Exist")
+        End If
+        Return False
+    End Function
+#End Region
+#Region "HelpToolStrip"
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
         Process.Start("https://pozzum.github.io/WrestleMINUS/")
     End Sub
@@ -1247,6 +1618,7 @@ Public Class MainForm
     Private Sub GitHubIssuesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GitHubIssuesToolStripMenuItem.Click
         Process.Start("https://github.com/pozzum/WrestleMINUS/issues")
     End Sub
+#End Region
 #End Region
     'Some Issue with Menus not properly populating.. when you first select Text View..
 #Region "TreeView Population"
@@ -1579,7 +1951,7 @@ Public Class MainForm
         End If
         ExtractSaveFileDialog.FileName = TreeView1.SelectedNode.Text & FileExtention
         If ExtractSaveFileDialog.ShowDialog() = DialogResult.OK Then
-            extractnode(TreeView1.SelectedNode, ExtractSaveFileDialog.FileName)
+            ExtractNode(TreeView1.SelectedNode, ExtractSaveFileDialog.FileName)
         End If
     End Sub
     Private Sub OpenToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles OpenToolStripMenuItem1.Click
@@ -1591,7 +1963,7 @@ Public Class MainForm
     End Sub
     Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenWithToolStripMenuItem.Click
         If My.Settings.DDSexeLocation = "Not Installed" Then
-            GetDDSexe(True)
+            CheckDDSexe(True)
         Else
             'Currently Only Designed for DDS Files
             Dim DDSBytes As Byte() = GetNodeBytes(TreeView1.SelectedNode)
@@ -1743,7 +2115,7 @@ Public Class MainForm
         Next
         ProgressBar1.Value = ProgressBar1.Maximum
     End Sub
-    Sub extractnode(Sentnode As TreeNode, Savepath As String)
+    Sub ExtractNode(Sentnode As TreeNode, Savepath As String)
         File.WriteAllBytes(Savepath, GetNodeBytes(Sentnode))
     End Sub
     Sub ExtractAllNode(CurrentNode As TreeNode, BaseFolder As String, Optional AdditonalFolders As String = "")
@@ -1756,18 +2128,34 @@ Public Class MainForm
                     If My.Settings.UseDetailedFileNames Then
                         FileExtention = "." & NodeTag.FileType.ToString
                     End If
-                    extractnode(temporarynode, BaseFolder & AdditonalFolders &
+                    ExtractNode(temporarynode, BaseFolder & AdditonalFolders &
                                    temporarynode.Text & FileExtention)
                 End If
             End If
             If temporarynode.GetNodeCount(False) > 0 Then
-                Dim Folder As String
-                If temporarynode.Text.Contains(".") Then
-                    Folder = temporarynode.Text.Substring(0, temporarynode.Text.IndexOf("."))
+                Dim Folder As String = ""
+                'File.Getfilenamewithoutextention...?
+                'Here we want to check if it is an uncompress containre for the settings options..
+                If NodeTag.FileType = PackageType.OODL OrElse
+                    NodeTag.FileType = PackageType.ZLIB OrElse
+                    NodeTag.FileType = PackageType.BPE Then
+                    MessageBox.Show("FileType match")
+                    If My.Settings.DecompresstoFolder Then
+                        If temporarynode.Text.Contains(".") Then
+                            Folder = temporarynode.Text.Substring(0, temporarynode.Text.IndexOf(".")) & Path.DirectorySeparatorChar
+                        Else
+                            Folder = temporarynode.Text & Path.DirectorySeparatorChar
+                        End If
+                    End If
+                    'if not folder add-on is nothing
                 Else
-                    Folder = temporarynode.Text
+                    If temporarynode.Text.Contains(".") Then
+                        Folder = temporarynode.Text.Substring(0, temporarynode.Text.IndexOf(".")) & Path.DirectorySeparatorChar
+                    Else
+                        Folder = temporarynode.Text & Path.DirectorySeparatorChar
+                    End If
                 End If
-                ExtractAllNode(temporarynode, BaseFolder, AdditonalFolders & Folder & Path.DirectorySeparatorChar)
+                ExtractAllNode(temporarynode, BaseFolder, AdditonalFolders & Folder)
             End If
         Next
     End Sub
@@ -1950,75 +2338,9 @@ Public Class MainForm
         End If
         Return True
     End Function
-    'Function InjectIntoCompressedNode(Sentnode As TreeNode, SentBytes As Byte())
-    '    If IsNothing(SentBytes) Then 'exits the function if no bytes are sent
-    '        MessageBox.Show("No File Sent, Injection Failed!")
-    '        Return False
-    '    End If
-    '    Dim NodeTag As NodeProperties = CType(Sentnode.Tag, NodeProperties)
-    '    'checking File Type match
-    '    Dim TempCheck As PackageType = CheckHeaderType(0, SentBytes)
-    '    If Not NodeTag.FileType = TempCheck Then
-    '        If MessageBox.Show("File Type Mismatch!" & vbNewLine & "Continue?",
-    '                        TempCheck.ToString & " Replacing " & NodeTag.FileType.ToString,
-    '                        MessageBoxButtons.YesNo) = DialogResult.No Then
-    '            Return False
-    '        End If
-    '    End If
-    '    'Get Parent Node Bytes
-    '    Dim ParentNode As TreeNode
-    '    If IsNothing(Sentnode.Parent) Then
-    '        ParentNode = Sentnode
-    '    Else
-    '        ParentNode = Sentnode.Parent
-    '    End If
-    '    Dim ParentNodeTag As NodeProperties = CType(ParentNode.Tag, NodeProperties)
-    '    Dim ParentBytes As Byte() = GetNodeBytes(ParentNode)
-    '    Dim CompressedLength As Long = 0
-    '    Dim WrittenFileArray As Byte() = Nothing
-    '    If ParentNodeTag.FileType = PackageType.OODL Then
-    '        WrittenFileArray = GetCompressedOodleBytes(SentBytes)
-    '    ElseIf ParentNodeTag.FileType = PackageType.ZLIB Then
-    '        WrittenFileArray = GetCompressedZlibBytes(SentBytes)
-    '    ElseIf ParentNodeTag.FileType = PackageType.BPE Then
-    '        WrittenFileArray = Nothing
-    '    End If
-    '    If IsNothing(WrittenFileArray) Then
-    '        MessageBox.Show("Failure to get Compressed Bytes")
-    '        Return False
-    '    End If
-    '    If ParentNodeTag.Index = 0 AndAlso
-    '        ParentNodeTag.StoredData.Length = 0 Then
-    '        'File to be Written
-    '        Dim WrittenFile As String = Sentnode.ToolTipText
-    '        If My.Settings.BackupInjections Then
-    '            File.Copy(WrittenFile, WrittenFile & ".bak", True)
-    '        End If
-    '        File.WriteAllBytes(WrittenFile, WrittenFileArray)
-    '        'Remove Save Pending Buttons when file written
-    '        SaveFileNoLongerPending()
-    '        'resettreebranch
-    '        Dim TempName As String = ParentNode.Text
-    '        ParentNode.Nodes.Clear()
-    '        ParentNode.Text = TempName
-    '        ParentNode.ToolTipText = WrittenFile
-    '        ParentNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
-    '               .Index = 0,
-    '                .length = WrittenFileArray.Length,
-    '                .StoredData = New Byte() {}}
-    '        'fixes for rebuilding the same file over and over
-    '        CheckFile(ParentNode)
-    '        TreeView1.SelectedNode = ParentNode
-    '        TabControl1.SelectedIndex = 0
-    '        ReadNode = ParentNode
-    '        InformationLoaded = False
-    '    Else
-    '        'we must go higher
-    '        InjectIntoNode(ParentNode, WrittenFileArray)
-    '    End If
-    '    Return True
-    'End Function
+
 #End Region
+#Region "View Controls"
 #Region "Multi-View Controls"
     'Commands that should be generic to be used across multiple tabs.
     Private Sub StoreOldComboBoxValue(sender As Object, e As EventArgs) Handles HexViewBitWidth.Enter,
@@ -4130,16 +4452,16 @@ Public Class MainForm
                     AddObjArrayIndividualObject(e.RowIndex)
                 End If
             ElseIf e.ColumnIndex = 14 Then 'Delete button
-                    If CInt(DataGridObjArrayView.Rows(e.RowIndex).Cells(11).Value) > 0 Then
-                        'Container Object We also need to delete the sub objects
-                        DeleteObjArrayContainer(e.RowIndex)
-                    Else
-                        'Individual Item we will need to update the container object.
-                        DeleteObjArrayIndividualObject(e.RowIndex)
-                    End If
+                If CInt(DataGridObjArrayView.Rows(e.RowIndex).Cells(11).Value) > 0 Then
+                    'Container Object We also need to delete the sub objects
+                    DeleteObjArrayContainer(e.RowIndex)
                 Else
-                    'do nothing
+                    'Individual Item we will need to update the container object.
+                    DeleteObjArrayIndividualObject(e.RowIndex)
                 End If
+            Else
+                'do nothing
+            End If
         End If
     End Sub
     Sub AddObjArrayContainer(index As Integer)
@@ -4290,7 +4612,9 @@ Public Class MainForm
             'Item Number
             Array.Copy(BitConverter.GetBytes(CUInt(DataGridObjArrayView.Rows(i).Cells(2).Value)), 0, ReturnedBytes, &H24 + i * 8, 4)
             'Name
-            Array.Copy(Encoding.ASCII.GetBytes(DataGridObjArrayView.Rows(i).Cells(4).Value), 0, ReturnedBytes, DataIndex + i * &H30, &H10)
+            Dim ObjectName As String = DataGridObjArrayView.Rows(i).Cells(4).Value
+            Dim StringBytes As Byte() = Encoding.ASCII.GetBytes(ObjectName)
+            Array.Copy(StringBytes, 0, ReturnedBytes, DataIndex + i * &H30, StringBytes.Length)
             'X Float
             Array.Copy(BitConverter.GetBytes(CSng(DataGridObjArrayView.Rows(i).Cells(5).Value)), 0, ReturnedBytes, DataIndex + &H10 + (i * &H30), 4)
             'Y Float
@@ -4641,5 +4965,6 @@ Public Class MainForm
         End If
         Return ReturnedBytes
     End Function
+#End Region
 #End Region
 End Class

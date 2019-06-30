@@ -24,16 +24,26 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.BPECompressionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.BPEBatchCompressToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.BPESingleCompressToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ZLIBCompressionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ZLIBBatchCompressToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ZLIBSingleCompressToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OODLCompressionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OODLBatchCompressToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OODLSingleCompressToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SupportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -244,6 +254,21 @@ Partial Class MainForm
         Me.AznTutorialToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ObjArrayView = New System.Windows.Forms.TabPage()
         Me.DataGridObjArrayView = New System.Windows.Forms.DataGridView()
+        Me.YobjArryIndex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjArrayParent = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Number = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ArrEnabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ChairName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.X = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Y = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Z = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RX = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RY = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RZ = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ContainedYobjArray = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StartIndexYobjArray = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Add_Obj_Array = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.Del_Obj_Array = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStrip2 = New System.Windows.Forms.MenuStrip()
         Me.ImportYOBJArrayFromCSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportYOBJArrayToCSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -296,7 +321,7 @@ Partial Class MainForm
         Me.SaveChangesTitleMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripPictureView = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
+        Me.OpenFileOrFolderDialog = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.TreeViewContext = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.OpenToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
@@ -345,21 +370,6 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.YobjArryIndex = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjArrayParent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Number = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ArrEnabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.ChairName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.X = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Y = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Z = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RX = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RY = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RZ = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ContainedYobjArray = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StartIndexYobjArray = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Add_Obj_Array = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.Del_Obj_Array = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -409,7 +419,7 @@ Partial Class MainForm
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.OptionsToolStripMenuItem, Me.HelpToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.OptionsToolStripMenuItem, Me.ToolsToolStripMenuItem, Me.HelpToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1184, 24)
@@ -429,7 +439,7 @@ Partial Class MainForm
         Me.LoadHomeToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.LoadHomeToolStripMenuItem.Name = "LoadHomeToolStripMenuItem"
         Me.LoadHomeToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.H), System.Windows.Forms.Keys)
-        Me.LoadHomeToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+        Me.LoadHomeToolStripMenuItem.Size = New System.Drawing.Size(211, 22)
         Me.LoadHomeToolStripMenuItem.Text = "&Load Home"
         '
         'OpenToolStripMenuItem
@@ -438,13 +448,13 @@ Partial Class MainForm
         Me.OpenToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem"
         Me.OpenToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
-        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
-        Me.OpenToolStripMenuItem.Text = "&Open File"
+        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(211, 22)
+        Me.OpenToolStripMenuItem.Text = "&Open File / Folder"
         '
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(211, 22)
         Me.ExitToolStripMenuItem.Text = "E&xit"
         '
         'OptionsToolStripMenuItem
@@ -452,6 +462,70 @@ Partial Class MainForm
         Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
         Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
         Me.OptionsToolStripMenuItem.Text = "&Options"
+        '
+        'ToolsToolStripMenuItem
+        '
+        Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.BPECompressionToolStripMenuItem, Me.ZLIBCompressionToolStripMenuItem, Me.OODLCompressionToolStripMenuItem})
+        Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
+        Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(46, 20)
+        Me.ToolsToolStripMenuItem.Text = "Tools"
+        '
+        'BPECompressionToolStripMenuItem
+        '
+        Me.BPECompressionToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.BPEBatchCompressToolStripMenuItem, Me.BPESingleCompressToolStripMenuItem})
+        Me.BPECompressionToolStripMenuItem.Name = "BPECompressionToolStripMenuItem"
+        Me.BPECompressionToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.BPECompressionToolStripMenuItem.Text = "BPE Compression"
+        '
+        'BPEBatchCompressToolStripMenuItem
+        '
+        Me.BPEBatchCompressToolStripMenuItem.Name = "BPEBatchCompressToolStripMenuItem"
+        Me.BPEBatchCompressToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
+        Me.BPEBatchCompressToolStripMenuItem.Text = "Compress File(s) in Place"
+        '
+        'BPESingleCompressToolStripMenuItem
+        '
+        Me.BPESingleCompressToolStripMenuItem.Name = "BPESingleCompressToolStripMenuItem"
+        Me.BPESingleCompressToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
+        Me.BPESingleCompressToolStripMenuItem.Text = "Compress File to..."
+        '
+        'ZLIBCompressionToolStripMenuItem
+        '
+        Me.ZLIBCompressionToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ZLIBBatchCompressToolStripMenuItem, Me.ZLIBSingleCompressToolStripMenuItem})
+        Me.ZLIBCompressionToolStripMenuItem.Name = "ZLIBCompressionToolStripMenuItem"
+        Me.ZLIBCompressionToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ZLIBCompressionToolStripMenuItem.Text = "ZLIB Compression"
+        '
+        'ZLIBBatchCompressToolStripMenuItem
+        '
+        Me.ZLIBBatchCompressToolStripMenuItem.Name = "ZLIBBatchCompressToolStripMenuItem"
+        Me.ZLIBBatchCompressToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
+        Me.ZLIBBatchCompressToolStripMenuItem.Text = "Compress File(s) in Place"
+        '
+        'ZLIBSingleCompressToolStripMenuItem
+        '
+        Me.ZLIBSingleCompressToolStripMenuItem.Name = "ZLIBSingleCompressToolStripMenuItem"
+        Me.ZLIBSingleCompressToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
+        Me.ZLIBSingleCompressToolStripMenuItem.Text = "Compress File to..."
+        '
+        'OODLCompressionToolStripMenuItem
+        '
+        Me.OODLCompressionToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OODLBatchCompressToolStripMenuItem, Me.OODLSingleCompressToolStripMenuItem})
+        Me.OODLCompressionToolStripMenuItem.Name = "OODLCompressionToolStripMenuItem"
+        Me.OODLCompressionToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.OODLCompressionToolStripMenuItem.Text = "OODL Compression"
+        '
+        'OODLBatchCompressToolStripMenuItem
+        '
+        Me.OODLBatchCompressToolStripMenuItem.Name = "OODLBatchCompressToolStripMenuItem"
+        Me.OODLBatchCompressToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
+        Me.OODLBatchCompressToolStripMenuItem.Text = "Compress File(s) in Place"
+        '
+        'OODLSingleCompressToolStripMenuItem
+        '
+        Me.OODLSingleCompressToolStripMenuItem.Name = "OODLSingleCompressToolStripMenuItem"
+        Me.OODLSingleCompressToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
+        Me.OODLSingleCompressToolStripMenuItem.Text = "Compress File to..."
         '
         'HelpToolStripMenuItem
         '
@@ -463,19 +537,19 @@ Partial Class MainForm
         'AboutToolStripMenuItem
         '
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.AboutToolStripMenuItem.Text = "&About..."
         '
         'SupportToolStripMenuItem
         '
         Me.SupportToolStripMenuItem.Name = "SupportToolStripMenuItem"
-        Me.SupportToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
+        Me.SupportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.SupportToolStripMenuItem.Text = "ST Thread"
         '
         'GitHubIssuesToolStripMenuItem
         '
         Me.GitHubIssuesToolStripMenuItem.Name = "GitHubIssuesToolStripMenuItem"
-        Me.GitHubIssuesToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
+        Me.GitHubIssuesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.GitHubIssuesToolStripMenuItem.Text = "GitHub Issues"
         '
         'SplitContainer1
@@ -2149,6 +2223,125 @@ Partial Class MainForm
         Me.DataGridObjArrayView.Size = New System.Drawing.Size(964, 394)
         Me.DataGridObjArrayView.TabIndex = 1
         '
+        'YobjArryIndex
+        '
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle1
+        Me.YobjArryIndex.HeaderText = "Index"
+        Me.YobjArryIndex.Name = "YobjArryIndex"
+        Me.YobjArryIndex.ReadOnly = True
+        Me.YobjArryIndex.Width = 58
+        '
+        'ObjArrayParent
+        '
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle2
+        Me.ObjArrayParent.HeaderText = "Parent"
+        Me.ObjArrayParent.MinimumWidth = 100
+        Me.ObjArrayParent.Name = "ObjArrayParent"
+        Me.ObjArrayParent.ReadOnly = True
+        '
+        'Number
+        '
+        Me.Number.HeaderText = "Number"
+        Me.Number.Name = "Number"
+        Me.Number.Width = 69
+        '
+        'ArrEnabled
+        '
+        Me.ArrEnabled.HeaderText = "Enabled"
+        Me.ArrEnabled.Name = "ArrEnabled"
+        Me.ArrEnabled.Width = 52
+        '
+        'ChairName
+        '
+        Me.ChairName.HeaderText = "Name"
+        Me.ChairName.MaxInputLength = 16
+        Me.ChairName.MinimumWidth = 100
+        Me.ChairName.Name = "ChairName"
+        Me.ChairName.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ChairName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'X
+        '
+        Me.X.HeaderText = "X"
+        Me.X.MinimumWidth = 60
+        Me.X.Name = "X"
+        Me.X.Width = 60
+        '
+        'Y
+        '
+        Me.Y.HeaderText = "Y"
+        Me.Y.MinimumWidth = 60
+        Me.Y.Name = "Y"
+        Me.Y.Width = 60
+        '
+        'Z
+        '
+        Me.Z.HeaderText = "Z"
+        Me.Z.MinimumWidth = 60
+        Me.Z.Name = "Z"
+        Me.Z.Width = 60
+        '
+        'RX
+        '
+        Me.RX.HeaderText = "RX"
+        Me.RX.MinimumWidth = 60
+        Me.RX.Name = "RX"
+        Me.RX.Width = 60
+        '
+        'RY
+        '
+        Me.RY.HeaderText = "RY"
+        Me.RY.MinimumWidth = 60
+        Me.RY.Name = "RY"
+        Me.RY.Width = 60
+        '
+        'RZ
+        '
+        Me.RZ.HeaderText = "RZ"
+        Me.RZ.MinimumWidth = 60
+        Me.RZ.Name = "RZ"
+        Me.RZ.Width = 60
+        '
+        'ContainedYobjArray
+        '
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle3
+        Me.ContainedYobjArray.HeaderText = "Objects"
+        Me.ContainedYobjArray.Name = "ContainedYobjArray"
+        Me.ContainedYobjArray.ReadOnly = True
+        Me.ContainedYobjArray.Width = 68
+        '
+        'StartIndexYobjArray
+        '
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle4
+        Me.StartIndexYobjArray.HeaderText = "Start Index"
+        Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
+        Me.StartIndexYobjArray.ReadOnly = True
+        Me.StartIndexYobjArray.Width = 83
+        '
+        'Add_Obj_Array
+        '
+        Me.Add_Obj_Array.HeaderText = "Add"
+        Me.Add_Obj_Array.MinimumWidth = 100
+        Me.Add_Obj_Array.Name = "Add_Obj_Array"
+        Me.Add_Obj_Array.Text = "Add"
+        Me.Add_Obj_Array.UseColumnTextForButtonValue = True
+        '
+        'Del_Obj_Array
+        '
+        Me.Del_Obj_Array.HeaderText = "Delete"
+        Me.Del_Obj_Array.MinimumWidth = 100
+        Me.Del_Obj_Array.Name = "Del_Obj_Array"
+        Me.Del_Obj_Array.Text = "Delete"
+        Me.Del_Obj_Array.UseColumnTextForButtonValue = True
+        '
         'MenuStrip2
         '
         Me.MenuStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportYOBJArrayFromCSVToolStripMenuItem, Me.ExportYOBJArrayToCSVToolStripMenuItem, Me.SaveYOBJArrayChangesToolStripMenuItem})
@@ -2529,10 +2722,12 @@ Partial Class MainForm
         Me.ToolStripMenuItem1.Size = New System.Drawing.Size(22, 20)
         Me.ToolStripMenuItem1.Text = " "
         '
-        'OpenFileDialog1
+        'OpenFileOrFolderDialog
         '
-        Me.OpenFileDialog1.FileName = "*.*"
-        Me.OpenFileDialog1.Multiselect = True
+        Me.OpenFileOrFolderDialog.CheckFileExists = False
+        Me.OpenFileOrFolderDialog.FileName = "Select Items"
+        Me.OpenFileOrFolderDialog.Multiselect = True
+        Me.OpenFileOrFolderDialog.ValidateNames = False
         '
         'TreeViewContext
         '
@@ -2824,125 +3019,6 @@ Partial Class MainForm
         '
         Me.SaveExtractAllDialog.FileName = "Save Files Here"
         '
-        'YobjArryIndex
-        '
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle5
-        Me.YobjArryIndex.HeaderText = "Index"
-        Me.YobjArryIndex.Name = "YobjArryIndex"
-        Me.YobjArryIndex.ReadOnly = True
-        Me.YobjArryIndex.Width = 58
-        '
-        'ObjArrayParent
-        '
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle6
-        Me.ObjArrayParent.HeaderText = "Parent"
-        Me.ObjArrayParent.MinimumWidth = 100
-        Me.ObjArrayParent.Name = "ObjArrayParent"
-        Me.ObjArrayParent.ReadOnly = True
-        '
-        'Number
-        '
-        Me.Number.HeaderText = "Number"
-        Me.Number.Name = "Number"
-        Me.Number.Width = 69
-        '
-        'ArrEnabled
-        '
-        Me.ArrEnabled.HeaderText = "Enabled"
-        Me.ArrEnabled.Name = "ArrEnabled"
-        Me.ArrEnabled.Width = 52
-        '
-        'ChairName
-        '
-        Me.ChairName.HeaderText = "Name"
-        Me.ChairName.MaxInputLength = 16
-        Me.ChairName.MinimumWidth = 100
-        Me.ChairName.Name = "ChairName"
-        Me.ChairName.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.ChairName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'X
-        '
-        Me.X.HeaderText = "X"
-        Me.X.MinimumWidth = 60
-        Me.X.Name = "X"
-        Me.X.Width = 60
-        '
-        'Y
-        '
-        Me.Y.HeaderText = "Y"
-        Me.Y.MinimumWidth = 60
-        Me.Y.Name = "Y"
-        Me.Y.Width = 60
-        '
-        'Z
-        '
-        Me.Z.HeaderText = "Z"
-        Me.Z.MinimumWidth = 60
-        Me.Z.Name = "Z"
-        Me.Z.Width = 60
-        '
-        'RX
-        '
-        Me.RX.HeaderText = "RX"
-        Me.RX.MinimumWidth = 60
-        Me.RX.Name = "RX"
-        Me.RX.Width = 60
-        '
-        'RY
-        '
-        Me.RY.HeaderText = "RY"
-        Me.RY.MinimumWidth = 60
-        Me.RY.Name = "RY"
-        Me.RY.Width = 60
-        '
-        'RZ
-        '
-        Me.RZ.HeaderText = "RZ"
-        Me.RZ.MinimumWidth = 60
-        Me.RZ.Name = "RZ"
-        Me.RZ.Width = 60
-        '
-        'ContainedYobjArray
-        '
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle7
-        Me.ContainedYobjArray.HeaderText = "Objects"
-        Me.ContainedYobjArray.Name = "ContainedYobjArray"
-        Me.ContainedYobjArray.ReadOnly = True
-        Me.ContainedYobjArray.Width = 68
-        '
-        'StartIndexYobjArray
-        '
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle8
-        Me.StartIndexYobjArray.HeaderText = "Start Index"
-        Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
-        Me.StartIndexYobjArray.ReadOnly = True
-        Me.StartIndexYobjArray.Width = 83
-        '
-        'Add_Obj_Array
-        '
-        Me.Add_Obj_Array.HeaderText = "Add"
-        Me.Add_Obj_Array.MinimumWidth = 100
-        Me.Add_Obj_Array.Name = "Add_Obj_Array"
-        Me.Add_Obj_Array.Text = "Add"
-        Me.Add_Obj_Array.UseColumnTextForButtonValue = True
-        '
-        'Del_Obj_Array
-        '
-        Me.Del_Obj_Array.HeaderText = "Delete"
-        Me.Del_Obj_Array.MinimumWidth = 100
-        Me.Del_Obj_Array.Name = "Del_Obj_Array"
-        Me.Del_Obj_Array.Text = "Delete"
-        Me.Del_Obj_Array.UseColumnTextForButtonValue = True
-        '
         'MainForm
         '
         Me.AllowDrop = True
@@ -3044,7 +3120,7 @@ Partial Class MainForm
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents HexView As TabPage
     Friend WithEvents TextView As TabPage
-    Friend WithEvents OpenFileDialog1 As OpenFileDialog
+    Friend WithEvents OpenFileOrFolderDialog As OpenFileDialog
     Friend WithEvents CurrentViewToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ProgressBar1 As ProgressBar
     Friend WithEvents ToolTip1 As ToolTip
@@ -3382,4 +3458,14 @@ Partial Class MainForm
     Friend WithEvents StartIndexYobjArray As DataGridViewTextBoxColumn
     Friend WithEvents Add_Obj_Array As DataGridViewButtonColumn
     Friend WithEvents Del_Obj_Array As DataGridViewButtonColumn
+    Friend WithEvents ToolsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ZLIBCompressionToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents OODLCompressionToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents BPECompressionToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents BPEBatchCompressToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents BPESingleCompressToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ZLIBBatchCompressToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ZLIBSingleCompressToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents OODLBatchCompressToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents OODLSingleCompressToolStripMenuItem As ToolStripMenuItem
 End Class

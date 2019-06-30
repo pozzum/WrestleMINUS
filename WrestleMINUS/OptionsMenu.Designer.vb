@@ -61,6 +61,7 @@ Partial Class OptionsMenu
         Me.ButtonSelectBPEExe = New System.Windows.Forms.Button()
         Me.TextBoxBPEExe = New System.Windows.Forms.TextBox()
         Me.LabelBPEExe = New System.Windows.Forms.Label()
+        Me.CheckBoxExtractAllinPlace = New System.Windows.Forms.CheckBox()
         CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -247,7 +248,7 @@ Partial Class OptionsMenu
         'TrackBarHexLength
         '
         Me.TrackBarHexLength.LargeChange = 100
-        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 480)
+        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 503)
         Me.TrackBarHexLength.Maximum = 500
         Me.TrackBarHexLength.Minimum = 1
         Me.TrackBarHexLength.Name = "TrackBarHexLength"
@@ -260,7 +261,7 @@ Partial Class OptionsMenu
         'LabelHexLength
         '
         Me.LabelHexLength.AutoSize = True
-        Me.LabelHexLength.Location = New System.Drawing.Point(12, 464)
+        Me.LabelHexLength.Location = New System.Drawing.Point(12, 487)
         Me.LabelHexLength.Name = "LabelHexLength"
         Me.LabelHexLength.Size = New System.Drawing.Size(140, 13)
         Me.LabelHexLength.TabIndex = 22
@@ -268,7 +269,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetStrings
         '
-        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 515)
+        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 538)
         Me.ButtonResetStrings.Name = "ButtonResetStrings"
         Me.ButtonResetStrings.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetStrings.TabIndex = 23
@@ -277,7 +278,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetPacs
         '
-        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 515)
+        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 538)
         Me.ButtonResetPacs.Name = "ButtonResetPacs"
         Me.ButtonResetPacs.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetPacs.TabIndex = 24
@@ -352,7 +353,7 @@ Partial Class OptionsMenu
         'CheckBoxOODLBypass
         '
         Me.CheckBoxOODLBypass.AutoSize = True
-        Me.CheckBoxOODLBypass.Location = New System.Drawing.Point(15, 446)
+        Me.CheckBoxOODLBypass.Location = New System.Drawing.Point(15, 469)
         Me.CheckBoxOODLBypass.Name = "CheckBoxOODLBypass"
         Me.CheckBoxOODLBypass.Size = New System.Drawing.Size(139, 17)
         Me.CheckBoxOODLBypass.TabIndex = 32
@@ -413,11 +414,22 @@ Partial Class OptionsMenu
         Me.LabelBPEExe.TabIndex = 35
         Me.LabelBPEExe.Text = "BPE Exe Location"
         '
+        'CheckBoxExtractAllinPlace
+        '
+        Me.CheckBoxExtractAllinPlace.AutoSize = True
+        Me.CheckBoxExtractAllinPlace.Location = New System.Drawing.Point(15, 446)
+        Me.CheckBoxExtractAllinPlace.Name = "CheckBoxExtractAllinPlace"
+        Me.CheckBoxExtractAllinPlace.Size = New System.Drawing.Size(195, 17)
+        Me.CheckBoxExtractAllinPlace.TabIndex = 39
+        Me.CheckBoxExtractAllinPlace.Text = "Extract All Decompresses to Folders"
+        Me.CheckBoxExtractAllinPlace.UseVisualStyleBackColor = True
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 551)
+        Me.ClientSize = New System.Drawing.Size(284, 576)
+        Me.Controls.Add(Me.CheckBoxExtractAllinPlace)
         Me.Controls.Add(Me.ButtonDownloadBPEExe)
         Me.Controls.Add(Me.ButtonSelectBPEExe)
         Me.Controls.Add(Me.TextBoxBPEExe)
@@ -504,4 +516,5 @@ Partial Class OptionsMenu
     Friend WithEvents ButtonSelectBPEExe As Button
     Friend WithEvents TextBoxBPEExe As TextBox
     Friend WithEvents LabelBPEExe As Label
+    Friend WithEvents CheckBoxExtractAllinPlace As CheckBox
 End Class

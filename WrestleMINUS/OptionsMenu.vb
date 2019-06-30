@@ -58,8 +58,17 @@ Public Class OptionsMenu
         CheckBoxDeleteTempBMP.Checked = My.Settings.DeleteTempBMP
         CheckBoxTreeNodeIcons.Checked = My.Settings.UseTreeIcons
         CheckBoxDetailedFileNames.Checked = My.Settings.UseDetailedFileNames
+        CheckBoxExtractAllinPlace.Checked = My.Settings.DecompresstoFolder
+        'extract all can only extract to folders with detailed file names
+        If CheckBoxDetailedFileNames.Checked Then
+            CheckBoxExtractAllinPlace.Enabled = True
+        Else
+            CheckBoxExtractAllinPlace.Checked = True
+            CheckBoxExtractAllinPlace.Enabled = False
+        End If
         TrackBarHexLength.Value = My.Settings.HexViewLength
         CheckBoxOODLBypass.Checked = My.Settings.BypassOODLWarn
+
         updateviewlength()
     End Sub
     Private Sub ButtonSelectHome_Click(sender As Object, e As EventArgs) Handles ButtonSelectHome.Click
@@ -82,18 +91,18 @@ Public Class OptionsMenu
         Process.Start("https://www.tapatalk.com/groups/legendsofmodding/bpe-compression-tool-t3741.html#p22164")
     End Sub
     Private Sub ButtonSelectBPEExe_Click(sender As Object, e As EventArgs) Handles ButtonSelectBPEExe.Click
-        MainForm.GetBPEExe(True)
+        MainForm.CheckBPEExe(True)
         LoadSettings()
     End Sub
     Private Sub ButtonDownloadUnrrbpe_Click(sender As Object, e As EventArgs) Handles ButtonDownloadUnrrbpe.Click
         Process.Start("http://asmodean.reverse.net/pages/unrrbpe.html")
     End Sub
     Private Sub ButtonSelectUnrrbpe_Click(sender As Object, e As EventArgs) Handles ButtonSelectUnrrbpe.Click
-        MainForm.GetUnrrbpe(True)
+        MainForm.CheckUnrrbpe(True)
         LoadSettings()
     End Sub
     Private Sub ButtonSelectDDSexe_Click(sender As Object, e As EventArgs) Handles ButtonSelectDDSexe.Click
-        MainForm.GetDDSexe(True)
+        MainForm.CheckDDSexe(True)
         LoadSettings()
     End Sub
     Private Sub ButtonSelectZlib_Click(sender As Object, e As EventArgs) Handles ButtonSelectZlib.Click
@@ -122,6 +131,15 @@ Public Class OptionsMenu
     End Sub
     Private Sub CheckBoxDetailedFileNames_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxDetailedFileNames.CheckedChanged
         My.Settings.UseDetailedFileNames = CheckBoxDetailedFileNames.Checked
+        If CheckBoxDetailedFileNames.Checked Then
+            CheckBoxExtractAllinPlace.Enabled = True
+        Else
+            CheckBoxExtractAllinPlace.Checked = True
+            CheckBoxExtractAllinPlace.Enabled = False
+        End If
+    End Sub
+    Private Sub CheckBoxExtractAllinPlace_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxExtractAllinPlace.CheckedChanged
+        My.Settings.DecompresstoFolder = CheckBoxExtractAllinPlace.Checked
     End Sub
     Private Sub CheckBoxOODLBypass_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxOODLBypass.CheckedChanged
         My.Settings.BypassOODLWarn = CheckBoxOODLBypass.Checked
