@@ -2139,7 +2139,6 @@ Public Class MainForm
                 If NodeTag.FileType = PackageType.OODL OrElse
                     NodeTag.FileType = PackageType.ZLIB OrElse
                     NodeTag.FileType = PackageType.BPE Then
-                    MessageBox.Show("FileType match")
                     If My.Settings.DecompresstoFolder Then
                         If temporarynode.Text.Contains(".") Then
                             Folder = temporarynode.Text.Substring(0, temporarynode.Text.IndexOf(".")) & Path.DirectorySeparatorChar
