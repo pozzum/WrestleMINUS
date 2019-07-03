@@ -751,7 +751,7 @@ Public Class MainForm
         My.Computer.FileSystem.CopyDirectory(fromPath, toPath, True)
         My.Computer.FileSystem.DeleteDirectory(fromPath, FileIO.DeleteDirectoryOption.DeleteAllContents)
     End Sub
-    Private Function EndianReverse(Source As Byte(), Optional Index As Integer = 0, Optional Length As Integer = 4)
+    Private Function EndianReverse(Source As Byte(), Optional Index As Integer = 0, Optional Length As Integer = 4) As Byte()
         Dim ReturnedArray As Byte() = New Byte(Length - 1) {}
         Array.Copy(Source, Index, ReturnedArray, 0, Length)
         Array.Reverse(ReturnedArray)
@@ -813,6 +813,15 @@ Public Class MainForm
         TitleFile
     End Enum
     Dim ActiveFile As String = ""
+    Dim LibraryContainsList As String() = New String() {"dds",
+        "ymx",
+        "tex",
+        "map",
+        "hkx",
+        "pac",
+        "txt",
+        "cvx",
+        "bin"} ' list adds files from ufc undesputed.
     Sub CheckFile(ByRef HostNode As TreeNode, Optional Crawl As Boolean = False)
         Dim NodeTag As NodeProperties = New NodeProperties
         NodeTag = CType(HostNode.Tag, NodeProperties)
@@ -1057,16 +1066,37 @@ Public Class MainForm
 #Region "Library Types"
             Case PackageType.TextureLibrary
                 Dim TextureCount As Integer = FileBytes(0)
+                Dim BytesRevesed As Boolean = False
+                If TextureCount = 0 Then 'if this is 0 then we are dealing with a reverse byte system header.
+                    TextureCount = FileBytes(3)
+                    BytesRevesed = True
+                End If
                 For i As Integer = 0 To TextureCount - 1
                     Dim ImageName As String = Encoding.Default.GetChars(FileBytes, i * &H20 + &H10, &H10)
                     ImageName = ImageName.TrimEnd(Chr(0))
+                    'Adding File Type Check
+                    Dim FileTypeName As String = Encoding.Default.GetChars(FileBytes, i * &H20 + &H20, 3)
+                    Dim FileTypeContained As PackageType = PackageType.bin
+                    If FileTypeName = "dds" Then
+                        FileTypeContained = PackageType.DDS
+                    End If
+                    'Here we need to get the File length and index incase the bytes are revesed
+                    Dim CurrentItemLength As UInt32 = 0
+                    Dim CurrentItemIndex As UInt32 = 0
+                    If BytesRevesed Then
+                        CurrentItemLength = BitConverter.ToUInt32(EndianReverse(FileBytes, i * &H20 + &H10 + &H14, 4), 0)
+                        CurrentItemIndex = BitConverter.ToUInt32(EndianReverse(FileBytes, i * &H20 + &H10 + &H18, 4), 0) + HostNode.Index
+                    Else
+                        CurrentItemLength = BitConverter.ToUInt32(FileBytes, i * &H20 + &H10 + &H14)
+                        CurrentItemIndex = BitConverter.ToUInt64(FileBytes, i * &H20 + &H10 + &H18) + HostNode.Index
+                    End If
                     Dim TempNode As TreeNode = New TreeNode(ImageName)
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties With {
                         .length = BitConverter.ToUInt32(FileBytes, i * &H20 + &H10 + &H14),
-                        .Index = BitConverter.ToUInt64(FileBytes, i * &H20 + &H10 + &H18) + TempNode.Index,
+                        .Index = CurrentItemIndex,
                         .StoredData = NodeTag.StoredData,
-                        .FileType = PackageType.DDS}
+                        .FileType = FileTypeContained}
                     TempNode.Tag = TempNodeProps
                     TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
                     TempNode.SelectedImageIndex = TempNode.ImageIndex
@@ -1209,7 +1239,7 @@ Public Class MainForm
                                     Return PackageType.TitleFile
                                 Case Encoding.Default.GetChars(ByteArray, Index + &H18, 3) = "yM_"
                                     Return PackageType.MuscleFile
-                                Case Encoding.Default.GetChars(ByteArray, Index + &H20, 3) = "dds"
+                                Case LibraryContainsList.Contains(Encoding.Default.GetChars(ByteArray, Index + &H20, 3)) 'ufc games can have additional file types  create a short list of 3 char codes to test
                                     Return PackageType.TextureLibrary
                                 Case Encoding.Default.GetChars(ByteArray, Index + &H24, 4) = "root"
                                     Return PackageType.TextureLibrary
