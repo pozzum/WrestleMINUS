@@ -811,6 +811,13 @@ Public Class MainForm
         YANM
         VMUM
         TitleFile
+        'here are additional ufc type files that we will have no handling for.  Hoever we want to properly cover them for adding in future.
+        UFC_MAP
+        UFC_HKX
+        UFC_PAC
+        UFC_TXT
+        UFC_CVX
+        UFC_BIN
     End Enum
     Dim ActiveFile As String = ""
     Dim LibraryContainsList As String() = New String() {"dds",
@@ -823,6 +830,7 @@ Public Class MainForm
         "cvx",
         "bin"} ' list adds files from ufc undesputed.
     Sub CheckFile(ByRef HostNode As TreeNode, Optional Crawl As Boolean = False)
+        'TO DO Tempnode generation can be simplified.
         Dim NodeTag As NodeProperties = New NodeProperties
         NodeTag = CType(HostNode.Tag, NodeProperties)
         ActiveFile = HostNode.ToolTipText
@@ -842,6 +850,7 @@ Public Class MainForm
                 Dim FileNameLength As Integer = BitConverter.ToUInt32(FileBytes, &H18)
                 FileNameLength += -(FileNameLength Mod &H800) + &H1000
                 For i As Integer = 0 To FileCount - 1
+                    'This will be the full length hex name always so TruncateDecimalNames is unneeded
                     Dim FileName As String = BitConverter.ToString(FileBytes, &H800 + i * &H14, 8).ToUpper.Replace("-", "")
                     Dim TempNode As TreeNode = New TreeNode(FileName)
                     TempNode.ToolTipText = HostNode.ToolTipText
@@ -859,7 +868,7 @@ Public Class MainForm
                 Dim HeaderLength As Integer = BitConverter.ToUInt32(FileBytes, 4)
                 Dim index As Integer = 0
                 Do While index < HeaderLength - 1
-                    Dim DirectoryName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 4)
+                    Dim DirectoryName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 4) 'we cant trim spaces because it would mess with reinjection if the name was edited
                     Dim DirectoryTreeNode As TreeNode = New TreeNode(DirectoryName, 6, 6)
                     DirectoryTreeNode.ToolTipText = HostNode.ToolTipText
                     Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 4
@@ -895,7 +904,7 @@ Public Class MainForm
                 Dim HeaderLength As Integer = BitConverter.ToUInt32(FileBytes, 4)
                 Dim index As Integer = 0
                 Do While index < HeaderLength - 1
-                    Dim DirectoryName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 4)
+                    Dim DirectoryName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 4) 'we cant trim spaces because it would mess with reinjection if the name was edited
                     Dim DirectoryTreeNode As TreeNode = New TreeNode(DirectoryName, 6, 6)
                     DirectoryTreeNode.ToolTipText = HostNode.ToolTipText
                     Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 3
@@ -947,6 +956,9 @@ Public Class MainForm
                         If PartName = "FFFFFFFF" Then
                             Continue For
                         End If
+                        If Not My.Settings.TruncateDecimalNames Then
+                            PartName = PartName.PadLeft(4, "0")
+                        End If
                         Dim TempNode As TreeNode = New TreeNode(PartName)
                         TempNode.ToolTipText = HostNode.ToolTipText
                         Dim TempNodeProps As NodeProperties = New NodeProperties With {
@@ -968,6 +980,9 @@ Public Class MainForm
                 Dim Partcount As Integer = BitConverter.ToUInt32(FileBytes, 4)
                 For i As Integer = 0 To Partcount - 1
                     Dim PartName As String = Hex(BitConverter.ToUInt32(FileBytes, &H8 + (i * &HC)))
+                    If Not My.Settings.TruncateDecimalNames Then
+                        PartName = PartName.PadLeft(4, "0")
+                    End If
                     Dim TempNode As TreeNode = New TreeNode(PartName)
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties With {
@@ -1076,10 +1091,30 @@ Public Class MainForm
                     ImageName = ImageName.TrimEnd(Chr(0))
                     'Adding File Type Check
                     Dim FileTypeName As String = Encoding.Default.GetChars(FileBytes, i * &H20 + &H20, 3)
+                    FileTypeName = FileTypeName.ToLower
                     Dim FileTypeContained As PackageType = PackageType.bin
-                    If FileTypeName = "dds" Then
-                        FileTypeContained = PackageType.DDS
-                    End If
+                    Select Case FileTypeName
+                        Case "dds"
+                            FileTypeContained = PackageType.DDS
+                        Case "ymx"
+                            FileTypeContained = PackageType.YOBJ
+                        Case "tex"
+                            FileTypeContained = PackageType.TextureLibrary
+                        Case "map"
+                            FileTypeContained = PackageType.UFC_MAP
+                        Case "hkx"
+                            FileTypeContained = PackageType.UFC_HKX
+                        Case "pac"
+                            FileTypeContained = PackageType.UFC_PAC
+                        Case "txt"
+                            FileTypeContained = PackageType.UFC_TXT
+                        Case "cvx"
+                            FileTypeContained = PackageType.UFC_CVX
+                        Case "bin"
+                            FileTypeContained = PackageType.UFC_BIN
+                        Case Else
+                            'MessageBox.Show("Missing Type " & FileTypeName)
+                    End Select
                     'Here we need to get the File length and index incase the bytes are revesed
                     Dim CurrentItemLength As UInt32 = 0
                     Dim CurrentItemIndex As UInt32 = 0
@@ -1093,7 +1128,7 @@ Public Class MainForm
                     Dim TempNode As TreeNode = New TreeNode(ImageName)
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties With {
-                        .length = BitConverter.ToUInt32(FileBytes, i * &H20 + &H10 + &H14),
+                        .length = CurrentItemLength,
                         .Index = CurrentItemIndex,
                         .StoredData = NodeTag.StoredData,
                         .FileType = FileTypeContained}
@@ -1242,7 +1277,7 @@ Public Class MainForm
                                 Case LibraryContainsList.Contains(Encoding.Default.GetChars(ByteArray, Index + &H20, 3)) 'ufc games can have additional file types  create a short list of 3 char codes to test
                                     Return PackageType.TextureLibrary
                                 Case Encoding.Default.GetChars(ByteArray, Index + &H24, 4) = "root"
-                                    Return PackageType.TextureLibrary
+                                    Return PackageType.YANMPack
                                 Case ActiveFile.ToLower.Contains("string")
                                     Dim NumberCheck As UInt32 = BitConverter.ToUInt32(ByteArray, Index + 0)
                                     If NumberCheck = 0 Then
@@ -2035,7 +2070,8 @@ Public Class MainForm
             ParrentNodeTag.FileType = PackageType.EPK8 OrElse
             ParrentNodeTag.FileType = PackageType.EPAC OrElse
             ParrentNodeTag.FileType = PackageType.OODL OrElse
-            ParrentNodeTag.FileType = PackageType.PachDirectory Then 'Hopefully this can expand to all
+            ParrentNodeTag.FileType = PackageType.PachDirectory OrElse
+            ParrentNodeTag.FileType = PackageType.TextureLibrary Then 'Hopefully this can expand to all
             Dim injectopenfile As OpenFileDialog = New OpenFileDialog With {
             .FileName = TreeView1.SelectedNode.Text & "." & NodeTag.FileType.ToString,
             .InitialDirectory = Path.GetDirectoryName(filepath)}
@@ -2173,7 +2209,7 @@ Public Class MainForm
                         If temporarynode.Text.Contains(".") Then
                             Folder = temporarynode.Text.Substring(0, temporarynode.Text.IndexOf(".")) & Path.DirectorySeparatorChar
                         Else
-                            Folder = temporarynode.Text & Path.DirectorySeparatorChar
+                            Folder = temporarynode.Text.TrimEnd(" ") & Path.DirectorySeparatorChar
                         End If
                     End If
                     'if not folder add-on is nothing
@@ -2181,7 +2217,7 @@ Public Class MainForm
                     If temporarynode.Text.Contains(".") Then
                         Folder = temporarynode.Text.Substring(0, temporarynode.Text.IndexOf(".")) & Path.DirectorySeparatorChar
                     Else
-                        Folder = temporarynode.Text & Path.DirectorySeparatorChar
+                        Folder = temporarynode.Text.TrimEnd(" ") & Path.DirectorySeparatorChar
                     End If
                 End If
                 ExtractAllNode(temporarynode, BaseFolder, AdditonalFolders & Folder)
@@ -2333,6 +2369,38 @@ Public Class MainForm
                     'Size stays index changed
                     Dim OldIndex As UInt32 = BitConverter.ToUInt32(WrittenFileArray, TempHeaderStart + (i * &H10) + &H4)
                     Array.Copy(BitConverter.GetBytes(CUInt(OldIndex + SizeDifference)), 0, WrittenFileArray, (TempHeaderStart + (i * &H10) + &H4), 4)
+                End If
+            Next
+        ElseIf ParentNodeTag.FileType = PackageType.TextureLibrary Then
+            'Code the injection here..
+            'start with the header fixes and inject each part of the file
+            Dim FileCount As Integer = WrittenFileArray(0)
+            Dim BytesRevesed As Boolean = False
+            If FileCount = 0 Then 'if this is 0 then we are dealing with a reverse byte system header.
+                FileCount = WrittenFileArray(3)
+                BytesRevesed = True
+            End If
+            'Texture Library has no total length to adjust
+            For i As Integer = 0 To FileCount - 1
+                If i < NodeLocation Then
+                    'no change needed
+                ElseIf i = NodeLocation Then
+                    'Index Stays the same
+                    If BytesRevesed Then
+                        Array.Copy(EndianReverse(BitConverter.GetBytes(CUInt(SentBytes.Length))), 0, WrittenFileArray, i * &H20 + &H10 + &H14, 4)
+                    Else
+                        Array.Copy(BitConverter.GetBytes(CUInt(SentBytes.Length)), 0, WrittenFileArray, i * &H20 + &H10 + &H14, 4)
+                    End If
+                Else 'size stays but index changes
+                    If BytesRevesed Then
+                        Dim OldIndex As UInt32 = BitConverter.ToUInt32(EndianReverse(WrittenFileArray, i * &H20 + &H10 + &H18, 4), 0)
+                        Dim TempIndex As UInt64 = OldIndex + SizeDifference
+                        Array.Copy(EndianReverse(BitConverter.GetBytes(CUInt(TempIndex))), 0, WrittenFileArray, i * &H20 + &H10 + &H18, 4)
+                    Else
+                        Dim OldIndex As UInt32 = BitConverter.ToUInt64(WrittenFileArray, i * &H20 + &H10 + &H18)
+                        Dim TempIndex As UInt64 = OldIndex + SizeDifference
+                        Array.Copy(BitConverter.GetBytes(CLng(TempIndex)), 0, WrittenFileArray, i * &H20 + &H10 + &H18, 8)
+                    End If
                 End If
             Next
         End If

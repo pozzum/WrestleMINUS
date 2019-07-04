@@ -55,6 +55,7 @@ Public Class OptionsMenu
         ComboBoxCompLevel.SelectedIndex = My.Settings.OODLCompressionLevel
         CheckBoxLoadHome.Checked = My.Settings.LoadHomeOnLaunch
         CheckBoxBackup.Checked = My.Settings.BackupInjections
+        CheckBoxTruncateNumeric.Checked = My.Settings.TruncateDecimalNames
         CheckBoxDeleteTempBMP.Checked = My.Settings.DeleteTempBMP
         CheckBoxTreeNodeIcons.Checked = My.Settings.UseTreeIcons
         CheckBoxDetailedFileNames.Checked = My.Settings.UseDetailedFileNames
@@ -117,13 +118,14 @@ Public Class OptionsMenu
     Private Sub CheckBoxLoadHome_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxLoadHome.CheckedChanged
         My.Settings.LoadHomeOnLaunch = CheckBoxLoadHome.Checked
     End Sub
-
     Private Sub CheckBoxBackup_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxBackup.CheckedChanged
         My.Settings.BackupInjections = CheckBoxBackup.Checked
     End Sub
-
     Private Sub CheckBoxDeleteTempBMP_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxDeleteTempBMP.CheckedChanged
         My.Settings.DeleteTempBMP = CheckBoxDeleteTempBMP.Checked
+    End Sub
+    Private Sub CheckBoxTruncateNumeric_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxTruncateNumeric.CheckedChanged
+        My.Settings.TruncateDecimalNames = CheckBoxTruncateNumeric.Checked
     End Sub
     Private Sub CheckBoxTreeNodeIcons_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxTreeNodeIcons.CheckedChanged
         My.Settings.UseTreeIcons = CheckBoxTreeNodeIcons.Checked
