@@ -22,45 +22,45 @@ Partial Class TextDialogPrompt
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
+        Me.LabelOldFileHeader = New System.Windows.Forms.Label()
+        Me.TextBoxEditedName = New System.Windows.Forms.TextBox()
+        Me.ButtonAcceptChange = New System.Windows.Forms.Button()
+        Me.ButtonCancelChange = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
-        'Label1
+        'LabelOldFileHeader
         '
-        Me.Label1.Location = New System.Drawing.Point(12, 9)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(156, 23)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Renaming File: ..."
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.LabelOldFileHeader.Location = New System.Drawing.Point(12, 9)
+        Me.LabelOldFileHeader.Name = "LabelOldFileHeader"
+        Me.LabelOldFileHeader.Size = New System.Drawing.Size(156, 23)
+        Me.LabelOldFileHeader.TabIndex = 0
+        Me.LabelOldFileHeader.Text = "Renaming File: ..."
+        Me.LabelOldFileHeader.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
-        'TextBox1
+        'TextBoxEditedName
         '
-        Me.TextBox1.Location = New System.Drawing.Point(12, 25)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(156, 20)
-        Me.TextBox1.TabIndex = 1
+        Me.TextBoxEditedName.Location = New System.Drawing.Point(12, 25)
+        Me.TextBoxEditedName.Name = "TextBoxEditedName"
+        Me.TextBoxEditedName.Size = New System.Drawing.Size(156, 20)
+        Me.TextBoxEditedName.TabIndex = 1
         '
-        'Button1
+        'ButtonAcceptChange
         '
-        Me.Button1.Location = New System.Drawing.Point(12, 51)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 2
-        Me.Button1.Text = "Ok"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.ButtonAcceptChange.Location = New System.Drawing.Point(12, 51)
+        Me.ButtonAcceptChange.Name = "ButtonAcceptChange"
+        Me.ButtonAcceptChange.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonAcceptChange.TabIndex = 2
+        Me.ButtonAcceptChange.Text = "Ok"
+        Me.ButtonAcceptChange.UseVisualStyleBackColor = True
         '
-        'Button2
+        'ButtonCancelChange
         '
-        Me.Button2.Location = New System.Drawing.Point(93, 51)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(75, 23)
-        Me.Button2.TabIndex = 3
-        Me.Button2.Text = "Cancel"
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.ButtonCancelChange.Location = New System.Drawing.Point(93, 51)
+        Me.ButtonCancelChange.Name = "ButtonCancelChange"
+        Me.ButtonCancelChange.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonCancelChange.TabIndex = 3
+        Me.ButtonCancelChange.Text = "Cancel"
+        Me.ButtonCancelChange.UseVisualStyleBackColor = True
         '
         'TextDialogPrompt
         '
@@ -68,10 +68,10 @@ Partial Class TextDialogPrompt
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(180, 81)
-        Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.Button1)
-        Me.Controls.Add(Me.TextBox1)
-        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.ButtonCancelChange)
+        Me.Controls.Add(Me.ButtonAcceptChange)
+        Me.Controls.Add(Me.TextBoxEditedName)
+        Me.Controls.Add(Me.LabelOldFileHeader)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
         Me.MinimizeBox = False
@@ -84,8 +84,8 @@ Partial Class TextDialogPrompt
 
     End Sub
 
-    Friend WithEvents Label1 As Label
-    Friend WithEvents TextBox1 As TextBox
-    Friend WithEvents Button1 As Button
-    Friend WithEvents Button2 As Button
+    Friend WithEvents LabelOldFileHeader As Label
+    Friend WithEvents TextBoxEditedName As TextBox
+    Friend WithEvents ButtonAcceptChange As Button
+    Friend WithEvents ButtonCancelChange As Button
 End Class

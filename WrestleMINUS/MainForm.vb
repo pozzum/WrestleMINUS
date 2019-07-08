@@ -790,7 +790,8 @@ Public Class MainForm
         EPAC
         PACH
         SHDC
-        PachDirectory
+        PachDirectory_4
+        PachDirectory_8
         ZLIB
         BPE
         OODL
@@ -874,7 +875,7 @@ Public Class MainForm
                     Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 4
                     Dim DirectoryNodeProps As NodeProperties = New NodeProperties With {
                         .StoredData = NodeTag.StoredData,
-                        .FileType = PackageType.PachDirectory}
+                        .FileType = PackageType.PachDirectory_8}
                     index += &HC
                     For i As Integer = 0 To DirectoryContainsCount - 1
                         Dim PachName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 8)
@@ -910,7 +911,7 @@ Public Class MainForm
                     Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 3
                     Dim DirectoryNodeProps As NodeProperties = New NodeProperties With {
                         .StoredData = NodeTag.StoredData,
-                        .FileType = PackageType.PachDirectory}
+                        .FileType = PackageType.PachDirectory_4}
                     index += &HC
                     For i As Integer = 0 To DirectoryContainsCount - 1
                         Dim PachName As String = Encoding.Default.GetChars(FileBytes, &H800 + index, 4)
@@ -957,7 +958,7 @@ Public Class MainForm
                             Continue For
                         End If
                         If Not My.Settings.TruncateDecimalNames Then
-                            PartName = PartName.PadLeft(4, "0")
+                            PartName = PartName.PadLeft(8, "0")
                         End If
                         Dim TempNode As TreeNode = New TreeNode(PartName)
                         TempNode.ToolTipText = HostNode.ToolTipText
@@ -1305,7 +1306,8 @@ Public Class MainForm
             TestType = PackageType.BPE OrElse
            TestType = PackageType.ZLIB OrElse
            TestType = PackageType.OODL OrElse
-           TestType = PackageType.PachDirectory OrElse
+           TestType = PackageType.PachDirectory_4 OrElse
+           TestType = PackageType.PachDirectory_8 OrElse
            TestType = PackageType.TextureLibrary OrElse
            TestType = PackageType.YANMPack OrElse
            TestType = PackageType.YOBJ Then
@@ -1351,7 +1353,9 @@ Public Class MainForm
                 Return 5
             Case PackageType.PACH
                 Return 6
-            Case PackageType.PachDirectory
+            Case PackageType.PachDirectory_4
+                Return 6
+            Case PackageType.PachDirectory_8
                 Return 6
             Case PackageType.BPE
                 Return 7
@@ -1929,7 +1933,8 @@ Public Class MainForm
                     InjectToolStripMenuItem.Visible = False
                     InjectZLIBToolStripMenuItem.Visible = False
                     InjectOODLToolStripMenuItem.Visible = False
-                    ShownOptions -= 3
+                    RenameToolStripMenuItem.Visible = False
+                    ShownOptions -= 4
                     If My.Settings.BPEExePath <> "Not Installed" Then
                         InjectBPEToolStripMenuItem.Visible = True
                     Else
@@ -1941,12 +1946,14 @@ Public Class MainForm
                     InjectBPEToolStripMenuItem.Visible = False
                     InjectZLIBToolStripMenuItem.Visible = True
                     InjectOODLToolStripMenuItem.Visible = False
-                    ShownOptions -= 3
+                    RenameToolStripMenuItem.Visible = False
+                    ShownOptions -= 4
                 ElseIf ParentNodeTag.FileType = PackageType.OODL Then
                     InjectToolStripMenuItem.Visible = False
                     InjectBPEToolStripMenuItem.Visible = False
                     InjectZLIBToolStripMenuItem.Visible = False
-                    ShownOptions -= 3
+                    RenameToolStripMenuItem.Visible = False
+                    ShownOptions -= 4
                     If CheckOodle() Then
                         InjectOODLToolStripMenuItem.Visible = True
                     Else
@@ -1956,6 +1963,7 @@ Public Class MainForm
                 Else
                     InjectToolStripMenuItem.Visible = True
                     InjectZLIBToolStripMenuItem.Visible = True
+                    RenameToolStripMenuItem.Visible = True
                     If My.Settings.BPEExePath <> "Not Installed" Then
                         InjectBPEToolStripMenuItem.Visible = True
                     Else
@@ -1975,7 +1983,8 @@ Public Class MainForm
                 InjectBPEToolStripMenuItem.Visible = False
                 InjectZLIBToolStripMenuItem.Visible = False
                 InjectOODLToolStripMenuItem.Visible = False
-                ShownOptions -= 5
+                RenameToolStripMenuItem.Visible = False
+                ShownOptions -= 6
             End If
             'TO DO add Open With Items Somehow
             If NodeTag.FileType = PackageType.bk2 AndAlso My.Settings.RADVideoToolPath <> "Not Installed" Then
@@ -2069,8 +2078,8 @@ Public Class MainForm
             ParrentNodeTag.FileType = PackageType.SHDC OrElse
             ParrentNodeTag.FileType = PackageType.EPK8 OrElse
             ParrentNodeTag.FileType = PackageType.EPAC OrElse
-            ParrentNodeTag.FileType = PackageType.OODL OrElse
-            ParrentNodeTag.FileType = PackageType.PachDirectory OrElse
+            ParrentNodeTag.FileType = PackageType.PachDirectory_4 OrElse
+            ParrentNodeTag.FileType = PackageType.PachDirectory_8 OrElse
             ParrentNodeTag.FileType = PackageType.TextureLibrary Then 'Hopefully this can expand to all
             Dim injectopenfile As OpenFileDialog = New OpenFileDialog With {
             .FileName = TreeView1.SelectedNode.Text & "." & NodeTag.FileType.ToString,
@@ -2094,79 +2103,108 @@ Public Class MainForm
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
-        Dim injectopenfile As OpenFileDialog = New OpenFileDialog With {
+        If ParrentNodeTag.FileType = PackageType.HSPC OrElse
+            ParrentNodeTag.FileType = PackageType.SHDC OrElse
+            ParrentNodeTag.FileType = PackageType.EPK8 OrElse
+            ParrentNodeTag.FileType = PackageType.EPAC OrElse
+            ParrentNodeTag.FileType = PackageType.PachDirectory_4 OrElse
+            ParrentNodeTag.FileType = PackageType.PachDirectory_8 OrElse
+            ParrentNodeTag.FileType = PackageType.TextureLibrary Then 'Hopefully this can expand to all
+            Dim injectopenfile As OpenFileDialog = New OpenFileDialog With {
             .FileName = TreeView1.SelectedNode.Text & "." & NodeTag.FileType.ToString,
             .InitialDirectory = Path.GetDirectoryName(filepath)}
-        If injectopenfile.ShowDialog() = DialogResult.OK Then
-            If File.Exists(injectopenfile.FileName) Then
-                Dim FileBytes As Byte() = File.ReadAllBytes(injectopenfile.FileName)
-                Dim CompressedBytes As Byte() = Nothing
-                CompressedBytes = GetCompressedBPEBytes(FileBytes)
-                If IsNothing(CompressedBytes) Then
-                    MessageBox.Show("Failure to get Compressed Bytes")
-                    Exit Sub
-                End If
-                If ParrentNodeTag.FileType = PackageType.BPE Then 'Hopefully this can expand to all
-                    InjectIntoNode(TreeView1.SelectedNode.Parent, CompressedBytes)
+            If injectopenfile.ShowDialog() = DialogResult.OK Then
+                If File.Exists(injectopenfile.FileName) Then
+                    Dim FileBytes As Byte() = File.ReadAllBytes(injectopenfile.FileName)
+                    Dim CompressedBytes As Byte() = Nothing
+                    CompressedBytes = GetCompressedBPEBytes(FileBytes)
+                    If IsNothing(CompressedBytes) Then
+                        MessageBox.Show("Failure to get Compressed Bytes")
+                        Exit Sub
+                    End If
+                    If ParrentNodeTag.FileType = PackageType.BPE Then 'Hopefully this can expand to all
+                        InjectIntoNode(TreeView1.SelectedNode.Parent, CompressedBytes)
+                    Else
+                        InjectIntoNode(TreeView1.SelectedNode, CompressedBytes)
+                    End If
                 Else
-                    InjectIntoNode(TreeView1.SelectedNode, CompressedBytes)
+                    MessageBox.Show("File Does Not Exist")
                 End If
-            Else
-                MessageBox.Show("File Does Not Exist")
             End If
+        Else
+            MessageBox.Show("Not Yet Supported")
         End If
     End Sub
     Private Sub InjectZLIBToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InjectZLIBToolStripMenuItem.Click
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
-
-        Dim injectopenfile As OpenFileDialog = New OpenFileDialog With {
+        If ParrentNodeTag.FileType = PackageType.HSPC OrElse
+            ParrentNodeTag.FileType = PackageType.SHDC OrElse
+            ParrentNodeTag.FileType = PackageType.EPK8 OrElse
+            ParrentNodeTag.FileType = PackageType.EPAC OrElse
+            ParrentNodeTag.FileType = PackageType.PachDirectory_4 OrElse
+            ParrentNodeTag.FileType = PackageType.PachDirectory_8 OrElse
+            ParrentNodeTag.FileType = PackageType.TextureLibrary Then 'Hopefully this can expand to all
+            Dim injectopenfile As OpenFileDialog = New OpenFileDialog With {
             .FileName = TreeView1.SelectedNode.Text & "." & NodeTag.FileType.ToString,
             .InitialDirectory = Path.GetDirectoryName(filepath)}
-        If injectopenfile.ShowDialog() = DialogResult.OK Then
-            If File.Exists(injectopenfile.FileName) Then
-                Dim FileBytes As Byte() = File.ReadAllBytes(injectopenfile.FileName)
-                Dim CompressedBytes As Byte() = Nothing
-                CompressedBytes = GetCompressedZlibBytes(FileBytes)
-                If IsNothing(CompressedBytes) Then
-                    MessageBox.Show("Failure to get Compressed Bytes")
-                    Exit Sub
-                End If
-                If ParrentNodeTag.FileType = PackageType.ZLIB Then 'Hopefully this can expand to all
-                    InjectIntoNode(TreeView1.SelectedNode.Parent, CompressedBytes)
+            If injectopenfile.ShowDialog() = DialogResult.OK Then
+                If File.Exists(injectopenfile.FileName) Then
+                    Dim FileBytes As Byte() = File.ReadAllBytes(injectopenfile.FileName)
+                    Dim CompressedBytes As Byte() = Nothing
+                    CompressedBytes = GetCompressedZlibBytes(FileBytes)
+                    If IsNothing(CompressedBytes) Then
+                        MessageBox.Show("Failure to get Compressed Bytes")
+                        Exit Sub
+                    End If
+                    If ParrentNodeTag.FileType = PackageType.ZLIB Then 'Hopefully this can expand to all
+                        InjectIntoNode(TreeView1.SelectedNode.Parent, CompressedBytes)
+                    Else
+                        InjectIntoNode(TreeView1.SelectedNode, CompressedBytes)
+                    End If
                 Else
-                    InjectIntoNode(TreeView1.SelectedNode, CompressedBytes)
+                    MessageBox.Show("File Does Not Exist")
                 End If
-            Else
-                MessageBox.Show("File Does Not Exist")
             End If
+        Else
+            MessageBox.Show("Not Yet Supported")
         End If
     End Sub
     Private Sub InjectOODLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InjectOODLToolStripMenuItem.Click
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
-        Dim injectopenfile As OpenFileDialog = New OpenFileDialog With {
+        If ParrentNodeTag.FileType = PackageType.HSPC OrElse
+            ParrentNodeTag.FileType = PackageType.SHDC OrElse
+            ParrentNodeTag.FileType = PackageType.EPK8 OrElse
+            ParrentNodeTag.FileType = PackageType.EPAC OrElse
+            ParrentNodeTag.FileType = PackageType.PachDirectory_4 OrElse
+            ParrentNodeTag.FileType = PackageType.PachDirectory_8 OrElse
+            ParrentNodeTag.FileType = PackageType.TextureLibrary Then 'Hopefully this can expand to all
+            Dim injectopenfile As OpenFileDialog = New OpenFileDialog With {
             .FileName = TreeView1.SelectedNode.Text & "." & NodeTag.FileType.ToString,
             .InitialDirectory = Path.GetDirectoryName(filepath)}
-        If injectopenfile.ShowDialog() = DialogResult.OK Then
-            If File.Exists(injectopenfile.FileName) Then
-                Dim FileBytes As Byte() = File.ReadAllBytes(injectopenfile.FileName)
-                Dim CompressedBytes As Byte() = Nothing
-                CompressedBytes = GetCompressedOodleBytes(FileBytes)
-                If IsNothing(CompressedBytes) Then
-                    MessageBox.Show("Failure to get Compressed Bytes")
-                    Exit Sub
-                End If
-                If ParrentNodeTag.FileType = PackageType.OODL Then 'Hopefully this can expand to all
-                    InjectIntoNode(TreeView1.SelectedNode.Parent, CompressedBytes)
+            If injectopenfile.ShowDialog() = DialogResult.OK Then
+                If File.Exists(injectopenfile.FileName) Then
+                    Dim FileBytes As Byte() = File.ReadAllBytes(injectopenfile.FileName)
+                    Dim CompressedBytes As Byte() = Nothing
+                    CompressedBytes = GetCompressedOodleBytes(FileBytes)
+                    If IsNothing(CompressedBytes) Then
+                        MessageBox.Show("Failure to get Compressed Bytes")
+                        Exit Sub
+                    End If
+                    If ParrentNodeTag.FileType = PackageType.OODL Then 'Hopefully this can expand to all
+                        InjectIntoNode(TreeView1.SelectedNode.Parent, CompressedBytes)
+                    Else
+                        InjectIntoNode(TreeView1.SelectedNode, CompressedBytes)
+                    End If
                 Else
-                    InjectIntoNode(TreeView1.SelectedNode, CompressedBytes)
+                    MessageBox.Show("File Does Not Exist")
                 End If
-            Else
-                MessageBox.Show("File Does Not Exist")
             End If
+        Else
+            MessageBox.Show("Not Yet Supported")
         End If
     End Sub
     Sub Crawlnode(Basenode As TreeNode)
@@ -2180,6 +2218,50 @@ Public Class MainForm
             ProgressBar1.Value += 1
         Next
         ProgressBar1.Value = ProgressBar1.Maximum
+    End Sub
+    Private Sub RenameToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenameToolStripMenuItem.Click
+        Dim filepath As String = TreeView1.SelectedNode.ToolTipText
+        Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
+        Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
+        If ParrentNodeTag.FileType = PackageType.HSPC OrElse
+            ParrentNodeTag.FileType = PackageType.SHDC OrElse
+            ParrentNodeTag.FileType = PackageType.EPK8 OrElse
+            ParrentNodeTag.FileType = PackageType.EPAC OrElse
+            ParrentNodeTag.FileType = PackageType.PachDirectory_4 OrElse
+            ParrentNodeTag.FileType = PackageType.PachDirectory_8 OrElse
+            ParrentNodeTag.FileType = PackageType.TextureLibrary Then 'Hopefully this can expand to all
+            'Here we want TextDialogInstance
+            Dim TextDialogInstance As New TextDialogPrompt With {
+                .OldFileName = TreeView1.SelectedNode.Text,
+                .EditedFileName = .OldFileName,
+                .ContainerBeingEdited = ParrentNodeTag.FileType}
+            TextDialogInstance.ShowDialog()
+            If TextDialogInstance.Result = DialogResult.OK Then
+                If Not TextDialogInstance.OldFileName = TextDialogInstance.EditedFileName Then 'no change
+                    Dim NewFileName As String = TextDialogInstance.EditedFileName
+                    NewFileName = ValidateTruncation(NewFileName, ParrentNodeTag.FileType)
+                    'MessageBox.Show("Changed Name to " & NewFileName)
+                    'here we have to check if it already has that same file name
+                    Dim NodeSet As TreeNodeCollection = TreeView1.SelectedNode.Parent.Nodes
+                    Dim NameMatched As Boolean = False
+                    For i As Integer = 0 To NodeSet.Count - 1
+                        'MessageBox.Show(NodeSet(i).Text)
+                        If NodeSet(i).Text = NewFileName Then
+                            NameMatched = True
+                        End If
+                    Next
+                    If Not NameMatched Then
+                        RenameNode(TreeView1.SelectedNode, NewFileName)
+                        MessageBox.Show("Part Renamed")
+                    Else
+                        MessageBox.Show("File Already Contains a file named " & NewFileName)
+                    End If
+                End If
+            End If
+            TextDialogInstance.Dispose()
+        Else
+            MessageBox.Show("Not Yet Supported")
+        End If
     End Sub
     Sub ExtractNode(Sentnode As TreeNode, Savepath As String)
         File.WriteAllBytes(Savepath, GetNodeBytes(Sentnode))
@@ -2225,6 +2307,7 @@ Public Class MainForm
         Next
     End Sub
     'First Pass but I feel like this can still be improved...
+    'I think I need to add checking oodl parents and making sure it's injected properly..
     Function InjectIntoNode(Sentnode As TreeNode, SentBytes As Byte()) As Boolean
         If IsNothing(SentBytes) Then 'exits the function if no bytes are sent
             MessageBox.Show("No File Sent, Injection Failed!")
@@ -2251,7 +2334,8 @@ Public Class MainForm
         Dim ParentNodeTag As NodeProperties = CType(ParentNode.Tag, NodeProperties)
         'skipping pachdirectories
         Dim DirectoryIndex As Integer = -1
-        If ParentNodeTag.FileType = PackageType.PachDirectory Then
+        If ParentNodeTag.FileType = PackageType.PachDirectory_4 OrElse
+           ParentNodeTag.FileType = PackageType.PachDirectory_8 Then
             DirectoryIndex = ParentNode.Index
             MessageBox.Show("Directory Skipped" & vbNewLine & DirectoryIndex)
             ParentNode = ParentNode.Parent
@@ -2435,7 +2519,253 @@ Public Class MainForm
         End If
         Return True
     End Function
-
+    Function ValidateTruncation(TestedString As String, ContainerType As PackageType) As String
+        If My.Settings.TruncateDecimalNames Then
+            Select Case ContainerType
+                Case PackageType.HSPC
+                    Return TestedString.TrimStart("0").ToUpper
+                Case PackageType.SHDC
+                    Return TestedString.TrimStart("0").ToUpper
+                Case PackageType.EPK8
+                    Return TestedString.TrimStart("0").ToUpper
+                Case PackageType.EPAC
+                    Return TestedString.TrimStart("0").ToUpper
+                Case PackageType.PachDirectory_4
+                    Return TestedString.TrimStart("0").ToUpper
+                Case PackageType.PachDirectory_8
+                    Return TestedString.TrimStart("0").ToUpper
+                Case PackageType.TextureLibrary
+                    Return TestedString.Trim(" ")
+                Case Else
+                    Return TestedString
+            End Select
+        Else
+            Select Case ContainerType
+                Case PackageType.HSPC
+                    Return TestedString.PadLeft(16, "0").ToUpper
+                Case PackageType.SHDC
+                    Return TestedString.PadLeft(4, "0").ToUpper
+                Case PackageType.EPK8
+                    Return TestedString.PadLeft(4, "0").ToUpper
+                Case PackageType.EPAC
+                    Return TestedString.PadLeft(4, "0").ToUpper
+                Case PackageType.PachDirectory_4
+                    Return TestedString.PadLeft(4, "0").ToUpper
+                Case PackageType.PachDirectory_8
+                    Return TestedString.PadLeft(8, "0").ToUpper
+                Case PackageType.TextureLibrary
+                    Return TestedString.Trim(" ")
+                Case Else
+                    Return TestedString
+            End Select
+        End If
+    End Function
+    Sub RenameNode(Sentnode As TreeNode, NewName As String)
+        Dim NodeTag As NodeProperties = CType(Sentnode.Tag, NodeProperties)
+        'Get Parent Node Bytes
+        Dim ParentNode As TreeNode
+        If IsNothing(Sentnode.Parent) Then
+            ParentNode = Sentnode
+        Else
+            ParentNode = Sentnode.Parent
+        End If
+        Dim ParentNodeTag As NodeProperties = CType(ParentNode.Tag, NodeProperties)
+        Dim ParentBytes As Byte() = GetNodeBytes(ParentNode)
+        Dim ParentNodeLocation As Integer = 0
+        If ParentNodeTag.FileType = PackageType.PachDirectory_4 OrElse
+            ParentNodeTag.FileType = PackageType.PachDirectory_8 Then
+            'here we grab the 
+            ParentBytes = GetNodeBytes(ParentNode.Parent)
+            ParentNodeLocation = ParentNode.Index
+        End If
+        Dim WrittenFileArray As Byte() = New Byte(ParentBytes.Length - 1) {}
+        ' Write File Prior to new file
+        Array.Copy(ParentBytes, 0, WrittenFileArray, 0, ParentBytes.LongLength)
+        Dim ContainedParts As Integer = ParentNode.GetNodeCount(False)
+        If ContainedParts > 1 Then
+            If MessageBox.Show("Tool cannot yet sort.  Continue?", "Continue?", MessageBoxButtons.OKCancel) = DialogResult.Cancel Then
+                Exit Sub
+            End If
+        End If
+        'Get Node Location
+        Dim NodeLocation As Integer = Sentnode.Index '0 based
+        Select Case ParentNodeTag.FileType
+            Case PackageType.HSPC
+                'Likely only the 1 SHDC unlikely needs to be sorted
+                Dim StringBytes As Byte() = New Byte(7) {}
+                Dim HexBytes As Byte() = HexStringToByte(NewName)
+                'making the new string
+                Array.Copy(HexBytes, 0, StringBytes, 0, HexBytes.Length)
+                'copy the string to the file.
+                Array.Copy(StringBytes, 0, WrittenFileArray, &H800 + NodeLocation * &H14, 8)
+            Case PackageType.SHDC
+                '8 char possible endian reverse
+                Dim StringBytes As Byte() = New Byte(3) {}
+                Dim HexBytes As Byte() = HexStringToByte(NewName)
+                'making the new string
+                Array.Copy(EndianReverse(HexBytes), 0, StringBytes, 0, HexBytes.Length)
+                Dim TempHeaderCheck As Integer = BitConverter.ToUInt32(WrittenFileArray, &H18)
+                Dim TempHeaderStart As Integer = BitConverter.ToUInt32(WrittenFileArray, &H1C)
+                Dim TempHeaderLength As Integer = BitConverter.ToUInt32(WrittenFileArray, &H20)
+                If TempHeaderStart < TempHeaderCheck Then
+                    TempHeaderStart = TempHeaderCheck + &H10 + &H40
+                    If TempHeaderStart Mod &H10 > 0 Then
+                        TempHeaderStart = TempHeaderStart + &H10 - (TempHeaderStart Mod &H10)
+                    End If
+                End If
+                'TempHeaderStart + (i * &H10)
+                'copy the string to the file.
+                Array.Copy(StringBytes, 0, WrittenFileArray, TempHeaderStart + NodeLocation * &H10, 4)
+            Case PackageType.EPK8
+                'This would be renaming the pach container
+                Dim StringBytes As Byte() = New Byte(3) {}
+                Dim UnEncodedBytes As Byte() = Encoding.Default.GetBytes(NewName)
+                'making the new string
+                Array.Copy(UnEncodedBytes, 0, StringBytes, 0, UnEncodedBytes.Length)
+                'I need to figure out how to double check what container it is... and we can't like assume an earlier container only has 1 pach
+                Dim EditedNameIndex As Integer = 0
+                Dim HeaderLength As Integer = BitConverter.ToUInt32(WrittenFileArray, 4)
+                Dim index As Integer = 0
+                Dim DirectoryCount = 0
+                Do While index < HeaderLength - 1
+                    If DirectoryCount = NodeLocation Then
+                        EditedNameIndex = &H800 + index
+                        Exit Do
+                    End If
+                    Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(WrittenFileArray, &H800 + index + 4) / 4
+                    index += &HC
+                    For i As Integer = 0 To DirectoryContainsCount - 1
+                        index += &H10
+                    Next
+                    DirectoryCount += 1
+                Loop
+                'now that we have the proper index..
+                'copy the string to the file.
+                Array.Copy(StringBytes, 0, WrittenFileArray, EditedNameIndex, 4)
+            Case PackageType.EPAC
+                'This would be renaming the pach container
+                Dim StringBytes As Byte() = New Byte(3) {}
+                Dim UnEncodedBytes As Byte() = Encoding.Default.GetBytes(NewName)
+                'making the new string
+                Array.Copy(UnEncodedBytes, 0, StringBytes, 0, UnEncodedBytes.Length)
+                'I need to figure out how to double check what container it is... and we can't like assume an earlier container only has 1 pach
+                Dim EditedNamerIndex As Integer = 0
+                Dim HeaderLength As Integer = BitConverter.ToUInt32(WrittenFileArray, 4)
+                Dim index As Integer = 0
+                Dim DirectoryCount = 0
+                Do While index < HeaderLength - 1
+                    If DirectoryCount = NodeLocation Then
+                        EditedNamerIndex = &H800 + index
+                        Exit Do
+                    End If
+                    Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(WrittenFileArray, &H800 + index + 4) / 3
+                    index += &HC
+                    For i As Integer = 0 To DirectoryContainsCount - 1
+                        index += &HC
+                    Next
+                    DirectoryCount += 1
+                Loop
+                Array.Copy(StringBytes, 0, WrittenFileArray, EditedNamerIndex, 4)
+            Case PackageType.PachDirectory_8
+                'a pach inside a epk8 pach directory
+                Dim StringBytes As Byte() = New Byte(7) {}
+                Dim UnEncodedBytes As Byte() = Encoding.Default.GetBytes(NewName)
+                'making the new string
+                Array.Copy(UnEncodedBytes, 0, StringBytes, 0, UnEncodedBytes.Length)
+                'We can't assume this is in the first container
+                Dim EditedNameIndex As Integer = 0
+                Dim HeaderLength As Integer = BitConverter.ToUInt32(WrittenFileArray, 4)
+                Dim index As Integer = 0
+                Dim DirectoryCount = 0
+                Do While index < HeaderLength - 1
+                    Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(WrittenFileArray, &H800 + index + 4) / 4
+                    index += &HC
+                    For i As Integer = 0 To DirectoryContainsCount - 1
+                        If DirectoryCount = ParentNodeLocation AndAlso
+                            i = NodeLocation Then
+                            EditedNameIndex = &H800 + index
+                            Exit Do
+                        End If
+                        index += &H10
+                    Next
+                    DirectoryCount += 1
+                Loop
+                'now that we have the proper index..
+                'copy the string to the file.
+                Array.Copy(StringBytes, 0, WrittenFileArray, EditedNameIndex, 8)
+            Case PackageType.PachDirectory_4
+                'this renames a pach inside a epk8 pach directory
+                Dim StringBytes As Byte() = New Byte(3) {}
+                Dim UnEncodedBytes As Byte() = Encoding.Default.GetBytes(NewName)
+                'making the new string
+                Array.Copy(UnEncodedBytes, 0, StringBytes, 0, UnEncodedBytes.Length)
+                'We can't assume this is in the first container
+                Dim EditedNameIndex As Integer = 0
+                Dim HeaderLength As Integer = BitConverter.ToUInt32(WrittenFileArray, 4)
+                Dim index As Integer = 0
+                Dim DirectoryCount = 0
+                Do While index < HeaderLength - 1
+                    Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(WrittenFileArray, &H800 + index + 4) / 3
+                    index += &HC
+                    For i As Integer = 0 To DirectoryContainsCount - 1
+                        If DirectoryCount = ParentNodeLocation AndAlso
+                            i = NodeLocation Then
+                            EditedNameIndex = &H800 + index
+                            Exit Do
+                        End If
+                        index += &HC
+                    Next
+                    DirectoryCount += 1
+                Loop
+                Array.Copy(StringBytes, 0, WrittenFileArray, EditedNameIndex, 4)
+            Case PackageType.TextureLibrary
+                'Does not need to be sorted
+                Dim StringBytes As Byte() = New Byte(15) {}
+                'making the new string
+                Array.Copy(Encoding.Default.GetBytes(NewName), 0, StringBytes, 0, NewName.Length)
+                'copy the string to the file.
+                Array.Copy(StringBytes, 0, WrittenFileArray, &H10 + NodeLocation * &H20, 16)
+        End Select
+        'now we want to correct the parent so we can inject properly
+        'skipping pachdirectories
+        Dim DirectoryIndex As Integer = -1
+        If ParentNodeTag.FileType = PackageType.PachDirectory_4 OrElse
+           ParentNodeTag.FileType = PackageType.PachDirectory_8 Then
+            DirectoryIndex = ParentNode.Index
+            MessageBox.Show("Directory Skipped" & vbNewLine & DirectoryIndex)
+            ParentNode = ParentNode.Parent
+            ParentNodeTag = CType(Sentnode.Parent.Parent.Tag, NodeProperties)
+        End If
+        If ParentNodeTag.Index = 0 AndAlso
+            ParentNodeTag.StoredData.Length = 0 Then
+            'File to be Written
+            Dim WrittenFile As String = Sentnode.ToolTipText
+            If My.Settings.BackupInjections Then
+                File.Copy(WrittenFile, WrittenFile & ".bak", True)
+            End If
+            File.WriteAllBytes(WrittenFile, WrittenFileArray)
+            'Remove Save Pending Buttons when file written
+            SaveFileNoLongerPending()
+            'resettreebranch
+            Dim TempName As String = ParentNode.Text
+            ParentNode.Nodes.Clear()
+            ParentNode.Text = TempName
+            ParentNode.ToolTipText = WrittenFile
+            ParentNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
+                   .Index = 0,
+                    .length = WrittenFileArray.Length,
+                    .StoredData = New Byte() {}}
+            'fixes for rebuilding the same file over and over
+            CheckFile(ParentNode)
+            TreeView1.SelectedNode = ParentNode
+            TabControl1.SelectedIndex = 0
+            ReadNode = ParentNode
+            InformationLoaded = False
+        Else
+            'we must go higher
+            InjectIntoNode(ParentNode, WrittenFileArray)
+        End If
+    End Sub
 #End Region
 #Region "View Controls"
 #Region "Multi-View Controls"
