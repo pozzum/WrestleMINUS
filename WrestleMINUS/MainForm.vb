@@ -1917,24 +1917,27 @@ Public Class MainForm
         Dim ShownOptions As Integer = TreeViewContext.Items.Count
         'Hide Menu Options when not needed, and if no options are relevent do not show the context strip
         If NodeTag.FileType = PackageType.Folder Then
-            ExtractToolStripMenuItem.Visible = False
+            ExtractPartToToolStripMenuItem.Visible = False
             InjectToolStripMenuItem.Visible = False
+            InjectUncompressedToolStripMenuItem.Visible = False
             InjectBPEToolStripMenuItem.Visible = False
             InjectZLIBToolStripMenuItem.Visible = False
             InjectOODLToolStripMenuItem.Visible = False
             OpenToolStripMenuItem1.Visible = False
             OpenWithToolStripMenuItem.Visible = False
-            ShownOptions -= 7
+            ShownOptions -= 4
         Else
             If NodeTag.Index > 0 OrElse
                        NodeTag.StoredData.Length > 0 Then
-                ExtractToolStripMenuItem.Visible = True 'injection is still in progess
+                ExtractToolStripMenuItem.Visible = True
+                ExtractPartToToolStripMenuItem.Visible = True 'injection is still in progess
                 If ParentNodeTag.FileType = PackageType.BPE Then
                     InjectToolStripMenuItem.Visible = False
+                    InjectUncompressedToolStripMenuItem.Visible = False
                     InjectZLIBToolStripMenuItem.Visible = False
                     InjectOODLToolStripMenuItem.Visible = False
                     RenameToolStripMenuItem.Visible = False
-                    ShownOptions -= 4
+                    ShownOptions -= 2
                     If My.Settings.BPEExePath <> "Not Installed" Then
                         InjectBPEToolStripMenuItem.Visible = True
                     Else
@@ -1943,17 +1946,19 @@ Public Class MainForm
                     End If
                 ElseIf ParentNodeTag.FileType = PackageType.ZLIB Then
                     InjectToolStripMenuItem.Visible = False
+                    InjectUncompressedToolStripMenuItem.Visible = False
                     InjectBPEToolStripMenuItem.Visible = False
                     InjectZLIBToolStripMenuItem.Visible = True
                     InjectOODLToolStripMenuItem.Visible = False
                     RenameToolStripMenuItem.Visible = False
-                    ShownOptions -= 4
+                    ShownOptions -= 2
                 ElseIf ParentNodeTag.FileType = PackageType.OODL Then
                     InjectToolStripMenuItem.Visible = False
+                    InjectUncompressedToolStripMenuItem.Visible = False
                     InjectBPEToolStripMenuItem.Visible = False
                     InjectZLIBToolStripMenuItem.Visible = False
                     RenameToolStripMenuItem.Visible = False
-                    ShownOptions -= 4
+                    ShownOptions -= 2
                     If CheckOodle() Then
                         InjectOODLToolStripMenuItem.Visible = True
                     Else
@@ -1962,6 +1967,7 @@ Public Class MainForm
                     End If
                 Else
                     InjectToolStripMenuItem.Visible = True
+                    InjectUncompressedToolStripMenuItem.Visible = True
                     InjectZLIBToolStripMenuItem.Visible = True
                     RenameToolStripMenuItem.Visible = True
                     If My.Settings.BPEExePath <> "Not Installed" Then
@@ -1979,12 +1985,14 @@ Public Class MainForm
                 End If
             Else
                 ExtractToolStripMenuItem.Visible = False
+                ExtractPartToToolStripMenuItem.Visible = False
                 InjectToolStripMenuItem.Visible = False
+                InjectUncompressedToolStripMenuItem.Visible = False
                 InjectBPEToolStripMenuItem.Visible = False
                 InjectZLIBToolStripMenuItem.Visible = False
                 InjectOODLToolStripMenuItem.Visible = False
                 RenameToolStripMenuItem.Visible = False
-                ShownOptions -= 6
+                ShownOptions -= 3
             End If
             'TO DO add Open With Items Somehow
             If NodeTag.FileType = PackageType.bk2 AndAlso My.Settings.RADVideoToolPath <> "Not Installed" Then
@@ -2003,19 +2011,21 @@ Public Class MainForm
         End If
         If TreeView1.SelectedNode.GetNodeCount(False) > 0 Then
             CrawlToolStripMenuItem.Visible = True
+            ExtractToolStripMenuItem.Visible = True
             ExtractAllInPlaceToolStripMenuItem.Visible = True
             ExtractAllToToolStripMenuItem.Visible = True
         Else
             CrawlToolStripMenuItem.Visible = False
+            ExtractToolStripMenuItem.Visible = False
             ExtractAllInPlaceToolStripMenuItem.Visible = False
             ExtractAllToToolStripMenuItem.Visible = False
-            ShownOptions -= 3
+            ShownOptions -= 2
         End If
         If ShownOptions > 0 Then
             TreeViewContext.Show(TreeView1, New Point(e.X, e.Y))
         End If
     End Sub
-    Private Sub ExtractToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExtractToolStripMenuItem.Click
+    Private Sub ExtractToolStripMenuItem_Click(sender As Object, e As EventArgs)
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ExtractSaveFileDialog As SaveFileDialog = New SaveFileDialog()
         ExtractSaveFileDialog.InitialDirectory = Path.GetDirectoryName(TreeView1.SelectedNode.ToolTipText)
@@ -2050,7 +2060,7 @@ Public Class MainForm
         Crawlnode(TreeView1.SelectedNode) 'Crawls All of the Nodes and then expands the node
         TreeView1.SelectedNode.ExpandAll()
     End Sub
-    Private Sub ExtractAllInPlaceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExtractAllInPlaceToolStripMenuItem.Click
+    Private Sub ExtractAllInPlaceToolStripMenuItem_Click(sender As Object, e As EventArgs)
         Crawlnode(TreeView1.SelectedNode) 'crawls the node first so all of the files to be extracted are located
         If CType(TreeView1.SelectedNode.Tag, NodeProperties).FileType = PackageType.Folder Then 'if a folder used the folder
             ExtractAllNode(TreeView1.SelectedNode,
@@ -2062,7 +2072,7 @@ Public Class MainForm
                            Path.GetFileNameWithoutExtension(TreeView1.SelectedNode.ToolTipText) & Path.DirectorySeparatorChar)
         End If
     End Sub
-    Private Sub ExtractAllToToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExtractAllToToolStripMenuItem.Click
+    Private Sub ExtractAllToToolStripMenuItem_Click(sender As Object, e As EventArgs)
         SaveExtractAllDialog.InitialDirectory = Path.GetDirectoryName(TreeView1.SelectedNode.ToolTipText)
         If SaveExtractAllDialog.ShowDialog() = DialogResult.OK Then
             Crawlnode(TreeView1.SelectedNode)
@@ -2070,7 +2080,7 @@ Public Class MainForm
                            (Path.GetDirectoryName(SaveExtractAllDialog.FileName) & Path.DirectorySeparatorChar))
         End If
     End Sub
-    Private Sub InjectToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InjectToolStripMenuItem.Click
+    Private Sub InjectToolStripMenuItem_Click(sender As Object, e As EventArgs)
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
@@ -2099,7 +2109,7 @@ Public Class MainForm
             MessageBox.Show("Not Yet Supported")
         End If
     End Sub
-    Private Sub InjectBPEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InjectBPEToolStripMenuItem.Click
+    Private Sub InjectBPEToolStripMenuItem_Click(sender As Object, e As EventArgs)
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
@@ -2135,7 +2145,7 @@ Public Class MainForm
             MessageBox.Show("Not Yet Supported")
         End If
     End Sub
-    Private Sub InjectZLIBToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InjectZLIBToolStripMenuItem.Click
+    Private Sub InjectZLIBToolStripMenuItem_Click(sender As Object, e As EventArgs)
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
@@ -2171,7 +2181,7 @@ Public Class MainForm
             MessageBox.Show("Not Yet Supported")
         End If
     End Sub
-    Private Sub InjectOODLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InjectOODLToolStripMenuItem.Click
+    Private Sub InjectOODLToolStripMenuItem_Click(sender As Object, e As EventArgs)
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
