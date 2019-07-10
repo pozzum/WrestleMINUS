@@ -297,6 +297,10 @@ Public Class MainForm
                 PacNumbers(0) = -1
             End If
         End If
+        If My.Settings.TruncateDecimalNames Then
+            My.Settings.DecimalNameMinLength = 8
+            My.Settings.TruncateDecimalNames = False
+        End If
         My.Settings.Save()
     End Sub
     Dim MuscleViewStartupRemoved As Boolean = False
@@ -819,6 +823,9 @@ Public Class MainForm
         UFC_TXT
         UFC_CVX
         UFC_BIN
+        'Day of Recconing GV File Types added as needed
+        TPL
+        DUMY
     End Enum
     Dim ActiveFile As String = ""
     Dim LibraryContainsList As String() = New String() {"dds",
@@ -829,7 +836,8 @@ Public Class MainForm
         "pac",
         "txt",
         "cvx",
-        "bin"} ' list adds files from ufc undesputed.
+        "bin",
+        "tpl"} ' list adds files from ufc undesputed.
     Sub CheckFile(ByRef HostNode As TreeNode, Optional Crawl As Boolean = False)
         'TO DO Tempnode generation can be simplified.
         Dim NodeTag As NodeProperties = New NodeProperties
@@ -957,9 +965,7 @@ Public Class MainForm
                         If PartName = "FFFFFFFF" Then
                             Continue For
                         End If
-                        If Not My.Settings.TruncateDecimalNames Then
-                            PartName = PartName.PadLeft(8, "0")
-                        End If
+                        PartName = PartName.PadLeft(My.Settings.DecimalNameMinLength, "0")
                         Dim TempNode As TreeNode = New TreeNode(PartName)
                         TempNode.ToolTipText = HostNode.ToolTipText
                         Dim TempNodeProps As NodeProperties = New NodeProperties With {
@@ -981,9 +987,7 @@ Public Class MainForm
                 Dim Partcount As Integer = BitConverter.ToUInt32(FileBytes, 4)
                 For i As Integer = 0 To Partcount - 1
                     Dim PartName As String = Hex(BitConverter.ToUInt32(FileBytes, &H8 + (i * &HC)))
-                    If Not My.Settings.TruncateDecimalNames Then
-                        PartName = PartName.PadLeft(4, "0")
-                    End If
+                    PartName = PartName.PadLeft(Math.Min(4, My.Settings.DecimalNameMinLength), "0")
                     Dim TempNode As TreeNode = New TreeNode(PartName)
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties With {
@@ -996,6 +1000,21 @@ Public Class MainForm
                     TempNode.SelectedImageIndex = TempNode.ImageIndex
                     HostNode.Nodes.Add(TempNode)
                 Next
+            Case PackageType.DUMY
+                Dim HeaderLength As Integer = BitConverter.ToUInt32(EndianReverse(FileBytes, 4), 0)
+                Dim PartName As String = Hex(0)
+                PartName = PartName.PadLeft(Math.Min(4, My.Settings.DecimalNameMinLength), "0")
+                Dim TempNode As TreeNode = New TreeNode(PartName)
+                TempNode.ToolTipText = HostNode.ToolTipText
+                Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                    .Index = &H8 + HeaderLength,
+                    .length = FileBytes.Length - .Index,
+                    .StoredData = NodeTag.StoredData,
+                    .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
+                TempNode.Tag = TempNodeProps
+                TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                TempNode.SelectedImageIndex = TempNode.ImageIndex
+                HostNode.Nodes.Add(TempNode)
 #End Region
 #Region "Compression Types"
             Case PackageType.ZLIB
@@ -1113,6 +1132,8 @@ Public Class MainForm
                             FileTypeContained = PackageType.UFC_CVX
                         Case "bin"
                             FileTypeContained = PackageType.UFC_BIN
+                        Case "tpl"
+                            FileTypeContained = PackageType.TPL
                         Case Else
                             'MessageBox.Show("Missing Type " & FileTypeName)
                     End Select
@@ -1245,6 +1266,8 @@ Public Class MainForm
                 Return PackageType.OODL
             Case "VMUM"
                 Return PackageType.VMUM
+            Case "DUMY"
+                Return PackageType.DUMY
             Case Else
                 'if we don't have a perfect 4 match we go to check the 3 character matches
                 Select Case True
@@ -1260,6 +1283,8 @@ Public Class MainForm
                         Return PackageType.BPE
                     Case FirstFour.Contains("ê¡Y")
                         Return PackageType.YOBJArray
+                    Case FirstFour.Contains(" ¯0")
+                        Return PackageType.TPL
                     Case Else
                         'if we do not have a header text to guide us we have some additional text checks that are consistent.
                         'some of these checks don't 100% require this many bytes, but none should functionally have that little byte length
@@ -1365,6 +1390,8 @@ Public Class MainForm
                 Return 9
             Case PackageType.TextureLibrary
                 Return 10
+            Case PackageType.TPL
+                Return 10
             Case PackageType.YANMPack
                 Return 11
             Case PackageType.YANM
@@ -1379,6 +1406,8 @@ Public Class MainForm
                 Return 13
             Case PackageType.DDS
                 Return 14
+            Case PackageType.DUMY
+                Return 14
             Case PackageType.ArenaInfo
                 Return 15
             Case PackageType.ShowInfo
@@ -1390,6 +1419,18 @@ Public Class MainForm
             Case PackageType.CostumeFile
                 Return 19
             Case PackageType.MuscleFile
+                Return 20
+            Case PackageType.UFC_PAC
+                Return 20
+            Case PackageType.UFC_BIN
+                Return 20
+            Case PackageType.UFC_CVX
+                Return 20
+            Case PackageType.UFC_HKX
+                Return 20
+            Case PackageType.UFC_MAP
+                Return 20
+            Case PackageType.UFC_TXT
                 Return 20
             Case PackageType.MaskFile
                 Return 21
@@ -2016,7 +2057,8 @@ Public Class MainForm
             ExtractAllToToolStripMenuItem.Visible = True
         Else
             CrawlToolStripMenuItem.Visible = False
-            ExtractToolStripMenuItem.Visible = False
+            'this should not be removed from this
+            'ExtractToolStripMenuItem.Visible = False
             ExtractAllInPlaceToolStripMenuItem.Visible = False
             ExtractAllToToolStripMenuItem.Visible = False
             ShownOptions -= 2
@@ -2025,7 +2067,7 @@ Public Class MainForm
             TreeViewContext.Show(TreeView1, New Point(e.X, e.Y))
         End If
     End Sub
-    Private Sub ExtractToolStripMenuItem_Click(sender As Object, e As EventArgs)
+    Private Sub ExtractPartToToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExtractPartToToolStripMenuItem.Click
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ExtractSaveFileDialog As SaveFileDialog = New SaveFileDialog()
         ExtractSaveFileDialog.InitialDirectory = Path.GetDirectoryName(TreeView1.SelectedNode.ToolTipText)
@@ -2060,7 +2102,8 @@ Public Class MainForm
         Crawlnode(TreeView1.SelectedNode) 'Crawls All of the Nodes and then expands the node
         TreeView1.SelectedNode.ExpandAll()
     End Sub
-    Private Sub ExtractAllInPlaceToolStripMenuItem_Click(sender As Object, e As EventArgs)
+    'Handles ExtractPartToToolStripMenuItem.Click
+    Private Sub ExtractAllInPlaceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExtractAllInPlaceToolStripMenuItem.Click
         Crawlnode(TreeView1.SelectedNode) 'crawls the node first so all of the files to be extracted are located
         If CType(TreeView1.SelectedNode.Tag, NodeProperties).FileType = PackageType.Folder Then 'if a folder used the folder
             ExtractAllNode(TreeView1.SelectedNode,
@@ -2072,7 +2115,7 @@ Public Class MainForm
                            Path.GetFileNameWithoutExtension(TreeView1.SelectedNode.ToolTipText) & Path.DirectorySeparatorChar)
         End If
     End Sub
-    Private Sub ExtractAllToToolStripMenuItem_Click(sender As Object, e As EventArgs)
+    Private Sub ExtractAllToToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExtractAllToToolStripMenuItem.Click
         SaveExtractAllDialog.InitialDirectory = Path.GetDirectoryName(TreeView1.SelectedNode.ToolTipText)
         If SaveExtractAllDialog.ShowDialog() = DialogResult.OK Then
             Crawlnode(TreeView1.SelectedNode)
@@ -2080,7 +2123,7 @@ Public Class MainForm
                            (Path.GetDirectoryName(SaveExtractAllDialog.FileName) & Path.DirectorySeparatorChar))
         End If
     End Sub
-    Private Sub InjectToolStripMenuItem_Click(sender As Object, e As EventArgs)
+    Private Sub InjectToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InjectUncompressedToolStripMenuItem.Click
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
@@ -2109,7 +2152,7 @@ Public Class MainForm
             MessageBox.Show("Not Yet Supported")
         End If
     End Sub
-    Private Sub InjectBPEToolStripMenuItem_Click(sender As Object, e As EventArgs)
+    Private Sub InjectBPEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InjectBPEToolStripMenuItem.Click
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
@@ -2145,7 +2188,7 @@ Public Class MainForm
             MessageBox.Show("Not Yet Supported")
         End If
     End Sub
-    Private Sub InjectZLIBToolStripMenuItem_Click(sender As Object, e As EventArgs)
+    Private Sub InjectZLIBToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InjectZLIBToolStripMenuItem.Click
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
@@ -2181,7 +2224,7 @@ Public Class MainForm
             MessageBox.Show("Not Yet Supported")
         End If
     End Sub
-    Private Sub InjectOODLToolStripMenuItem_Click(sender As Object, e As EventArgs)
+    Private Sub InjectOODLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InjectOODLToolStripMenuItem.Click
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
@@ -2319,6 +2362,10 @@ Public Class MainForm
     'First Pass but I feel like this can still be improved...
     'I think I need to add checking oodl parents and making sure it's injected properly..
     Function InjectIntoNode(Sentnode As TreeNode, SentBytes As Byte()) As Boolean
+        'Adding in a check if file is read only and if the file is missing
+        If Not CheckFileWriteable(Sentnode.ToolTipText) Then
+            Return False
+        End If
         If IsNothing(SentBytes) Then 'exits the function if no bytes are sent
             MessageBox.Show("No File Sent, Injection Failed!")
             Return False
@@ -2349,7 +2396,7 @@ Public Class MainForm
             DirectoryIndex = ParentNode.Index
             MessageBox.Show("Directory Skipped" & vbNewLine & DirectoryIndex)
             ParentNode = ParentNode.Parent
-            ParentNodeTag = CType(ParentNode.Parent.Tag, NodeProperties)
+            ParentNodeTag = CType(ParentNode.Tag, NodeProperties)
         End If
         Dim ParentBytes As Byte() = GetNodeBytes(ParentNode)
         'adjust length if needed
@@ -2502,7 +2549,7 @@ Public Class MainForm
             ParentNodeTag.StoredData.Length = 0 Then
             'File to be Written
             Dim WrittenFile As String = Sentnode.ToolTipText
-            If My.Settings.BackupInjections Then
+            If My.Settings.BackupInjections AndAlso CheckFileWriteable(WrittenFile & ".bak", False) Then
                 File.Copy(WrittenFile, WrittenFile & ".bak", True)
             End If
             File.WriteAllBytes(WrittenFile, WrittenFileArray)
@@ -2529,48 +2576,55 @@ Public Class MainForm
         End If
         Return True
     End Function
-    Function ValidateTruncation(TestedString As String, ContainerType As PackageType) As String
-        If My.Settings.TruncateDecimalNames Then
-            Select Case ContainerType
-                Case PackageType.HSPC
-                    Return TestedString.TrimStart("0").ToUpper
-                Case PackageType.SHDC
-                    Return TestedString.TrimStart("0").ToUpper
-                Case PackageType.EPK8
-                    Return TestedString.TrimStart("0").ToUpper
-                Case PackageType.EPAC
-                    Return TestedString.TrimStart("0").ToUpper
-                Case PackageType.PachDirectory_4
-                    Return TestedString.TrimStart("0").ToUpper
-                Case PackageType.PachDirectory_8
-                    Return TestedString.TrimStart("0").ToUpper
-                Case PackageType.TextureLibrary
-                    Return TestedString.Trim(" ")
-                Case Else
-                    Return TestedString
-            End Select
-        Else
-            Select Case ContainerType
-                Case PackageType.HSPC
-                    Return TestedString.PadLeft(16, "0").ToUpper
-                Case PackageType.SHDC
-                    Return TestedString.PadLeft(4, "0").ToUpper
-                Case PackageType.EPK8
-                    Return TestedString.PadLeft(4, "0").ToUpper
-                Case PackageType.EPAC
-                    Return TestedString.PadLeft(4, "0").ToUpper
-                Case PackageType.PachDirectory_4
-                    Return TestedString.PadLeft(4, "0").ToUpper
-                Case PackageType.PachDirectory_8
-                    Return TestedString.PadLeft(8, "0").ToUpper
-                Case PackageType.TextureLibrary
-                    Return TestedString.Trim(" ")
-                Case Else
-                    Return TestedString
-            End Select
+    Public Shared Function CheckFileWriteable(FilePath As String, Optional FileMustExist As Boolean = True)
+        If Not File.Exists(FilePath) Then
+            If FileMustExist Then
+                MessageBox.Show(FilePath & vbNewLine & "Not Found")
+                Return False
+            Else
+                Return True
+            End If
         End If
+        Dim attributes As FileAttributes = File.GetAttributes(FilePath)
+        If (attributes And FileAttributes.ReadOnly) = FileAttributes.ReadOnly Then
+            If MessageBox.Show(FilePath & " Is Read Only!" & vbNewLine & "Would you like to make it writable?", "Make File Writeable?", MessageBoxButtons.OKCancel) = DialogResult.OK Then
+                attributes = RemoveAttribute(attributes, FileAttributes.ReadOnly)
+                File.SetAttributes(FilePath, attributes)
+            Else
+                Return False
+            End If
+        End If
+        Return True
+    End Function
+    'This is required to remove read only
+    Private Shared Function RemoveAttribute(ByVal attributes As FileAttributes, ByVal attributesToRemove As FileAttributes) As FileAttributes
+        Return attributes And Not attributesToRemove
+    End Function
+    Function ValidateTruncation(TestedString As String, ContainerType As PackageType) As String
+        Select Case ContainerType
+            Case PackageType.HSPC
+                Return TestedString.PadLeft(16, "0").ToUpper
+            Case PackageType.SHDC
+                Return TestedString.PadLeft(Math.Min(4, My.Settings.DecimalNameMinLength), "0").ToUpper
+            Case PackageType.EPK8
+                Return TestedString.PadLeft(Math.Min(4, My.Settings.DecimalNameMinLength), "0").ToUpper
+            Case PackageType.EPAC
+                Return TestedString.PadLeft(Math.Min(4, My.Settings.DecimalNameMinLength), "0").ToUpper
+            Case PackageType.PachDirectory_4
+                Return TestedString.PadLeft(Math.Min(4, My.Settings.DecimalNameMinLength), "0").ToUpper
+            Case PackageType.PachDirectory_8
+                Return TestedString.PadLeft(My.Settings.DecimalNameMinLength, "0").ToUpper
+            Case PackageType.TextureLibrary
+                Return TestedString.Trim(" ")
+            Case Else
+                Return TestedString
+        End Select
     End Function
     Sub RenameNode(Sentnode As TreeNode, NewName As String)
+        'Adding in a check if file is read only and if the file is missing
+        If Not CheckFileWriteable(Sentnode.ToolTipText) Then
+            Exit Sub
+        End If
         Dim NodeTag As NodeProperties = CType(Sentnode.Tag, NodeProperties)
         'Get Parent Node Bytes
         Dim ParentNode As TreeNode
@@ -2750,7 +2804,7 @@ Public Class MainForm
             ParentNodeTag.StoredData.Length = 0 Then
             'File to be Written
             Dim WrittenFile As String = Sentnode.ToolTipText
-            If My.Settings.BackupInjections Then
+            If My.Settings.BackupInjections AndAlso CheckFileWriteable(WrittenFile & ".bak", False) Then
                 File.Copy(WrittenFile, WrittenFile & ".bak", True)
             End If
             File.WriteAllBytes(WrittenFile, WrittenFileArray)
@@ -5402,6 +5456,7 @@ Public Class MainForm
         End If
         Return ReturnedBytes
     End Function
+
 #End Region
 #End Region
 End Class

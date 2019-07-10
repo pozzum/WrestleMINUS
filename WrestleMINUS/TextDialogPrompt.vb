@@ -39,10 +39,10 @@ Public Class TextDialogPrompt
                 CurrentRestriction = RestrictionTypes.AlphaNumWSpaces
                 TextBoxEditedName.MaxLength = 4
             Case PackageType.PachDirectory_4
-                CurrentRestriction = RestrictionTypes.Hex
+                CurrentRestriction = RestrictionTypes.AlphaNumWSpaces
                 TextBoxEditedName.MaxLength = 4
             Case PackageType.PachDirectory_8
-                CurrentRestriction = RestrictionTypes.Hex
+                CurrentRestriction = RestrictionTypes.AlphaNumWSpaces
                 TextBoxEditedName.MaxLength = 8
             Case PackageType.TextureLibrary
                 CurrentRestriction = RestrictionTypes.AlphaNumNoSpaces
@@ -100,4 +100,5 @@ Public Class TextDialogPrompt
         Result = DialogResult.Cancel
         Me.Close()
     End Sub
+
 End Class

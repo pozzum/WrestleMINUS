@@ -12,6 +12,7 @@
 8	Z	-ZLIB
 9	O	-OODL
 10	T	-TextureLibrary
+		-TPL (Nintendo Texture Files)
 11	A	-YANMPACK (ANIMATIONS)
 		-YANM
 		-OFOP
@@ -19,6 +20,7 @@
 		-YOBJArray
 13	@	-STRING FILE
 14	D	-DDS
+		-DUMY
 15	M	-ARENAINFO (MISC)
 16	G	-SHOWINFO (STG)
 17	N	-NIBJ
@@ -26,6 +28,7 @@
 		-BIK
 19	C	-CostumeFile
 20	U	-MuscleFile
+		-UFC Files
 21	K	-MaskFile
 22	V	-VMUM
 23	W	-TitleFile (WWE TITLE)
