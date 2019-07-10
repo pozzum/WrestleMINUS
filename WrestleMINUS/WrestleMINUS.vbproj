@@ -118,7 +118,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="NumericUpDownColumn.vb" />
     <Compile Include="OnlineVersion.vb" />
     <Compile Include="OptionsMenu.Designer.vb">
       <DependentUpon>OptionsMenu.vb</DependentUpon>
@@ -132,7 +131,6 @@
     <Compile Include="TextDialogPrompt.vb">
       <SubType>Form</SubType>
     </Compile>
-    <None Include="yukes_bpe.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">

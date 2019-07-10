@@ -66,7 +66,6 @@ Public Class OptionsMenu
             CheckBoxExtractAllinPlace.Checked = True
             CheckBoxExtractAllinPlace.Enabled = False
         End If
-        MessageBox.Show(My.Settings.DecimalNameMinLength)
         TrackBarDecimalNameLength.Value = My.Settings.DecimalNameMinLength
         LabelDecimalNameLength.Text = "Decimal File Name Min Length: " & TrackBarDecimalNameLength.Value
         TrackBarHexLength.Value = My.Settings.HexViewLength

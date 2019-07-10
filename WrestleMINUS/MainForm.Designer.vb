@@ -3193,15 +3193,6 @@ Partial Class MainForm
     Friend WithEvents ObjArrayView As TabPage
     Friend WithEvents MenuStrip2 As MenuStrip
     Friend WithEvents DataGridObjArrayView As DataGridView
-    Friend WithEvents ChairNum As NumericUpDownColumn
-    Friend WithEvents ArrX As NumericUpDownColumn
-    Friend WithEvents ArrY As NumericUpDownColumn
-    Friend WithEvents ArrZ As NumericUpDownColumn
-    Friend WithEvents ArrRX As NumericUpDownColumn
-    Friend WithEvents ArrRY As NumericUpDownColumn
-    Friend WithEvents ArrRZ As NumericUpDownColumn
-    Friend WithEvents ArrDec1 As NumericUpDownColumn
-    Friend WithEvents ArrDec2 As NumericUpDownColumn
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
@@ -3236,16 +3227,7 @@ Partial Class MainForm
     Friend WithEvents DataGridViewTextBoxColumn32 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn33 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn34 As DataGridViewTextBoxColumn
-    Friend WithEvents NumericUpDownColumn1 As NumericUpDownColumn
     Friend WithEvents DataGridViewTextBoxColumn35 As DataGridViewTextBoxColumn
-    Friend WithEvents NumericUpDownColumn2 As NumericUpDownColumn
-    Friend WithEvents NumericUpDownColumn3 As NumericUpDownColumn
-    Friend WithEvents NumericUpDownColumn4 As NumericUpDownColumn
-    Friend WithEvents NumericUpDownColumn5 As NumericUpDownColumn
-    Friend WithEvents NumericUpDownColumn6 As NumericUpDownColumn
-    Friend WithEvents NumericUpDownColumn7 As NumericUpDownColumn
-    Friend WithEvents NumericUpDownColumn8 As NumericUpDownColumn
-    Friend WithEvents NumericUpDownColumn9 As NumericUpDownColumn
     Friend WithEvents CrawlToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SaveExtractAllDialog As SaveFileDialog
     Friend WithEvents AssetView As TabPage
