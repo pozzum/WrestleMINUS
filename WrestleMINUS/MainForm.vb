@@ -1464,6 +1464,7 @@ Public Class MainForm
     Private Sub OptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsToolStripMenuItem.Click
         OptionsMenu.Show() '
     End Sub
+#Region "Tool Toolstrip"
 #Region "Tool Compression Toolstrip"
     Private Sub BPEBatchCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BPEBatchCompressToolStripMenuItem.Click
         Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
@@ -1718,6 +1719,21 @@ Public Class MainForm
         Return False
     End Function
 #End Region
+    Private Sub GenerateFileNameHashToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GenerateFileNameHashToolStripMenuItem.Click
+        Dim TextDialogInstance As New TextDialogPrompt With {
+                .ContainerBeingEdited = PackageType.bin,
+                .OldFileName = "hash"}
+        TextDialogInstance.ShowDialog()
+        If TextDialogInstance.Result = DialogResult.OK Then
+            If Not TextDialogInstance.OldFileName = TextDialogInstance.EditedFileName Then 'no change
+                Dim NewFileName As String = TextDialogInstance.EditedFileName
+                Dim HashedName As String = HashGenerator.GetMd5Hash(NewFileName, True)
+                MessageBox.Show(HashedName, "File Hash")
+            End If
+        End If
+        TextDialogInstance.Dispose()
+    End Sub
+#End Region
 #Region "HelpToolStrip"
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
         Process.Start("https://pozzum.github.io/WrestleMINUS/")
@@ -1966,6 +1982,7 @@ Public Class MainForm
             InjectOODLToolStripMenuItem.Visible = False
             OpenToolStripMenuItem1.Visible = False
             OpenWithToolStripMenuItem.Visible = False
+            RenameFileToolStripMenuItem.Visible = True
             ShownOptions -= 4
         Else
             If NodeTag.Index > 0 OrElse
@@ -1977,8 +1994,9 @@ Public Class MainForm
                     InjectUncompressedToolStripMenuItem.Visible = False
                     InjectZLIBToolStripMenuItem.Visible = False
                     InjectOODLToolStripMenuItem.Visible = False
-                    RenameToolStripMenuItem.Visible = False
-                    ShownOptions -= 2
+                    RenamePartToolStripMenuItem.Visible = False
+                    RenameFileToolStripMenuItem.Visible = False
+                    ShownOptions -= 3
                     If My.Settings.BPEExePath <> "Not Installed" Then
                         InjectBPEToolStripMenuItem.Visible = True
                     Else
@@ -1991,15 +2009,17 @@ Public Class MainForm
                     InjectBPEToolStripMenuItem.Visible = False
                     InjectZLIBToolStripMenuItem.Visible = True
                     InjectOODLToolStripMenuItem.Visible = False
-                    RenameToolStripMenuItem.Visible = False
-                    ShownOptions -= 2
+                    RenamePartToolStripMenuItem.Visible = False
+                    RenameFileToolStripMenuItem.Visible = False
+                    ShownOptions -= 3
                 ElseIf ParentNodeTag.FileType = PackageType.OODL Then
                     InjectToolStripMenuItem.Visible = False
                     InjectUncompressedToolStripMenuItem.Visible = False
                     InjectBPEToolStripMenuItem.Visible = False
                     InjectZLIBToolStripMenuItem.Visible = False
-                    RenameToolStripMenuItem.Visible = False
-                    ShownOptions -= 2
+                    RenamePartToolStripMenuItem.Visible = False
+                    RenameFileToolStripMenuItem.Visible = False
+                    ShownOptions -= 3
                     If CheckOodle() Then
                         InjectOODLToolStripMenuItem.Visible = True
                     Else
@@ -2010,7 +2030,8 @@ Public Class MainForm
                     InjectToolStripMenuItem.Visible = True
                     InjectUncompressedToolStripMenuItem.Visible = True
                     InjectZLIBToolStripMenuItem.Visible = True
-                    RenameToolStripMenuItem.Visible = True
+                    RenamePartToolStripMenuItem.Visible = True
+                    RenameFileToolStripMenuItem.Visible = False
                     If My.Settings.BPEExePath <> "Not Installed" Then
                         InjectBPEToolStripMenuItem.Visible = True
                     Else
@@ -2032,7 +2053,8 @@ Public Class MainForm
                 InjectBPEToolStripMenuItem.Visible = False
                 InjectZLIBToolStripMenuItem.Visible = False
                 InjectOODLToolStripMenuItem.Visible = False
-                RenameToolStripMenuItem.Visible = False
+                RenamePartToolStripMenuItem.Visible = False
+                RenameFileToolStripMenuItem.Visible = True
                 ShownOptions -= 3
             End If
             'TO DO add Open With Items Somehow
@@ -2272,7 +2294,7 @@ Public Class MainForm
         Next
         ProgressBar1.Value = ProgressBar1.Maximum
     End Sub
-    Private Sub RenameToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenameToolStripMenuItem.Click
+    Private Sub RenamePartToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenamePartToolStripMenuItem.Click
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
         Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
         Dim ParrentNodeTag As NodeProperties = CType(TreeView1.SelectedNode.Parent.Tag, NodeProperties)
@@ -2315,6 +2337,9 @@ Public Class MainForm
         Else
             MessageBox.Show("Not Yet Supported")
         End If
+    End Sub
+    Private Sub RenameFileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenameFileToolStripMenuItem.Click
+
     End Sub
     Sub ExtractNode(Sentnode As TreeNode, Savepath As String)
         File.WriteAllBytes(Savepath, GetNodeBytes(Sentnode))
@@ -5456,7 +5481,6 @@ Public Class MainForm
         End If
         Return ReturnedBytes
     End Function
-
 #End Region
 #End Region
 End Class

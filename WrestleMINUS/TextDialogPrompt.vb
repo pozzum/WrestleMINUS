@@ -15,7 +15,11 @@ Public Class TextDialogPrompt
         FileName
     End Enum
     Private Sub TextDialogPrompt_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
-        LabelOldFileHeader.Text = "Renaming File: " & OldFileName
+        If OldFileName = "hash" Then
+            LabelOldFileHeader.Text = "Generating Name Hash:"
+        Else
+            LabelOldFileHeader.Text = "Renaming File: " & OldFileName
+        End If
         TextBoxEditedName.Text = EditedFileName
         ApplyRestrictions(ContainerBeingEdited)
     End Sub

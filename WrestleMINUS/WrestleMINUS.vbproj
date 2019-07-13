@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="GlobalSuppressions.vb" />
+    <Compile Include="HashGenerator.vb" />
     <Compile Include="MainForm.vb">
       <SubType>Form</SubType>
     </Compile>

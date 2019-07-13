@@ -326,7 +326,18 @@ Partial Class MainForm
         Me.TreeViewContext = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.OpenToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExtractToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExtractPartToToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExtractAllInPlaceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExtractAllToToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InjectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InjectUncompressedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InjectBPEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InjectZLIBToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InjectOODLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CrawlToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RenamePartToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RenameFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -363,16 +374,7 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.RenameToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.InjectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.InjectUncompressedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.InjectBPEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.InjectZLIBToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.InjectOODLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExtractToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExtractPartToToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExtractAllInPlaceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExtractAllToToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GenerateFileNameHashToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -468,7 +470,7 @@ Partial Class MainForm
         '
         'ToolsToolStripMenuItem
         '
-        Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.BPECompressionToolStripMenuItem, Me.ZLIBCompressionToolStripMenuItem, Me.OODLCompressionToolStripMenuItem})
+        Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.BPECompressionToolStripMenuItem, Me.ZLIBCompressionToolStripMenuItem, Me.OODLCompressionToolStripMenuItem, Me.GenerateFileNameHashToolStripMenuItem})
         Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
         Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(46, 20)
         Me.ToolsToolStripMenuItem.Text = "Tools"
@@ -477,7 +479,7 @@ Partial Class MainForm
         '
         Me.BPECompressionToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.BPEBatchCompressToolStripMenuItem, Me.BPESingleCompressToolStripMenuItem})
         Me.BPECompressionToolStripMenuItem.Name = "BPECompressionToolStripMenuItem"
-        Me.BPECompressionToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+        Me.BPECompressionToolStripMenuItem.Size = New System.Drawing.Size(207, 22)
         Me.BPECompressionToolStripMenuItem.Text = "BPE Compression"
         '
         'BPEBatchCompressToolStripMenuItem
@@ -496,7 +498,7 @@ Partial Class MainForm
         '
         Me.ZLIBCompressionToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ZLIBBatchCompressToolStripMenuItem, Me.ZLIBSingleCompressToolStripMenuItem})
         Me.ZLIBCompressionToolStripMenuItem.Name = "ZLIBCompressionToolStripMenuItem"
-        Me.ZLIBCompressionToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+        Me.ZLIBCompressionToolStripMenuItem.Size = New System.Drawing.Size(207, 22)
         Me.ZLIBCompressionToolStripMenuItem.Text = "ZLIB Compression"
         '
         'ZLIBBatchCompressToolStripMenuItem
@@ -515,7 +517,7 @@ Partial Class MainForm
         '
         Me.OODLCompressionToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OODLBatchCompressToolStripMenuItem, Me.OODLSingleCompressToolStripMenuItem})
         Me.OODLCompressionToolStripMenuItem.Name = "OODLCompressionToolStripMenuItem"
-        Me.OODLCompressionToolStripMenuItem.Size = New System.Drawing.Size(179, 22)
+        Me.OODLCompressionToolStripMenuItem.Size = New System.Drawing.Size(207, 22)
         Me.OODLCompressionToolStripMenuItem.Text = "OODL Compression"
         '
         'OODLBatchCompressToolStripMenuItem
@@ -2734,9 +2736,9 @@ Partial Class MainForm
         '
         'TreeViewContext
         '
-        Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem1, Me.OpenWithToolStripMenuItem, Me.ExtractToolStripMenuItem, Me.InjectToolStripMenuItem, Me.CrawlToolStripMenuItem, Me.RenameToolStripMenuItem})
+        Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem1, Me.OpenWithToolStripMenuItem, Me.ExtractToolStripMenuItem, Me.InjectToolStripMenuItem, Me.CrawlToolStripMenuItem, Me.RenamePartToolStripMenuItem, Me.RenameFileToolStripMenuItem})
         Me.TreeViewContext.Name = "TreeViewContext"
-        Me.TreeViewContext.Size = New System.Drawing.Size(181, 158)
+        Me.TreeViewContext.Size = New System.Drawing.Size(141, 158)
         '
         'OpenToolStripMenuItem1
         '
@@ -2750,11 +2752,79 @@ Partial Class MainForm
         Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
         Me.OpenWithToolStripMenuItem.Text = "Open With..."
         '
+        'ExtractToolStripMenuItem
+        '
+        Me.ExtractToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExtractPartToToolStripMenuItem, Me.ExtractAllInPlaceToolStripMenuItem, Me.ExtractAllToToolStripMenuItem})
+        Me.ExtractToolStripMenuItem.Name = "ExtractToolStripMenuItem"
+        Me.ExtractToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.ExtractToolStripMenuItem.Text = "Extract"
+        '
+        'ExtractPartToToolStripMenuItem
+        '
+        Me.ExtractPartToToolStripMenuItem.Name = "ExtractPartToToolStripMenuItem"
+        Me.ExtractPartToToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.ExtractPartToToolStripMenuItem.Text = "Extract Part To..."
+        '
+        'ExtractAllInPlaceToolStripMenuItem
+        '
+        Me.ExtractAllInPlaceToolStripMenuItem.Name = "ExtractAllInPlaceToolStripMenuItem"
+        Me.ExtractAllInPlaceToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.ExtractAllInPlaceToolStripMenuItem.Text = "Extract All In Place"
+        '
+        'ExtractAllToToolStripMenuItem
+        '
+        Me.ExtractAllToToolStripMenuItem.Name = "ExtractAllToToolStripMenuItem"
+        Me.ExtractAllToToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.ExtractAllToToolStripMenuItem.Text = "Extract All To..."
+        '
+        'InjectToolStripMenuItem
+        '
+        Me.InjectToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.InjectUncompressedToolStripMenuItem, Me.InjectBPEToolStripMenuItem, Me.InjectZLIBToolStripMenuItem, Me.InjectOODLToolStripMenuItem})
+        Me.InjectToolStripMenuItem.Name = "InjectToolStripMenuItem"
+        Me.InjectToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.InjectToolStripMenuItem.Text = "Inject"
+        '
+        'InjectUncompressedToolStripMenuItem
+        '
+        Me.InjectUncompressedToolStripMenuItem.Name = "InjectUncompressedToolStripMenuItem"
+        Me.InjectUncompressedToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
+        Me.InjectUncompressedToolStripMenuItem.Text = "Inject Uncompressed"
+        '
+        'InjectBPEToolStripMenuItem
+        '
+        Me.InjectBPEToolStripMenuItem.Name = "InjectBPEToolStripMenuItem"
+        Me.InjectBPEToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
+        Me.InjectBPEToolStripMenuItem.Text = "Inject as BPE"
+        '
+        'InjectZLIBToolStripMenuItem
+        '
+        Me.InjectZLIBToolStripMenuItem.Name = "InjectZLIBToolStripMenuItem"
+        Me.InjectZLIBToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
+        Me.InjectZLIBToolStripMenuItem.Text = "Inject as ZLIB"
+        '
+        'InjectOODLToolStripMenuItem
+        '
+        Me.InjectOODLToolStripMenuItem.Name = "InjectOODLToolStripMenuItem"
+        Me.InjectOODLToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
+        Me.InjectOODLToolStripMenuItem.Text = "Inject as OODL"
+        '
         'CrawlToolStripMenuItem
         '
         Me.CrawlToolStripMenuItem.Name = "CrawlToolStripMenuItem"
         Me.CrawlToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
         Me.CrawlToolStripMenuItem.Text = "Crawl"
+        '
+        'RenamePartToolStripMenuItem
+        '
+        Me.RenamePartToolStripMenuItem.Name = "RenamePartToolStripMenuItem"
+        Me.RenamePartToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.RenamePartToolStripMenuItem.Text = "Rename"
+        '
+        'RenameFileToolStripMenuItem
+        '
+        Me.RenameFileToolStripMenuItem.Name = "RenameFileToolStripMenuItem"
+        Me.RenameFileToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.RenameFileToolStripMenuItem.Text = "Rename"
         '
         'DataGridViewTextBoxColumn1
         '
@@ -2980,67 +3050,11 @@ Partial Class MainForm
         '
         Me.SaveExtractAllDialog.FileName = "Save Files Here"
         '
-        'RenameToolStripMenuItem
+        'GenerateFileNameHashToolStripMenuItem
         '
-        Me.RenameToolStripMenuItem.Name = "RenameToolStripMenuItem"
-        Me.RenameToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
-        Me.RenameToolStripMenuItem.Text = "Rename"
-        '
-        'InjectToolStripMenuItem
-        '
-        Me.InjectToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.InjectUncompressedToolStripMenuItem, Me.InjectBPEToolStripMenuItem, Me.InjectZLIBToolStripMenuItem, Me.InjectOODLToolStripMenuItem})
-        Me.InjectToolStripMenuItem.Name = "InjectToolStripMenuItem"
-        Me.InjectToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
-        Me.InjectToolStripMenuItem.Text = "Inject"
-        '
-        'InjectUncompressedToolStripMenuItem
-        '
-        Me.InjectUncompressedToolStripMenuItem.Name = "InjectUncompressedToolStripMenuItem"
-        Me.InjectUncompressedToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
-        Me.InjectUncompressedToolStripMenuItem.Text = "Inject Uncompressed"
-        '
-        'InjectBPEToolStripMenuItem
-        '
-        Me.InjectBPEToolStripMenuItem.Name = "InjectBPEToolStripMenuItem"
-        Me.InjectBPEToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
-        Me.InjectBPEToolStripMenuItem.Text = "Inject as BPE"
-        '
-        'InjectZLIBToolStripMenuItem
-        '
-        Me.InjectZLIBToolStripMenuItem.Name = "InjectZLIBToolStripMenuItem"
-        Me.InjectZLIBToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
-        Me.InjectZLIBToolStripMenuItem.Text = "Inject as ZLIB"
-        '
-        'InjectOODLToolStripMenuItem
-        '
-        Me.InjectOODLToolStripMenuItem.Name = "InjectOODLToolStripMenuItem"
-        Me.InjectOODLToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
-        Me.InjectOODLToolStripMenuItem.Text = "Inject as OODL"
-        '
-        'ExtractToolStripMenuItem
-        '
-        Me.ExtractToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExtractPartToToolStripMenuItem, Me.ExtractAllInPlaceToolStripMenuItem, Me.ExtractAllToToolStripMenuItem})
-        Me.ExtractToolStripMenuItem.Name = "ExtractToolStripMenuItem"
-        Me.ExtractToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.ExtractToolStripMenuItem.Text = "Extract"
-        '
-        'ExtractPartToToolStripMenuItem
-        '
-        Me.ExtractPartToToolStripMenuItem.Name = "ExtractPartToToolStripMenuItem"
-        Me.ExtractPartToToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.ExtractPartToToolStripMenuItem.Text = "Extract Part To..."
-        '
-        'ExtractAllInPlaceToolStripMenuItem
-        '
-        Me.ExtractAllInPlaceToolStripMenuItem.Name = "ExtractAllInPlaceToolStripMenuItem"
-        Me.ExtractAllInPlaceToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.ExtractAllInPlaceToolStripMenuItem.Text = "Extract All In Place"
-        '
-        'ExtractAllToToolStripMenuItem
-        '
-        Me.ExtractAllToToolStripMenuItem.Name = "ExtractAllToToolStripMenuItem"
-        Me.ExtractAllToToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.ExtractAllToToolStripMenuItem.Text = "Extract All To..."
+        Me.GenerateFileNameHashToolStripMenuItem.Name = "GenerateFileNameHashToolStripMenuItem"
+        Me.GenerateFileNameHashToolStripMenuItem.Size = New System.Drawing.Size(207, 22)
+        Me.GenerateFileNameHashToolStripMenuItem.Text = "Generate File Name Hash"
         '
         'MainForm
         '
@@ -3466,7 +3480,7 @@ Partial Class MainForm
     Friend WithEvents ZLIBSingleCompressToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents OODLBatchCompressToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents OODLSingleCompressToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents RenameToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents RenamePartToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents InjectToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents InjectUncompressedToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents InjectBPEToolStripMenuItem As ToolStripMenuItem
@@ -3476,4 +3490,6 @@ Partial Class MainForm
     Friend WithEvents ExtractPartToToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExtractAllInPlaceToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExtractAllToToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents RenameFileToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents GenerateFileNameHashToolStripMenuItem As ToolStripMenuItem
 End Class
