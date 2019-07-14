@@ -1,7 +1,7 @@
 ﻿Imports System.Text.RegularExpressions
-Imports System.Windows.Forms 'messageboxes
-Imports System
+
 Public Class OnlineVersion
+
     'uses smrando's updater as a base https://github.com/Dessyreqt/smrandomizer/blob/master/SuperMetroidRandomizer/Net/RandomizerVersion.cs
     Public Enum UpdateType
         None
@@ -10,7 +10,9 @@ Public Class OnlineVersion
         MinorUpdate
         MajorUpdate
     End Enum
-    Shared PageAddress As String = "https://pozzum.github.io/WrestleMINUS/"
+
+    Shared ReadOnly PageAddress As String = "https://pozzum.github.io/WrestleMINUS/"
+
     'Dim LocalVersionSplit() As Integer = CInt(Split(LocalVersion, "."))
     Shared Sub CheckUpdate()
         Try
@@ -60,6 +62,7 @@ Public Class OnlineVersion
             'MessageBox.Show(ex.Message)
         End Try
     End Sub
+
     Shared Function GetResponse(Address As String)
         If Not Address.Contains("pozzum.github.io/WrestleMINUS/") Then
             Return ""
@@ -73,6 +76,7 @@ Public Class OnlineVersion
         End While
         Return TempBrowser.Document.Body.InnerHtml
     End Function
+
     Shared Function GetUpdateType(CheckedVersion, LocalVersion) As UpdateType
         If CheckedVersion(0) > LocalVersion(0) Then
             Return UpdateType.MajorUpdate
@@ -93,6 +97,7 @@ Public Class OnlineVersion
         End If
 
     End Function
+
     Shared Function GetUpdateString(ChangeType As UpdateType)
         If ChangeType = UpdateType.MajorUpdate Then
             Return "major update"

@@ -1,6 +1,8 @@
 ﻿Imports System.Security.Cryptography 'MD5
-Imports System.Text 'Text Encoding 
+Imports System.Text 'Text Encoding
+
 Public Class HashGenerator
+
     Shared Function GetMd5Hash(ByVal HashedString As String, Optional PartialHash As Boolean = False) As String
         ' Initializes a hash object : md5
         Dim Hash = MD5.Create
@@ -19,6 +21,7 @@ Public Class HashGenerator
         'if file open fails
         Return Nothing
     End Function
+
     ' One parses the array Of bytes (bytes) And converts Each Byte (Byte) To hexadecimal
     Public Shared Function PrintByteArray(ByVal Array() As Byte, Optional PartialHash As Boolean = False) As String
         Dim HexValue As String = ""
@@ -38,4 +41,5 @@ Public Class HashGenerator
         ' Return the string to upper
         Return HexValue.ToUpper
     End Function
+
 End Class

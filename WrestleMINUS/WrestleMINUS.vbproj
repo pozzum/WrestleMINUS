@@ -94,8 +94,6 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationEvents.vb" />
-    <Compile Include="GlobalSuppressions.vb" />
     <Compile Include="HashGenerator.vb" />
     <Compile Include="MainForm.vb">
       <SubType>Form</SubType>
@@ -126,6 +124,7 @@
     <Compile Include="OptionsMenu.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PackUnpack.vb" />
     <Compile Include="TextDialogPrompt.Designer.vb">
       <DependentUpon>TextDialogPrompt.vb</DependentUpon>
     </Compile>
