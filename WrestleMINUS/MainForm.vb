@@ -1,16 +1,8 @@
 ﻿Imports System.IO   'Files
 Imports System.Text 'Text Encoding 
-Imports Ionic.Zlib  'zlib decompress
-'http://www.codeplex.com/DotNetZip
-
-'http://forum.xentax.com/viewtopic.php?f=32&t=9972
-Imports System.Drawing
-Imports System.Drawing.Imaging
 Imports System.Environment 'appdata
-Imports System.Threading 'Multithreading
 Imports System.Runtime.Serialization.Formatters.Binary 'Binary Formatter
 Imports Newtonsoft.Json
-Imports System.Text.RegularExpressions 'Regular Expressions for text matches
 Imports FontAwesome.Sharp
 Public Class MainForm
     Friend Shared StringReferences() As String
@@ -24,9 +16,11 @@ Public Class MainForm
 #Region "Main Form Functions"
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = Me.Text & " Ver: " & My.Application.Info.Version.ToString
+        OnlineVersion.CheckUpdate()
+        SettingsHandlers.SettingsCheck()
         LoadFontAwesomeIcons()
-        CheckUpdate()
-        SettingsCheck()
+        FillCompressionMenu()
+        ApplyFormSettings()
         HideTabs(Nothing)
         CreatedImages = New List(Of String)
     End Sub
@@ -37,114 +31,60 @@ Public Class MainForm
             LoadHome()
         End If
     End Sub
-    Sub LoadFontAwesomeIcons()
-        If CheckFontAwesome() Then
-            LoadHomeToolStripMenuItem.Image = IconChar.Home.ToBitmap(16, Color.Black)
-            OpenToolStripMenuItem.Image = IconChar.FolderOpen.ToBitmap(16, Color.Black)
-            ExitToolStripMenuItem.Image = IconChar.WindowClose.ToBitmap(16, Color.Black)
-            BPECompressionToolStripMenuItem.Image = IconChar.CompressArrowsAlt.ToBitmap(16, Color.Black)
-            ZLIBCompressionToolStripMenuItem.Image = IconChar.CompressArrowsAlt.ToBitmap(16, Color.Black)
-            OODLCompressionToolStripMenuItem.Image = IconChar.CompressArrowsAlt.ToBitmap(16, Color.Black)
-            'https://fontawesome.com/cheatsheet?from=io
+    Private Sub MainForm_DragEnter(sender As Object, e As DragEventArgs) Handles MyBase.DragEnter,
+                                                                                Hex_Selected.DragEnter,
+                                                                                Text_Selected.DragEnter
+        If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
+            e.Effect = DragDropEffects.All
+        Else
+            e.Effect = DragDropEffects.None
         End If
     End Sub
-    Sub SettingsCheck()
-        If My.Settings.UpgradeRequired = True Then
-            My.Settings.Upgrade()
-            My.Settings.UpgradeRequired = False
-            My.Settings.Save()
-        End If
-        'My.Settings.Reset()
-        If My.Settings.ExeLocation = "" Then
-            SelectHomeDirectory()
-        End If
-        If My.Settings.TexConvPath = "" Then 'Locate the texture conversion exe
-            GetTexConvExe()
-        End If
-        If My.Settings.RADVideoToolPath = "" Then
-            GetRadVideo()
-        End If
-        CheckUnrrbpe()
-        CheckDDSexe()
-        'Tool Menu Compress in place
-        Dim CompressOptions As Integer = ToolsToolStripMenuItem.DropDownItems.Count
-        If CheckBPEExe() Then
-            BPECompressionToolStripMenuItem.Visible = True
-        Else
-            BPECompressionToolStripMenuItem.Visible = False
-            CompressOptions -= 1
-        End If
-        If CheckIconicZlib() Then
-            ZLIBCompressionToolStripMenuItem.Visible = True
-        Else
-            ZLIBCompressionToolStripMenuItem.Visible = False
-            CompressOptions -= 1
-        End If
-        If CheckOodle() Then
-            OODLCompressionToolStripMenuItem.Visible = True
-        Else
-            OODLCompressionToolStripMenuItem.Visible = False
-            CompressOptions -= 1
-        End If
-        If CompressOptions = 0 Then
-            ToolsToolStripMenuItem.Visible = False
-        End If
-        HexViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
-        TextViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
-        MiscViewType.SelectedIndex = My.Settings.MiscModeIndex
-        ShowViewType.SelectedIndex = My.Settings.ShowModeIndex
-        If My.Settings.StringObject = "" Then
-            Dim AppDataStringLocation As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS\Strings.bin"
-            If File.Exists(AppDataStringLocation) Then
-                Dim fs As Stream = New FileStream(AppDataStringLocation, FileMode.Open)
-                Dim bf As BinaryFormatter = New BinaryFormatter()
-                StringReferences = CType(bf.Deserialize(fs), String())
-                fs.Close()
-            Else
-                StringReferences = New String(&HFFFFF) {}
-                StringReferences(0) = "String Not Read"
-            End If
-            My.Settings.StringObject = AppDataStringLocation
-        Else
-            If File.Exists(My.Settings.StringObject) Then
-                Dim fs As Stream = New FileStream(My.Settings.StringObject, FileMode.Open)
-                Dim bf As BinaryFormatter = New BinaryFormatter()
-                StringReferences = CType(bf.Deserialize(fs), String())
-                fs.Close()
-            Else
-                StringReferences = New String(&HFFFFF) {}
-                StringReferences(0) = "String Not Read"
-            End If
-        End If
-        If My.Settings.PacNumObject = "" Then
-            Dim AppDataPacNumLocation As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS\PacNums.bin"
-            If File.Exists(AppDataPacNumLocation) Then
-                Dim fs As Stream = New FileStream(AppDataPacNumLocation, FileMode.Open)
-                Dim bf As BinaryFormatter = New BinaryFormatter()
-                PacNumbers = CType(bf.Deserialize(fs), Integer())
-                fs.Close()
-            Else
-                PacNumbers = New Integer(1024) {}
-                PacNumbers(0) = -1
-            End If
-            My.Settings.PacNumObject = AppDataPacNumLocation
-        Else
-            If File.Exists(My.Settings.PacNumObject) Then
-                Dim fs As Stream = New FileStream(My.Settings.PacNumObject, FileMode.Open)
-                Dim bf As BinaryFormatter = New BinaryFormatter()
-                PacNumbers = CType(bf.Deserialize(fs), Integer())
-                fs.Close()
-            Else
-                PacNumbers = New Integer(1024) {}
-                PacNumbers(0) = -1
-            End If
-        End If
-        If My.Settings.TruncateDecimalNames Then
-            My.Settings.DecimalNameMinLength = 8
-            My.Settings.TruncateDecimalNames = False
-        End If
-        My.Settings.Save()
+    Private Sub MainForm_DragDrop(sender As Object, e As DragEventArgs) Handles MyBase.DragDrop,
+                                                                                Hex_Selected.DragDrop,
+                                                                                Text_Selected.DragDrop
+        Dim s() As String = e.Data.GetData("FileDrop", False)
+        SelectedFiles = s
+        LoadParameters()
+        'Dim i As Integer
+        'For i = 0 To s.Length - 1
+        'ListBox1.Items.Add(s(i))
+        'Next i
     End Sub
+    Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        If My.Settings.DeleteTempBMP Then
+            DeleteTempImages()
+            'Code from xhp-creations commented out for future if Delete Temp does not properly wor
+            'Dim TempFolder As String = Path.GetDirectoryName(My.Settings.TexConvPath) &
+            'Path.DirectorySeparatorChar
+            'Try
+            'For Each f In Directory.GetFiles(TempFolder, "*.BMP", SearchOption.AllDirectories)
+            'File.Delete(f)
+            'Next
+            'Catch ex As UnauthorizedAccessException
+            'End Try
+        End If
+        'Close all tabs so save check is in just one place.
+        If HideTabs(Nothing) = DialogResult.Cancel Then
+            e.Cancel = True
+        End If
+        'Seperating command out to allow for error handling to exit closing form command
+        If SettingsHandlers.SaveSettingsFiles() = DialogResult.Cancel Then
+            e.Cancel = True
+        End If
+    End Sub
+    Shared Function CheckCommands() As Boolean
+        Dim args As String() = Environment.GetCommandLineArgs()
+        Dim parameters As Boolean = False
+        If args.Length > 1 Then
+            parameters = True
+            MainForm.SelectedFiles = New String(args.Length - 2) {}
+            For i As Integer = 1 To args.Length - 1
+                MainForm.SelectedFiles(i - 1) = args(i)
+            Next
+        End If
+        Return parameters
+    End Function
     Dim MuscleViewStartupRemoved As Boolean = False
     Function HideTabs(ExcludedTab As TabPage) As DialogResult
         If IsNothing(ExcludedTab) Then
@@ -195,324 +135,17 @@ Public Class MainForm
         Next
         Return DialogResult.OK
     End Function
-    Sub CheckUpdate()
-        Dim checkUpdateThread = New Thread(AddressOf OnlineVersion.CheckUpdate)
-        checkUpdateThread.SetApartmentState(ApartmentState.STA)
-        checkUpdateThread.Start()
-    End Sub
-#Region "Options Menu Location Functions"
-    Public Sub SelectHomeDirectory()
-        Dim TempFileDialog As OpenFileDialog = New OpenFileDialog
-        TempFileDialog.FileName = "WWE2KXX.exe"
-        TempFileDialog.Title = "Select WWE exe directory"
-        If Directory.Exists("C:\Steam\steamapps\common\") Then
-            TempFileDialog.InitialDirectory = "C:\Steam\steamapps\common\"
-        End If
-        TempFileDialog.ShowDialog()
-        If File.Exists(TempFileDialog.FileName) AndAlso
-            Path.GetExtension(TempFileDialog.FileName).ToLower = ".exe" Then
-            My.Settings.ExeLocation = TempFileDialog.FileName
-        Else
-            If My.Settings.ExeLocation = "" Then
-                MessageBox.Show("Loading home disabled")
-                My.Settings.ExeLocation = ""
-                My.Settings.LoadHomeOnLaunch = False
-            End If
+    Sub LoadFontAwesomeIcons()
+        If SettingsHandlers.CheckFontAwesome() Then
+            LoadHomeToolStripMenuItem.Image = IconChar.Home.ToBitmap(16, Color.Black)
+            OpenToolStripMenuItem.Image = IconChar.FolderOpen.ToBitmap(16, Color.Black)
+            ExitToolStripMenuItem.Image = IconChar.WindowClose.ToBitmap(16, Color.Black)
+            BPECompressionToolStripMenuItem.Image = IconChar.CompressArrowsAlt.ToBitmap(16, Color.Black)
+            ZLIBCompressionToolStripMenuItem.Image = IconChar.CompressArrowsAlt.ToBitmap(16, Color.Black)
+            OODLCompressionToolStripMenuItem.Image = IconChar.CompressArrowsAlt.ToBitmap(16, Color.Black)
+            'https://fontawesome.com/cheatsheet?from=io
         End If
     End Sub
-    Public Sub GetTexConvExe(Optional fromoptions As Boolean = False)
-        Dim convertpath As String = Path.GetDirectoryName(Application.ExecutablePath) &
-                      Path.DirectorySeparatorChar & "texconv.exe"
-        Dim appDataPath As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
-        FolderCheck(appDataPath)
-        appDataPath += Path.DirectorySeparatorChar & "texconv.exe"
-        If fromoptions Then
-            Dim TexConvToolOpenDialog As New OpenFileDialog With {.FileName = "texconv.exe", .Title = "Select texconv.exe"}
-            If My.Settings.TexConvPath = "" Then
-                TexConvToolOpenDialog.InitialDirectory = Application.StartupPath
-            Else
-                Path.GetDirectoryName(My.Settings.TexConvPath)
-            End If
-            If TexConvToolOpenDialog.ShowDialog = DialogResult.OK Then
-                If Path.GetFileName(TexConvToolOpenDialog.FileName) = "texconv.exe" Then
-                    My.Settings.TexConvPath = TexConvToolOpenDialog.FileName
-                Else
-                    MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
-                End If
-            End If
-        Else
-            If File.Exists(convertpath) Then
-                If MessageBox.Show("Would you like to move the texture conversion exe to Appdata?" & vbNewLine & "(Recommended)", "Move tool to appdata?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
-                    File.Move(convertpath, appDataPath)
-                    My.Settings.TexConvPath = appDataPath
-                Else
-                    My.Settings.TexConvPath = convertpath
-                End If
-            ElseIf File.Exists(appDataPath) Then
-                My.Settings.TexConvPath = appDataPath
-            Else
-                If MessageBox.Show("texconv.exe not found!" & vbNewLine &
-                                "Would you like to navigate to ""texconv.exe"" ", "Find texconv.exe", MessageBoxButtons.YesNo) = DialogResult.Yes Then
-                    Dim TexConvToolOpenDialog As New OpenFileDialog With {.FileName = "texconv.exe", .Title = "Select texconv.exe"}
-                    If TexConvToolOpenDialog.ShowDialog = DialogResult.OK Then
-                        If Path.GetFileName(TexConvToolOpenDialog.FileName) = "texconv.exe" Then
-                            My.Settings.TexConvPath = TexConvToolOpenDialog.FileName
-                        Else
-                            MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
-                        End If
-                    End If
-
-
-                Else
-                    MessageBox.Show("Picture view will raise errors")
-                End If
-            End If
-        End If
-    End Sub
-    Public Sub GetRadVideo(Optional FromOptions As Boolean = False)
-        If My.Settings.RADVideoToolPath = "" Then
-            My.Settings.RADVideoToolPath = "Not Installed"
-            Dim AllDrives As DriveInfo() = DriveInfo.GetDrives()
-            For Each Drive As DriveInfo In AllDrives
-                'MessageBox.Show(Drive.Name & "Program Files (x86)\RADVideo\radvideo.exe")
-                If (Drive.IsReady = True) Then
-                    If File.Exists(Drive.Name & "Program Files (x86)\RADVideo\radvideo.exe") Then
-                        My.Settings.RADVideoToolPath = Drive.Name & "Program Files (x86)\RADVideo\binkplay.exe"
-                        Exit For
-                    ElseIf File.Exists(Drive.Name & "Program Files\RADVideo\radvideo.exe") Then
-                        My.Settings.RADVideoToolPath = Drive.Name & "Program Files\RADVideo\binkplay.exe"
-                        Exit For
-                    End If
-                End If
-            Next
-        End If
-        If My.Settings.RADVideoToolPath = "Not Installed" OrElse FromOptions Then
-            Dim RADVideoToolOpenDialog As New OpenFileDialog With {.FileName = "radvideo.exe", .Title = "Select radvideo.exe"}
-            If Not My.Settings.RADVideoToolPath = "Not Installed" Then
-                RADVideoToolOpenDialog.InitialDirectory = Path.GetDirectoryName(My.Settings.RADVideoToolPath)
-            End If
-            If RADVideoToolOpenDialog.ShowDialog = DialogResult.OK Then
-                If Path.GetFileName(RADVideoToolOpenDialog.FileName) = "radvideo.exe" Then
-                    My.Settings.RADVideoToolPath = RADVideoToolOpenDialog.FileName.Replace("radvideo.exe", "binkplay.exe")
-                Else
-                    MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
-                End If
-            End If
-        End If
-    End Sub
-    Public Function CheckBPEExe(Optional FromOptions As Boolean = False)
-        Dim AppDataStorage As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
-        If FromOptions = False Then
-            If File.Exists(AppDataStorage & Path.DirectorySeparatorChar & "bpe.exe") Then
-                My.Settings.BPEExePath = AppDataStorage & Path.DirectorySeparatorChar & "bpe.exe"
-                Return True
-            Else
-                If MessageBox.Show("Would you like to navigate to ""bpe.exe""" & vbNewLine &
-                    "this would be in any ""Pac Editor"" install folder.",
-                       "BPE Compressor",
-                       MessageBoxButtons.YesNo) = DialogResult.No Then
-                    MessageBox.Show("Download link can be found in the options menu.")
-                    My.Settings.BPEExePath = "Not Installed"
-                    Return False
-                End If
-            End If
-        End If
-        If My.Settings.BPEExePath = "" Then
-            My.Settings.BPEExePath = "Not Installed"
-        End If
-        Dim BPEExeOpenDialog As New OpenFileDialog With {.FileName = "bpe.exe", .Title = "Select bpe.exe"}
-        If BPEExeOpenDialog.ShowDialog = DialogResult.OK Then
-            If Path.GetFileName(BPEExeOpenDialog.FileName) = "bpe.exe" Then
-                If Not Path.GetDirectoryName(BPEExeOpenDialog.FileName) = AppDataStorage Then
-                    If MessageBox.Show("Would you like create a copy of this to the appdata?",
-                                       "Copy File?",
-                                       MessageBoxButtons.YesNo) = DialogResult.Yes Then
-                        FolderCheck(AppDataStorage)
-                        File.Copy(BPEExeOpenDialog.FileName, AppDataStorage & Path.DirectorySeparatorChar & "bpe.exe", True)
-                        My.Settings.BPEExePath = AppDataStorage & Path.DirectorySeparatorChar & "bpe.exe"
-                        Return True
-                    Else
-                        My.Settings.BPEExePath = BPEExeOpenDialog.FileName
-                        Return True
-                    End If
-                Else
-                    My.Settings.BPEExePath = BPEExeOpenDialog.FileName
-                    Return True
-                End If
-            Else
-                MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
-                Return False
-            End If
-        End If
-        If My.Settings.BPEExePath = "Not Installed" Then
-            Return False
-        Else
-            Return True
-        End If
-    End Function
-    Public Function CheckUnrrbpe(Optional FromOptions As Boolean = False)
-        Dim AppDataStorage As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
-        If FromOptions = False Then
-            If File.Exists(AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe") Then
-                My.Settings.UnrrbpePath = AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe"
-                Return True
-            Else
-                If MessageBox.Show("Would you like to navigate to ""unrrbpe.exe""" & vbNewLine &
-                    "this would be in any ""X-Packer"" install folder.",
-                       "BPE Decompresser",
-                       MessageBoxButtons.YesNo) = DialogResult.No Then
-                    MessageBox.Show("Download link can be found in the options menu.")
-                    My.Settings.UnrrbpePath = "Not Installed"
-                    Return False
-                End If
-            End If
-        End If
-        If My.Settings.UnrrbpePath = "" Then
-            My.Settings.UnrrbpePath = "Not Installed"
-        End If
-        Dim UnrrbpeOpenDialog As New OpenFileDialog With {.FileName = "unrrbpe.exe", .Title = "Select unrrbpe.exe"}
-        If UnrrbpeOpenDialog.ShowDialog = DialogResult.OK Then
-            If Path.GetFileName(UnrrbpeOpenDialog.FileName) = "unrrbpe.exe" Then
-                If Not Path.GetDirectoryName(UnrrbpeOpenDialog.FileName) = AppDataStorage Then
-                    If MessageBox.Show("Would you like create a copy of this to the appdata?",
-                                       "Copy File?",
-                                       MessageBoxButtons.YesNo) = DialogResult.Yes Then
-                        FolderCheck(AppDataStorage)
-                        File.Copy(UnrrbpeOpenDialog.FileName, AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe", True)
-                        My.Settings.UnrrbpePath = AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe"
-                        Return True
-                    Else
-                        My.Settings.UnrrbpePath = UnrrbpeOpenDialog.FileName
-                        Return True
-                    End If
-                Else
-                    My.Settings.UnrrbpePath = UnrrbpeOpenDialog.FileName
-                    Return True
-                End If
-            Else
-                MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
-                Return False
-            End If
-        End If
-        If My.Settings.UnrrbpePath = "Not Installed" Then
-            Return False
-        Else
-            Return True
-        End If
-    End Function
-    Public Sub CheckDDSexe(Optional FromOptions As Boolean = False)
-        If FromOptions Then
-            Dim DDSOpenExeOpenDialog As New OpenFileDialog With {.FileName = "*.exe", .Title = "Select exe for opening DDS files"}
-            If Not My.Settings.DDSexeLocation = "Not Installed" Then
-                DDSOpenExeOpenDialog.InitialDirectory = Path.GetDirectoryName(My.Settings.DDSexeLocation)
-            End If
-            If DDSOpenExeOpenDialog.ShowDialog = DialogResult.OK Then
-                My.Settings.DDSexeLocation = DDSOpenExeOpenDialog.FileName
-            Else
-                OpenWithToolStripMenuItem.Text = "Open With..."
-            End If
-        ElseIf File.Exists(My.Settings.DDSexeLocation) Then
-            OpenWithToolStripMenuItem.Text = "Open With " & Path.GetFileNameWithoutExtension(My.Settings.DDSexeLocation)
-        End If
-    End Sub
-    Public Function CheckIconicZlib(Optional FromOptions As Boolean = False) As Boolean
-        If Not File.Exists(Application.StartupPath & Path.DirectorySeparatorChar & "Ionic.Zlib.dll") Then
-            If Not FromOptions Then
-                MessageBox.Show("Ionic.Zlib Dll Not loaded")
-                Return False
-            Else
-                Dim ZlibOpenDialog As New OpenFileDialog With {.FileName = "Ionic.Zlib.dll", .Title = "Ionic.Zlib.dll"}
-                If ZlibOpenDialog.ShowDialog = DialogResult.OK Then
-                    If Path.GetFileName(ZlibOpenDialog.FileName) = "Ionic.Zlib.dll" Then
-                        File.Copy(ZlibOpenDialog.FileName, Application.StartupPath & Path.DirectorySeparatorChar & "Ionic.Zlib.dll")
-                        Return True
-                    Else
-                        MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
-                        Return False
-                    End If
-                Else
-                    Return False
-                End If
-            End If
-        Else
-            Return True
-        End If
-    End Function
-    Public Function CheckOodle(Optional FromOptions As Boolean = False) As Boolean
-        If Not File.Exists(Application.StartupPath & Path.DirectorySeparatorChar & "oo2core_6_win64.dll") Then
-            Dim TestLocation As String = Path.GetDirectoryName(My.Settings.ExeLocation) & Path.DirectorySeparatorChar & "oo2core_6_win64.dll"
-            If File.Exists(TestLocation) Then
-                File.Copy(TestLocation,
-                      Path.GetDirectoryName(Application.ExecutablePath) & Path.DirectorySeparatorChar & "oo2core_6_win64.dll", True)
-                Return True
-            Else
-                If Not FromOptions Then
-                    MessageBox.Show("Oodle Dll Not loaded")
-                    Return False
-                Else
-                    Dim OodleOpenDialog As New OpenFileDialog With {.FileName = "oo2core_6_win64.dll", .Title = "oo2core_6_win64.dll"}
-                    If OodleOpenDialog.ShowDialog = DialogResult.OK Then
-                        If Path.GetFileName(OodleOpenDialog.FileName) = "oo2core_6_win64.dll" Then
-                            File.Copy(OodleOpenDialog.FileName, Application.StartupPath &
-                                      Path.DirectorySeparatorChar & "oo2core_6_win64.dll")
-                            Return True
-                        Else
-                            MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
-                            Return False
-                        End If
-                    Else
-                        Return False
-                    End If
-                End If
-            End If
-        Else
-            Return True
-        End If
-    End Function
-    Public Function CheckFontAwesome(Optional FromOptions As Boolean = False) As Boolean
-        If Not File.Exists(Application.StartupPath & Path.DirectorySeparatorChar & "FontAwesome.Sharp.dll") Then
-            Dim TestLocation As String = Path.GetDirectoryName(My.Settings.ExeLocation) & Path.DirectorySeparatorChar & "FontAwesome.Sharp.dll"
-            If File.Exists(TestLocation) Then
-                File.Copy(TestLocation,
-                      Path.GetDirectoryName(Application.ExecutablePath) & Path.DirectorySeparatorChar & "FontAwesome.Sharp.dll", True)
-                Return True
-            Else
-                If Not FromOptions Then
-                    MessageBox.Show("Oodle Dll Not loaded")
-                    Return False
-                Else
-                    Dim OodleOpenDialog As New OpenFileDialog With {.FileName = "FontAwesome.Sharp.dll", .Title = "FontAwesome.Sharp.dll"}
-                    If OodleOpenDialog.ShowDialog = DialogResult.OK Then
-                        If Path.GetFileName(OodleOpenDialog.FileName) = "FontAwesome.Sharp.dll" Then
-                            File.Copy(OodleOpenDialog.FileName, Application.StartupPath &
-                                      Path.DirectorySeparatorChar & "FontAwesome.Sharp.dll")
-                            Return True
-                        Else
-                            MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
-                            Return False
-                        End If
-                    Else
-                        Return False
-                    End If
-                End If
-            End If
-        Else
-            Return True
-        End If
-    End Function
-#End Region
-    Shared Function CheckCommands() As Boolean
-        Dim args As String() = Environment.GetCommandLineArgs()
-        Dim parameters As Boolean = False
-        If args.Length > 1 Then
-            parameters = True
-            MainForm.SelectedFiles = New String(args.Length - 2) {}
-            For i As Integer = 1 To args.Length - 1
-                MainForm.SelectedFiles(i - 1) = args(i)
-            Next
-        End If
-        Return parameters
-    End Function
     Shared Sub LoadIcons()
         If My.Settings.UseTreeIcons Then
             MainForm.TreeView1.ImageList = MainForm.ImageList1
@@ -520,105 +153,31 @@ Public Class MainForm
             MainForm.TreeView1.ImageList = Nothing
         End If
     End Sub
-    Private Sub MainForm_DragEnter(sender As Object, e As DragEventArgs) Handles MyBase.DragEnter,
-                                                                                Hex_Selected.DragEnter,
-                                                                                Text_Selected.DragEnter
-        If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
-            e.Effect = DragDropEffects.All
+    Sub FillCompressionMenu()
+        'Tool Menu Compress in place
+        If PackUnpack.CheckBPEExe() Then
+            BPECompressionToolStripMenuItem.Visible = True
         Else
-            e.Effect = DragDropEffects.None
+            BPECompressionToolStripMenuItem.Visible = False
         End If
-    End Sub
-    Private Sub MainForm_DragDrop(sender As Object, e As DragEventArgs) Handles MyBase.DragDrop,
-                                                                                Hex_Selected.DragDrop,
-                                                                                Text_Selected.DragDrop
-        Dim s() As String = e.Data.GetData("FileDrop", False)
-        SelectedFiles = s
-        LoadParameters()
-        'Dim i As Integer
-        'For i = 0 To s.Length - 1
-        'ListBox1.Items.Add(s(i))
-        'Next i
-    End Sub
-    Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        If My.Settings.DeleteTempBMP Then
-            DeleteTempImages()
-            'Code from xhp-creations commented out for future if Delete Temp does not properly wor
-            'Dim TempFolder As String = Path.GetDirectoryName(My.Settings.TexConvPath) &
-            'Path.DirectorySeparatorChar
-            'Try
-            'For Each f In Directory.GetFiles(TempFolder, "*.BMP", SearchOption.AllDirectories)
-            'File.Delete(f)
-            'Next
-            'Catch ex As UnauthorizedAccessException
-            'End Try
-        End If
-        'Close all tabs so save check is in just one place.
-        If HideTabs(Nothing) = DialogResult.Cancel Then
-            e.Cancel = True
-        End If
-        'Seperating command out to allow for error handling to exit closing form command
-        If SaveSettingsFiles() = DialogResult.Cancel Then
-            e.Cancel = True
-        End If
-    End Sub
-    Function SaveSettingsFiles() As DialogResult
-        Try
-            'Here is the saving of the String File so we don't store it in the settings file and bloat the loading and closing.
-            If File.Exists(My.Settings.StringObject) = True Then
-                File.Delete(My.Settings.StringObject)
-            End If
-            Dim StringFileStream As Stream = New FileStream(My.Settings.StringObject, FileMode.Create)
-            Dim StringBinaryFormatter As BinaryFormatter = New BinaryFormatter()
-            StringBinaryFormatter.Serialize(StringFileStream, StringReferences)
-            StringFileStream.Close()
-            If File.Exists(My.Settings.PacNumObject) = True Then
-                File.Delete(My.Settings.PacNumObject)
-            End If
-            Dim PacNumFileStream As Stream = New FileStream(My.Settings.PacNumObject, FileMode.Create)
-            Dim PacNumBinaryFormatter As BinaryFormatter = New BinaryFormatter()
-            PacNumBinaryFormatter.Serialize(PacNumFileStream, PacNumbers)
-            PacNumFileStream.Close()
-            Return DialogResult.OK
-        Catch ex As Exception
-            Return MessageBox.Show("Error Savings Settings Files" & vbNewLine &
-                            ex.Message & vbNewLine & "Continue?", "Settings Error", MessageBoxButtons.OKCancel)
-        End Try
-    End Function
-#End Region
-#Region "General Tools"
-    'Here are App-seperate commands use as required.
-    Private Sub FolderCheck(FolderPath As String)
-        If Directory.Exists(FolderPath) = False Then
-            Directory.CreateDirectory(FolderPath)
-        End If
-    End Sub
-    Private Sub MoveAllItems(ByVal fromPath As String, ByVal toPath As String)
-        My.Computer.FileSystem.CopyDirectory(fromPath, toPath, True)
-        My.Computer.FileSystem.DeleteDirectory(fromPath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-    End Sub
-    Private Function EndianReverse(Source As Byte(), Optional Index As Integer = 0, Optional Length As Integer = 4) As Byte()
-        Dim ReturnedArray As Byte() = New Byte(Length - 1) {}
-        Array.Copy(Source, Index, ReturnedArray, 0, Length)
-        Array.Reverse(ReturnedArray)
-        Return ReturnedArray
-    End Function
-    Function HexCheck(StringtoCheck As String) As Boolean
-        If Not IsNothing(StringtoCheck) Then
-            Dim HexTest As Boolean = StringtoCheck.All(Function(c) "0123456789abcdefABCDEF".Contains(c))
-            Return HexTest
+        If PackUnpack.CheckIconicZlib() Then
+            ZLIBCompressionToolStripMenuItem.Visible = True
         Else
-            Return False
+            ZLIBCompressionToolStripMenuItem.Visible = False
         End If
-    End Function
-    Function HexStringToByte(HexString As String) As Byte()
-        Dim NumberofCharacters As Integer = HexString.Length
-        Dim ReturnedBytes As Byte() = New Byte(NumberofCharacters / 2 - 1) {}
-        For i As Integer = 0 To NumberofCharacters - 1 Step 2
-            ReturnedBytes(i / 2) = Convert.ToByte(HexString.Substring(i, 2), 16)
-        Next
-        Return ReturnedBytes
-    End Function
+        If PackUnpack.CheckOodle() Then
+            OODLCompressionToolStripMenuItem.Visible = True
+        Else
+            OODLCompressionToolStripMenuItem.Visible = False
+        End If
+        My.Settings.Save()
+    End Sub
+    Sub ApplyFormSettings()
+        HexViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
+        TextViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
+        MiscViewType.SelectedIndex = My.Settings.MiscModeIndex
+        ShowViewType.SelectedIndex = My.Settings.ShowModeIndex
+    End Sub
 #End Region
 #Region "File Handlers"
     Public Class NodeProperties
@@ -845,7 +404,7 @@ Public Class MainForm
                     HostNode.Nodes.Add(TempNode)
                 Next
             Case PackageType.DUMY
-                Dim HeaderLength As Integer = BitConverter.ToUInt32(EndianReverse(FileBytes, 4), 0)
+                Dim HeaderLength As Integer = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, 4), 0)
                 Dim PartName As String = Hex(0)
                 PartName = PartName.PadLeft(Math.Min(4, My.Settings.DecimalNameMinLength), "0")
                 Dim TempNode As TreeNode = New TreeNode(PartName)
@@ -868,7 +427,7 @@ Public Class MainForm
                     Exit Select
                 End If
                 Dim UncompressedBytes As Byte() = Nothing
-                If CheckIconicZlib() Then
+                If PackUnpack.CheckIconicZlib() Then
                     UncompressedBytes = PackUnpack.GetUncompressedZlibBytes(FileBytes)
                 End If
                 If IsNothing(UncompressedBytes) Then
@@ -895,7 +454,7 @@ Public Class MainForm
                     Exit Select
                 End If
                 Dim UncompressedBytes As Byte() = Nothing
-                If CheckUnrrbpe() Then
+                If PackUnpack.CheckUnrrbpe() Then
                     UncompressedBytes = PackUnpack.GetUncompressedBPEBytes(FileBytes)
                 End If
                 If IsNothing(UncompressedBytes) Then
@@ -922,7 +481,7 @@ Public Class MainForm
                     Exit Select
                 End If
                 Dim UncompressedBytes As Byte() = Nothing
-                If CheckOodle() Then
+                If PackUnpack.CheckOodle() Then
                     UncompressedBytes = PackUnpack.GetUncompressedOodleBytes(FileBytes)
                 End If
                 If IsNothing(UncompressedBytes) Then
@@ -986,8 +545,8 @@ Public Class MainForm
                     Dim CurrentItemLength As UInt32 = 0
                     Dim CurrentItemIndex As UInt32 = 0
                     If BytesRevesed Then
-                        CurrentItemLength = BitConverter.ToUInt32(EndianReverse(FileBytes, i * &H20 + &H10 + &H14, 4), 0)
-                        CurrentItemIndex = BitConverter.ToUInt32(EndianReverse(FileBytes, i * &H20 + &H10 + &H18, 4), 0) + HostNode.Index
+                        CurrentItemLength = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, i * &H20 + &H10 + &H14, 4), 0)
+                        CurrentItemIndex = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, i * &H20 + &H10 + &H18, 4), 0) + HostNode.Index
                     Else
                         CurrentItemLength = BitConverter.ToUInt32(FileBytes, i * &H20 + &H10 + &H14)
                         CurrentItemIndex = BitConverter.ToUInt64(FileBytes, i * &H20 + &H10 + &H18) + HostNode.Index
@@ -1005,9 +564,9 @@ Public Class MainForm
                     HostNode.Nodes.Add(TempNode)
                 Next
             Case PackageType.YANMPack
-                Dim HeaderLength As UInt32 = BitConverter.ToUInt32(EndianReverse(FileBytes), 0) + &H20
+                Dim HeaderLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes), 0) + &H20
                 'MessageBox.Show(HeaderLength)
-                Dim YANMLength As UInt32 = BitConverter.ToUInt32(EndianReverse(FileBytes, 3), 0)
+                Dim YANMLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, 3), 0)
                 'MessageBox.Show(YANMLength)
                 Dim HeadIndex As Integer = 0
                 Dim partcount As Integer = 0
@@ -1020,11 +579,11 @@ Public Class MainForm
                     Dim TempNode As TreeNode = New TreeNode(PartName)
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties With {
-                        .Index = (BitConverter.ToUInt32(EndianReverse(FileBytes, HeadIndex + &H24), 0)) + HeaderLength + HostNode.Index,
+                        .Index = (BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, HeadIndex + &H24), 0)) + HeaderLength + HostNode.Index,
                         .FileType = PackageType.YANM,
                         .StoredData = NodeTag.StoredData}
                     If HeadIndex + &H20 + &H28 < HeaderLength Then
-                        TempNodeProps.length = (BitConverter.ToUInt32(EndianReverse(FileBytes, HeadIndex + &H24 + &H28), 0)) + HeaderLength - TempNodeProps.Index
+                        TempNodeProps.length = (BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, HeadIndex + &H24 + &H28), 0)) + HeaderLength - TempNodeProps.Index
                     Else
                         TempNodeProps.length = YANMLength - TempNodeProps.Index + HeaderLength
                     End If
@@ -1657,7 +1216,7 @@ Public Class MainForm
         Else
             If MessageBox.Show("No Home Directory Selected." & vbNewLine &
                              "Select Home Now?", "Select Home?", MessageBoxButtons.OKCancel) = DialogResult.OK Then
-                SelectHomeDirectory()
+                SettingsHandlers.SelectHomeDirectory()
             End If
         End If
     End Sub
@@ -1866,7 +1425,7 @@ Public Class MainForm
                     RenamePartToolStripMenuItem.Visible = False
                     RenameFileToolStripMenuItem.Visible = False
                     ShownOptions -= 3
-                    If CheckOodle() Then
+                    If PackUnpack.CheckOodle() Then
                         InjectOODLToolStripMenuItem.Visible = True
                     Else
                         InjectOODLToolStripMenuItem.Visible = False
@@ -1884,7 +1443,7 @@ Public Class MainForm
                         InjectBPEToolStripMenuItem.Visible = True
                         ShownOptions -= 1
                     End If
-                    If CheckOodle() Then
+                    If PackUnpack.CheckOodle() Then
                         InjectOODLToolStripMenuItem.Visible = True
                     Else
                         InjectOODLToolStripMenuItem.Visible = False
@@ -1957,7 +1516,7 @@ Public Class MainForm
     End Sub
     Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenWithToolStripMenuItem.Click
         If My.Settings.DDSexeLocation = "Not Installed" Then
-            CheckDDSexe(True)
+            SettingsHandlers.CheckDDSexe(True)
         Else
             'Currently Only Designed for DDS Files
             Dim DDSBytes As Byte() = GetNodeBytes(TreeView1.SelectedNode)
@@ -2228,7 +1787,7 @@ Public Class MainForm
                         'here we have to check if the folder already exists
                         Dim NameMatched As Boolean = Directory.Exists(NewFolderName)
                         If Not NameMatched Then
-                            MoveAllItems(filepath, NewFolderName)
+                            GeneralTools.MoveAllItems(filepath, NewFolderName)
                             MessageBox.Show("Folder Moved")
                             Dim TempDI As DirectoryInfo = New DirectoryInfo(NewFolderName)
                             'resettreebranch
@@ -2293,7 +1852,7 @@ Public Class MainForm
         File.WriteAllBytes(Savepath, GetNodeBytes(Sentnode))
     End Sub
     Sub ExtractAllNode(CurrentNode As TreeNode, BaseFolder As String, Optional AdditonalFolders As String = "")
-        FolderCheck(BaseFolder & AdditonalFolders)
+        GeneralTools.FolderCheck(BaseFolder & AdditonalFolders)
         For Each temporarynode As TreeNode In CurrentNode.Nodes
             Dim NodeTag As NodeProperties = CType(temporarynode.Tag, NodeProperties)
             If Not NodeTag.FileType = PackageType.Folder Then 'Folders aren't extractable but make new folders
@@ -2501,15 +2060,15 @@ Public Class MainForm
                 ElseIf i = NodeLocation Then
                     'Index Stays the same
                     If BytesRevesed Then
-                        Array.Copy(EndianReverse(BitConverter.GetBytes(CUInt(SentBytes.Length))), 0, WrittenFileArray, i * &H20 + &H10 + &H14, 4)
+                        Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(SentBytes.Length))), 0, WrittenFileArray, i * &H20 + &H10 + &H14, 4)
                     Else
                         Array.Copy(BitConverter.GetBytes(CUInt(SentBytes.Length)), 0, WrittenFileArray, i * &H20 + &H10 + &H14, 4)
                     End If
                 Else 'size stays but index changes
                     If BytesRevesed Then
-                        Dim OldIndex As UInt32 = BitConverter.ToUInt32(EndianReverse(WrittenFileArray, i * &H20 + &H10 + &H18, 4), 0)
+                        Dim OldIndex As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(WrittenFileArray, i * &H20 + &H10 + &H18, 4), 0)
                         Dim TempIndex As UInt64 = OldIndex + SizeDifference
-                        Array.Copy(EndianReverse(BitConverter.GetBytes(CUInt(TempIndex))), 0, WrittenFileArray, i * &H20 + &H10 + &H18, 4)
+                        Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(TempIndex))), 0, WrittenFileArray, i * &H20 + &H10 + &H18, 4)
                     Else
                         Dim OldIndex As UInt32 = BitConverter.ToUInt64(WrittenFileArray, i * &H20 + &H10 + &H18)
                         Dim TempIndex As UInt64 = OldIndex + SizeDifference
@@ -2634,7 +2193,7 @@ Public Class MainForm
             Case PackageType.HSPC
                 'Likely only the 1 SHDC unlikely needs to be sorted
                 Dim StringBytes As Byte() = New Byte(7) {}
-                Dim HexBytes As Byte() = HexStringToByte(NewName)
+                Dim HexBytes As Byte() = GeneralTools.HexStringToByte(NewName)
                 'making the new string
                 Array.Copy(HexBytes, 0, StringBytes, 0, HexBytes.Length)
                 'copy the string to the file.
@@ -2642,9 +2201,9 @@ Public Class MainForm
             Case PackageType.SHDC
                 '8 char possible endian reverse
                 Dim StringBytes As Byte() = New Byte(3) {}
-                Dim HexBytes As Byte() = HexStringToByte(NewName)
+                Dim HexBytes As Byte() = GeneralTools.HexStringToByte(NewName)
                 'making the new string
-                Array.Copy(EndianReverse(HexBytes), 0, StringBytes, 0, HexBytes.Length)
+                Array.Copy(GeneralTools.EndianReverse(HexBytes), 0, StringBytes, 0, HexBytes.Length)
                 Dim TempHeaderCheck As Integer = BitConverter.ToUInt32(WrittenFileArray, &H18)
                 Dim TempHeaderStart As Integer = BitConverter.ToUInt32(WrittenFileArray, &H1C)
                 Dim TempHeaderLength As Integer = BitConverter.ToUInt32(WrittenFileArray, &H20)
@@ -3032,7 +2591,7 @@ Public Class MainForm
     Private Sub DataGridStringView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridStringView.CellEndEdit
         Dim MyCell As DataGridViewCell = DataGridStringView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         If e.ColumnIndex = 0 Then 'Hexvalue
-            If Not HexCheck(MyCell.Value) Then
+            If Not GeneralTools.HexCheck(MyCell.Value) Then
                 MyCell.Value = OldValue
             Else
                 SortStringsToolStripMenuItem.Visible = True
@@ -3783,7 +3342,7 @@ Public Class MainForm
 
             Case Else 'Hex Text Required
                 '0, 6, 7, 8, 34, 36, 37
-                If Not HexCheck(MyCell.Value) Then
+                If Not GeneralTools.HexCheck(MyCell.Value) Then
                     MyCell.Value = OldValue
                 Else
                     If e.ColumnIndex = 24 Then 'Filter
@@ -3839,7 +3398,7 @@ Public Class MainForm
             ReturnedBytes(&HC + i * ShowLength + 41) = CByte(DataGridShowView.Rows(i).Cells(21).Value) 'D4
             ReturnedBytes(&HC + i * ShowLength + 43) = CByte(DataGridShowView.Rows(i).Cells(22).Value) 'D5
             ReturnedBytes(&HC + i * ShowLength + 44) = CByte(DataGridShowView.Rows(i).Cells(23).Value) 'REF '24
-            Array.Copy(HexStringToByte(DataGridShowView.Rows(i).Cells(24).Value), 0, ReturnedBytes, &HC + i * ShowLength + 45, 6) 'Filter
+            Array.Copy(GeneralTools.HexStringToByte(DataGridShowView.Rows(i).Cells(24).Value), 0, ReturnedBytes, &HC + i * ShowLength + 45, 6) 'Filter
             ReturnedBytes(&HC + i * ShowLength + 51) = &HFF '3 Bytes FF
             ReturnedBytes(&HC + i * ShowLength + 52) = &HFF
             ReturnedBytes(&HC + i * ShowLength + 53) = &HFF
@@ -3852,7 +3411,7 @@ Public Class MainForm
             ReturnedBytes(&HC + i * ShowLength + 70) = CByte(DataGridShowView.Rows(i).Cells(31).Value) 'H3
             ReturnedBytes(&HC + i * ShowLength + 71) = CByte(DataGridShowView.Rows(i).Cells(32).Value) 'H4
             ReturnedBytes(&HC + i * ShowLength + 73) = CByte(DataGridShowView.Rows(i).Cells(33).Value) 'Bar
-            Array.Copy(HexStringToByte(DataGridShowView.Rows(i).Cells(34).Value), 0, ReturnedBytes, &HC + i * ShowLength + 74, 34) 'Unkown
+            Array.Copy(GeneralTools.HexStringToByte(DataGridShowView.Rows(i).Cells(34).Value), 0, ReturnedBytes, &HC + i * ShowLength + 74, 34) 'Unkown
             ReturnedBytes(&HC + i * ShowLength + 108) = &H70 '3 byte 70
             ReturnedBytes(&HC + i * ShowLength + 109) = &H70
             ReturnedBytes(&HC + i * ShowLength + 110) = &H70
@@ -3921,7 +3480,7 @@ Public Class MainForm
     End Sub
     Private Sub DataGridNIBJView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridNIBJView.CellEndEdit
         Dim MyCell As DataGridViewCell = DataGridNIBJView.Rows(e.RowIndex).Cells(e.ColumnIndex)
-        If Not HexCheck(MyCell.Value) OrElse
+        If Not GeneralTools.HexCheck(MyCell.Value) OrElse
             MyCell.Value.ToString.Length > 8 Then
             MyCell.Value = OldValue
         Else
@@ -4146,7 +3705,7 @@ Public Class MainForm
                 MyCell.Value = OldValue
             End If
         ElseIf ((e.ColumnIndex - 2) Mod 5) = 0 Then 'Attire Name
-            If Not HexCheck(MyCell.Value) Then
+            If Not GeneralTools.HexCheck(MyCell.Value) Then
                 MyCell.Value = OldValue
             ElseIf StringReferences(CUInt("&H" & MyCell.Value)) > &HFFFFF Then
                 MyCell.Value = OldValue

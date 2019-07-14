@@ -64,6 +64,8 @@ Partial Class OptionsMenu
         Me.CheckBoxExtractAllinPlace = New System.Windows.Forms.CheckBox()
         Me.TrackBarDecimalNameLength = New System.Windows.Forms.TrackBar()
         Me.LabelDecimalNameLength = New System.Windows.Forms.Label()
+        Me.LabelFontAwesome = New System.Windows.Forms.Label()
+        Me.ButtonSelectFontAwesome = New System.Windows.Forms.Button()
         CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBarDecimalNameLength, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -193,7 +195,7 @@ Partial Class OptionsMenu
         'LabelZlib
         '
         Me.LabelZlib.AutoSize = True
-        Me.LabelZlib.Location = New System.Drawing.Point(12, 252)
+        Me.LabelZlib.Location = New System.Drawing.Point(12, 281)
         Me.LabelZlib.Name = "LabelZlib"
         Me.LabelZlib.Size = New System.Drawing.Size(114, 13)
         Me.LabelZlib.TabIndex = 14
@@ -202,7 +204,7 @@ Partial Class OptionsMenu
         'LabelOodle
         '
         Me.LabelOodle.AutoSize = True
-        Me.LabelOodle.Location = New System.Drawing.Point(12, 281)
+        Me.LabelOodle.Location = New System.Drawing.Point(12, 310)
         Me.LabelOodle.Name = "LabelOodle"
         Me.LabelOodle.Size = New System.Drawing.Size(125, 13)
         Me.LabelOodle.TabIndex = 15
@@ -210,7 +212,7 @@ Partial Class OptionsMenu
         '
         'ButtonSelectZlib
         '
-        Me.ButtonSelectZlib.Location = New System.Drawing.Point(147, 247)
+        Me.ButtonSelectZlib.Location = New System.Drawing.Point(147, 276)
         Me.ButtonSelectZlib.Name = "ButtonSelectZlib"
         Me.ButtonSelectZlib.Size = New System.Drawing.Size(125, 23)
         Me.ButtonSelectZlib.TabIndex = 16
@@ -220,7 +222,7 @@ Partial Class OptionsMenu
         '
         'ButtonOodleSelect
         '
-        Me.ButtonOodleSelect.Location = New System.Drawing.Point(147, 276)
+        Me.ButtonOodleSelect.Location = New System.Drawing.Point(147, 305)
         Me.ButtonOodleSelect.Name = "ButtonOodleSelect"
         Me.ButtonOodleSelect.Size = New System.Drawing.Size(125, 23)
         Me.ButtonOodleSelect.TabIndex = 17
@@ -231,7 +233,7 @@ Partial Class OptionsMenu
         'CheckBoxLoadHome
         '
         Me.CheckBoxLoadHome.AutoSize = True
-        Me.CheckBoxLoadHome.Location = New System.Drawing.Point(15, 330)
+        Me.CheckBoxLoadHome.Location = New System.Drawing.Point(15, 359)
         Me.CheckBoxLoadHome.Name = "CheckBoxLoadHome"
         Me.CheckBoxLoadHome.Size = New System.Drawing.Size(135, 17)
         Me.CheckBoxLoadHome.TabIndex = 18
@@ -241,7 +243,7 @@ Partial Class OptionsMenu
         'CheckBoxBackup
         '
         Me.CheckBoxBackup.AutoSize = True
-        Me.CheckBoxBackup.Location = New System.Drawing.Point(15, 353)
+        Me.CheckBoxBackup.Location = New System.Drawing.Point(15, 382)
         Me.CheckBoxBackup.Name = "CheckBoxBackup"
         Me.CheckBoxBackup.Size = New System.Drawing.Size(196, 17)
         Me.CheckBoxBackup.TabIndex = 19
@@ -251,7 +253,7 @@ Partial Class OptionsMenu
         'TrackBarHexLength
         '
         Me.TrackBarHexLength.LargeChange = 100
-        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 565)
+        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 594)
         Me.TrackBarHexLength.Maximum = 500
         Me.TrackBarHexLength.Minimum = 1
         Me.TrackBarHexLength.Name = "TrackBarHexLength"
@@ -264,7 +266,7 @@ Partial Class OptionsMenu
         'LabelHexLength
         '
         Me.LabelHexLength.AutoSize = True
-        Me.LabelHexLength.Location = New System.Drawing.Point(12, 549)
+        Me.LabelHexLength.Location = New System.Drawing.Point(12, 578)
         Me.LabelHexLength.Name = "LabelHexLength"
         Me.LabelHexLength.Size = New System.Drawing.Size(140, 13)
         Me.LabelHexLength.TabIndex = 22
@@ -272,7 +274,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetStrings
         '
-        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 600)
+        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 629)
         Me.ButtonResetStrings.Name = "ButtonResetStrings"
         Me.ButtonResetStrings.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetStrings.TabIndex = 23
@@ -281,7 +283,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetPacs
         '
-        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 600)
+        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 629)
         Me.ButtonResetPacs.Name = "ButtonResetPacs"
         Me.ButtonResetPacs.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetPacs.TabIndex = 24
@@ -291,7 +293,7 @@ Partial Class OptionsMenu
         'CheckBoxDeleteTempBMP
         '
         Me.CheckBoxDeleteTempBMP.AutoSize = True
-        Me.CheckBoxDeleteTempBMP.Location = New System.Drawing.Point(15, 376)
+        Me.CheckBoxDeleteTempBMP.Location = New System.Drawing.Point(15, 405)
         Me.CheckBoxDeleteTempBMP.Name = "CheckBoxDeleteTempBMP"
         Me.CheckBoxDeleteTempBMP.Size = New System.Drawing.Size(172, 17)
         Me.CheckBoxDeleteTempBMP.TabIndex = 25
@@ -301,7 +303,7 @@ Partial Class OptionsMenu
         'CheckBoxTreeNodeIcons
         '
         Me.CheckBoxTreeNodeIcons.AutoSize = True
-        Me.CheckBoxTreeNodeIcons.Location = New System.Drawing.Point(15, 399)
+        Me.CheckBoxTreeNodeIcons.Location = New System.Drawing.Point(15, 428)
         Me.CheckBoxTreeNodeIcons.Name = "CheckBoxTreeNodeIcons"
         Me.CheckBoxTreeNodeIcons.Size = New System.Drawing.Size(125, 17)
         Me.CheckBoxTreeNodeIcons.TabIndex = 26
@@ -346,7 +348,7 @@ Partial Class OptionsMenu
         'CheckBoxDetailedFileNames
         '
         Me.CheckBoxDetailedFileNames.AutoSize = True
-        Me.CheckBoxDetailedFileNames.Location = New System.Drawing.Point(15, 422)
+        Me.CheckBoxDetailedFileNames.Location = New System.Drawing.Point(15, 451)
         Me.CheckBoxDetailedFileNames.Name = "CheckBoxDetailedFileNames"
         Me.CheckBoxDetailedFileNames.Size = New System.Drawing.Size(180, 17)
         Me.CheckBoxDetailedFileNames.TabIndex = 31
@@ -356,7 +358,7 @@ Partial Class OptionsMenu
         'CheckBoxOODLBypass
         '
         Me.CheckBoxOODLBypass.AutoSize = True
-        Me.CheckBoxOODLBypass.Location = New System.Drawing.Point(15, 468)
+        Me.CheckBoxOODLBypass.Location = New System.Drawing.Point(15, 497)
         Me.CheckBoxOODLBypass.Name = "CheckBoxOODLBypass"
         Me.CheckBoxOODLBypass.Size = New System.Drawing.Size(139, 17)
         Me.CheckBoxOODLBypass.TabIndex = 32
@@ -368,7 +370,7 @@ Partial Class OptionsMenu
         Me.ComboBoxCompLevel.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.ComboBoxCompLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBoxCompLevel.FormattingEnabled = True
-        Me.ComboBoxCompLevel.Location = New System.Drawing.Point(147, 305)
+        Me.ComboBoxCompLevel.Location = New System.Drawing.Point(147, 334)
         Me.ComboBoxCompLevel.Name = "ComboBoxCompLevel"
         Me.ComboBoxCompLevel.Size = New System.Drawing.Size(125, 21)
         Me.ComboBoxCompLevel.TabIndex = 33
@@ -376,7 +378,7 @@ Partial Class OptionsMenu
         'LabelOodleCompLevel
         '
         Me.LabelOodleCompLevel.AutoSize = True
-        Me.LabelOodleCompLevel.Location = New System.Drawing.Point(12, 308)
+        Me.LabelOodleCompLevel.Location = New System.Drawing.Point(12, 337)
         Me.LabelOodleCompLevel.Name = "LabelOodleCompLevel"
         Me.LabelOodleCompLevel.Size = New System.Drawing.Size(130, 13)
         Me.LabelOodleCompLevel.TabIndex = 34
@@ -420,7 +422,7 @@ Partial Class OptionsMenu
         'CheckBoxExtractAllinPlace
         '
         Me.CheckBoxExtractAllinPlace.AutoSize = True
-        Me.CheckBoxExtractAllinPlace.Location = New System.Drawing.Point(15, 445)
+        Me.CheckBoxExtractAllinPlace.Location = New System.Drawing.Point(15, 474)
         Me.CheckBoxExtractAllinPlace.Name = "CheckBoxExtractAllinPlace"
         Me.CheckBoxExtractAllinPlace.Size = New System.Drawing.Size(195, 17)
         Me.CheckBoxExtractAllinPlace.TabIndex = 39
@@ -430,7 +432,7 @@ Partial Class OptionsMenu
         'TrackBarDecimalNameLength
         '
         Me.TrackBarDecimalNameLength.LargeChange = 2
-        Me.TrackBarDecimalNameLength.Location = New System.Drawing.Point(12, 516)
+        Me.TrackBarDecimalNameLength.Location = New System.Drawing.Point(12, 545)
         Me.TrackBarDecimalNameLength.Maximum = 8
         Me.TrackBarDecimalNameLength.Name = "TrackBarDecimalNameLength"
         Me.TrackBarDecimalNameLength.Size = New System.Drawing.Size(260, 45)
@@ -440,17 +442,38 @@ Partial Class OptionsMenu
         'LabelDecimalNameLength
         '
         Me.LabelDecimalNameLength.AutoSize = True
-        Me.LabelDecimalNameLength.Location = New System.Drawing.Point(12, 490)
+        Me.LabelDecimalNameLength.Location = New System.Drawing.Point(12, 519)
         Me.LabelDecimalNameLength.Name = "LabelDecimalNameLength"
         Me.LabelDecimalNameLength.Size = New System.Drawing.Size(163, 13)
         Me.LabelDecimalNameLength.TabIndex = 42
         Me.LabelDecimalNameLength.Text = "Decimal File Name Min Length: 0"
         '
+        'LabelFontAwesome
+        '
+        Me.LabelFontAwesome.AutoSize = True
+        Me.LabelFontAwesome.Location = New System.Drawing.Point(12, 252)
+        Me.LabelFontAwesome.Name = "LabelFontAwesome"
+        Me.LabelFontAwesome.Size = New System.Drawing.Size(122, 13)
+        Me.LabelFontAwesome.TabIndex = 43
+        Me.LabelFontAwesome.Text = "FontAwe. Loaded: False"
+        '
+        'ButtonSelectFontAwesome
+        '
+        Me.ButtonSelectFontAwesome.Location = New System.Drawing.Point(147, 247)
+        Me.ButtonSelectFontAwesome.Name = "ButtonSelectFontAwesome"
+        Me.ButtonSelectFontAwesome.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonSelectFontAwesome.TabIndex = 44
+        Me.ButtonSelectFontAwesome.Text = "Locate FontAwesome"
+        Me.ButtonSelectFontAwesome.UseVisualStyleBackColor = True
+        Me.ButtonSelectFontAwesome.Visible = False
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 634)
+        Me.ClientSize = New System.Drawing.Size(284, 661)
+        Me.Controls.Add(Me.ButtonSelectFontAwesome)
+        Me.Controls.Add(Me.LabelFontAwesome)
         Me.Controls.Add(Me.LabelDecimalNameLength)
         Me.Controls.Add(Me.CheckBoxExtractAllinPlace)
         Me.Controls.Add(Me.ButtonDownloadBPEExe)
@@ -544,4 +567,6 @@ Partial Class OptionsMenu
     Friend WithEvents CheckBoxExtractAllinPlace As CheckBox
     Friend WithEvents TrackBarDecimalNameLength As TrackBar
     Friend WithEvents LabelDecimalNameLength As Label
+    Friend WithEvents LabelFontAwesome As Label
+    Friend WithEvents ButtonSelectFontAwesome As Button
 End Class

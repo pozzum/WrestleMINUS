@@ -94,6 +94,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeneralTools.vb" />
     <Compile Include="HashGenerator.vb" />
     <Compile Include="MainForm.vb">
       <SubType>Form</SubType>
@@ -125,6 +126,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="PackUnpack.vb" />
+    <Compile Include="SettingsHandlers.vb" />
     <Compile Include="TextDialogPrompt.Designer.vb">
       <DependentUpon>TextDialogPrompt.vb</DependentUpon>
     </Compile>

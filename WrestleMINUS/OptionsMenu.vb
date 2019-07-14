@@ -39,14 +39,22 @@ Public Class OptionsMenu
         Else
             LabelDSSExe.ForeColor = Color.Black
         End If
-        If Not MainForm.CheckIconicZlib() Then
+        If Not SettingsHandlers.CheckFontAwesome() Then
+            LabelFontAwesome.Text = "FontAwe. Loaded: False"
+            LabelFontAwesome.ForeColor = Color.Red
+            ButtonSelectFontAwesome.Visible = True
+        Else
+            LabelFontAwesome.Text = "FontAwesome Loaded: True"
+            LabelFontAwesome.ForeColor = Color.Black
+        End If
+        If Not PackUnpack.CheckIconicZlib() Then
             LabelZlib.Text = "Zlib DLL Loaded: False"
             LabelZlib.ForeColor = Color.Red
             ButtonSelectZlib.Visible = True
         Else
             LabelZlib.ForeColor = Color.Black
         End If
-        If Not MainForm.CheckOodle() Then
+        If Not PackUnpack.CheckOodle() Then
             LabelOodle.Text = "Oodle DLL Loaded: False"
             LabelOodle.ForeColor = Color.Red
             ButtonOodleSelect.Visible = True
@@ -77,12 +85,12 @@ Public Class OptionsMenu
     End Sub
 
     Private Sub ButtonSelectHome_Click(sender As Object, e As EventArgs) Handles ButtonSelectHome.Click
-        MainForm.SelectHomeDirectory()
+        SettingsHandlers.SelectHomeDirectory()
         LoadSettings()
     End Sub
 
     Private Sub ButtonSelectTexConv_Click(sender As Object, e As EventArgs) Handles ButtonSelectTexConv.Click
-        MainForm.GetTexConvExe(True)
+        SettingsHandlers.GetTexConvExe(True)
         LoadSettings()
     End Sub
 
@@ -91,7 +99,7 @@ Public Class OptionsMenu
     End Sub
 
     Private Sub ButtonSelectRadVideo_Click(sender As Object, e As EventArgs) Handles ButtonSelectRadVideo.Click
-        MainForm.GetRadVideo(True)
+        SettingsHandlers.GetRadVideo(True)
         LoadSettings()
     End Sub
 
@@ -101,7 +109,7 @@ Public Class OptionsMenu
     End Sub
 
     Private Sub ButtonSelectBPEExe_Click(sender As Object, e As EventArgs) Handles ButtonSelectBPEExe.Click
-        MainForm.CheckBPEExe(True)
+        PackUnpack.CheckBPEExe(True)
         LoadSettings()
     End Sub
 
@@ -110,21 +118,28 @@ Public Class OptionsMenu
     End Sub
 
     Private Sub ButtonSelectUnrrbpe_Click(sender As Object, e As EventArgs) Handles ButtonSelectUnrrbpe.Click
-        MainForm.CheckUnrrbpe(True)
+        PackUnpack.CheckUnrrbpe(True)
         LoadSettings()
     End Sub
 
     Private Sub ButtonSelectDDSexe_Click(sender As Object, e As EventArgs) Handles ButtonSelectDDSexe.Click
-        MainForm.CheckDDSexe(True)
+        SettingsHandlers.CheckDDSexe(True)
+        LoadSettings()
+    End Sub
+
+    Private Sub ButtonSelectFontAwesome_Click(sender As Object, e As EventArgs) Handles ButtonSelectFontAwesome.Click
+        SettingsHandlers.CheckFontAwesome(True)
         LoadSettings()
     End Sub
 
     Private Sub ButtonSelectZlib_Click(sender As Object, e As EventArgs) Handles ButtonSelectZlib.Click
-        MainForm.CheckIconicZlib(True)
+        PackUnpack.CheckIconicZlib(True)
+        LoadSettings()
     End Sub
 
     Private Sub ButtonOodleSelect_Click(sender As Object, e As EventArgs) Handles ButtonOodleSelect.Click
-        MainForm.CheckOodle(True)
+        PackUnpack.CheckOodle(True)
+        LoadSettings()
     End Sub
 
     Private Sub ComboBoxCompLevel_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBoxCompLevel.SelectedIndexChanged
@@ -193,5 +208,4 @@ Public Class OptionsMenu
         MainForm.PacNumbers = New Integer(1024) {}
         MainForm.PacNumbers(0) = -1
     End Sub
-
 End Class

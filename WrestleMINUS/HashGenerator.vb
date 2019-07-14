@@ -12,7 +12,7 @@ Public Class HashGenerator
             'Convert the input string to a byte array And compute the hash.
             HashValue = Hash.ComputeHash(Encoding.UTF8.GetBytes(HashedString))
             ' The Byte array Is converted to hexadecimal for easy reading
-            Dim HashHex = PrintByteArray(HashValue, PartialHash)
+            Dim HashHex = PrintHashArray(HashValue, PartialHash)
             ' Return the hash
             Return HashHex
         Catch
@@ -23,7 +23,7 @@ Public Class HashGenerator
     End Function
 
     ' One parses the array Of bytes (bytes) And converts Each Byte (Byte) To hexadecimal
-    Public Shared Function PrintByteArray(ByVal Array() As Byte, Optional PartialHash As Boolean = False) As String
+    Public Shared Function PrintHashArray(ByVal Array() As Byte, Optional PartialHash As Boolean = False) As String
         Dim HexValue As String = ""
         ' The Byte array (bytes)
         Dim i As Integer

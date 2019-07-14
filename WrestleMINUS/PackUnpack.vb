@@ -1,9 +1,168 @@
 ﻿Imports System.IO   'Files
 Imports Ionic.Zlib  'zlib decompress
+'http://www.codeplex.com/DotNetZip
+Imports System.Environment 'appdata
 
 Public Class PackUnpack
 
-#Region "Compression & Decompress"
+#Region "Compression Requirements Checks"
+    Shared Function CheckBPEExe(Optional FromOptions As Boolean = False)
+        Dim AppDataStorage As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
+        If FromOptions = False Then
+            If File.Exists(AppDataStorage & Path.DirectorySeparatorChar & "bpe.exe") Then
+                My.Settings.BPEExePath = AppDataStorage & Path.DirectorySeparatorChar & "bpe.exe"
+                Return True
+            Else
+                If MessageBox.Show("Would you like to navigate to ""bpe.exe""" & vbNewLine &
+                    "this would be in any ""Pac Editor"" install folder.",
+                       "BPE Compressor",
+                       MessageBoxButtons.YesNo) = DialogResult.No Then
+                    MessageBox.Show("Download link can be found in the options menu.")
+                    My.Settings.BPEExePath = "Not Installed"
+                    Return False
+                End If
+            End If
+        End If
+        If My.Settings.BPEExePath = "" Then
+            My.Settings.BPEExePath = "Not Installed"
+        End If
+        Dim BPEExeOpenDialog As New OpenFileDialog With {.FileName = "bpe.exe", .Title = "Select bpe.exe"}
+        If BPEExeOpenDialog.ShowDialog = DialogResult.OK Then
+            If Path.GetFileName(BPEExeOpenDialog.FileName) = "bpe.exe" Then
+                If Not Path.GetDirectoryName(BPEExeOpenDialog.FileName) = AppDataStorage Then
+                    If MessageBox.Show("Would you like create a copy of this to the appdata?",
+                                       "Copy File?",
+                                       MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                        GeneralTools.FolderCheck(AppDataStorage)
+                        File.Copy(BPEExeOpenDialog.FileName, AppDataStorage & Path.DirectorySeparatorChar & "bpe.exe", True)
+                        My.Settings.BPEExePath = AppDataStorage & Path.DirectorySeparatorChar & "bpe.exe"
+                        Return True
+                    Else
+                        My.Settings.BPEExePath = BPEExeOpenDialog.FileName
+                        Return True
+                    End If
+                Else
+                    My.Settings.BPEExePath = BPEExeOpenDialog.FileName
+                    Return True
+                End If
+            Else
+                MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                Return False
+            End If
+        End If
+        If My.Settings.BPEExePath = "Not Installed" Then
+            Return False
+        Else
+            Return True
+        End If
+    End Function
+    Shared Function CheckUnrrbpe(Optional FromOptions As Boolean = False)
+        Dim AppDataStorage As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
+        If FromOptions = False Then
+            If File.Exists(AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe") Then
+                My.Settings.UnrrbpePath = AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe"
+                Return True
+            Else
+                If MessageBox.Show("Would you like to navigate to ""unrrbpe.exe""" & vbNewLine &
+                    "this would be in any ""X-Packer"" install folder.",
+                       "BPE Decompresser",
+                       MessageBoxButtons.YesNo) = DialogResult.No Then
+                    MessageBox.Show("Download link can be found in the options menu.")
+                    My.Settings.UnrrbpePath = "Not Installed"
+                    Return False
+                End If
+            End If
+        End If
+        If My.Settings.UnrrbpePath = "" Then
+            My.Settings.UnrrbpePath = "Not Installed"
+        End If
+        Dim UnrrbpeOpenDialog As New OpenFileDialog With {.FileName = "unrrbpe.exe", .Title = "Select unrrbpe.exe"}
+        If UnrrbpeOpenDialog.ShowDialog = DialogResult.OK Then
+            If Path.GetFileName(UnrrbpeOpenDialog.FileName) = "unrrbpe.exe" Then
+                If Not Path.GetDirectoryName(UnrrbpeOpenDialog.FileName) = AppDataStorage Then
+                    If MessageBox.Show("Would you like create a copy of this to the appdata?",
+                                       "Copy File?",
+                                       MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                        GeneralTools.FolderCheck(AppDataStorage)
+                        File.Copy(UnrrbpeOpenDialog.FileName, AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe", True)
+                        My.Settings.UnrrbpePath = AppDataStorage & Path.DirectorySeparatorChar & "unrrbpe.exe"
+                        Return True
+                    Else
+                        My.Settings.UnrrbpePath = UnrrbpeOpenDialog.FileName
+                        Return True
+                    End If
+                Else
+                    My.Settings.UnrrbpePath = UnrrbpeOpenDialog.FileName
+                    Return True
+                End If
+            Else
+                MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                Return False
+            End If
+        End If
+        If My.Settings.UnrrbpePath = "Not Installed" Then
+            Return False
+        Else
+            Return True
+        End If
+    End Function
+    Shared Function CheckIconicZlib(Optional FromOptions As Boolean = False) As Boolean
+        If Not File.Exists(Application.StartupPath & Path.DirectorySeparatorChar & "Ionic.Zlib.dll") Then
+            If Not FromOptions Then
+                MessageBox.Show("Ionic.Zlib Dll Not loaded")
+                Return False
+            Else
+                Dim ZlibOpenDialog As New OpenFileDialog With {.FileName = "Ionic.Zlib.dll", .Title = "Ionic.Zlib.dll"}
+                If ZlibOpenDialog.ShowDialog = DialogResult.OK Then
+                    If Path.GetFileName(ZlibOpenDialog.FileName) = "Ionic.Zlib.dll" Then
+                        File.Copy(ZlibOpenDialog.FileName, Application.StartupPath & Path.DirectorySeparatorChar & "Ionic.Zlib.dll")
+                        Return True
+                    Else
+                        MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                        Return False
+                    End If
+                Else
+                    Return False
+                End If
+            End If
+        Else
+            Return True
+        End If
+    End Function
+    Shared Function CheckOodle(Optional FromOptions As Boolean = False) As Boolean
+        If Not File.Exists(Application.StartupPath & Path.DirectorySeparatorChar & "oo2core_6_win64.dll") Then
+            Dim TestLocation As String = Path.GetDirectoryName(My.Settings.ExeLocation) & Path.DirectorySeparatorChar & "oo2core_6_win64.dll"
+            If File.Exists(TestLocation) Then
+                File.Copy(TestLocation,
+                      Path.GetDirectoryName(Application.ExecutablePath) & Path.DirectorySeparatorChar & "oo2core_6_win64.dll", True)
+                Return True
+            Else
+                If Not FromOptions Then
+                    MessageBox.Show("Oodle Dll Not loaded")
+                    Return False
+                Else
+                    Dim OodleOpenDialog As New OpenFileDialog With {.FileName = "oo2core_6_win64.dll", .Title = "oo2core_6_win64.dll"}
+                    If OodleOpenDialog.ShowDialog = DialogResult.OK Then
+                        If Path.GetFileName(OodleOpenDialog.FileName) = "oo2core_6_win64.dll" Then
+                            File.Copy(OodleOpenDialog.FileName, Application.StartupPath &
+                                      Path.DirectorySeparatorChar & "oo2core_6_win64.dll")
+                            Return True
+                        Else
+                            MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                            Return False
+                        End If
+                    Else
+                        Return False
+                    End If
+                End If
+            End If
+        Else
+            Return True
+        End If
+    End Function
+#End Region
+
+#Region "Compression & Decompress Functions"
 
     Public Enum OodleFormat As UInt32
         LZH
