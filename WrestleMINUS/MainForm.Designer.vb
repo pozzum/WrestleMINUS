@@ -44,6 +44,7 @@ Partial Class MainForm
         Me.OODLCompressionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OODLBatchCompressToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OODLSingleCompressToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GenerateFileNameHashToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SupportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -321,7 +322,6 @@ Partial Class MainForm
         Me.SaveChangesTitleMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripPictureView = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OpenFileOrFolderDialog = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.TreeViewContext = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.OpenToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
@@ -374,7 +374,7 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SaveExtractAllDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.GenerateFileNameHashToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DeleteFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -531,6 +531,12 @@ Partial Class MainForm
         Me.OODLSingleCompressToolStripMenuItem.Name = "OODLSingleCompressToolStripMenuItem"
         Me.OODLSingleCompressToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
         Me.OODLSingleCompressToolStripMenuItem.Text = "Compress File to..."
+        '
+        'GenerateFileNameHashToolStripMenuItem
+        '
+        Me.GenerateFileNameHashToolStripMenuItem.Name = "GenerateFileNameHashToolStripMenuItem"
+        Me.GenerateFileNameHashToolStripMenuItem.Size = New System.Drawing.Size(207, 22)
+        Me.GenerateFileNameHashToolStripMenuItem.Text = "Generate File Name Hash"
         '
         'HelpToolStripMenuItem
         '
@@ -2727,18 +2733,11 @@ Partial Class MainForm
         Me.ToolStripMenuItem1.Size = New System.Drawing.Size(22, 20)
         Me.ToolStripMenuItem1.Text = " "
         '
-        'OpenFileOrFolderDialog
-        '
-        Me.OpenFileOrFolderDialog.CheckFileExists = False
-        Me.OpenFileOrFolderDialog.FileName = "Select Items"
-        Me.OpenFileOrFolderDialog.Multiselect = True
-        Me.OpenFileOrFolderDialog.ValidateNames = False
-        '
         'TreeViewContext
         '
-        Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem1, Me.OpenWithToolStripMenuItem, Me.ExtractToolStripMenuItem, Me.InjectToolStripMenuItem, Me.CrawlToolStripMenuItem, Me.RenamePartToolStripMenuItem, Me.RenameFileToolStripMenuItem})
+        Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem1, Me.OpenWithToolStripMenuItem, Me.ExtractToolStripMenuItem, Me.InjectToolStripMenuItem, Me.CrawlToolStripMenuItem, Me.RenameFileToolStripMenuItem, Me.RenamePartToolStripMenuItem, Me.DeleteFileToolStripMenuItem})
         Me.TreeViewContext.Name = "TreeViewContext"
-        Me.TreeViewContext.Size = New System.Drawing.Size(141, 158)
+        Me.TreeViewContext.Size = New System.Drawing.Size(141, 180)
         '
         'OpenToolStripMenuItem1
         '
@@ -3050,11 +3049,11 @@ Partial Class MainForm
         '
         Me.SaveExtractAllDialog.FileName = "Save Files Here"
         '
-        'GenerateFileNameHashToolStripMenuItem
+        'DeleteFileToolStripMenuItem
         '
-        Me.GenerateFileNameHashToolStripMenuItem.Name = "GenerateFileNameHashToolStripMenuItem"
-        Me.GenerateFileNameHashToolStripMenuItem.Size = New System.Drawing.Size(207, 22)
-        Me.GenerateFileNameHashToolStripMenuItem.Text = "Generate File Name Hash"
+        Me.DeleteFileToolStripMenuItem.Name = "DeleteFileToolStripMenuItem"
+        Me.DeleteFileToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.DeleteFileToolStripMenuItem.Text = "Delete"
         '
         'MainForm
         '
@@ -3157,7 +3156,6 @@ Partial Class MainForm
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents HexView As TabPage
     Friend WithEvents TextView As TabPage
-    Friend WithEvents OpenFileOrFolderDialog As OpenFileDialog
     Friend WithEvents CurrentViewToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ProgressBar1 As ProgressBar
     Friend WithEvents ToolTip1 As ToolTip
@@ -3492,4 +3490,5 @@ Partial Class MainForm
     Friend WithEvents ExtractAllToToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents RenameFileToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents GenerateFileNameHashToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DeleteFileToolStripMenuItem As ToolStripMenuItem
 End Class

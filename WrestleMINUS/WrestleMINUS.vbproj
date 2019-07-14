@@ -125,6 +125,7 @@
     <Compile Include="OptionsMenu.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PackageType.vb" />
     <Compile Include="PackUnpack.vb" />
     <Compile Include="SettingsHandlers.vb" />
     <Compile Include="TextDialogPrompt.Designer.vb">

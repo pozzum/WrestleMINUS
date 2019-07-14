@@ -4,7 +4,9 @@ Imports System.Environment 'appdata
 Imports System.Runtime.Serialization.Formatters.Binary 'Binary Formatter
 Imports Newtonsoft.Json
 Imports FontAwesome.Sharp
+
 Public Class MainForm
+
     Friend Shared StringReferences() As String
     Friend Shared PacNumbers() As Integer
     Dim SelectedFiles() As String
@@ -13,7 +15,8 @@ Public Class MainForm
     Dim ReadNode As TreeNode
     Dim OldValue
     Dim InformationLoaded As Boolean = False
-#Region "Main Form Functions"
+
+#Region "Main Form Loading Functions"
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = Me.Text & " Ver: " & My.Application.Info.Version.ToString
         OnlineVersion.CheckUpdate()
@@ -179,6 +182,151 @@ Public Class MainForm
         ShowViewType.SelectedIndex = My.Settings.ShowModeIndex
     End Sub
 #End Region
+
+#Region "Menu Strip"
+#Region "File Sub Menu"
+    Private Sub LoadHomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoadHomeToolStripMenuItem.Click
+        LoadHome()
+    End Sub
+    Private Sub OpenToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenToolStripMenuItem.Click
+        Dim OpenFileOrFolderDialog As New OpenFileDialog With {
+            .CheckFileExists = False,
+            .FileName = "Select Items",
+            .Multiselect = True,
+            .ValidateNames = False}
+        If OpenFileOrFolderDialog.ShowDialog = DialogResult.OK Then
+            Dim DialogSelection As String() = OpenFileOrFolderDialog.FileNames
+            For i As Integer = 0 To DialogSelection.Count - 1
+                DialogSelection(i) = DialogSelection(i).Replace("Select Items", "")
+            Next '"Select Items"
+            SelectedFiles = DialogSelection
+            LoadParameters()
+        End If
+    End Sub
+    Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
+        Application.Exit()
+    End Sub
+    Private Sub OptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsToolStripMenuItem.Click
+        OptionsMenu.Show() '
+    End Sub
+#End Region
+#Region "Tool Toolstrip"
+
+    Private Sub BPEBatchCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BPEBatchCompressToolStripMenuItem.Click
+        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
+            .Multiselect = True,
+            .FileName = "File(s) to Compress"}
+        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim SelectedFiles As String() = CompressOpenFileDialog.FileNames
+            For i As Integer = 0 To SelectedFiles.Count - 1
+                PackUnpack.CompressBPEToFile(SelectedFiles(i))
+            Next
+            MessageBox.Show("Compression Complete")
+        End If
+    End Sub
+
+    Private Sub BPESingleCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BPESingleCompressToolStripMenuItem.Click
+        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
+            .FileName = "File to Compress"}
+        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim CompressSaveFileDialog As SaveFileDialog = New SaveFileDialog With {
+                .InitialDirectory = Path.GetDirectoryName(CompressOpenFileDialog.FileName),
+                .FileName = Path.GetFileNameWithoutExtension(CompressOpenFileDialog.FileName) & ".bpe",
+                .Title = "Save File Locaiton"}
+            If CompressSaveFileDialog.ShowDialog() = DialogResult.OK Then
+                If PackUnpack.CompressBPEToFile(CompressOpenFileDialog.FileName(), CompressSaveFileDialog.FileName()) Then
+                    MessageBox.Show("Compression Complete")
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub ZLIBBatchCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZLIBBatchCompressToolStripMenuItem.Click
+        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
+            .Multiselect = True,
+            .FileName = "File(s) to Compress"}
+        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim SelectedFiles As String() = CompressOpenFileDialog.FileNames
+            For i As Integer = 0 To SelectedFiles.Count - 1
+                PackUnpack.CompressZLIBToFile(SelectedFiles(i))
+            Next
+            MessageBox.Show("Compression Complete")
+        End If
+    End Sub
+
+    Private Sub ZLIBSingleCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZLIBSingleCompressToolStripMenuItem.Click
+        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
+            .FileName = "File to Compress"}
+        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim CompressSaveFileDialog As SaveFileDialog = New SaveFileDialog With {
+                .InitialDirectory = Path.GetDirectoryName(CompressOpenFileDialog.FileName),
+                .FileName = Path.GetFileNameWithoutExtension(CompressOpenFileDialog.FileName) & ".zlib",
+                .Title = "Save File Locaiton"}
+            If CompressSaveFileDialog.ShowDialog() = DialogResult.OK Then
+                If PackUnpack.CompressZLIBToFile(CompressOpenFileDialog.FileName(), CompressSaveFileDialog.FileName()) Then
+                    MessageBox.Show("Compression Complete")
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub OODLBatchCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OODLBatchCompressToolStripMenuItem.Click
+        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
+            .Multiselect = True,
+            .FileName = "File(s) to Compress"}
+        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim SelectedFiles As String() = CompressOpenFileDialog.FileNames
+            For i As Integer = 0 To SelectedFiles.Count - 1
+                PackUnpack.CompressOODLToFile(SelectedFiles(i))
+            Next
+            MessageBox.Show("Compression Complete")
+        End If
+    End Sub
+
+    Private Sub OODLSingleCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OODLSingleCompressToolStripMenuItem.Click
+        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
+            .FileName = "File to Compress"}
+        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim CompressSaveFileDialog As SaveFileDialog = New SaveFileDialog With {
+                .InitialDirectory = Path.GetDirectoryName(CompressOpenFileDialog.FileName),
+                .FileName = Path.GetFileNameWithoutExtension(CompressOpenFileDialog.FileName) & ".oodl",
+                .Title = "Save File Locaiton"}
+            If CompressSaveFileDialog.ShowDialog() = DialogResult.OK Then
+                If PackUnpack.CompressOODLToFile(CompressOpenFileDialog.FileName(), CompressSaveFileDialog.FileName()) Then
+                    MessageBox.Show("Compression Complete")
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub GenerateFileNameHashToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GenerateFileNameHashToolStripMenuItem.Click
+        Dim TextDialogInstance As New TextDialogPrompt With {
+                .ContainerBeingEdited = PackageType.bin,
+                .OldFileName = "hash"}
+        TextDialogInstance.ShowDialog()
+        If TextDialogInstance.Result = DialogResult.OK Then
+            If Not TextDialogInstance.OldFileName = TextDialogInstance.EditedFileName Then 'no change
+                Dim NewFileName As String = TextDialogInstance.EditedFileName
+                Dim HashedName As String = HashGenerator.GetMd5Hash(NewFileName, True)
+                MessageBox.Show(HashedName, "File Hash")
+            End If
+        End If
+        TextDialogInstance.Dispose()
+    End Sub
+#End Region
+#Region "HelpToolStrip"
+    Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
+        Process.Start("https://pozzum.github.io/WrestleMINUS/")
+    End Sub
+    Private Sub SupportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SupportToolStripMenuItem.Click
+        Process.Start("https://smacktalks.org/forums/topic/70048-wrestleminus/")
+    End Sub
+    Private Sub GitHubIssuesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GitHubIssuesToolStripMenuItem.Click
+        Process.Start("https://github.com/pozzum/WrestleMINUS/issues")
+    End Sub
+#End Region
+#End Region
+
 #Region "File Handlers"
     Public Class NodeProperties
         Public FileType As PackageType = PackageType.Unchecked
@@ -186,50 +334,6 @@ Public Class MainForm
         Public length As UInt64
         Public StoredData As Byte()
     End Class
-    Public Enum PackageType
-        Unchecked
-        bin
-        Folder
-        HSPC
-        EPK8
-        EPAC
-        PACH
-        SHDC
-        PachDirectory_4
-        PachDirectory_8
-        ZLIB
-        BPE
-        OODL
-        TextureLibrary
-        YANMPack
-        YOBJ
-        StringFile
-        DDS
-        ArenaInfo
-        ShowInfo
-        NIBJ
-        bk2
-        CostumeFile
-        MuscleFile
-        MaskFile
-        YOBJArray
-        OFOP
-        YANM
-        VMUM
-        TitleFile
-        'here are additional ufc type files that we will have no handling for.  Hoever we want to properly cover them for adding in future.
-        UFC_MAP
-        UFC_HKX
-        UFC_PAC
-        UFC_TXT
-        UFC_CVX
-        UFC_BIN
-        'Day of Recconing GV File Types added as needed
-        TPL
-        DUMY
-        'Sending the text editor notice that we are editing a file name
-        EditingFileName
-    End Enum
     Dim ActiveFile As String = ""
     Dim LibraryContainsList As String() = New String() {"dds",
         "ymx",
@@ -847,308 +951,6 @@ Public Class MainForm
         End Select
 
     End Function
-#End Region
-#Region "Menu Strip"
-    Private Sub LoadHomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoadHomeToolStripMenuItem.Click
-        LoadHome()
-    End Sub
-    Private Sub OpenToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenToolStripMenuItem.Click
-        If OpenFileOrFolderDialog.ShowDialog = DialogResult.OK Then
-            Dim DialogSelection As String() = OpenFileOrFolderDialog.FileNames
-            For i As Integer = 0 To DialogSelection.Count - 1
-                DialogSelection(i) = DialogSelection(i).Replace("Select Items", "")
-            Next '"Select Items"
-            SelectedFiles = DialogSelection
-            LoadParameters()
-        End If
-    End Sub
-    Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
-        Application.Exit()
-    End Sub
-    Private Sub OptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsToolStripMenuItem.Click
-        OptionsMenu.Show() '
-    End Sub
-#Region "Tool Toolstrip"
-#Region "Tool Compression Toolstrip"
-    Private Sub BPEBatchCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BPEBatchCompressToolStripMenuItem.Click
-        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
-            .Multiselect = True,
-            .FileName = "File(s) to Compress"}
-        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
-            Dim SelectedFiles As String() = CompressOpenFileDialog.FileNames
-            For i As Integer = 0 To SelectedFiles.Count - 1
-                CompressBPEToFile(SelectedFiles(i))
-            Next
-            MessageBox.Show("Compression Complete")
-        End If
-    End Sub
-    Private Sub BPESingleCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BPESingleCompressToolStripMenuItem.Click
-        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
-            .FileName = "File to Compress"}
-        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
-            Dim CompressSaveFileDialog As SaveFileDialog = New SaveFileDialog With {
-                .InitialDirectory = Path.GetDirectoryName(CompressOpenFileDialog.FileName),
-                .FileName = Path.GetFileNameWithoutExtension(CompressOpenFileDialog.FileName) & ".bpe",
-                .Title = "Save File Locaiton"}
-            If CompressSaveFileDialog.ShowDialog() = DialogResult.OK Then
-                If CompressBPEToFile(CompressOpenFileDialog.FileName(), CompressSaveFileDialog.FileName()) Then
-                    MessageBox.Show("Compression Complete")
-                End If
-            End If
-        End If
-    End Sub
-    Function CompressBPEToFile(FiletoRead As String, Optional FiletoWrite As String = "")
-        If File.Exists(FiletoRead) Then
-            Dim FileBytes As Byte() = File.ReadAllBytes(FiletoRead)
-            Dim ExistingFileType As PackageType = CheckHeaderType(0, FileBytes)
-            If ExistingFileType = PackageType.BPE Then
-                MessageBox.Show("File is already a BPE")
-            Else
-                Dim BytesToCompress As Byte() = Nothing
-                If ExistingFileType = PackageType.OODL Then
-                    Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as OODL" & vbNewLine & "Decompress before compression?",
-                                                                 "File Already Compressed", MessageBoxButtons.YesNoCancel)
-                    If Result = DialogResult.Yes Then
-                        BytesToCompress = PackUnpack.GetUncompressedOodleBytes(FileBytes)
-                    ElseIf Result = DialogResult.No Then
-                        BytesToCompress = FileBytes
-                    ElseIf Result = DialogResult.Cancel Then
-                        Return False
-                    End If
-                ElseIf ExistingFileType = PackageType.ZLIB Then
-                    Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as ZLIB" & vbNewLine & "Decompress before compression?",
-                                                                 "File Already Compressed", MessageBoxButtons.YesNoCancel)
-                    If Result = DialogResult.Yes Then
-                        BytesToCompress = PackUnpack.GetUncompressedZlibBytes(FileBytes)
-                    ElseIf Result = DialogResult.No Then
-                        BytesToCompress = FileBytes
-                    ElseIf Result = DialogResult.Cancel Then
-                        Return False
-                    End If
-                Else
-                    BytesToCompress = FileBytes
-                End If
-                Dim CompressedBytes As Byte() = Nothing
-                CompressedBytes = PackUnpack.GetCompressedBPEBytes(BytesToCompress)
-                If IsNothing(CompressedBytes) Then
-                    MessageBox.Show("Failure to get compressed bytes for " & Path.GetFileName(FiletoRead))
-                    Return False
-                Else
-                    'Write bytes to file
-                    Dim SaveLocation As String = ""
-                    If FiletoWrite = "" Then
-                        SaveLocation = Path.GetDirectoryName(FiletoRead) & Path.DirectorySeparatorChar & Path.GetFileNameWithoutExtension(FiletoRead) & ".bpe"
-                        If File.Exists(SaveLocation) Then
-                            'We need to Backup the file in this case... this really shouldn't happen because bpe is skipped
-                            File.Move(SaveLocation, SaveLocation.Replace(".bpe", ".bpe.bak"))
-                        End If
-                    Else
-                        SaveLocation = FiletoWrite
-                    End If
-                    File.WriteAllBytes(SaveLocation, CompressedBytes)
-                    Return True
-                End If
-            End If
-        Else
-            MessageBox.Show("File " & Path.GetFileName(FiletoRead) & " Does Not Exist")
-        End If
-        Return False
-    End Function
-    Private Sub ZLIBBatchCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZLIBBatchCompressToolStripMenuItem.Click
-        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
-            .Multiselect = True,
-            .FileName = "File(s) to Compress"}
-        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
-            Dim SelectedFiles As String() = CompressOpenFileDialog.FileNames
-            For i As Integer = 0 To SelectedFiles.Count - 1
-                CompressZLIBToFile(SelectedFiles(i))
-            Next
-            MessageBox.Show("Compression Complete")
-        End If
-    End Sub
-    Private Sub ZLIBSingleCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ZLIBSingleCompressToolStripMenuItem.Click
-        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
-            .FileName = "File to Compress"}
-        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
-            Dim CompressSaveFileDialog As SaveFileDialog = New SaveFileDialog With {
-                .InitialDirectory = Path.GetDirectoryName(CompressOpenFileDialog.FileName),
-                .FileName = Path.GetFileNameWithoutExtension(CompressOpenFileDialog.FileName) & ".zlib",
-                .Title = "Save File Locaiton"}
-            If CompressSaveFileDialog.ShowDialog() = DialogResult.OK Then
-                If CompressZLIBToFile(CompressOpenFileDialog.FileName(), CompressSaveFileDialog.FileName()) Then
-                    MessageBox.Show("Compression Complete")
-                End If
-            End If
-        End If
-    End Sub
-    Function CompressZLIBToFile(FiletoRead As String, Optional FiletoWrite As String = "")
-        If File.Exists(FiletoRead) Then
-            Dim FileBytes As Byte() = File.ReadAllBytes(FiletoRead)
-            Dim ExistingFileType As PackageType = CheckHeaderType(0, FileBytes)
-            If ExistingFileType = PackageType.ZLIB Then
-                MessageBox.Show("File is already a ZLIB")
-            Else
-                Dim BytesToCompress As Byte() = Nothing
-                If ExistingFileType = PackageType.OODL Then
-                    Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as OODL" & vbNewLine & "Decompress before compression?",
-                                                                 "File Already Compressed", MessageBoxButtons.YesNoCancel)
-                    If Result = DialogResult.Yes Then
-                        BytesToCompress = PackUnpack.GetUncompressedOodleBytes(FileBytes)
-                    ElseIf Result = DialogResult.No Then
-                        BytesToCompress = FileBytes
-                    ElseIf Result = DialogResult.Cancel Then
-                        Return False
-                    End If
-                ElseIf ExistingFileType = PackageType.BPE Then
-                    Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as BPE" & vbNewLine & "Decompress before compression?",
-                                                                 "File Already Compressed", MessageBoxButtons.YesNoCancel)
-                    If Result = DialogResult.Yes Then
-                        BytesToCompress = PackUnpack.GetUncompressedBPEBytes(FileBytes)
-                    ElseIf Result = DialogResult.No Then
-                        BytesToCompress = FileBytes
-                    ElseIf Result = DialogResult.Cancel Then
-                        Return False
-                    End If
-                Else
-                    BytesToCompress = FileBytes
-                End If
-                Dim CompressedBytes As Byte() = Nothing
-                CompressedBytes = PackUnpack.GetCompressedZlibBytes(BytesToCompress)
-                If IsNothing(CompressedBytes) Then
-                    MessageBox.Show("Failure to get compressed bytes for " & Path.GetFileName(FiletoRead))
-                    Return False
-                Else
-                    'Write bytes to file
-                    Dim SaveLocation As String = ""
-                    If FiletoWrite = "" Then
-                        SaveLocation = Path.GetDirectoryName(FiletoRead) & Path.DirectorySeparatorChar & Path.GetFileNameWithoutExtension(FiletoRead) & ".zlib"
-                        If File.Exists(SaveLocation) Then
-                            'We need to Backup the file in this case... this really shouldn't happen because bpe is skipped
-                            File.Move(SaveLocation, SaveLocation.Replace(".zlib", ".zlib.bak"))
-                        End If
-                    Else
-                        SaveLocation = FiletoWrite
-                    End If
-                    File.WriteAllBytes(SaveLocation, CompressedBytes)
-                    Return True
-                End If
-            End If
-        Else
-            MessageBox.Show("File " & Path.GetFileName(FiletoRead) & " Does Not Exist")
-        End If
-        Return False
-    End Function
-    Private Sub OODLBatchCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OODLBatchCompressToolStripMenuItem.Click
-        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
-            .Multiselect = True,
-            .FileName = "File(s) to Compress"}
-        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
-            Dim SelectedFiles As String() = CompressOpenFileDialog.FileNames
-            For i As Integer = 0 To SelectedFiles.Count - 1
-                CompressOODLToFile(SelectedFiles(i))
-            Next
-            MessageBox.Show("Compression Complete")
-        End If
-    End Sub
-    Private Sub OODLSingleCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OODLSingleCompressToolStripMenuItem.Click
-        Dim CompressOpenFileDialog As OpenFileDialog = New OpenFileDialog With {
-            .FileName = "File to Compress"}
-        If CompressOpenFileDialog.ShowDialog() = DialogResult.OK Then
-            Dim CompressSaveFileDialog As SaveFileDialog = New SaveFileDialog With {
-                .InitialDirectory = Path.GetDirectoryName(CompressOpenFileDialog.FileName),
-                .FileName = Path.GetFileNameWithoutExtension(CompressOpenFileDialog.FileName) & ".oodl",
-                .Title = "Save File Locaiton"}
-            If CompressSaveFileDialog.ShowDialog() = DialogResult.OK Then
-                If CompressOODLToFile(CompressOpenFileDialog.FileName(), CompressSaveFileDialog.FileName()) Then
-                    MessageBox.Show("Compression Complete")
-                End If
-            End If
-        End If
-    End Sub
-    Function CompressOODLToFile(FiletoRead As String, Optional FiletoWrite As String = "")
-        If File.Exists(FiletoRead) Then
-            Dim FileBytes As Byte() = File.ReadAllBytes(FiletoRead)
-            Dim ExistingFileType As PackageType = CheckHeaderType(0, FileBytes)
-            If ExistingFileType = PackageType.OODL Then
-                MessageBox.Show("File is already a ZLIB")
-            Else
-                Dim BytesToCompress As Byte() = Nothing
-                If ExistingFileType = PackageType.ZLIB Then
-                    Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as ZLIB" & vbNewLine & "Decompress before compression?",
-                                                                 "File Already Compressed", MessageBoxButtons.YesNoCancel)
-                    If Result = DialogResult.Yes Then
-                        BytesToCompress = PackUnpack.GetUncompressedZlibBytes(FileBytes)
-                    ElseIf Result = DialogResult.No Then
-                        BytesToCompress = FileBytes
-                    ElseIf Result = DialogResult.Cancel Then
-                        Return False
-                    End If
-                ElseIf ExistingFileType = PackageType.BPE Then
-                    Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as BPE" & vbNewLine & "Decompress before compression?",
-                                                                 "File Already Compressed", MessageBoxButtons.YesNoCancel)
-                    If Result = DialogResult.Yes Then
-                        BytesToCompress = PackUnpack.GetUncompressedBPEBytes(FileBytes)
-                    ElseIf Result = DialogResult.No Then
-                        BytesToCompress = FileBytes
-                    ElseIf Result = DialogResult.Cancel Then
-                        Return False
-                    End If
-                Else
-                    BytesToCompress = FileBytes
-                End If
-                Dim CompressedBytes As Byte() = Nothing
-                CompressedBytes = PackUnpack.GetCompressedOodleBytes(BytesToCompress)
-                If IsNothing(CompressedBytes) Then
-                    MessageBox.Show("Failure to get compressed bytes for " & Path.GetFileName(FiletoRead))
-                    Return False
-                Else
-                    'Write bytes to file
-                    Dim SaveLocation As String = ""
-                    If FiletoWrite = "" Then
-                        SaveLocation = Path.GetDirectoryName(FiletoRead) & Path.DirectorySeparatorChar & Path.GetFileNameWithoutExtension(FiletoRead) & ".oodl"
-                        If File.Exists(SaveLocation) Then
-                            'We need to Backup the file in this case... this really shouldn't happen because bpe is skipped
-                            File.Move(SaveLocation, SaveLocation.Replace(".oodl", ".oodl.bak"))
-                        End If
-                    Else
-                        SaveLocation = FiletoWrite
-                    End If
-                    File.WriteAllBytes(SaveLocation, CompressedBytes)
-                    Return True
-                End If
-            End If
-        Else
-            MessageBox.Show("File " & Path.GetFileName(FiletoRead) & " Does Not Exist")
-        End If
-        Return False
-    End Function
-#End Region
-    Private Sub GenerateFileNameHashToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GenerateFileNameHashToolStripMenuItem.Click
-        Dim TextDialogInstance As New TextDialogPrompt With {
-                .ContainerBeingEdited = PackageType.bin,
-                .OldFileName = "hash"}
-        TextDialogInstance.ShowDialog()
-        If TextDialogInstance.Result = DialogResult.OK Then
-            If Not TextDialogInstance.OldFileName = TextDialogInstance.EditedFileName Then 'no change
-                Dim NewFileName As String = TextDialogInstance.EditedFileName
-                Dim HashedName As String = HashGenerator.GetMd5Hash(NewFileName, True)
-                MessageBox.Show(HashedName, "File Hash")
-            End If
-        End If
-        TextDialogInstance.Dispose()
-    End Sub
-#End Region
-#Region "HelpToolStrip"
-    Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
-        Process.Start("https://pozzum.github.io/WrestleMINUS/")
-    End Sub
-    Private Sub SupportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SupportToolStripMenuItem.Click
-        Process.Start("https://smacktalks.org/forums/topic/70048-wrestleminus/")
-    End Sub
-    Private Sub GitHubIssuesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GitHubIssuesToolStripMenuItem.Click
-        Process.Start("https://github.com/pozzum/WrestleMINUS/issues")
-    End Sub
-#End Region
 #End Region
     'Some Issue with Menus not properly populating.. when you first select Text View..
 #Region "TreeView Population"
@@ -1810,7 +1612,7 @@ Public Class MainForm
                 End If
                 TextDialogInstance.Dispose()
             Else
-                    MessageBox.Show("Folder " & filepath & " Not Found")
+                MessageBox.Show("Folder " & filepath & " Not Found")
             End If
         Else 'it should be a file
             If File.Exists(filepath) Then
@@ -1841,7 +1643,7 @@ Public Class MainForm
                             MessageBox.Show("File " & NewFullPath & " already exists.")
                         End If
                     End If
-                    End If
+                End If
                 TextDialogInstance.Dispose()
             Else
                 MessageBox.Show("File " & Path.GetFileName(filepath) & " Not Found")
