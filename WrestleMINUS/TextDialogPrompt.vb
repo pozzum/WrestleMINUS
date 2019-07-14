@@ -1,4 +1,5 @@
-﻿Imports WrestleMINUS.MainForm
+﻿Imports System.IO   'Files
+Imports WrestleMINUS.MainForm
 Imports System.Text.RegularExpressions 'Text Replace
 Public Class TextDialogPrompt
     Public Result As DialogResult = DialogResult.Cancel
@@ -13,15 +14,25 @@ Public Class TextDialogPrompt
         AlphaNumWSpaces
         AlphaNumNoSpaces
         FileName
+        Folder
     End Enum
     Private Sub TextDialogPrompt_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         If OldFileName = "hash" Then
             LabelOldFileHeader.Text = "Generating Name Hash:"
-        Else
+        ElseIf ContainerBeingEdited = PackageType.Folder Then
+            If Path.GetFileName(OldFileName) = "" Then
+                LabelOldFileHeader.Text = "Renaming Folder: " & Path.GetFileName(Path.GetDirectoryName(OldFileName))
+            Else
+                LabelOldFileHeader.Text = "Renaming Folder: " & Path.GetFileName(OldFileName)
+            End If
+        ElseIf ContainerBeingEdited = PackageType.EditingFileName Then
             LabelOldFileHeader.Text = "Renaming File: " & OldFileName
+        Else
+            LabelOldFileHeader.Text = "Renaming File Part: " & OldFileName
         End If
         TextBoxEditedName.Text = EditedFileName
         ApplyRestrictions(ContainerBeingEdited)
+        ResizeMenu()
     End Sub
     Sub ApplyRestrictions(ContainerType As PackageType)
         Select Case ContainerType
@@ -51,6 +62,12 @@ Public Class TextDialogPrompt
             Case PackageType.TextureLibrary
                 CurrentRestriction = RestrictionTypes.AlphaNumNoSpaces
                 TextBoxEditedName.MaxLength = 16
+            Case PackageType.EditingFileName
+                CurrentRestriction = RestrictionTypes.FileName
+                TextBoxEditedName.MaxLength = 255
+            Case PackageType.Folder
+                CurrentRestriction = RestrictionTypes.Folder
+                TextBoxEditedName.MaxLength = 255
             Case Else
                 CurrentRestriction = RestrictionTypes.None
                 TextBoxEditedName.MaxLength = 255
@@ -58,6 +75,28 @@ Public Class TextDialogPrompt
         '    ParrentNodeTag.FileType = PackageType.PachDirectory OrElse
         '    ParrentNodeTag.FileType = PackageType.TextureLibrary
     End Sub
+    Sub ResizeMenu()
+        Dim MinSize As Integer = CalculateLabelWidth(LabelOldFileHeader)
+        If MinSize < Me.Width Then
+            MinSize = Me.Width
+        End If
+        'labels can just get the width set
+        LabelOldFileHeader.Width = MinSize
+        TextBoxEditedName.Width = MinSize
+        'buttons have to be adjusted
+        '6 pixels in the middle and 12 on the left 156
+        Dim ButtonWidth As Integer = (MinSize - 6) / 2
+        ButtonAcceptChange.Width = ButtonWidth
+        ButtonCancelChange.Width = ButtonWidth
+        ButtonCancelChange.Location = New Point(12 + MinSize - ButtonWidth, ButtonCancelChange.Location.Y)
+        '20 pixels on either side..
+        Me.Width = MinSize + 40
+    End Sub
+    Function CalculateLabelWidth(TestedLabel As Label)
+        Dim TextSize As Size = TextRenderer.MeasureText(TestedLabel.Text, TestedLabel.Font)
+        Dim TextWidth As Integer = TextSize.Width
+        Return TextWidth + TestedLabel.Padding.Horizontal
+    End Function
     Private Sub TextBoxEditedName_TextChanged(sender As Object, e As EventArgs) Handles TextBoxEditedName.TextChanged
         Dim SentTextBox As TextBox = CType(sender, TextBox)
         Dim CursorPosition As Integer = SentTextBox.SelectionStart
@@ -72,6 +111,8 @@ Public Class TextDialogPrompt
                 SentTextBox.Text = Regex.Replace(SentTextBox.Text, "[^0-9a-zA-Z_]", "")
             Case RestrictionTypes.FileName
                 SentTextBox.Text = Regex.Replace(SentTextBox.Text, "[^\w\-. ]", "")
+            Case RestrictionTypes.Folder
+                SentTextBox.Text = Regex.Replace(SentTextBox.Text, "[^\w\-\:.\\ ]", "")
         End Select
         SentTextBox.SelectionStart = CursorPosition
         EditedFileName = SentTextBox.Text

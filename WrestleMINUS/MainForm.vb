@@ -781,7 +781,7 @@ Public Class MainForm
 #Region "File Handlers"
     Public Class NodeProperties
         Public FileType As PackageType = PackageType.Unchecked
-        Public Index As UInt64
+        Public Index As UInt64 = 0
         Public length As UInt64
         Public StoredData As Byte()
     End Class
@@ -826,6 +826,8 @@ Public Class MainForm
         'Day of Recconing GV File Types added as needed
         TPL
         DUMY
+        'Sending the text editor notice that we are editing a file name
+        EditingFileName
     End Enum
     Dim ActiveFile As String = ""
     Dim LibraryContainsList As String() = New String() {"dds",
@@ -1983,6 +1985,7 @@ Public Class MainForm
             InjectOODLToolStripMenuItem.Visible = False
             OpenToolStripMenuItem1.Visible = False
             OpenWithToolStripMenuItem.Visible = False
+            RenamePartToolStripMenuItem.Visible = False
             RenameFileToolStripMenuItem.Visible = True
             ShownOptions -= 4
         Else
@@ -2084,7 +2087,7 @@ Public Class MainForm
             'ExtractToolStripMenuItem.Visible = False
             ExtractAllInPlaceToolStripMenuItem.Visible = False
             ExtractAllToToolStripMenuItem.Visible = False
-            ShownOptions -= 2
+            ShownOptions -= 1
         End If
         If ShownOptions > 0 Then
             TreeViewContext.Show(TreeView1, New Point(e.X, e.Y))
@@ -2339,8 +2342,110 @@ Public Class MainForm
             MessageBox.Show("Not Yet Supported")
         End If
     End Sub
+    'If File.Exists(SelectedFiles(i)) Then
+    'Dim NewFI As FileInfo = New FileInfo(SelectedFiles(i))
+    'Dim TempNode As TreeNode = TreeView1.Nodes.Add(NewFI.Name)
+    '                TempNode.ToolTipText = NewFI.FullName
+    '                TempNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
+    '                    .Index = 0,
+    '                    .length = FileLen(NewFI.FullName),
+    '                    .StoredData = New Byte() {}}
+    '                TempNode.ImageIndex = 0
+    '                TempNode.SelectedImageIndex = 0
+    '                CheckFile(TempNode)
+    '                ProgressBar1.Value += 1
+    '            ElseIf Directory.Exists(SelectedFiles(i)) Then
+    'Dim TempDI As DirectoryInfo = New DirectoryInfo(SelectedFiles(i))
+    'Dim TempNode As TreeNode = TreeView1.Nodes.Add(TempDI.Name)
+    '                TempNode.ToolTipText = TempDI.FullName
+    '                TempNode.Tag = New NodeProperties With {.FileType = PackageType.Folder,
+    '                        .Index = 0,
+    '                        .length = 0,
+    '                        .StoredData = New Byte(0) {}}
+    '                TempNode.ImageIndex = 1
+    '                TempNode.SelectedImageIndex = 1
+    '                LoadSubDirectories(SelectedFiles(i), TempNode)
+    '                LoadFiles(SelectedFiles(i), TempNode)
+    '            End If
     Private Sub RenameFileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenameFileToolStripMenuItem.Click
-
+        Dim filepath As String = TreeView1.SelectedNode.ToolTipText
+        Dim SelectedNode As TreeNode = TreeView1.SelectedNode
+        Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
+        If NodeTag.FileType = PackageType.Folder Then
+            If Directory.Exists(filepath) Then
+                Dim TextDialogInstance As New TextDialogPrompt With {
+                    .OldFileName = TreeView1.SelectedNode.ToolTipText,
+                    .EditedFileName = filepath,
+                    .ContainerBeingEdited = PackageType.Folder}
+                TextDialogInstance.ShowDialog()
+                If TextDialogInstance.Result = DialogResult.OK Then
+                    If Not TextDialogInstance.OldFileName = TextDialogInstance.EditedFileName Then 'no change
+                        'Folder Editing, MoveAllFiles will be used
+                        Dim NewFolderName As String = TextDialogInstance.EditedFileName
+                        NewFolderName = ValidateTruncation(NewFolderName, PackageType.Folder)
+                        'here we have to check if the folder already exists
+                        Dim NameMatched As Boolean = Directory.Exists(NewFolderName)
+                        If Not NameMatched Then
+                            MoveAllItems(filepath, NewFolderName)
+                            MessageBox.Show("Folder Moved")
+                            Dim TempDI As DirectoryInfo = New DirectoryInfo(NewFolderName)
+                            'resettreebranch
+                            SelectedNode.Nodes.Clear()
+                            SelectedNode.Text = TempDI.Name
+                            SelectedNode.ToolTipText = TempDI.FullName
+                            SelectedNode.Tag = New NodeProperties With {.FileType = PackageType.Folder,
+                                .Index = 0,
+                                .length = 0,
+                                .StoredData = New Byte() {}}
+                            SelectedNode.ImageIndex = 1
+                            SelectedNode.SelectedImageIndex = 1
+                            LoadSubDirectories(TempDI.FullName, SelectedNode)
+                            LoadFiles(TempDI.FullName, SelectedNode)
+                            InformationLoaded = False
+                        Else
+                            MessageBox.Show("Folder " & NewFolderName & " already exists.", "Rename Failed")
+                        End If
+                    End If
+                End If
+                TextDialogInstance.Dispose()
+            Else
+                    MessageBox.Show("Folder " & filepath & " Not Found")
+            End If
+        Else 'it should be a file
+            If File.Exists(filepath) Then
+                Dim TextDialogInstance As New TextDialogPrompt With {
+                    .OldFileName = Path.GetFileName(filepath),
+                    .EditedFileName = Path.GetFileName(filepath),
+                    .ContainerBeingEdited = PackageType.EditingFileName}
+                TextDialogInstance.ShowDialog()
+                If TextDialogInstance.Result = DialogResult.OK Then
+                    If Not TextDialogInstance.OldFileName = TextDialogInstance.EditedFileName Then 'no change
+                        'Folder Editing, MoveAllFiles will be used
+                        Dim NewFileName As String = TextDialogInstance.EditedFileName
+                        Dim NewFullPath As String = Path.GetDirectoryName(filepath) & Path.DirectorySeparatorChar & TextDialogInstance.EditedFileName
+                        If Not File.Exists(NewFullPath) Then
+                            File.Move(filepath, NewFullPath)
+                            Dim NewFI As FileInfo = New FileInfo(NewFullPath)
+                            SelectedNode.Nodes.Clear()
+                            SelectedNode.Text = NewFI.Name
+                            SelectedNode.ToolTipText = NewFI.FullName
+                            SelectedNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
+                            .Index = 0,
+                            .length = FileLen(NewFI.FullName),
+                            .StoredData = New Byte() {}}
+                            SelectedNode.ImageIndex = 0
+                            SelectedNode.SelectedImageIndex = 0
+                            CheckFile(SelectedNode)
+                        Else
+                            MessageBox.Show("File " & NewFullPath & " already exists.")
+                        End If
+                    End If
+                    End If
+                TextDialogInstance.Dispose()
+            Else
+                MessageBox.Show("File " & Path.GetFileName(filepath) & " Not Found")
+            End If
+        End If
     End Sub
     Sub ExtractNode(Sentnode As TreeNode, Savepath As String)
         File.WriteAllBytes(Savepath, GetNodeBytes(Sentnode))
@@ -2592,8 +2697,8 @@ Public Class MainForm
                     .StoredData = New Byte() {}}
             'fixes for rebuilding the same file over and over
             CheckFile(ParentNode)
-            TreeView1.SelectedNode = ParentNode
             TabControl1.SelectedIndex = 0
+            TreeView1.SelectedNode = ParentNode
             ReadNode = ParentNode
             InformationLoaded = False
         Else
@@ -2641,6 +2746,10 @@ Public Class MainForm
             Case PackageType.PachDirectory_8
                 Return TestedString.PadLeft(My.Settings.DecimalNameMinLength, "0").ToUpper
             Case PackageType.TextureLibrary
+                Return TestedString.Trim(" ")
+            Case PackageType.Folder
+                Return TestedString.Trim(" ")
+            Case PackageType.EditingFileName
                 Return TestedString.Trim(" ")
             Case Else
                 Return TestedString
