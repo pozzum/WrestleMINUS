@@ -1018,23 +1018,15 @@ Public Class MainForm
 #End Region
 #Region "Compression Types"
             Case PackageType.ZLIB
+                ' Checking to make sure the node isn't already decompressed..
+                If HostNode.Nodes.Count > 0 Then
+                    'MessageBox.Show(HostNode.Text & " Already Decompressed")
+                    Exit Select
+                End If
                 Dim UncompressedBytes As Byte() = Nothing
                 If CheckIconicZlib() Then
                     UncompressedBytes = GetUncompressedZlibBytes(FileBytes)
                 End If
-                'Dim CompressedLength As UInt32 = BitConverter.ToUInt32(FileBytes, 8)
-                'Dim UncompressedLength As UInt32 = BitConverter.ToUInt32(FileBytes, 12)
-                'Dim input As Byte() = New Byte(CompressedLength - 1) {}
-                'Array.Copy(FileBytes, 16, input, 0, CInt(NodeTag.length - 16))
-                'Dim output As Byte() = New Byte(UncompressedLength - 1) {}
-                'Try
-                '    output = ZlibStream.UncompressBuffer(input)
-                'Catch ex As Exception
-                '    MessageBox.Show(ex.Message)
-                '    NodeTag.FileType = PackageType.bin
-                '    HostNode.Tag = NodeTag
-                '    Exit Sub
-                'End Try
                 If IsNothing(UncompressedBytes) Then
                     NodeTag.FileType = PackageType.bin
                     HostNode.Tag = NodeTag
@@ -1053,7 +1045,11 @@ Public Class MainForm
                     HostNode.Nodes.Add(TempNode)
                 End If
             Case PackageType.BPE
-                'TODO add unBPE Check Here..
+                ' Checking to make sure the node isn't already decompressed..
+                If HostNode.Nodes.Count > 0 Then
+                    'MessageBox.Show(HostNode.Text & " Already Decompressed")
+                    Exit Select
+                End If
                 Dim UncompressedBytes As Byte() = Nothing
                 If CheckUnrrbpe() Then
                     UncompressedBytes = GetUncompressedBPEBytes(FileBytes)
@@ -1076,6 +1072,11 @@ Public Class MainForm
                     HostNode.Nodes.Add(TempNode)
                 End If
             Case PackageType.OODL
+                ' Checking to make sure the node isn't already decompressed..
+                If HostNode.Nodes.Count > 0 Then
+                    'MessageBox.Show(HostNode.Text & " Already Decompressed")
+                    Exit Select
+                End If
                 Dim UncompressedBytes As Byte() = Nothing
                 If CheckOodle() Then
                     UncompressedBytes = GetUncompressedOodleBytes(FileBytes)
