@@ -67,6 +67,7 @@ Public Class OptionsMenu
         CheckBoxLoadHome.Checked = My.Settings.LoadHomeOnLaunch
         CheckBoxBackup.Checked = My.Settings.BackupInjections
         CheckBoxDeleteTempBMP.Checked = My.Settings.DeleteTempBMP
+        CheckBoxRecycleDeletedFiles.Checked = My.Settings.RecycleDeletedFiles
         CheckBoxTreeNodeIcons.Checked = My.Settings.UseTreeIcons
         CheckBoxDetailedFileNames.Checked = My.Settings.UseDetailedFileNames
         CheckBoxExtractAllinPlace.Checked = My.Settings.DecompresstoFolder
@@ -158,6 +159,10 @@ Public Class OptionsMenu
         My.Settings.DeleteTempBMP = CheckBoxDeleteTempBMP.Checked
     End Sub
 
+    Private Sub CheckBoxRecycleDeletedFiles_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxRecycleDeletedFiles.CheckedChanged
+        My.Settings.RecycleDeletedFiles = CheckBoxRecycleDeletedFiles.Checked
+    End Sub
+
     Private Sub CheckBoxTreeNodeIcons_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxTreeNodeIcons.CheckedChanged
         My.Settings.UseTreeIcons = CheckBoxTreeNodeIcons.Checked
         MainForm.LoadIcons()
@@ -208,4 +213,5 @@ Public Class OptionsMenu
         MainForm.PacNumbers = New Integer(1024) {}
         MainForm.PacNumbers(0) = -1
     End Sub
+
 End Class

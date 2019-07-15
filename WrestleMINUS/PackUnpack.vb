@@ -156,7 +156,7 @@ Public Class PackUnpack
     Shared Function CompressBPEToFile(FiletoRead As String, Optional FiletoWrite As String = "")
         If File.Exists(FiletoRead) Then
             Dim FileBytes As Byte() = File.ReadAllBytes(FiletoRead)
-            Dim ExistingFileType As PackageType = MainForm.CheckHeaderType(0, FileBytes)
+            Dim ExistingFileType As PackageType = PackageHandlers.CheckHeaderType(0, FileBytes, FiletoRead)
             If ExistingFileType = PackageType.BPE Then
                 MessageBox.Show("File is already a BPE")
             Else
@@ -279,7 +279,7 @@ Public Class PackUnpack
     Shared Function CompressZLIBToFile(FiletoRead As String, Optional FiletoWrite As String = "")
         If File.Exists(FiletoRead) Then
             Dim FileBytes As Byte() = File.ReadAllBytes(FiletoRead)
-            Dim ExistingFileType As PackageType = MainForm.CheckHeaderType(0, FileBytes)
+            Dim ExistingFileType As PackageType = PackageHandlers.CheckHeaderType(0, FileBytes, FiletoRead)
             If ExistingFileType = PackageType.ZLIB Then
                 MessageBox.Show("File is already a ZLIB")
             Else
@@ -454,7 +454,7 @@ Public Class PackUnpack
     Shared Function CompressOODLToFile(FiletoRead As String, Optional FiletoWrite As String = "")
         If File.Exists(FiletoRead) Then
             Dim FileBytes As Byte() = File.ReadAllBytes(FiletoRead)
-            Dim ExistingFileType As PackageType = MainForm.CheckHeaderType(0, FileBytes)
+            Dim ExistingFileType As PackageType = PackageHandlers.CheckHeaderType(0, FileBytes, FiletoRead)
             If ExistingFileType = PackageType.OODL Then
                 MessageBox.Show("File is already a ZLIB")
             Else

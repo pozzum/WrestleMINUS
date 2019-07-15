@@ -22,6 +22,7 @@ Partial Class OptionsMenu
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(OptionsMenu))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TextBoxHome = New System.Windows.Forms.TextBox()
@@ -66,6 +67,8 @@ Partial Class OptionsMenu
         Me.LabelDecimalNameLength = New System.Windows.Forms.Label()
         Me.LabelFontAwesome = New System.Windows.Forms.Label()
         Me.ButtonSelectFontAwesome = New System.Windows.Forms.Button()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.CheckBoxRecycleDeletedFiles = New System.Windows.Forms.CheckBox()
         CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBarDecimalNameLength, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -253,7 +256,7 @@ Partial Class OptionsMenu
         'TrackBarHexLength
         '
         Me.TrackBarHexLength.LargeChange = 100
-        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 594)
+        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 617)
         Me.TrackBarHexLength.Maximum = 500
         Me.TrackBarHexLength.Minimum = 1
         Me.TrackBarHexLength.Name = "TrackBarHexLength"
@@ -266,7 +269,7 @@ Partial Class OptionsMenu
         'LabelHexLength
         '
         Me.LabelHexLength.AutoSize = True
-        Me.LabelHexLength.Location = New System.Drawing.Point(12, 578)
+        Me.LabelHexLength.Location = New System.Drawing.Point(12, 601)
         Me.LabelHexLength.Name = "LabelHexLength"
         Me.LabelHexLength.Size = New System.Drawing.Size(140, 13)
         Me.LabelHexLength.TabIndex = 22
@@ -274,7 +277,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetStrings
         '
-        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 629)
+        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 652)
         Me.ButtonResetStrings.Name = "ButtonResetStrings"
         Me.ButtonResetStrings.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetStrings.TabIndex = 23
@@ -283,7 +286,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetPacs
         '
-        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 629)
+        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 652)
         Me.ButtonResetPacs.Name = "ButtonResetPacs"
         Me.ButtonResetPacs.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetPacs.TabIndex = 24
@@ -303,7 +306,7 @@ Partial Class OptionsMenu
         'CheckBoxTreeNodeIcons
         '
         Me.CheckBoxTreeNodeIcons.AutoSize = True
-        Me.CheckBoxTreeNodeIcons.Location = New System.Drawing.Point(15, 428)
+        Me.CheckBoxTreeNodeIcons.Location = New System.Drawing.Point(15, 451)
         Me.CheckBoxTreeNodeIcons.Name = "CheckBoxTreeNodeIcons"
         Me.CheckBoxTreeNodeIcons.Size = New System.Drawing.Size(125, 17)
         Me.CheckBoxTreeNodeIcons.TabIndex = 26
@@ -348,7 +351,7 @@ Partial Class OptionsMenu
         'CheckBoxDetailedFileNames
         '
         Me.CheckBoxDetailedFileNames.AutoSize = True
-        Me.CheckBoxDetailedFileNames.Location = New System.Drawing.Point(15, 451)
+        Me.CheckBoxDetailedFileNames.Location = New System.Drawing.Point(15, 474)
         Me.CheckBoxDetailedFileNames.Name = "CheckBoxDetailedFileNames"
         Me.CheckBoxDetailedFileNames.Size = New System.Drawing.Size(180, 17)
         Me.CheckBoxDetailedFileNames.TabIndex = 31
@@ -358,7 +361,7 @@ Partial Class OptionsMenu
         'CheckBoxOODLBypass
         '
         Me.CheckBoxOODLBypass.AutoSize = True
-        Me.CheckBoxOODLBypass.Location = New System.Drawing.Point(15, 497)
+        Me.CheckBoxOODLBypass.Location = New System.Drawing.Point(15, 520)
         Me.CheckBoxOODLBypass.Name = "CheckBoxOODLBypass"
         Me.CheckBoxOODLBypass.Size = New System.Drawing.Size(139, 17)
         Me.CheckBoxOODLBypass.TabIndex = 32
@@ -422,7 +425,7 @@ Partial Class OptionsMenu
         'CheckBoxExtractAllinPlace
         '
         Me.CheckBoxExtractAllinPlace.AutoSize = True
-        Me.CheckBoxExtractAllinPlace.Location = New System.Drawing.Point(15, 474)
+        Me.CheckBoxExtractAllinPlace.Location = New System.Drawing.Point(15, 497)
         Me.CheckBoxExtractAllinPlace.Name = "CheckBoxExtractAllinPlace"
         Me.CheckBoxExtractAllinPlace.Size = New System.Drawing.Size(195, 17)
         Me.CheckBoxExtractAllinPlace.TabIndex = 39
@@ -432,7 +435,7 @@ Partial Class OptionsMenu
         'TrackBarDecimalNameLength
         '
         Me.TrackBarDecimalNameLength.LargeChange = 2
-        Me.TrackBarDecimalNameLength.Location = New System.Drawing.Point(12, 545)
+        Me.TrackBarDecimalNameLength.Location = New System.Drawing.Point(12, 568)
         Me.TrackBarDecimalNameLength.Maximum = 8
         Me.TrackBarDecimalNameLength.Name = "TrackBarDecimalNameLength"
         Me.TrackBarDecimalNameLength.Size = New System.Drawing.Size(260, 45)
@@ -442,7 +445,7 @@ Partial Class OptionsMenu
         'LabelDecimalNameLength
         '
         Me.LabelDecimalNameLength.AutoSize = True
-        Me.LabelDecimalNameLength.Location = New System.Drawing.Point(12, 519)
+        Me.LabelDecimalNameLength.Location = New System.Drawing.Point(12, 542)
         Me.LabelDecimalNameLength.Name = "LabelDecimalNameLength"
         Me.LabelDecimalNameLength.Size = New System.Drawing.Size(163, 13)
         Me.LabelDecimalNameLength.TabIndex = 42
@@ -467,11 +470,22 @@ Partial Class OptionsMenu
         Me.ButtonSelectFontAwesome.UseVisualStyleBackColor = True
         Me.ButtonSelectFontAwesome.Visible = False
         '
+        'CheckBoxRecycleDeletedFiles
+        '
+        Me.CheckBoxRecycleDeletedFiles.AutoSize = True
+        Me.CheckBoxRecycleDeletedFiles.Location = New System.Drawing.Point(15, 428)
+        Me.CheckBoxRecycleDeletedFiles.Name = "CheckBoxRecycleDeletedFiles"
+        Me.CheckBoxRecycleDeletedFiles.Size = New System.Drawing.Size(129, 17)
+        Me.CheckBoxRecycleDeletedFiles.TabIndex = 45
+        Me.CheckBoxRecycleDeletedFiles.Text = "Recycle Deleted Files"
+        Me.CheckBoxRecycleDeletedFiles.UseVisualStyleBackColor = True
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 661)
+        Me.ClientSize = New System.Drawing.Size(284, 691)
+        Me.Controls.Add(Me.CheckBoxRecycleDeletedFiles)
         Me.Controls.Add(Me.ButtonSelectFontAwesome)
         Me.Controls.Add(Me.LabelFontAwesome)
         Me.Controls.Add(Me.LabelDecimalNameLength)
@@ -569,4 +583,6 @@ Partial Class OptionsMenu
     Friend WithEvents LabelDecimalNameLength As Label
     Friend WithEvents LabelFontAwesome As Label
     Friend WithEvents ButtonSelectFontAwesome As Button
+    Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents CheckBoxRecycleDeletedFiles As CheckBox
 End Class

@@ -328,34 +328,19 @@ Public Class MainForm
 #End Region
 
 #Region "File Handlers"
-    Public Class NodeProperties
-        Public FileType As PackageType = PackageType.Unchecked
-        Public Index As UInt64 = 0
-        Public length As UInt64
-        Public StoredData As Byte()
-    End Class
+
     Dim ActiveFile As String = ""
-    Dim LibraryContainsList As String() = New String() {"dds",
-        "ymx",
-        "tex",
-        "map",
-        "hkx",
-        "pac",
-        "txt",
-        "cvx",
-        "bin",
-        "tpl"} ' list adds files from ufc undesputed.
     Sub CheckFile(ByRef HostNode As TreeNode, Optional Crawl As Boolean = False)
         'TO DO Tempnode generation can be simplified.
         Dim NodeTag As NodeProperties = New NodeProperties
         NodeTag = CType(HostNode.Tag, NodeProperties)
         ActiveFile = HostNode.ToolTipText
-        Dim FileBytes As Byte() = GetNodeBytes(HostNode)
+        Dim FileBytes As Byte() = NodeHandlers.GetNodeBytes(HostNode.Tag)
         Select Case NodeTag.FileType
             Case PackageType.Unchecked
-                NodeTag.FileType = CheckHeaderType(0, FileBytes)
+                NodeTag.FileType = PackageHandlers.CheckHeaderType(0, FileBytes, ActiveFile)
                 NodeTag.StoredData = New Byte() {}
-                HostNode.ImageIndex = GetImageIndex(NodeTag.FileType)
+                HostNode.ImageIndex = PackageHandlers.GetImageIndex(NodeTag.FileType)
                 HostNode.SelectedImageIndex = HostNode.ImageIndex
                 HostNode.Tag = NodeTag
                 CheckFile(HostNode, Crawl)
@@ -371,11 +356,12 @@ Public Class MainForm
                     Dim TempNode As TreeNode = New TreeNode(FileName)
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .FullFilePath = TempNode.ToolTipText,
                         .Index = BitConverter.ToUInt32(FileBytes, FileNameLength + i * &HC) * &H800 + NodeTag.Index,
                         .length = BitConverter.ToUInt32(FileBytes, FileNameLength + i * &HC + &H4) * &H100,
                         .StoredData = NodeTag.StoredData,
-                        .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
-                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                        .FileType = PackageHandlers.CheckHeaderType(.Index - NodeTag.Index, FileBytes, ActiveFile)}
+                    TempNode.ImageIndex = PackageHandlers.GetImageIndex(TempNodeProps.FileType)
                     TempNode.SelectedImageIndex = TempNode.ImageIndex
                     TempNode.Tag = TempNodeProps
                     HostNode.Nodes.Add(TempNode)
@@ -389,6 +375,7 @@ Public Class MainForm
                     DirectoryTreeNode.ToolTipText = HostNode.ToolTipText
                     Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 4
                     Dim DirectoryNodeProps As NodeProperties = New NodeProperties With {
+                        .FullFilePath = DirectoryTreeNode.ToolTipText,
                         .StoredData = NodeTag.StoredData,
                         .FileType = PackageType.PachDirectory_8}
                     index += &HC
@@ -397,22 +384,23 @@ Public Class MainForm
                         Dim TempNode As TreeNode = New TreeNode(PachName)
                         TempNode.ToolTipText = HostNode.ToolTipText
                         Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                            .FullFilePath = TempNode.ToolTipText,
                             .Index = BitConverter.ToUInt32(FileBytes, &H800 + index + 8) * &H800 + &H4000 + NodeTag.Index,
                             .length = BitConverter.ToUInt32(FileBytes, &H800 + index + 12) * &H100,
                             .StoredData = NodeTag.StoredData,
-                            .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
+                            .FileType = PackageHandlers.CheckHeaderType(.Index - NodeTag.Index, FileBytes, ActiveFile)}
                         If i = 0 Then
                             DirectoryNodeProps.Index = TempNodeProps.Index
                         End If
                         DirectoryNodeProps.length += TempNodeProps.length
                         index += &H10
                         TempNode.Tag = TempNodeProps
-                        TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                        TempNode.ImageIndex = PackageHandlers.GetImageIndex(TempNodeProps.FileType)
                         TempNode.SelectedImageIndex = TempNode.ImageIndex
                         DirectoryTreeNode.Nodes.Add(TempNode)
                     Next
                     DirectoryTreeNode.Tag = DirectoryNodeProps
-                    DirectoryTreeNode.ImageIndex = GetImageIndex(DirectoryNodeProps.FileType)
+                    DirectoryTreeNode.ImageIndex = PackageHandlers.GetImageIndex(DirectoryNodeProps.FileType)
                     DirectoryTreeNode.SelectedImageIndex = DirectoryTreeNode.ImageIndex
                     HostNode.Nodes.Add(DirectoryTreeNode)
                 Loop
@@ -425,6 +413,7 @@ Public Class MainForm
                     DirectoryTreeNode.ToolTipText = HostNode.ToolTipText
                     Dim DirectoryContainsCount As Integer = BitConverter.ToUInt16(FileBytes, &H800 + index + 4) / 3
                     Dim DirectoryNodeProps As NodeProperties = New NodeProperties With {
+                        .FullFilePath = DirectoryTreeNode.ToolTipText,
                         .StoredData = NodeTag.StoredData,
                         .FileType = PackageType.PachDirectory_4}
                     index += &HC
@@ -436,19 +425,19 @@ Public Class MainForm
                             .Index = BitConverter.ToUInt32(FileBytes, &H800 + index + 4) * &H800 + &H4000 + NodeTag.Index,
                             .length = BitConverter.ToUInt32(FileBytes, &H800 + index + 8) * &H100,
                             .StoredData = NodeTag.StoredData,
-                            .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
+                            .FileType = PackageHandlers.CheckHeaderType(.Index - NodeTag.Index, FileBytes, ActiveFile)}
                         If i = 0 Then
                             DirectoryNodeProps.Index = TempNodeProps.Index
                         End If
                         DirectoryNodeProps.length += TempNodeProps.length
                         index += &HC
                         TempNode.Tag = TempNodeProps
-                        TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                        TempNode.ImageIndex = PackageHandlers.GetImageIndex(TempNodeProps.FileType)
                         TempNode.SelectedImageIndex = TempNode.ImageIndex
                         DirectoryTreeNode.Nodes.Add(TempNode)
                     Next
                     DirectoryTreeNode.Tag = DirectoryNodeProps
-                    DirectoryTreeNode.ImageIndex = GetImageIndex(DirectoryNodeProps.FileType)
+                    DirectoryTreeNode.ImageIndex = PackageHandlers.GetImageIndex(DirectoryNodeProps.FileType)
                     DirectoryTreeNode.SelectedImageIndex = DirectoryTreeNode.ImageIndex
                     HostNode.Nodes.Add(DirectoryTreeNode)
                 Loop
@@ -476,12 +465,13 @@ Public Class MainForm
                         Dim TempNode As TreeNode = New TreeNode(PartName)
                         TempNode.ToolTipText = HostNode.ToolTipText
                         Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                            .FullFilePath = TempNode.ToolTipText,
                             .Index = BitConverter.ToUInt32(FileBytes, TempHeaderStart + (i * &H10) + &H4) + NodeTag.Index,
                             .length = BitConverter.ToUInt64(FileBytes, TempHeaderStart + (i * &H10) + &H8),
                             .StoredData = NodeTag.StoredData,
-                            .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
+                            .FileType = PackageHandlers.CheckHeaderType(.Index - NodeTag.Index, FileBytes, ActiveFile)}
                         TempNode.Tag = TempNodeProps
-                        TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                        TempNode.ImageIndex = PackageHandlers.GetImageIndex(TempNodeProps.FileType)
                         TempNode.SelectedImageIndex = TempNode.ImageIndex
                         HostNode.Nodes.Add(TempNode)
                     Catch ex As Exception
@@ -498,12 +488,13 @@ Public Class MainForm
                     Dim TempNode As TreeNode = New TreeNode(PartName)
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .FullFilePath = TempNode.ToolTipText,
                         .Index = BitConverter.ToUInt32(FileBytes, &HC + (i * &HC)) + &H8 + Partcount * &HC + NodeTag.Index,
                         .length = BitConverter.ToUInt32(FileBytes, &H10 + (i * &HC)),
                         .StoredData = NodeTag.StoredData,
-                        .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
+                        .FileType = PackageHandlers.CheckHeaderType(.Index - NodeTag.Index, FileBytes, ActiveFile)}
                     TempNode.Tag = TempNodeProps
-                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                    TempNode.ImageIndex = PackageHandlers.GetImageIndex(TempNodeProps.FileType)
                     TempNode.SelectedImageIndex = TempNode.ImageIndex
                     HostNode.Nodes.Add(TempNode)
                 Next
@@ -517,9 +508,9 @@ Public Class MainForm
                     .Index = &H8 + HeaderLength,
                     .length = FileBytes.Length - .Index,
                     .StoredData = NodeTag.StoredData,
-                    .FileType = CheckHeaderType(.Index - NodeTag.Index, FileBytes)}
+                    .FileType = PackageHandlers.CheckHeaderType(.Index - NodeTag.Index, FileBytes, ActiveFile)}
                 TempNode.Tag = TempNodeProps
-                TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                TempNode.ImageIndex = PackageHandlers.GetImageIndex(TempNodeProps.FileType)
                 TempNode.SelectedImageIndex = TempNode.ImageIndex
                 HostNode.Nodes.Add(TempNode)
 #End Region
@@ -542,12 +533,13 @@ Public Class MainForm
                     Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .FullFilePath = TempNode.ToolTipText,
                         .Index = 0,
                         .length = UncompressedBytes.Length,
                         .StoredData = UncompressedBytes,
-                        .FileType = CheckHeaderType(.Index, UncompressedBytes)}
+                        .FileType = PackageHandlers.CheckHeaderType(.Index, UncompressedBytes, ActiveFile)}
                     TempNode.Tag = TempNodeProps
-                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                    TempNode.ImageIndex = PackageHandlers.GetImageIndex(TempNodeProps.FileType)
                     TempNode.SelectedImageIndex = TempNode.ImageIndex
                     HostNode.Nodes.Add(TempNode)
                 End If
@@ -569,12 +561,13 @@ Public Class MainForm
                     Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .FullFilePath = TempNode.ToolTipText,
                         .Index = 0,
                         .length = UncompressedBytes.Length,
                         .StoredData = UncompressedBytes,
-                        .FileType = CheckHeaderType(.Index, UncompressedBytes)}
+                        .FileType = PackageHandlers.CheckHeaderType(.Index, UncompressedBytes, ActiveFile)}
                     TempNode.Tag = TempNodeProps
-                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                    TempNode.ImageIndex = PackageHandlers.GetImageIndex(TempNodeProps.FileType)
                     TempNode.SelectedImageIndex = TempNode.ImageIndex
                     HostNode.Nodes.Add(TempNode)
                 End If
@@ -596,12 +589,13 @@ Public Class MainForm
                     Dim TempNode As TreeNode = New TreeNode(HostNode.Text & " UNCOMPRESS")
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .FullFilePath = TempNode.ToolTipText,
                         .Index = 0,
                         .length = UncompressedBytes.Length,
                         .StoredData = UncompressedBytes,
-                        .FileType = CheckHeaderType(.Index, UncompressedBytes)}
+                        .FileType = PackageHandlers.CheckHeaderType(.Index, UncompressedBytes, ActiveFile)}
                     TempNode.Tag = TempNodeProps
-                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                    TempNode.ImageIndex = PackageHandlers.GetImageIndex(TempNodeProps.FileType)
                     TempNode.SelectedImageIndex = TempNode.ImageIndex
                     HostNode.Nodes.Add(TempNode)
                 End If
@@ -658,12 +652,13 @@ Public Class MainForm
                     Dim TempNode As TreeNode = New TreeNode(ImageName)
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .FullFilePath = TempNode.ToolTipText,
                         .length = CurrentItemLength,
                         .Index = CurrentItemIndex,
                         .StoredData = NodeTag.StoredData,
                         .FileType = FileTypeContained}
                     TempNode.Tag = TempNodeProps
-                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                    TempNode.ImageIndex = PackageHandlers.GetImageIndex(TempNodeProps.FileType)
                     TempNode.SelectedImageIndex = TempNode.ImageIndex
                     HostNode.Nodes.Add(TempNode)
                 Next
@@ -683,6 +678,7 @@ Public Class MainForm
                     Dim TempNode As TreeNode = New TreeNode(PartName)
                     TempNode.ToolTipText = HostNode.ToolTipText
                     Dim TempNodeProps As NodeProperties = New NodeProperties With {
+                        .FullFilePath = TempNode.ToolTipText,
                         .Index = (BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, HeadIndex + &H24), 0)) + HeaderLength + HostNode.Index,
                         .FileType = PackageType.YANM,
                         .StoredData = NodeTag.StoredData}
@@ -693,7 +689,7 @@ Public Class MainForm
                     End If
                     'add to list box
                     TempNode.Tag = TempNodeProps
-                    TempNode.ImageIndex = GetImageIndex(TempNodeProps.FileType)
+                    TempNode.ImageIndex = PackageHandlers.GetImageIndex(TempNodeProps.FileType)
                     TempNode.SelectedImageIndex = TempNode.ImageIndex
                     HostNode.Nodes.Add(TempNode)
                     partcount = partcount + 1
@@ -727,230 +723,15 @@ Public Class MainForm
                 ChildNodeProps = CType(ChildNode.Tag, NodeProperties)
                 ProgressBar1.Maximum += 1
                 ProgressBar1.Value += 1
-                If Expandable(ChildNodeProps.FileType) Then
+                If PackageHandlers.Expandable(ChildNodeProps.FileType) Then
                     CheckFile(ChildNode, Crawl)
                 End If
             Next
         End If
-        HostNode.ImageIndex = GetImageIndex(NodeTag.FileType)
+        HostNode.ImageIndex = PackageHandlers.GetImageIndex(NodeTag.FileType)
         HostNode.SelectedImageIndex = HostNode.ImageIndex
         HostNode.Tag = NodeTag
     End Sub
-    Function CheckHeaderType(Index As Long, ByVal ByteArray As Byte()) As PackageType
-        'To be split into 2 seperate functions once all processes are added
-        Dim FirstFour As String
-        'Make sure the file has bytes
-        If ByteArray.Length = 0 Then
-            Return PackageType.bin
-        End If
-        If Index > ByteArray.Length Then
-            Return PackageType.bin
-        End If
-        FirstFour = Encoding.Default.GetChars(ByteArray, Index, 4)
-        Select Case FirstFour
-            Case "HSPC"
-                Return PackageType.HSPC
-            Case "SHDC"
-                Return PackageType.SHDC
-            Case "EPK8"
-                Return PackageType.EPK8
-            Case "PACH"
-                Return PackageType.PACH
-            Case "EPAC"
-                Return PackageType.EPAC
-            Case "ZLIB"
-                Return PackageType.ZLIB
-            Case "YOBJ"
-                Return PackageType.YOBJ
-            Case "JBOY"
-                Return PackageType.YOBJ
-            Case "NIBJ"
-                Return PackageType.NIBJ
-            Case "0FOP"
-                Return PackageType.OFOP
-            Case "YANM"
-                Return PackageType.YANM
-            Case "OODL"
-                Return PackageType.OODL
-            Case "VMUM"
-                Return PackageType.VMUM
-            Case "DUMY"
-                Return PackageType.DUMY
-            Case Else
-                'if we don't have a perfect 4 match we go to check the 3 character matches
-                Select Case True
-                    Case FirstFour.Contains("STG")
-                        Return PackageType.ShowInfo
-                    Case FirstFour.Contains("DDS")
-                        Return PackageType.DDS
-                    Case FirstFour.Contains("KB2")
-                        Return PackageType.bk2
-                    Case FirstFour.Contains("COS")
-                        Return PackageType.CostumeFile
-                    Case FirstFour.Contains("BPE")
-                        Return PackageType.BPE
-                    Case FirstFour.Contains("ê¡Y")
-                        Return PackageType.YOBJArray
-                    Case FirstFour.Contains(" ¯0")
-                        Return PackageType.TPL
-                    Case Else
-                        'if we do not have a header text to guide us we have some additional text checks that are consistent.
-                        'some of these checks don't 100% require this many bytes, but none should functionally have that little byte length
-                        If ByteArray.Length > &H30 Then
-                            Select Case True
-                                Case Encoding.Default.GetChars(ByteArray, Index + &H10, 4) = "aren"
-                                    Return PackageType.ArenaInfo
-                                Case Encoding.Default.GetChars(ByteArray, Index + &H14, 6) = "M_Head"
-                                    Return PackageType.MaskFile
-                                Case Encoding.Default.GetChars(ByteArray, Index + &H14, 6) = "M_Body"
-                                    Return PackageType.MaskFile
-                                Case BitConverter.ToUInt32(ByteArray, Index + &H14) = 2004 'this is an unsafe check.  It just works for all known games so far.
-                                    Return PackageType.TitleFile
-                                Case Encoding.Default.GetChars(ByteArray, Index + &H18, 3) = "yM_"
-                                    Return PackageType.MuscleFile
-                                Case LibraryContainsList.Contains(Encoding.Default.GetChars(ByteArray, Index + &H20, 3)) 'ufc games can have additional file types  create a short list of 3 char codes to test
-                                    Return PackageType.TextureLibrary
-                                Case Encoding.Default.GetChars(ByteArray, Index + &H24, 4) = "root"
-                                    Return PackageType.YANMPack
-                                Case ActiveFile.ToLower.Contains("string")
-                                    Dim NumberCheck As UInt32 = BitConverter.ToUInt32(ByteArray, Index + 0)
-                                    If NumberCheck = 0 Then
-                                        Return PackageType.StringFile
-                                    Else
-                                        Return PackageType.bin
-                                    End If
-                                Case Else
-                                    Return PackageType.bin
-                            End Select
-                        Else
-                            Return PackageType.bin
-                        End If
-                End Select
-        End Select
-    End Function
-    Function Expandable(TestType As PackageType) As Boolean
-        If TestType = PackageType.Unchecked OrElse
-           TestType = PackageType.Folder OrElse
-           TestType = PackageType.HSPC OrElse
-           TestType = PackageType.EPK8 OrElse
-           TestType = PackageType.EPAC OrElse
-           TestType = PackageType.SHDC OrElse
-           TestType = PackageType.PACH OrElse
-            TestType = PackageType.BPE OrElse
-           TestType = PackageType.ZLIB OrElse
-           TestType = PackageType.OODL OrElse
-           TestType = PackageType.PachDirectory_4 OrElse
-           TestType = PackageType.PachDirectory_8 OrElse
-           TestType = PackageType.TextureLibrary OrElse
-           TestType = PackageType.YANMPack OrElse
-           TestType = PackageType.YOBJ Then
-            Return True
-        End If
-        Return False
-    End Function
-    Function GetNodeBytes(ByRef HostNode As TreeNode) As Byte()
-        Dim NodeTag As NodeProperties = New NodeProperties
-        NodeTag = CType(HostNode.Tag, NodeProperties)
-        Dim FileBytes As Byte() = New Byte(NodeTag.length - 1) {}
-        If NodeTag.StoredData.Length > 0 Then
-            Array.Copy(NodeTag.StoredData, CInt(NodeTag.Index), FileBytes, 0, CInt(NodeTag.length))
-        ElseIf NodeTag.length > 0 Then
-            If Not File.Exists(HostNode.ToolTipText) Then
-                MessageBox.Show("File Not Found")
-                Return New Byte() {}
-            End If
-            Try
-                Dim ActiveReader As BinaryReader = New BinaryReader(File.Open(HostNode.ToolTipText, FileMode.Open, FileAccess.Read))
-                ActiveReader.BaseStream.Seek(NodeTag.Index, SeekOrigin.Begin)
-                FileBytes = ActiveReader.ReadBytes(NodeTag.length)
-                ActiveReader.Dispose()
-                ' MessageBox.Show(NodeTag.Index & vbNewLine & NodeTag.length)
-            Catch ex As Exception
-                MessageBox.Show(ex.Message)
-            End Try
-        Else Return New Byte() {}
-        End If
-        Return FileBytes
-    End Function
-    Function GetImageIndex(SentType As PackageType) As UInt32
-        Select Case SentType
-            Case PackageType.Folder
-                Return 1
-            Case PackageType.HSPC
-                Return 2
-            Case PackageType.EPK8
-                Return 3
-            Case PackageType.EPAC
-                Return 4
-            Case PackageType.SHDC
-                Return 5
-            Case PackageType.PACH
-                Return 6
-            Case PackageType.PachDirectory_4
-                Return 6
-            Case PackageType.PachDirectory_8
-                Return 6
-            Case PackageType.BPE
-                Return 7
-            Case PackageType.ZLIB
-                Return 8
-            Case PackageType.OODL
-                Return 9
-            Case PackageType.TextureLibrary
-                Return 10
-            Case PackageType.TPL
-                Return 10
-            Case PackageType.YANMPack
-                Return 11
-            Case PackageType.YANM
-                Return 11
-            Case PackageType.OFOP
-                Return 11
-            Case PackageType.YOBJ
-                Return 12
-            Case PackageType.YOBJArray
-                Return 12
-            Case PackageType.StringFile
-                Return 13
-            Case PackageType.DDS
-                Return 14
-            Case PackageType.DUMY
-                Return 14
-            Case PackageType.ArenaInfo
-                Return 15
-            Case PackageType.ShowInfo
-                Return 16
-            Case PackageType.NIBJ
-                Return 17
-            Case PackageType.bk2
-                Return 18
-            Case PackageType.CostumeFile
-                Return 19
-            Case PackageType.MuscleFile
-                Return 20
-            Case PackageType.UFC_PAC
-                Return 20
-            Case PackageType.UFC_BIN
-                Return 20
-            Case PackageType.UFC_CVX
-                Return 20
-            Case PackageType.UFC_HKX
-                Return 20
-            Case PackageType.UFC_MAP
-                Return 20
-            Case PackageType.UFC_TXT
-                Return 20
-            Case PackageType.MaskFile
-                Return 21
-            Case PackageType.VMUM
-                Return 22
-            Case PackageType.TitleFile
-                Return 23
-            Case Else
-                Return 0
-        End Select
-
-    End Function
 #End Region
     'Some Issue with Menus not properly populating.. when you first select Text View..
 #Region "TreeView Population"
@@ -970,7 +751,8 @@ Public Class MainForm
                     Dim NewFI As FileInfo = New FileInfo(SelectedFiles(i))
                     Dim TempNode As TreeNode = TreeView1.Nodes.Add(NewFI.Name)
                     TempNode.ToolTipText = NewFI.FullName
-                    TempNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
+                    TempNode.Tag = New NodeProperties With {.FullFilePath = TempNode.ToolTipText,
+                        .FileType = PackageType.Unchecked,
                         .Index = 0,
                         .length = FileLen(NewFI.FullName),
                         .StoredData = New Byte() {}}
@@ -982,10 +764,11 @@ Public Class MainForm
                     Dim TempDI As DirectoryInfo = New DirectoryInfo(SelectedFiles(i))
                     Dim TempNode As TreeNode = TreeView1.Nodes.Add(TempDI.Name)
                     TempNode.ToolTipText = TempDI.FullName
-                    TempNode.Tag = New NodeProperties With {.FileType = PackageType.Folder,
-                            .Index = 0,
-                            .length = 0,
-                            .StoredData = New Byte(0) {}}
+                    TempNode.Tag = New NodeProperties With {.FullFilePath = TempNode.ToolTipText,
+                        .FileType = PackageType.Folder,
+                        .Index = 0,
+                        .length = 0,
+                        .StoredData = New Byte(0) {}}
                     TempNode.ImageIndex = 1
                     TempNode.SelectedImageIndex = 1
                     LoadSubDirectories(SelectedFiles(i), TempNode)
@@ -1006,10 +789,12 @@ Public Class MainForm
                                     Directory.GetDirectories(HomeDirectory, "**", SearchOption.AllDirectories).Length
             Dim TempNode As TreeNode = TreeView1.Nodes.Add(HomeDI.Name)
             TempNode.ToolTipText = HomeDI.FullName
-            TempNode.Tag = New NodeProperties With {.FileType = PackageType.Folder,
-                    .Index = 0,
-                    .length = 0,
-                    .StoredData = New Byte(0) {}}
+            TempNode.Tag = New NodeProperties With {
+                .FileType = PackageType.Folder,
+                .FullFilePath = TempNode.ToolTipText,
+                .Index = 0,
+                .length = 0,
+                .StoredData = New Byte(0) {}}
             TempNode.ImageIndex = 1
             TempNode.SelectedImageIndex = 1
             'testing having folders first
@@ -1028,7 +813,9 @@ Public Class MainForm
             Dim NewDI As DirectoryInfo = New DirectoryInfo(SubDirectory)
             Dim TempNode As TreeNode = ParentNode.Nodes.Add(NewDI.Name)
             TempNode.ToolTipText = NewDI.FullName
-            TempNode.Tag = New NodeProperties With {.FileType = PackageType.Folder,
+            TempNode.Tag = New NodeProperties With {
+                .FullFilePath = TempNode.ToolTipText,
+                .FileType = PackageType.Folder,
                 .Index = 0,
                 .length = 0,
                 .StoredData = New Byte(0) {}
@@ -1046,7 +833,9 @@ Public Class MainForm
             Dim NewFI As FileInfo = New FileInfo(FilePath)
             Dim TempNode As TreeNode = ParentNode.Nodes.Add(NewFI.Name)
             TempNode.ToolTipText = NewFI.FullName
-            TempNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
+            TempNode.Tag = New NodeProperties With {
+                .FullFilePath = TempNode.ToolTipText,
+                .FileType = PackageType.Unchecked,
                 .Index = 0,
                 .length = FileLen(NewFI.FullName),
                 .StoredData = New Byte() {}}
@@ -1068,7 +857,7 @@ Public Class MainForm
     End Sub
     Private Sub TreeView1_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles TreeView1.AfterSelect
         If File.Exists(e.Node.ToolTipText.ToString()) Then
-            If Expandable(CType(e.Node.Tag, NodeProperties).FileType) Then
+            If PackageHandlers.Expandable(CType(e.Node.Tag, NodeProperties).FileType) Then
                 If e.Node.Nodes.Count = 0 Then
                     CheckFile(e.Node)
                 End If
@@ -1190,6 +979,7 @@ Public Class MainForm
             OpenWithToolStripMenuItem.Visible = False
             RenamePartToolStripMenuItem.Visible = False
             RenameFileToolStripMenuItem.Visible = True
+            DeleteFileToolStripMenuItem.Visible = True
             ShownOptions -= 4
         Else
             If NodeTag.Index > 0 OrElse
@@ -1203,7 +993,8 @@ Public Class MainForm
                     InjectOODLToolStripMenuItem.Visible = False
                     RenamePartToolStripMenuItem.Visible = False
                     RenameFileToolStripMenuItem.Visible = False
-                    ShownOptions -= 3
+                    DeleteFileToolStripMenuItem.Visible = False
+                    ShownOptions -= 4
                     If My.Settings.BPEExePath <> "Not Installed" Then
                         InjectBPEToolStripMenuItem.Visible = True
                     Else
@@ -1218,7 +1009,8 @@ Public Class MainForm
                     InjectOODLToolStripMenuItem.Visible = False
                     RenamePartToolStripMenuItem.Visible = False
                     RenameFileToolStripMenuItem.Visible = False
-                    ShownOptions -= 3
+                    DeleteFileToolStripMenuItem.Visible = False
+                    ShownOptions -= 4
                 ElseIf ParentNodeTag.FileType = PackageType.OODL Then
                     InjectToolStripMenuItem.Visible = False
                     InjectUncompressedToolStripMenuItem.Visible = False
@@ -1226,7 +1018,8 @@ Public Class MainForm
                     InjectZLIBToolStripMenuItem.Visible = False
                     RenamePartToolStripMenuItem.Visible = False
                     RenameFileToolStripMenuItem.Visible = False
-                    ShownOptions -= 3
+                    DeleteFileToolStripMenuItem.Visible = False
+                    ShownOptions -= 4
                     If PackUnpack.CheckOodle() Then
                         InjectOODLToolStripMenuItem.Visible = True
                     Else
@@ -1239,6 +1032,7 @@ Public Class MainForm
                     InjectZLIBToolStripMenuItem.Visible = True
                     RenamePartToolStripMenuItem.Visible = True
                     RenameFileToolStripMenuItem.Visible = False
+                    DeleteFileToolStripMenuItem.Visible = False
                     If My.Settings.BPEExePath <> "Not Installed" Then
                         InjectBPEToolStripMenuItem.Visible = True
                     Else
@@ -1262,6 +1056,7 @@ Public Class MainForm
                 InjectOODLToolStripMenuItem.Visible = False
                 RenamePartToolStripMenuItem.Visible = False
                 RenameFileToolStripMenuItem.Visible = True
+                DeleteFileToolStripMenuItem.Visible = True
                 ShownOptions -= 3
             End If
             'TO DO add Open With Items Somehow
@@ -1311,7 +1106,7 @@ Public Class MainForm
     End Sub
     Private Sub OpenToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles OpenToolStripMenuItem1.Click
         'Currently Only Opens Bink Files
-        Dim TronBytes As Byte() = GetNodeBytes(TreeView1.SelectedNode)
+        Dim TronBytes As Byte() = NodeHandlers.GetNodeBytes(TreeView1.SelectedNode.Tag)
         Dim filepath As String = Path.GetTempFileName
         File.WriteAllBytes(filepath, TronBytes)
         Process.Start(My.Settings.RADVideoToolPath, filepath)
@@ -1321,7 +1116,7 @@ Public Class MainForm
             SettingsHandlers.CheckDDSexe(True)
         Else
             'Currently Only Designed for DDS Files
-            Dim DDSBytes As Byte() = GetNodeBytes(TreeView1.SelectedNode)
+            Dim DDSBytes As Byte() = NodeHandlers.GetNodeBytes(TreeView1.SelectedNode.Tag)
             Dim filepath As String = Path.GetTempPath & Guid.NewGuid().ToString() & ".dds"
             File.WriteAllBytes(filepath, DDSBytes)
             Process.Start(My.Settings.DDSexeLocation, filepath)
@@ -1345,7 +1140,9 @@ Public Class MainForm
         End If
     End Sub
     Private Sub ExtractAllToToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExtractAllToToolStripMenuItem.Click
-        SaveExtractAllDialog.InitialDirectory = Path.GetDirectoryName(TreeView1.SelectedNode.ToolTipText)
+        Dim SaveExtractAllDialog As SaveFileDialog = New SaveFileDialog With {
+            .FileName = "Save Files Here",
+            .InitialDirectory = Path.GetDirectoryName(TreeView1.SelectedNode.ToolTipText)}
         If SaveExtractAllDialog.ShowDialog() = DialogResult.OK Then
             Crawlnode(TreeView1.SelectedNode)
             ExtractAllNode(TreeView1.SelectedNode,
@@ -1494,7 +1291,7 @@ Public Class MainForm
         ProgressBar1.Value = 0
         ProgressBar1.Maximum = Basenode.GetNodeCount(False)
         For Each TestedNode As TreeNode In Basenode.Nodes
-            If Expandable(CType(TestedNode.Tag, NodeProperties).FileType) Then
+            If PackageHandlers.Expandable(CType(TestedNode.Tag, NodeProperties).FileType) Then
                 CheckFile(TestedNode, True)
             End If
             ProgressBar1.Value += 1
@@ -1545,31 +1342,6 @@ Public Class MainForm
             MessageBox.Show("Not Yet Supported")
         End If
     End Sub
-    'If File.Exists(SelectedFiles(i)) Then
-    'Dim NewFI As FileInfo = New FileInfo(SelectedFiles(i))
-    'Dim TempNode As TreeNode = TreeView1.Nodes.Add(NewFI.Name)
-    '                TempNode.ToolTipText = NewFI.FullName
-    '                TempNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
-    '                    .Index = 0,
-    '                    .length = FileLen(NewFI.FullName),
-    '                    .StoredData = New Byte() {}}
-    '                TempNode.ImageIndex = 0
-    '                TempNode.SelectedImageIndex = 0
-    '                CheckFile(TempNode)
-    '                ProgressBar1.Value += 1
-    '            ElseIf Directory.Exists(SelectedFiles(i)) Then
-    'Dim TempDI As DirectoryInfo = New DirectoryInfo(SelectedFiles(i))
-    'Dim TempNode As TreeNode = TreeView1.Nodes.Add(TempDI.Name)
-    '                TempNode.ToolTipText = TempDI.FullName
-    '                TempNode.Tag = New NodeProperties With {.FileType = PackageType.Folder,
-    '                        .Index = 0,
-    '                        .length = 0,
-    '                        .StoredData = New Byte(0) {}}
-    '                TempNode.ImageIndex = 1
-    '                TempNode.SelectedImageIndex = 1
-    '                LoadSubDirectories(SelectedFiles(i), TempNode)
-    '                LoadFiles(SelectedFiles(i), TempNode)
-    '            End If
     Private Sub RenameFileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenameFileToolStripMenuItem.Click
         Dim filepath As String = TreeView1.SelectedNode.ToolTipText
         Dim SelectedNode As TreeNode = TreeView1.SelectedNode
@@ -1596,7 +1368,9 @@ Public Class MainForm
                             SelectedNode.Nodes.Clear()
                             SelectedNode.Text = TempDI.Name
                             SelectedNode.ToolTipText = TempDI.FullName
-                            SelectedNode.Tag = New NodeProperties With {.FileType = PackageType.Folder,
+                            SelectedNode.Tag = New NodeProperties With {
+                                .FullFilePath = SelectedNode.ToolTipText,
+                                .FileType = PackageType.Folder,
                                 .Index = 0,
                                 .length = 0,
                                 .StoredData = New Byte() {}}
@@ -1632,9 +1406,11 @@ Public Class MainForm
                             SelectedNode.Nodes.Clear()
                             SelectedNode.Text = NewFI.Name
                             SelectedNode.ToolTipText = NewFI.FullName
-                            SelectedNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
-                            .Index = 0,
-                            .length = FileLen(NewFI.FullName),
+                            SelectedNode.Tag = New NodeProperties With {
+                                .FullFilePath = SelectedNode.ToolTipText,
+                                .FileType = PackageType.Unchecked,
+                                .Index = 0,
+                                .length = FileLen(NewFI.FullName),
                             .StoredData = New Byte() {}}
                             SelectedNode.ImageIndex = 0
                             SelectedNode.SelectedImageIndex = 0
@@ -1650,8 +1426,30 @@ Public Class MainForm
             End If
         End If
     End Sub
+    Private Sub DeleteFileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeleteFileToolStripMenuItem.Click
+        Dim filepath As String = TreeView1.SelectedNode.ToolTipText
+        Dim SelectedNode As TreeNode = TreeView1.SelectedNode
+        Dim NodeTag As NodeProperties = CType(TreeView1.SelectedNode.Tag, NodeProperties)
+        If NodeTag.FileType = PackageType.Folder Then
+            If Directory.Exists(filepath) Then
+                If MessageBox.Show("Would you like to delete folder " & filepath & " ?", "Delete Folder?", MessageBoxButtons.OKCancel) = DialogResult.OK Then
+                    If GeneralTools.DeleteAllItems(filepath) Then SelectedNode.Remove()
+                End If
+                Else
+                MessageBox.Show("Folder " & filepath & " Not Found")
+            End If
+        Else 'it should be a file
+            If File.Exists(filepath) Then
+                If MessageBox.Show("Would you like to delete file " & Path.GetFileName(filepath) & " ?", "Delete File?", MessageBoxButtons.OKCancel) = DialogResult.OK Then
+                    If GeneralTools.DeleteSafely(filepath) Then SelectedNode.Remove()
+                End If
+            Else
+                MessageBox.Show("File " & Path.GetFileName(filepath) & " Not Found")
+            End If
+        End If
+    End Sub
     Sub ExtractNode(Sentnode As TreeNode, Savepath As String)
-        File.WriteAllBytes(Savepath, GetNodeBytes(Sentnode))
+        File.WriteAllBytes(Savepath, NodeHandlers.GetNodeBytes(Sentnode.Tag))
     End Sub
     Sub ExtractAllNode(CurrentNode As TreeNode, BaseFolder As String, Optional AdditonalFolders As String = "")
         GeneralTools.FolderCheck(BaseFolder & AdditonalFolders)
@@ -1707,7 +1505,7 @@ Public Class MainForm
         Dim NodeTag As NodeProperties = CType(Sentnode.Tag, NodeProperties)
         Dim SizeDifference As Long = SentBytes.Length - NodeTag.length 'negative for shorter
         'checking File Type match
-        Dim TempCheck As PackageType = CheckHeaderType(0, SentBytes)
+        Dim TempCheck As PackageType = PackageHandlers.CheckHeaderType(0, SentBytes, ActiveFile)
         If Not NodeTag.FileType = TempCheck Then
             If MessageBox.Show("File Type Mismatch!" & vbNewLine & "Continue?",
                             TempCheck.ToString & " Replacing " & NodeTag.FileType.ToString,
@@ -1732,7 +1530,7 @@ Public Class MainForm
             ParentNode = ParentNode.Parent
             ParentNodeTag = CType(ParentNode.Tag, NodeProperties)
         End If
-        Dim ParentBytes As Byte() = GetNodeBytes(ParentNode)
+        Dim ParentBytes As Byte() = NodeHandlers.GetNodeBytes(ParentNode.Tag)
         'adjust length if needed
         If ParentNodeTag.FileType = PackageType.HSPC OrElse
                 ParentNodeTag.FileType = PackageType.EPK8 OrElse
@@ -1894,10 +1692,12 @@ Public Class MainForm
             ParentNode.Nodes.Clear()
             ParentNode.Text = TempName
             ParentNode.ToolTipText = WrittenFile
-            ParentNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
-                   .Index = 0,
-                    .length = WrittenFileArray.Length,
-                    .StoredData = New Byte() {}}
+            ParentNode.Tag = New NodeProperties With {
+                .FullFilePath = ParentNode.ToolTipText,
+                .FileType = PackageType.Unchecked,
+                .Index = 0,
+                .length = WrittenFileArray.Length,
+                .StoredData = New Byte() {}}
             'fixes for rebuilding the same file over and over
             CheckFile(ParentNode)
             TabControl1.SelectedIndex = 0
@@ -1922,17 +1722,13 @@ Public Class MainForm
         Dim attributes As FileAttributes = File.GetAttributes(FilePath)
         If (attributes And FileAttributes.ReadOnly) = FileAttributes.ReadOnly Then
             If MessageBox.Show(FilePath & " Is Read Only!" & vbNewLine & "Would you like to make it writable?", "Make File Writeable?", MessageBoxButtons.OKCancel) = DialogResult.OK Then
-                attributes = RemoveAttribute(attributes, FileAttributes.ReadOnly)
+                attributes = GeneralTools.RemoveAttribute(attributes, FileAttributes.ReadOnly)
                 File.SetAttributes(FilePath, attributes)
             Else
                 Return False
             End If
         End If
         Return True
-    End Function
-    'This is required to remove read only
-    Private Shared Function RemoveAttribute(ByVal attributes As FileAttributes, ByVal attributesToRemove As FileAttributes) As FileAttributes
-        Return attributes And Not attributesToRemove
     End Function
     Function ValidateTruncation(TestedString As String, ContainerType As PackageType) As String
         Select Case ContainerType
@@ -1972,12 +1768,12 @@ Public Class MainForm
             ParentNode = Sentnode.Parent
         End If
         Dim ParentNodeTag As NodeProperties = CType(ParentNode.Tag, NodeProperties)
-        Dim ParentBytes As Byte() = GetNodeBytes(ParentNode)
+        Dim ParentBytes As Byte() = NodeHandlers.GetNodeBytes(ParentNode.Tag)
         Dim ParentNodeLocation As Integer = 0
         If ParentNodeTag.FileType = PackageType.PachDirectory_4 OrElse
             ParentNodeTag.FileType = PackageType.PachDirectory_8 Then
             'here we grab the 
-            ParentBytes = GetNodeBytes(ParentNode.Parent)
+            ParentBytes = NodeHandlers.GetNodeBytes(ParentNode.Parent.Tag)
             ParentNodeLocation = ParentNode.Index
         End If
         Dim WrittenFileArray As Byte() = New Byte(ParentBytes.Length - 1) {}
@@ -2153,10 +1949,12 @@ Public Class MainForm
             ParentNode.Nodes.Clear()
             ParentNode.Text = TempName
             ParentNode.ToolTipText = WrittenFile
-            ParentNode.Tag = New NodeProperties With {.FileType = PackageType.Unchecked,
-                   .Index = 0,
-                    .length = WrittenFileArray.Length,
-                    .StoredData = New Byte() {}}
+            ParentNode.Tag = New NodeProperties With {
+                .FullFilePath = ParentNode.ToolTipText,
+                .FileType = PackageType.Unchecked,
+                .Index = 0,
+                .length = WrittenFileArray.Length,
+                .StoredData = New Byte() {}}
             'fixes for rebuilding the same file over and over
             CheckFile(ParentNode)
             TreeView1.SelectedNode = ParentNode
@@ -2212,7 +2010,7 @@ Public Class MainForm
                 bitwidth = CInt(HexViewBitWidth.SelectedItem)
             End If
             Dim NodeTag As NodeProperties = CType(SelectedNode.Tag, NodeProperties)
-            Dim Filebytes As Byte() = GetNodeBytes(SelectedNode)
+            Dim Filebytes As Byte() = NodeHandlers.GetNodeBytes(SelectedNode.Tag)
             Dim ByteString As String = ""
             If Filebytes.Length < (&H1000 * My.Settings.HexViewLength) Then
                 ByteString = (BitConverter.ToString(Filebytes, 0, Filebytes.Length).Replace("-", " "))
@@ -2259,7 +2057,7 @@ Public Class MainForm
                 bitwidth = CInt(TextViewBitWidth.SelectedItem)
             End If
             Dim NodeTag As NodeProperties = CType(SelectedNode.Tag, NodeProperties)
-            Dim Filebytes As Byte() = GetNodeBytes(SelectedNode)
+            Dim Filebytes As Byte() = NodeHandlers.GetNodeBytes(SelectedNode.Tag)
             Dim TextString As String = ""
             If NodeTag.length < (&H1000 * My.Settings.HexViewLength) Then
                 TextString = New String(".", NodeTag.length)
@@ -2310,7 +2108,7 @@ Public Class MainForm
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
         Try
             Dim NodeTag As NodeProperties = CType(SelectedData.Tag, NodeProperties)
-            Dim StringBytes As Byte() = GetNodeBytes(SelectedData)
+            Dim StringBytes As Byte() = NodeHandlers.GetNodeBytes(SelectedData.Tag)
             Dim StringCount As Integer = BitConverter.ToInt32(StringBytes, 4)
             StringCountToolStripMenuItem.Text = "String Count: " & StringCount
             ProgressBar1.Maximum = StringCount - 1
@@ -2558,7 +2356,7 @@ Public Class MainForm
     Sub FillMiscView(SelectedData As TreeNode)
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridMiscView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
-        Dim MiscBytes As Byte() = GetNodeBytes(SelectedData)
+        Dim MiscBytes As Byte() = NodeHandlers.GetNodeBytes(SelectedData.Tag)
         Dim ArenaCount As Integer = BitConverter.ToInt32(MiscBytes, 0)
         ProgressBar1.Maximum = ArenaCount - 1
         ProgressBar1.Value = 0
@@ -3020,7 +2818,7 @@ Public Class MainForm
             StringRead = True
         End If
         StringLoadedShowMenuItem.Text = "String Loaded: " & StringRead.ToString
-        Dim ShowBytes As Byte() = GetNodeBytes(SelectedData)
+        Dim ShowBytes As Byte() = NodeHandlers.GetNodeBytes(SelectedData.Tag)
         Dim FileLength As Integer = ShowBytes.Length
         Dim GameTypeTest As UInt32 = BitConverter.ToInt32(ShowBytes, 8)
         Dim ShowSpacing As Integer = &H74
@@ -3171,7 +2969,7 @@ Public Class MainForm
                 ShowLength = &H78
         End Select
         Dim ReturnedBytes As Byte() = New Byte(&HC + ShowLength * DataGridShowView.RowCount - 1) {}
-        Dim ShowBytes As Byte() = GetNodeBytes(ReadNode)
+        Dim ShowBytes As Byte() = NodeHandlers.GetNodeBytes(ReadNode.Tag)
         'copy the header byptes so they stay the same
         Array.Copy(ShowBytes, ReturnedBytes, &HC)
         ProgressBar1.Maximum = DataGridShowView.RowCount - 1
@@ -3234,7 +3032,7 @@ Public Class MainForm
         DataGridNIBJView.Rows.Clear()
         DataGridNIBJView.Columns.Clear()
         Dim NodeTag As NodeProperties = CType(SelectedData.Tag, NodeProperties)
-        Dim NIJBBytes As Byte() = GetNodeBytes(SelectedData)
+        Dim NIJBBytes As Byte() = NodeHandlers.GetNodeBytes(SelectedData.Tag)
         Dim HeaderByte As Integer = BitConverter.ToInt32(NIJBBytes, &H4) '64 for Parm Light
         Dim LightCount As Integer = BitConverter.ToInt32(NIJBBytes, &H8)
         Dim ShowCount As Integer = BitConverter.ToInt32(NIJBBytes, &HC)
@@ -3302,7 +3100,7 @@ Public Class MainForm
         InjectIntoNode(ReadNode, BuildNIBJFile())
     End Sub
     Private Function BuildNIBJFile() As Byte()
-        Dim ShowBytes As Byte() = GetNodeBytes(ReadNode)
+        Dim ShowBytes As Byte() = NodeHandlers.GetNodeBytes(ReadNode.Tag)
         Dim ReturnedBytes As Byte() = New Byte(ShowBytes.Length - 1) {}
         Dim LightCount As Integer = DataGridNIBJView.ColumnCount
         Dim ShowCount As Integer = DataGridNIBJView.RowCount
@@ -3319,7 +3117,7 @@ Public Class MainForm
 #Region "Picture View Controls"
     Dim CreatedImages As List(Of String)
     Sub LoadPictureView(SelectedData As TreeNode)
-        Dim PictureBytes As Byte() = GetNodeBytes(SelectedData)
+        Dim PictureBytes As Byte() = NodeHandlers.GetNodeBytes(SelectedData.Tag)
         Dim ImageStream As MemoryStream = New MemoryStream(PictureBytes)
         Dim TempName As String = Path.GetTempFileName
         FileSystem.Rename(TempName, TempName + ".dds")
@@ -3376,7 +3174,7 @@ Public Class MainForm
             PacsRead = True
         End If
         PacsLoadedAttireMenuItem.Text = "Pacs Loaded: " & PacsRead.ToString
-        Dim AttireBytes As Byte() = GetNodeBytes(SelectedData)
+        Dim AttireBytes As Byte() = NodeHandlers.GetNodeBytes(SelectedData.Tag)
         Dim WrestlerCount As Integer = BitConverter.ToInt32(AttireBytes, &H8)
         Dim WrestlerPacs(WrestlerCount - 1) As Integer
         Dim AttireCount(WrestlerCount - 1) As Integer
@@ -3595,7 +3393,7 @@ Public Class MainForm
 #Region "Muscle View Controls"
     'TO DO Streamline intergration with Object models whenever Object viewer is actually built.
     Sub LoadMuscleView(SelectedData As TreeNode)
-        Dim MuscleBytes As Byte() = GetNodeBytes(SelectedData)
+        Dim MuscleBytes As Byte() = NodeHandlers.GetNodeBytes(SelectedData.Tag)
         If DataGridMuscleView.ColumnCount = 0 Then
             DataGridMuscleView.Columns.Add("Name", "Name")
             DataGridMuscleView.Columns.Add("Number1", Path.GetFileNameWithoutExtension(SelectedData.ToolTipText))
@@ -3639,7 +3437,7 @@ Public Class MainForm
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridMaskView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
         Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
-        Dim MaskBytes As Byte() = GetNodeBytes(SelectedData)
+        Dim MaskBytes As Byte() = NodeHandlers.GetNodeBytes(SelectedData.Tag)
         Dim MaskHeader As Integer = BitConverter.ToInt32(MaskBytes, &H4) ' should be C
         If Not MaskHeader = &HC Then
             MessageBox.Show("Unkown error with CE header")
@@ -4164,7 +3962,7 @@ Public Class MainForm
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridObjArrayView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
         Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
-        Dim ObjArrayBytes As Byte() = GetNodeBytes(SelectedData)
+        Dim ObjArrayBytes As Byte() = NodeHandlers.GetNodeBytes(SelectedData.Tag)
         Dim ChairCount As Integer = BitConverter.ToInt32(ObjArrayBytes, &HC)
         Dim ParentStrings As String() = New String(ChairCount) {}
         ParentStrings(0) = "Base Object"
@@ -4410,7 +4208,7 @@ Public Class MainForm
         InjectIntoNode(ReadNode, BuildYOBJArrayFile())
     End Sub
     Private Function BuildYOBJArrayFile() As Byte()
-        Dim ShowBytes As Byte() = GetNodeBytes(ReadNode)
+        Dim ShowBytes As Byte() = NodeHandlers.GetNodeBytes(ReadNode.Tag)
         Dim ReturnedBytes As Byte() = New Byte(&H20 + ((&H30 + &H8) * DataGridObjArrayView.Rows.Count) - 1) {}
         Dim ContainerCount As UInt32 = 0
         Dim ObjectCount As UInt32 = 0
