@@ -69,14 +69,20 @@ Partial Class OptionsMenu
         Me.ButtonSelectFontAwesome = New System.Windows.Forms.Button()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.CheckBoxRecycleDeletedFiles = New System.Windows.Forms.CheckBox()
+        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.TabPage2 = New System.Windows.Forms.TabPage()
         CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBarDecimalNameLength, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabControl1.SuspendLayout()
+        Me.TabPage1.SuspendLayout()
+        Me.TabPage2.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(12, 9)
+        Me.Label1.Location = New System.Drawing.Point(6, 6)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(80, 13)
         Me.Label1.TabIndex = 0
@@ -84,7 +90,7 @@ Partial Class OptionsMenu
         '
         'TextBoxHome
         '
-        Me.TextBoxHome.Location = New System.Drawing.Point(12, 25)
+        Me.TextBoxHome.Location = New System.Drawing.Point(6, 22)
         Me.TextBoxHome.Name = "TextBoxHome"
         Me.TextBoxHome.ReadOnly = True
         Me.TextBoxHome.Size = New System.Drawing.Size(229, 20)
@@ -92,7 +98,7 @@ Partial Class OptionsMenu
         '
         'ButtonSelectHome
         '
-        Me.ButtonSelectHome.Location = New System.Drawing.Point(247, 23)
+        Me.ButtonSelectHome.Location = New System.Drawing.Point(241, 20)
         Me.ButtonSelectHome.Name = "ButtonSelectHome"
         Me.ButtonSelectHome.Size = New System.Drawing.Size(25, 23)
         Me.ButtonSelectHome.TabIndex = 2
@@ -102,7 +108,7 @@ Partial Class OptionsMenu
         'LabelTexConv
         '
         Me.LabelTexConv.AutoSize = True
-        Me.LabelTexConv.Location = New System.Drawing.Point(12, 48)
+        Me.LabelTexConv.Location = New System.Drawing.Point(6, 45)
         Me.LabelTexConv.Name = "LabelTexConv"
         Me.LabelTexConv.Size = New System.Drawing.Size(115, 13)
         Me.LabelTexConv.TabIndex = 3
@@ -110,7 +116,7 @@ Partial Class OptionsMenu
         '
         'TextBoxTexConv
         '
-        Me.TextBoxTexConv.Location = New System.Drawing.Point(12, 64)
+        Me.TextBoxTexConv.Location = New System.Drawing.Point(6, 61)
         Me.TextBoxTexConv.Name = "TextBoxTexConv"
         Me.TextBoxTexConv.ReadOnly = True
         Me.TextBoxTexConv.Size = New System.Drawing.Size(229, 20)
@@ -118,7 +124,7 @@ Partial Class OptionsMenu
         '
         'ButtonSelectTexConv
         '
-        Me.ButtonSelectTexConv.Location = New System.Drawing.Point(247, 62)
+        Me.ButtonSelectTexConv.Location = New System.Drawing.Point(241, 59)
         Me.ButtonSelectTexConv.Name = "ButtonSelectTexConv"
         Me.ButtonSelectTexConv.Size = New System.Drawing.Size(25, 23)
         Me.ButtonSelectTexConv.TabIndex = 5
@@ -128,7 +134,7 @@ Partial Class OptionsMenu
         'LabelRadVideo
         '
         Me.LabelRadVideo.AutoSize = True
-        Me.LabelRadVideo.Location = New System.Drawing.Point(12, 87)
+        Me.LabelRadVideo.Location = New System.Drawing.Point(6, 84)
         Me.LabelRadVideo.Name = "LabelRadVideo"
         Me.LabelRadVideo.Size = New System.Drawing.Size(119, 13)
         Me.LabelRadVideo.TabIndex = 6
@@ -136,7 +142,7 @@ Partial Class OptionsMenu
         '
         'TextBoxRadVideo
         '
-        Me.TextBoxRadVideo.Location = New System.Drawing.Point(12, 103)
+        Me.TextBoxRadVideo.Location = New System.Drawing.Point(6, 100)
         Me.TextBoxRadVideo.Name = "TextBoxRadVideo"
         Me.TextBoxRadVideo.ReadOnly = True
         Me.TextBoxRadVideo.Size = New System.Drawing.Size(193, 20)
@@ -144,7 +150,7 @@ Partial Class OptionsMenu
         '
         'ButtonSelectRadVideo
         '
-        Me.ButtonSelectRadVideo.Location = New System.Drawing.Point(247, 101)
+        Me.ButtonSelectRadVideo.Location = New System.Drawing.Point(241, 98)
         Me.ButtonSelectRadVideo.Name = "ButtonSelectRadVideo"
         Me.ButtonSelectRadVideo.Size = New System.Drawing.Size(25, 23)
         Me.ButtonSelectRadVideo.TabIndex = 8
@@ -154,7 +160,7 @@ Partial Class OptionsMenu
         'LabelUnrrbpe
         '
         Me.LabelUnrrbpe.AutoSize = True
-        Me.LabelUnrrbpe.Location = New System.Drawing.Point(12, 165)
+        Me.LabelUnrrbpe.Location = New System.Drawing.Point(6, 162)
         Me.LabelUnrrbpe.Name = "LabelUnrrbpe"
         Me.LabelUnrrbpe.Size = New System.Drawing.Size(110, 13)
         Me.LabelUnrrbpe.TabIndex = 9
@@ -162,7 +168,7 @@ Partial Class OptionsMenu
         '
         'TextBoxUnrrbpe
         '
-        Me.TextBoxUnrrbpe.Location = New System.Drawing.Point(12, 181)
+        Me.TextBoxUnrrbpe.Location = New System.Drawing.Point(6, 178)
         Me.TextBoxUnrrbpe.Name = "TextBoxUnrrbpe"
         Me.TextBoxUnrrbpe.ReadOnly = True
         Me.TextBoxUnrrbpe.Size = New System.Drawing.Size(193, 20)
@@ -170,7 +176,7 @@ Partial Class OptionsMenu
         '
         'ButtonSelectUnrrbpe
         '
-        Me.ButtonSelectUnrrbpe.Location = New System.Drawing.Point(247, 179)
+        Me.ButtonSelectUnrrbpe.Location = New System.Drawing.Point(241, 176)
         Me.ButtonSelectUnrrbpe.Name = "ButtonSelectUnrrbpe"
         Me.ButtonSelectUnrrbpe.Size = New System.Drawing.Size(25, 23)
         Me.ButtonSelectUnrrbpe.TabIndex = 11
@@ -179,7 +185,7 @@ Partial Class OptionsMenu
         '
         'ButtonDownloadUnrrbpe
         '
-        Me.ButtonDownloadUnrrbpe.Location = New System.Drawing.Point(211, 179)
+        Me.ButtonDownloadUnrrbpe.Location = New System.Drawing.Point(205, 176)
         Me.ButtonDownloadUnrrbpe.Name = "ButtonDownloadUnrrbpe"
         Me.ButtonDownloadUnrrbpe.Size = New System.Drawing.Size(30, 23)
         Me.ButtonDownloadUnrrbpe.TabIndex = 12
@@ -188,7 +194,7 @@ Partial Class OptionsMenu
         '
         'ButtonDownloadRadVideo
         '
-        Me.ButtonDownloadRadVideo.Location = New System.Drawing.Point(211, 101)
+        Me.ButtonDownloadRadVideo.Location = New System.Drawing.Point(205, 98)
         Me.ButtonDownloadRadVideo.Name = "ButtonDownloadRadVideo"
         Me.ButtonDownloadRadVideo.Size = New System.Drawing.Size(30, 23)
         Me.ButtonDownloadRadVideo.TabIndex = 13
@@ -198,7 +204,7 @@ Partial Class OptionsMenu
         'LabelZlib
         '
         Me.LabelZlib.AutoSize = True
-        Me.LabelZlib.Location = New System.Drawing.Point(12, 281)
+        Me.LabelZlib.Location = New System.Drawing.Point(6, 278)
         Me.LabelZlib.Name = "LabelZlib"
         Me.LabelZlib.Size = New System.Drawing.Size(114, 13)
         Me.LabelZlib.TabIndex = 14
@@ -207,7 +213,7 @@ Partial Class OptionsMenu
         'LabelOodle
         '
         Me.LabelOodle.AutoSize = True
-        Me.LabelOodle.Location = New System.Drawing.Point(12, 310)
+        Me.LabelOodle.Location = New System.Drawing.Point(6, 307)
         Me.LabelOodle.Name = "LabelOodle"
         Me.LabelOodle.Size = New System.Drawing.Size(125, 13)
         Me.LabelOodle.TabIndex = 15
@@ -215,7 +221,7 @@ Partial Class OptionsMenu
         '
         'ButtonSelectZlib
         '
-        Me.ButtonSelectZlib.Location = New System.Drawing.Point(147, 276)
+        Me.ButtonSelectZlib.Location = New System.Drawing.Point(141, 273)
         Me.ButtonSelectZlib.Name = "ButtonSelectZlib"
         Me.ButtonSelectZlib.Size = New System.Drawing.Size(125, 23)
         Me.ButtonSelectZlib.TabIndex = 16
@@ -225,7 +231,7 @@ Partial Class OptionsMenu
         '
         'ButtonOodleSelect
         '
-        Me.ButtonOodleSelect.Location = New System.Drawing.Point(147, 305)
+        Me.ButtonOodleSelect.Location = New System.Drawing.Point(141, 302)
         Me.ButtonOodleSelect.Name = "ButtonOodleSelect"
         Me.ButtonOodleSelect.Size = New System.Drawing.Size(125, 23)
         Me.ButtonOodleSelect.TabIndex = 17
@@ -236,7 +242,7 @@ Partial Class OptionsMenu
         'CheckBoxLoadHome
         '
         Me.CheckBoxLoadHome.AutoSize = True
-        Me.CheckBoxLoadHome.Location = New System.Drawing.Point(15, 359)
+        Me.CheckBoxLoadHome.Location = New System.Drawing.Point(6, 31)
         Me.CheckBoxLoadHome.Name = "CheckBoxLoadHome"
         Me.CheckBoxLoadHome.Size = New System.Drawing.Size(135, 17)
         Me.CheckBoxLoadHome.TabIndex = 18
@@ -246,7 +252,7 @@ Partial Class OptionsMenu
         'CheckBoxBackup
         '
         Me.CheckBoxBackup.AutoSize = True
-        Me.CheckBoxBackup.Location = New System.Drawing.Point(15, 382)
+        Me.CheckBoxBackup.Location = New System.Drawing.Point(6, 54)
         Me.CheckBoxBackup.Name = "CheckBoxBackup"
         Me.CheckBoxBackup.Size = New System.Drawing.Size(196, 17)
         Me.CheckBoxBackup.TabIndex = 19
@@ -256,7 +262,7 @@ Partial Class OptionsMenu
         'TrackBarHexLength
         '
         Me.TrackBarHexLength.LargeChange = 100
-        Me.TrackBarHexLength.Location = New System.Drawing.Point(12, 617)
+        Me.TrackBarHexLength.Location = New System.Drawing.Point(3, 287)
         Me.TrackBarHexLength.Maximum = 500
         Me.TrackBarHexLength.Minimum = 1
         Me.TrackBarHexLength.Name = "TrackBarHexLength"
@@ -269,7 +275,7 @@ Partial Class OptionsMenu
         'LabelHexLength
         '
         Me.LabelHexLength.AutoSize = True
-        Me.LabelHexLength.Location = New System.Drawing.Point(12, 601)
+        Me.LabelHexLength.Location = New System.Drawing.Point(3, 271)
         Me.LabelHexLength.Name = "LabelHexLength"
         Me.LabelHexLength.Size = New System.Drawing.Size(140, 13)
         Me.LabelHexLength.TabIndex = 22
@@ -277,7 +283,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetStrings
         '
-        Me.ButtonResetStrings.Location = New System.Drawing.Point(12, 652)
+        Me.ButtonResetStrings.Location = New System.Drawing.Point(3, 322)
         Me.ButtonResetStrings.Name = "ButtonResetStrings"
         Me.ButtonResetStrings.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetStrings.TabIndex = 23
@@ -286,7 +292,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetPacs
         '
-        Me.ButtonResetPacs.Location = New System.Drawing.Point(147, 652)
+        Me.ButtonResetPacs.Location = New System.Drawing.Point(138, 322)
         Me.ButtonResetPacs.Name = "ButtonResetPacs"
         Me.ButtonResetPacs.Size = New System.Drawing.Size(125, 23)
         Me.ButtonResetPacs.TabIndex = 24
@@ -296,7 +302,7 @@ Partial Class OptionsMenu
         'CheckBoxDeleteTempBMP
         '
         Me.CheckBoxDeleteTempBMP.AutoSize = True
-        Me.CheckBoxDeleteTempBMP.Location = New System.Drawing.Point(15, 405)
+        Me.CheckBoxDeleteTempBMP.Location = New System.Drawing.Point(6, 77)
         Me.CheckBoxDeleteTempBMP.Name = "CheckBoxDeleteTempBMP"
         Me.CheckBoxDeleteTempBMP.Size = New System.Drawing.Size(172, 17)
         Me.CheckBoxDeleteTempBMP.TabIndex = 25
@@ -306,7 +312,7 @@ Partial Class OptionsMenu
         'CheckBoxTreeNodeIcons
         '
         Me.CheckBoxTreeNodeIcons.AutoSize = True
-        Me.CheckBoxTreeNodeIcons.Location = New System.Drawing.Point(15, 451)
+        Me.CheckBoxTreeNodeIcons.Location = New System.Drawing.Point(6, 123)
         Me.CheckBoxTreeNodeIcons.Name = "CheckBoxTreeNodeIcons"
         Me.CheckBoxTreeNodeIcons.Size = New System.Drawing.Size(125, 17)
         Me.CheckBoxTreeNodeIcons.TabIndex = 26
@@ -315,7 +321,7 @@ Partial Class OptionsMenu
         '
         'ButtonDownloadDDSexe
         '
-        Me.ButtonDownloadDDSexe.Location = New System.Drawing.Point(211, 218)
+        Me.ButtonDownloadDDSexe.Location = New System.Drawing.Point(205, 215)
         Me.ButtonDownloadDDSexe.Name = "ButtonDownloadDDSexe"
         Me.ButtonDownloadDDSexe.Size = New System.Drawing.Size(30, 23)
         Me.ButtonDownloadDDSexe.TabIndex = 30
@@ -324,7 +330,7 @@ Partial Class OptionsMenu
         '
         'ButtonSelectDDSexe
         '
-        Me.ButtonSelectDDSexe.Location = New System.Drawing.Point(247, 218)
+        Me.ButtonSelectDDSexe.Location = New System.Drawing.Point(241, 215)
         Me.ButtonSelectDDSexe.Name = "ButtonSelectDDSexe"
         Me.ButtonSelectDDSexe.Size = New System.Drawing.Size(25, 23)
         Me.ButtonSelectDDSexe.TabIndex = 29
@@ -333,7 +339,7 @@ Partial Class OptionsMenu
         '
         'TextBoxDDSExe
         '
-        Me.TextBoxDDSExe.Location = New System.Drawing.Point(12, 220)
+        Me.TextBoxDDSExe.Location = New System.Drawing.Point(6, 217)
         Me.TextBoxDDSExe.Name = "TextBoxDDSExe"
         Me.TextBoxDDSExe.ReadOnly = True
         Me.TextBoxDDSExe.Size = New System.Drawing.Size(193, 20)
@@ -342,7 +348,7 @@ Partial Class OptionsMenu
         'LabelDSSExe
         '
         Me.LabelDSSExe.AutoSize = True
-        Me.LabelDSSExe.Location = New System.Drawing.Point(12, 204)
+        Me.LabelDSSExe.Location = New System.Drawing.Point(6, 201)
         Me.LabelDSSExe.Name = "LabelDSSExe"
         Me.LabelDSSExe.Size = New System.Drawing.Size(138, 13)
         Me.LabelDSSExe.TabIndex = 27
@@ -351,7 +357,7 @@ Partial Class OptionsMenu
         'CheckBoxDetailedFileNames
         '
         Me.CheckBoxDetailedFileNames.AutoSize = True
-        Me.CheckBoxDetailedFileNames.Location = New System.Drawing.Point(15, 474)
+        Me.CheckBoxDetailedFileNames.Location = New System.Drawing.Point(6, 146)
         Me.CheckBoxDetailedFileNames.Name = "CheckBoxDetailedFileNames"
         Me.CheckBoxDetailedFileNames.Size = New System.Drawing.Size(180, 17)
         Me.CheckBoxDetailedFileNames.TabIndex = 31
@@ -361,7 +367,7 @@ Partial Class OptionsMenu
         'CheckBoxOODLBypass
         '
         Me.CheckBoxOODLBypass.AutoSize = True
-        Me.CheckBoxOODLBypass.Location = New System.Drawing.Point(15, 520)
+        Me.CheckBoxOODLBypass.Location = New System.Drawing.Point(6, 192)
         Me.CheckBoxOODLBypass.Name = "CheckBoxOODLBypass"
         Me.CheckBoxOODLBypass.Size = New System.Drawing.Size(139, 17)
         Me.CheckBoxOODLBypass.TabIndex = 32
@@ -373,7 +379,7 @@ Partial Class OptionsMenu
         Me.ComboBoxCompLevel.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.ComboBoxCompLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBoxCompLevel.FormattingEnabled = True
-        Me.ComboBoxCompLevel.Location = New System.Drawing.Point(147, 334)
+        Me.ComboBoxCompLevel.Location = New System.Drawing.Point(138, 6)
         Me.ComboBoxCompLevel.Name = "ComboBoxCompLevel"
         Me.ComboBoxCompLevel.Size = New System.Drawing.Size(125, 21)
         Me.ComboBoxCompLevel.TabIndex = 33
@@ -381,7 +387,7 @@ Partial Class OptionsMenu
         'LabelOodleCompLevel
         '
         Me.LabelOodleCompLevel.AutoSize = True
-        Me.LabelOodleCompLevel.Location = New System.Drawing.Point(12, 337)
+        Me.LabelOodleCompLevel.Location = New System.Drawing.Point(3, 9)
         Me.LabelOodleCompLevel.Name = "LabelOodleCompLevel"
         Me.LabelOodleCompLevel.Size = New System.Drawing.Size(130, 13)
         Me.LabelOodleCompLevel.TabIndex = 34
@@ -389,7 +395,7 @@ Partial Class OptionsMenu
         '
         'ButtonDownloadBPEExe
         '
-        Me.ButtonDownloadBPEExe.Location = New System.Drawing.Point(211, 140)
+        Me.ButtonDownloadBPEExe.Location = New System.Drawing.Point(205, 137)
         Me.ButtonDownloadBPEExe.Name = "ButtonDownloadBPEExe"
         Me.ButtonDownloadBPEExe.Size = New System.Drawing.Size(30, 23)
         Me.ButtonDownloadBPEExe.TabIndex = 38
@@ -398,7 +404,7 @@ Partial Class OptionsMenu
         '
         'ButtonSelectBPEExe
         '
-        Me.ButtonSelectBPEExe.Location = New System.Drawing.Point(247, 140)
+        Me.ButtonSelectBPEExe.Location = New System.Drawing.Point(241, 137)
         Me.ButtonSelectBPEExe.Name = "ButtonSelectBPEExe"
         Me.ButtonSelectBPEExe.Size = New System.Drawing.Size(25, 23)
         Me.ButtonSelectBPEExe.TabIndex = 37
@@ -407,7 +413,7 @@ Partial Class OptionsMenu
         '
         'TextBoxBPEExe
         '
-        Me.TextBoxBPEExe.Location = New System.Drawing.Point(12, 142)
+        Me.TextBoxBPEExe.Location = New System.Drawing.Point(6, 139)
         Me.TextBoxBPEExe.Name = "TextBoxBPEExe"
         Me.TextBoxBPEExe.ReadOnly = True
         Me.TextBoxBPEExe.Size = New System.Drawing.Size(193, 20)
@@ -416,7 +422,7 @@ Partial Class OptionsMenu
         'LabelBPEExe
         '
         Me.LabelBPEExe.AutoSize = True
-        Me.LabelBPEExe.Location = New System.Drawing.Point(12, 126)
+        Me.LabelBPEExe.Location = New System.Drawing.Point(6, 123)
         Me.LabelBPEExe.Name = "LabelBPEExe"
         Me.LabelBPEExe.Size = New System.Drawing.Size(93, 13)
         Me.LabelBPEExe.TabIndex = 35
@@ -425,7 +431,7 @@ Partial Class OptionsMenu
         'CheckBoxExtractAllinPlace
         '
         Me.CheckBoxExtractAllinPlace.AutoSize = True
-        Me.CheckBoxExtractAllinPlace.Location = New System.Drawing.Point(15, 497)
+        Me.CheckBoxExtractAllinPlace.Location = New System.Drawing.Point(6, 169)
         Me.CheckBoxExtractAllinPlace.Name = "CheckBoxExtractAllinPlace"
         Me.CheckBoxExtractAllinPlace.Size = New System.Drawing.Size(195, 17)
         Me.CheckBoxExtractAllinPlace.TabIndex = 39
@@ -435,7 +441,7 @@ Partial Class OptionsMenu
         'TrackBarDecimalNameLength
         '
         Me.TrackBarDecimalNameLength.LargeChange = 2
-        Me.TrackBarDecimalNameLength.Location = New System.Drawing.Point(12, 568)
+        Me.TrackBarDecimalNameLength.Location = New System.Drawing.Point(3, 238)
         Me.TrackBarDecimalNameLength.Maximum = 8
         Me.TrackBarDecimalNameLength.Name = "TrackBarDecimalNameLength"
         Me.TrackBarDecimalNameLength.Size = New System.Drawing.Size(260, 45)
@@ -445,7 +451,7 @@ Partial Class OptionsMenu
         'LabelDecimalNameLength
         '
         Me.LabelDecimalNameLength.AutoSize = True
-        Me.LabelDecimalNameLength.Location = New System.Drawing.Point(12, 542)
+        Me.LabelDecimalNameLength.Location = New System.Drawing.Point(3, 212)
         Me.LabelDecimalNameLength.Name = "LabelDecimalNameLength"
         Me.LabelDecimalNameLength.Size = New System.Drawing.Size(163, 13)
         Me.LabelDecimalNameLength.TabIndex = 42
@@ -454,7 +460,7 @@ Partial Class OptionsMenu
         'LabelFontAwesome
         '
         Me.LabelFontAwesome.AutoSize = True
-        Me.LabelFontAwesome.Location = New System.Drawing.Point(12, 252)
+        Me.LabelFontAwesome.Location = New System.Drawing.Point(6, 249)
         Me.LabelFontAwesome.Name = "LabelFontAwesome"
         Me.LabelFontAwesome.Size = New System.Drawing.Size(122, 13)
         Me.LabelFontAwesome.TabIndex = 43
@@ -462,7 +468,7 @@ Partial Class OptionsMenu
         '
         'ButtonSelectFontAwesome
         '
-        Me.ButtonSelectFontAwesome.Location = New System.Drawing.Point(147, 247)
+        Me.ButtonSelectFontAwesome.Location = New System.Drawing.Point(141, 244)
         Me.ButtonSelectFontAwesome.Name = "ButtonSelectFontAwesome"
         Me.ButtonSelectFontAwesome.Size = New System.Drawing.Size(125, 23)
         Me.ButtonSelectFontAwesome.TabIndex = 44
@@ -473,70 +479,107 @@ Partial Class OptionsMenu
         'CheckBoxRecycleDeletedFiles
         '
         Me.CheckBoxRecycleDeletedFiles.AutoSize = True
-        Me.CheckBoxRecycleDeletedFiles.Location = New System.Drawing.Point(15, 428)
+        Me.CheckBoxRecycleDeletedFiles.Location = New System.Drawing.Point(6, 100)
         Me.CheckBoxRecycleDeletedFiles.Name = "CheckBoxRecycleDeletedFiles"
         Me.CheckBoxRecycleDeletedFiles.Size = New System.Drawing.Size(129, 17)
         Me.CheckBoxRecycleDeletedFiles.TabIndex = 45
         Me.CheckBoxRecycleDeletedFiles.Text = "Recycle Deleted Files"
         Me.CheckBoxRecycleDeletedFiles.UseVisualStyleBackColor = True
         '
+        'TabControl1
+        '
+        Me.TabControl1.Controls.Add(Me.TabPage1)
+        Me.TabControl1.Controls.Add(Me.TabPage2)
+        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl1.Location = New System.Drawing.Point(0, 0)
+        Me.TabControl1.Name = "TabControl1"
+        Me.TabControl1.SelectedIndex = 0
+        Me.TabControl1.Size = New System.Drawing.Size(284, 386)
+        Me.TabControl1.TabIndex = 46
+        '
+        'TabPage1
+        '
+        Me.TabPage1.BackColor = System.Drawing.SystemColors.Control
+        Me.TabPage1.Controls.Add(Me.Label1)
+        Me.TabPage1.Controls.Add(Me.ButtonSelectFontAwesome)
+        Me.TabPage1.Controls.Add(Me.TextBoxHome)
+        Me.TabPage1.Controls.Add(Me.LabelFontAwesome)
+        Me.TabPage1.Controls.Add(Me.ButtonSelectHome)
+        Me.TabPage1.Controls.Add(Me.LabelTexConv)
+        Me.TabPage1.Controls.Add(Me.TextBoxTexConv)
+        Me.TabPage1.Controls.Add(Me.ButtonSelectTexConv)
+        Me.TabPage1.Controls.Add(Me.ButtonDownloadBPEExe)
+        Me.TabPage1.Controls.Add(Me.ButtonOodleSelect)
+        Me.TabPage1.Controls.Add(Me.LabelRadVideo)
+        Me.TabPage1.Controls.Add(Me.ButtonSelectZlib)
+        Me.TabPage1.Controls.Add(Me.ButtonSelectBPEExe)
+        Me.TabPage1.Controls.Add(Me.LabelOodle)
+        Me.TabPage1.Controls.Add(Me.TextBoxRadVideo)
+        Me.TabPage1.Controls.Add(Me.LabelZlib)
+        Me.TabPage1.Controls.Add(Me.TextBoxBPEExe)
+        Me.TabPage1.Controls.Add(Me.ButtonSelectRadVideo)
+        Me.TabPage1.Controls.Add(Me.LabelBPEExe)
+        Me.TabPage1.Controls.Add(Me.ButtonDownloadRadVideo)
+        Me.TabPage1.Controls.Add(Me.LabelUnrrbpe)
+        Me.TabPage1.Controls.Add(Me.TextBoxUnrrbpe)
+        Me.TabPage1.Controls.Add(Me.ButtonSelectUnrrbpe)
+        Me.TabPage1.Controls.Add(Me.ButtonDownloadDDSexe)
+        Me.TabPage1.Controls.Add(Me.ButtonDownloadUnrrbpe)
+        Me.TabPage1.Controls.Add(Me.ButtonSelectDDSexe)
+        Me.TabPage1.Controls.Add(Me.LabelDSSExe)
+        Me.TabPage1.Controls.Add(Me.TextBoxDDSExe)
+        Me.TabPage1.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage1.Name = "TabPage1"
+        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage1.Size = New System.Drawing.Size(276, 345)
+        Me.TabPage1.TabIndex = 0
+        Me.TabPage1.Text = "File Select"
+        '
+        'TabPage2
+        '
+        Me.TabPage2.BackColor = System.Drawing.SystemColors.Control
+        Me.TabPage2.Controls.Add(Me.LabelOodleCompLevel)
+        Me.TabPage2.Controls.Add(Me.LabelDecimalNameLength)
+        Me.TabPage2.Controls.Add(Me.ButtonResetPacs)
+        Me.TabPage2.Controls.Add(Me.CheckBoxRecycleDeletedFiles)
+        Me.TabPage2.Controls.Add(Me.ButtonResetStrings)
+        Me.TabPage2.Controls.Add(Me.CheckBoxLoadHome)
+        Me.TabPage2.Controls.Add(Me.LabelHexLength)
+        Me.TabPage2.Controls.Add(Me.CheckBoxBackup)
+        Me.TabPage2.Controls.Add(Me.TrackBarHexLength)
+        Me.TabPage2.Controls.Add(Me.CheckBoxDeleteTempBMP)
+        Me.TabPage2.Controls.Add(Me.TrackBarDecimalNameLength)
+        Me.TabPage2.Controls.Add(Me.CheckBoxTreeNodeIcons)
+        Me.TabPage2.Controls.Add(Me.CheckBoxExtractAllinPlace)
+        Me.TabPage2.Controls.Add(Me.CheckBoxDetailedFileNames)
+        Me.TabPage2.Controls.Add(Me.CheckBoxOODLBypass)
+        Me.TabPage2.Controls.Add(Me.ComboBoxCompLevel)
+        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage2.Name = "TabPage2"
+        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage2.Size = New System.Drawing.Size(276, 360)
+        Me.TabPage2.TabIndex = 1
+        Me.TabPage2.Text = "Options"
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 691)
-        Me.Controls.Add(Me.CheckBoxRecycleDeletedFiles)
-        Me.Controls.Add(Me.ButtonSelectFontAwesome)
-        Me.Controls.Add(Me.LabelFontAwesome)
-        Me.Controls.Add(Me.LabelDecimalNameLength)
-        Me.Controls.Add(Me.CheckBoxExtractAllinPlace)
-        Me.Controls.Add(Me.ButtonDownloadBPEExe)
-        Me.Controls.Add(Me.ButtonSelectBPEExe)
-        Me.Controls.Add(Me.TextBoxBPEExe)
-        Me.Controls.Add(Me.LabelBPEExe)
-        Me.Controls.Add(Me.LabelOodleCompLevel)
-        Me.Controls.Add(Me.ComboBoxCompLevel)
-        Me.Controls.Add(Me.CheckBoxOODLBypass)
-        Me.Controls.Add(Me.CheckBoxDetailedFileNames)
-        Me.Controls.Add(Me.ButtonDownloadDDSexe)
-        Me.Controls.Add(Me.ButtonSelectDDSexe)
-        Me.Controls.Add(Me.TextBoxDDSExe)
-        Me.Controls.Add(Me.LabelDSSExe)
-        Me.Controls.Add(Me.CheckBoxTreeNodeIcons)
-        Me.Controls.Add(Me.CheckBoxDeleteTempBMP)
-        Me.Controls.Add(Me.ButtonResetPacs)
-        Me.Controls.Add(Me.ButtonResetStrings)
-        Me.Controls.Add(Me.LabelHexLength)
-        Me.Controls.Add(Me.TrackBarHexLength)
-        Me.Controls.Add(Me.CheckBoxBackup)
-        Me.Controls.Add(Me.CheckBoxLoadHome)
-        Me.Controls.Add(Me.ButtonOodleSelect)
-        Me.Controls.Add(Me.ButtonSelectZlib)
-        Me.Controls.Add(Me.LabelOodle)
-        Me.Controls.Add(Me.LabelZlib)
-        Me.Controls.Add(Me.ButtonDownloadRadVideo)
-        Me.Controls.Add(Me.ButtonDownloadUnrrbpe)
-        Me.Controls.Add(Me.ButtonSelectUnrrbpe)
-        Me.Controls.Add(Me.TextBoxUnrrbpe)
-        Me.Controls.Add(Me.LabelUnrrbpe)
-        Me.Controls.Add(Me.ButtonSelectRadVideo)
-        Me.Controls.Add(Me.TextBoxRadVideo)
-        Me.Controls.Add(Me.LabelRadVideo)
-        Me.Controls.Add(Me.ButtonSelectTexConv)
-        Me.Controls.Add(Me.TextBoxTexConv)
-        Me.Controls.Add(Me.LabelTexConv)
-        Me.Controls.Add(Me.ButtonSelectHome)
-        Me.Controls.Add(Me.TextBoxHome)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.TrackBarDecimalNameLength)
+        Me.BackColor = System.Drawing.SystemColors.Control
+        Me.ClientSize = New System.Drawing.Size(284, 386)
+        Me.Controls.Add(Me.TabControl1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "OptionsMenu"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Options Menu"
         CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TrackBarDecimalNameLength, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabControl1.ResumeLayout(False)
+        Me.TabPage1.ResumeLayout(False)
+        Me.TabPage1.PerformLayout()
+        Me.TabPage2.ResumeLayout(False)
+        Me.TabPage2.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
 
@@ -585,4 +628,7 @@ Partial Class OptionsMenu
     Friend WithEvents ButtonSelectFontAwesome As Button
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents CheckBoxRecycleDeletedFiles As CheckBox
+    Friend WithEvents TabControl1 As TabControl
+    Friend WithEvents TabPage1 As TabPage
+    Friend WithEvents TabPage2 As TabPage
 End Class

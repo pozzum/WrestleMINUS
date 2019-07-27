@@ -71,6 +71,7 @@ Public Class OptionsMenu
         CheckBoxTreeNodeIcons.Checked = My.Settings.UseTreeIcons
         CheckBoxDetailedFileNames.Checked = My.Settings.UseDetailedFileNames
         CheckBoxExtractAllinPlace.Checked = My.Settings.DecompresstoFolder
+        CheckBoxOODLBypass.Checked = My.Settings.BypassOODLWarn
         'extract all can only extract to folders with detailed file names
         If CheckBoxDetailedFileNames.Checked Then
             CheckBoxExtractAllinPlace.Enabled = True
@@ -81,10 +82,12 @@ Public Class OptionsMenu
         TrackBarDecimalNameLength.Value = My.Settings.DecimalNameMinLength
         LabelDecimalNameLength.Text = "Decimal File Name Min Length: " & TrackBarDecimalNameLength.Value
         TrackBarHexLength.Value = My.Settings.HexViewLength
-        CheckBoxOODLBypass.Checked = My.Settings.BypassOODLWarn
+        TabControl1.SelectedIndex = My.Settings.OptionMenuSelectedTab
         UpdateViewLength()
     End Sub
-
+    Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
+        My.Settings.OptionMenuSelectedTab = TabControl1.SelectedIndex
+    End Sub
     Private Sub ButtonSelectHome_Click(sender As Object, e As EventArgs) Handles ButtonSelectHome.Click
         SettingsHandlers.SelectHomeDirectory()
         LoadSettings()
@@ -116,6 +119,10 @@ Public Class OptionsMenu
 
     Private Sub ButtonDownloadUnrrbpe_Click(sender As Object, e As EventArgs) Handles ButtonDownloadUnrrbpe.Click
         Process.Start("http://asmodean.reverse.net/pages/unrrbpe.html")
+    End Sub
+
+    Private Sub ButtonDownloadDDSexe_Click(sender As Object, e As EventArgs) Handles ButtonDownloadDDSexe.Click
+        Process.Start("https://www.getpaint.net/")
     End Sub
 
     Private Sub ButtonSelectUnrrbpe_Click(sender As Object, e As EventArgs) Handles ButtonSelectUnrrbpe.Click
@@ -213,5 +220,4 @@ Public Class OptionsMenu
         MainForm.PacNumbers = New Integer(1024) {}
         MainForm.PacNumbers(0) = -1
     End Sub
-
 End Class

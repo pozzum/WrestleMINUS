@@ -34,6 +34,7 @@ Public Class GeneralTools
         End Try
         Return True
     End Function
+
     Shared Function DeleteSafely(ByVal Path As String) As Boolean
         Try
             If My.Settings.RecycleDeletedFiles Then
@@ -45,6 +46,27 @@ Public Class GeneralTools
             MessageBox.Show(ex.Message)
             Return False
         End Try
+        Return True
+    End Function
+
+    Public Shared Function CheckFileWriteable(FilePath As String, Optional FileMustExist As Boolean = True)
+        If Not File.Exists(FilePath) Then
+            If FileMustExist Then
+                MessageBox.Show(FilePath & vbNewLine & "Not Found")
+                Return False
+            Else
+                Return True
+            End If
+        End If
+        Dim attributes As FileAttributes = File.GetAttributes(FilePath)
+        If (attributes And FileAttributes.ReadOnly) = FileAttributes.ReadOnly Then
+            If MessageBox.Show(FilePath & " Is Read Only!" & vbNewLine & "Would you like to make it writable?", "Make File Writeable?", MessageBoxButtons.OKCancel) = DialogResult.OK Then
+                attributes = RemoveAttribute(attributes, FileAttributes.ReadOnly)
+                File.SetAttributes(FilePath, attributes)
+            Else
+                Return False
+            End If
+        End If
         Return True
     End Function
 
@@ -67,7 +89,11 @@ Public Class GeneralTools
 #End Region
 
 #Region "Hex or Byte Based General Tools"
+
     Shared Function EndianReverse(Source As Byte(), Optional Index As Integer = 0, Optional Length As Integer = 4) As Byte()
+        If Length > Source.Length Then
+            Length = Source.Length
+        End If
         Dim ReturnedArray As Byte() = New Byte(Length - 1) {}
         Array.Copy(Source, Index, ReturnedArray, 0, Length)
         Array.Reverse(ReturnedArray)
@@ -91,5 +117,23 @@ Public Class GeneralTools
         Next
         Return ReturnedBytes
     End Function
+
 #End Region
+
+#Region "Other Object Based General Tools"
+
+    Shared Function CountVisibleToolStrip(SentCollection As ToolStripItemCollection) As Integer
+        'if the tool-strip is not yet rendered visible will always trigger as false
+        'so I have personally implemented using the tag system like I do with the nodes.
+        Dim ReturnCount As Integer = 0
+        For i As Integer = 0 To SentCollection.Count - 1
+            If SentCollection(i).Tag Then
+                ReturnCount += 1
+            End If
+        Next
+        Return ReturnCount
+    End Function
+
+#End Region
+
 End Class

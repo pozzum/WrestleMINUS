@@ -118,6 +118,8 @@ Public Class SettingsHandlers
         End If
     End Sub
 
+    'REFACTOR - Make Get Functions like Check Functions where they return a true or false
+
     Shared Sub GetTexConvExe(Optional fromoptions As Boolean = False)
         Dim convertpath As String = Path.GetDirectoryName(Application.ExecutablePath) &
                       Path.DirectorySeparatorChar & "texconv.exe"
@@ -208,10 +210,10 @@ Public Class SettingsHandlers
                 My.Settings.DDSexeLocation = DDSOpenExeOpenDialog.FileName
             Else
                 'WARNING MAIN FORM REF
-                MainForm.OpenWithToolStripMenuItem.Text = "Open With..."
+                MainForm.OpenImageWithToolStripMenuItem.Text = "Open With..."
             End If
         ElseIf File.Exists(My.Settings.DDSexeLocation) Then
-            MainForm.OpenWithToolStripMenuItem.Text = "Open With " & Path.GetFileNameWithoutExtension(My.Settings.DDSexeLocation)
+            MainForm.OpenImageWithToolStripMenuItem.Text = "Open With " & Path.GetFileNameWithoutExtension(My.Settings.DDSexeLocation)
         End If
     End Sub
 
