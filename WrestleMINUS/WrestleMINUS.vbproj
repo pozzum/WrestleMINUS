@@ -94,6 +94,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefBuilder.vb" />
     <Compile Include="GeneralTools.vb" />
     <Compile Include="HashGenerator.vb" />
     <Compile Include="MainForm.vb">
@@ -187,6 +188,7 @@
     <Content Include="Assets\O.png" />
     <Content Include="Assets\P.png" />
     <Content Include="Assets\Qu.png" />
+    <Content Include="Assets\R.png" />
     <Content Include="Assets\S.png" />
     <Content Include="Assets\T.png" />
     <Content Include="Assets\thumb_Help_and_Support.png" />

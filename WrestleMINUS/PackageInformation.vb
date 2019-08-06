@@ -111,6 +111,8 @@ Public Class PackageInformation
                 Return 22
             Case PackageType.TitleFile
                 Return 23
+            Case PackageType.TextureReference
+                Return 24
             Case Else
                 Return 0
         End Select
@@ -199,6 +201,8 @@ Public Class PackageInformation
                 Return PackageType.VMUM
             Case "DUMY"
                 Return PackageType.DUMY
+            Case "OneT"
+                Return PackageType.TextureReference
             Case Else
                 'if we don't have a perfect 4 match we go to check the 3 character matches
                 Select Case True
@@ -657,7 +661,6 @@ Public Class PackageInformation
                 Next
             Case PackageType.YANMPack
                 Dim HeaderLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes), 0) + &H20
-                'MessageBox.Show(HeaderLength)
                 Dim YANMLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, 4), 0)
                 Dim HeadIndex As Integer = 0
                 Dim partcount As Integer = 0
@@ -671,9 +674,8 @@ Public Class PackageInformation
                         HeadIndex = &H70
                     End If
                     'getting the part name
-                    Dim PartName As String = Encoding.ASCII.GetString(FileBytes, HeadIndex + 4, 8)
                     Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
-                        .Name = PartName,
+                        .Name = Encoding.ASCII.GetString(FileBytes, HeadIndex + 4, 8),
                         .FullFilePath = ParentFileProperties.FullFilePath,
                         .Index = (BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, HeadIndex + &H24), 0)) + HeaderLength + ParentFileProperties.Index,
                         .FileType = PackageType.YANM,

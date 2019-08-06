@@ -45,6 +45,9 @@ Partial Class MainForm
         Me.OODLBatchCompressToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OODLSingleCompressToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GenerateFileNameHashToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RebuildDefFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RebuildDefCurrentHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RebuildDefSelectFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SupportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -470,7 +473,7 @@ Partial Class MainForm
         '
         'ToolsToolStripMenuItem
         '
-        Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.BPECompressionToolStripMenuItem, Me.ZLIBCompressionToolStripMenuItem, Me.OODLCompressionToolStripMenuItem, Me.GenerateFileNameHashToolStripMenuItem})
+        Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RebuildDefFileToolStripMenuItem, Me.BPECompressionToolStripMenuItem, Me.ZLIBCompressionToolStripMenuItem, Me.OODLCompressionToolStripMenuItem, Me.GenerateFileNameHashToolStripMenuItem})
         Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
         Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(46, 20)
         Me.ToolsToolStripMenuItem.Text = "Tools"
@@ -537,6 +540,25 @@ Partial Class MainForm
         Me.GenerateFileNameHashToolStripMenuItem.Name = "GenerateFileNameHashToolStripMenuItem"
         Me.GenerateFileNameHashToolStripMenuItem.Size = New System.Drawing.Size(207, 22)
         Me.GenerateFileNameHashToolStripMenuItem.Text = "Generate File Name Hash"
+        '
+        'RebuildDefFileToolStripMenuItem
+        '
+        Me.RebuildDefFileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RebuildDefCurrentHomeToolStripMenuItem, Me.RebuildDefSelectFolderToolStripMenuItem})
+        Me.RebuildDefFileToolStripMenuItem.Name = "RebuildDefFileToolStripMenuItem"
+        Me.RebuildDefFileToolStripMenuItem.Size = New System.Drawing.Size(207, 22)
+        Me.RebuildDefFileToolStripMenuItem.Text = "Rebuild Def File"
+        '
+        'RebuildDefCurrentHomeToolStripMenuItem
+        '
+        Me.RebuildDefCurrentHomeToolStripMenuItem.Name = "RebuildDefCurrentHomeToolStripMenuItem"
+        Me.RebuildDefCurrentHomeToolStripMenuItem.Size = New System.Drawing.Size(206, 22)
+        Me.RebuildDefCurrentHomeToolStripMenuItem.Text = "For Current Home Folder"
+        '
+        'RebuildDefSelectFolderToolStripMenuItem
+        '
+        Me.RebuildDefSelectFolderToolStripMenuItem.Name = "RebuildDefSelectFolderToolStripMenuItem"
+        Me.RebuildDefSelectFolderToolStripMenuItem.Size = New System.Drawing.Size(206, 22)
+        Me.RebuildDefSelectFolderToolStripMenuItem.Text = "For WWE Exe..."
         '
         'HelpToolStripMenuItem
         '
@@ -622,6 +644,7 @@ Partial Class MainForm
         Me.ImageList1.Images.SetKeyName(21, "K.png")
         Me.ImageList1.Images.SetKeyName(22, "V.png")
         Me.ImageList1.Images.SetKeyName(23, "W.png")
+        Me.ImageList1.Images.SetKeyName(24, "R.png")
         '
         'ProgressBar1
         '
@@ -718,7 +741,7 @@ Partial Class MainForm
         '
         Me.TextView.Controls.Add(Me.Text_Selected)
         Me.TextView.Controls.Add(Me.MenuStripTextView)
-        Me.TextView.Location = New System.Drawing.Point(4, 23)
+        Me.TextView.Location = New System.Drawing.Point(4, 22)
         Me.TextView.Name = "TextView"
         Me.TextView.Padding = New System.Windows.Forms.Padding(3)
         Me.TextView.Size = New System.Drawing.Size(970, 424)
@@ -763,7 +786,7 @@ Partial Class MainForm
         '
         Me.StringView.Controls.Add(Me.DataGridStringView)
         Me.StringView.Controls.Add(Me.MenuStripStringView)
-        Me.StringView.Location = New System.Drawing.Point(4, 23)
+        Me.StringView.Location = New System.Drawing.Point(4, 22)
         Me.StringView.Name = "StringView"
         Me.StringView.Padding = New System.Windows.Forms.Padding(3)
         Me.StringView.Size = New System.Drawing.Size(970, 424)
@@ -864,7 +887,7 @@ Partial Class MainForm
         '
         Me.MiscView.Controls.Add(Me.DataGridMiscView)
         Me.MiscView.Controls.Add(Me.MenuStripMiscView)
-        Me.MiscView.Location = New System.Drawing.Point(4, 23)
+        Me.MiscView.Location = New System.Drawing.Point(4, 22)
         Me.MiscView.Name = "MiscView"
         Me.MiscView.Padding = New System.Windows.Forms.Padding(3)
         Me.MiscView.Size = New System.Drawing.Size(970, 424)
@@ -1196,7 +1219,7 @@ Partial Class MainForm
         '
         Me.ShowView.Controls.Add(Me.DataGridShowView)
         Me.ShowView.Controls.Add(Me.MenuStripShowView)
-        Me.ShowView.Location = New System.Drawing.Point(4, 23)
+        Me.ShowView.Location = New System.Drawing.Point(4, 22)
         Me.ShowView.Name = "ShowView"
         Me.ShowView.Padding = New System.Windows.Forms.Padding(3)
         Me.ShowView.Size = New System.Drawing.Size(970, 424)
@@ -1524,7 +1547,7 @@ Partial Class MainForm
         '
         Me.NIBJView.Controls.Add(Me.DataGridNIBJView)
         Me.NIBJView.Controls.Add(Me.MenuStripNIBJView)
-        Me.NIBJView.Location = New System.Drawing.Point(4, 23)
+        Me.NIBJView.Location = New System.Drawing.Point(4, 22)
         Me.NIBJView.Name = "NIBJView"
         Me.NIBJView.Padding = New System.Windows.Forms.Padding(3)
         Me.NIBJView.Size = New System.Drawing.Size(970, 424)
@@ -1569,7 +1592,7 @@ Partial Class MainForm
         'PictureView
         '
         Me.PictureView.Controls.Add(Me.PictureBox2)
-        Me.PictureView.Location = New System.Drawing.Point(4, 23)
+        Me.PictureView.Location = New System.Drawing.Point(4, 22)
         Me.PictureView.Name = "PictureView"
         Me.PictureView.Size = New System.Drawing.Size(970, 424)
         Me.PictureView.TabIndex = 8
@@ -1589,7 +1612,7 @@ Partial Class MainForm
         'ObjectView
         '
         Me.ObjectView.Controls.Add(Me.Label1)
-        Me.ObjectView.Location = New System.Drawing.Point(4, 23)
+        Me.ObjectView.Location = New System.Drawing.Point(4, 22)
         Me.ObjectView.Name = "ObjectView"
         Me.ObjectView.Padding = New System.Windows.Forms.Padding(3)
         Me.ObjectView.Size = New System.Drawing.Size(970, 424)
@@ -1611,7 +1634,7 @@ Partial Class MainForm
         '
         Me.AttireView.Controls.Add(Me.DataGridAttireView)
         Me.AttireView.Controls.Add(Me.MenuStripAttireView)
-        Me.AttireView.Location = New System.Drawing.Point(4, 23)
+        Me.AttireView.Location = New System.Drawing.Point(4, 22)
         Me.AttireView.Name = "AttireView"
         Me.AttireView.Padding = New System.Windows.Forms.Padding(3)
         Me.AttireView.Size = New System.Drawing.Size(970, 424)
@@ -2048,7 +2071,7 @@ Partial Class MainForm
         '
         Me.MuscleView.Controls.Add(Me.DataGridMuscleView)
         Me.MuscleView.Controls.Add(Me.MenuStripMuscleView)
-        Me.MuscleView.Location = New System.Drawing.Point(4, 23)
+        Me.MuscleView.Location = New System.Drawing.Point(4, 22)
         Me.MuscleView.Name = "MuscleView"
         Me.MuscleView.Padding = New System.Windows.Forms.Padding(3)
         Me.MuscleView.Size = New System.Drawing.Size(970, 424)
@@ -2087,7 +2110,7 @@ Partial Class MainForm
         '
         Me.MaskView.Controls.Add(Me.DataGridMaskView)
         Me.MaskView.Controls.Add(Me.MenuStripMaskView)
-        Me.MaskView.Location = New System.Drawing.Point(4, 23)
+        Me.MaskView.Location = New System.Drawing.Point(4, 22)
         Me.MaskView.Name = "MaskView"
         Me.MaskView.Padding = New System.Windows.Forms.Padding(3)
         Me.MaskView.Size = New System.Drawing.Size(970, 424)
@@ -2212,7 +2235,7 @@ Partial Class MainForm
         '
         Me.ObjArrayView.Controls.Add(Me.DataGridObjArrayView)
         Me.ObjArrayView.Controls.Add(Me.MenuStripObjectArrayView)
-        Me.ObjArrayView.Location = New System.Drawing.Point(4, 23)
+        Me.ObjArrayView.Location = New System.Drawing.Point(4, 22)
         Me.ObjArrayView.Name = "ObjArrayView"
         Me.ObjArrayView.Padding = New System.Windows.Forms.Padding(3)
         Me.ObjArrayView.Size = New System.Drawing.Size(970, 424)
@@ -2384,7 +2407,7 @@ Partial Class MainForm
         'AssetView
         '
         Me.AssetView.Controls.Add(Me.DataGridAssetView)
-        Me.AssetView.Location = New System.Drawing.Point(4, 23)
+        Me.AssetView.Location = New System.Drawing.Point(4, 22)
         Me.AssetView.Name = "AssetView"
         Me.AssetView.Padding = New System.Windows.Forms.Padding(3)
         Me.AssetView.Size = New System.Drawing.Size(970, 424)
@@ -2508,7 +2531,7 @@ Partial Class MainForm
         '
         Me.TitleView.Controls.Add(Me.DataGridTitleView)
         Me.TitleView.Controls.Add(Me.MenuStripTitleView)
-        Me.TitleView.Location = New System.Drawing.Point(4, 23)
+        Me.TitleView.Location = New System.Drawing.Point(4, 22)
         Me.TitleView.Name = "TitleView"
         Me.TitleView.Padding = New System.Windows.Forms.Padding(3)
         Me.TitleView.Size = New System.Drawing.Size(970, 424)
@@ -2745,9 +2768,9 @@ Partial Class MainForm
         Me.OpenRADVideoToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
         Me.OpenRADVideoToolStripMenuItem.Text = "Open"
         '
-        'OpenWithToolStripMenuItem
+        'OpenImageWithToolStripMenuItem
         '
-        Me.OpenImageWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
+        Me.OpenImageWithToolStripMenuItem.Name = "OpenImageWithToolStripMenuItem"
         Me.OpenImageWithToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
         Me.OpenImageWithToolStripMenuItem.Text = "Open With..."
         '
@@ -3493,4 +3516,7 @@ Partial Class MainForm
     Friend WithEvents GenerateFileNameHashToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents DeleteFileToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents DeletePartToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents RebuildDefFileToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents RebuildDefCurrentHomeToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents RebuildDefSelectFolderToolStripMenuItem As ToolStripMenuItem
 End Class

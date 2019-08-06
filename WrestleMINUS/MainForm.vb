@@ -137,6 +137,7 @@ Public Class MainForm
             BPECompressionToolStripMenuItem.Image = IconChar.CompressArrowsAlt.ToBitmap(16, Color.Black)
             ZLIBCompressionToolStripMenuItem.Image = IconChar.CompressArrowsAlt.ToBitmap(16, Color.Black)
             OODLCompressionToolStripMenuItem.Image = IconChar.CompressArrowsAlt.ToBitmap(16, Color.Black)
+            RebuildDefFileToolStripMenuItem.Image = IconChar.Wrench.ToBitmap(16, Color.Black)
             'https://fontawesome.com/cheatsheet?from=io
         End If
     End Sub
@@ -304,6 +305,26 @@ Public Class MainForm
         End If
         TextDialogInstance.Dispose()
     End Sub
+
+    Private Sub RebuildDefCurrentHomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebuildDefCurrentHomeToolStripMenuItem.Click
+        DefBuilder.RebuildDef(My.Settings.ExeLocation, True, My.Settings.AppendDefFileRebuild, My.Settings.DisableModPref, My.Settings.RelocateModFolderMods)
+    End Sub
+
+    Private Sub RebuildDefSelectFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebuildDefSelectFolderToolStripMenuItem.Click
+        Dim TempFileDialog As OpenFileDialog = New OpenFileDialog With {
+            .FileName = "WWE2KXX.exe",
+            .Title = "Select WWE exe directory"}
+        If Directory.Exists("C:\Steam\steamapps\common\") Then
+            TempFileDialog.InitialDirectory = "C:\Steam\steamapps\common\"
+        End If
+        TempFileDialog.ShowDialog()
+        If File.Exists(TempFileDialog.FileName) AndAlso
+            Path.GetExtension(TempFileDialog.FileName).ToLower = ".exe" Then
+            DefBuilder.RebuildDef(TempFileDialog.FileName, True, My.Settings.AppendDefFileRebuild, My.Settings.DisableModPref, My.Settings.RelocateModFolderMods)
+        Else
+            MessageBox.Show("File Selection Failure")
+        End If
+    End Sub
 #End Region
 #Region "HelpToolStrip"
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
@@ -320,7 +341,8 @@ Public Class MainForm
 
     'TO DO Add UpdateProgress to more functions, Flesh out with parameters
 #Region "TreeView Population"
-    Function GenerateNodeFromFile(SentFileProperties As ExtendedFileProperties) As TreeNode
+
+    Function GenerateNodeFromFile(SentFileProperties As ExtendedFileProperties, Optional ExitingNode As TreeNode = Nothing) As TreeNode
         Dim TempNode As TreeNode = New TreeNode(SentFileProperties.Name) With {
             .ImageIndex = PackageInformation.GetImageIndex(SentFileProperties.FileType),
             .SelectedImageIndex = .ImageIndex,
@@ -334,34 +356,65 @@ Public Class MainForm
         End If
         Return TempNode
     End Function
-    Function GeneratingSubNodesFromFile(SentFileProperties As ExtendedFileProperties) As TreeNode()
-        'Here we are essentially updating a node with updated file information
-        Dim TempNodes As List(Of TreeNode) = New List(Of TreeNode)
-        If Not IsNothing(SentFileProperties.SubFiles) Then
-            For i As Integer = 0 To SentFileProperties.SubFiles.Count - 1
-                TempNodes.Add(GenerateNodeFromFile(SentFileProperties.SubFiles(i)))
-            Next
-        End If
-        If TempNodes.Count > 0 Then
-            Return TempNodes.ToArray()
+    Sub UpdateNodeWithFileInformation(ExitingNode As TreeNode)
+        If IsNothing(ExitingNode.Parent) Then
+            TreeView1.Nodes.Insert(ExitingNode.Index + 1, GenerateNodeFromFile(ExitingNode.Tag))
         Else
-            Return Nothing
+            TreeView1.SelectedNode.Parent.Nodes.Insert(ExitingNode.Index + 1, GenerateNodeFromFile(ExitingNode.Tag))
         End If
-    End Function
+        ExitingNode.Remove()
+    End Sub
 
     Function RebuildNodeFromUpdatedFiles(EditedFile As TreeNode, Optional NewExtendedFileProperties As ExtendedFileProperties = Nothing)
-        'We need to double check if the new extended file properties resulted in a new folder or file name.
-
+        Dim SentNodeTag As ExtendedFileProperties = CType(EditedFile.Tag, ExtendedFileProperties)
         'First we want to crawl up to the File Base Node
-
+        Do While EditedFile.Parent IsNot Nothing
+            If SentNodeTag.Index = 0 AndAlso
+                    SentNodeTag.StoredData.Length = 0 Then
+                'we have the right node and node tag to exit the Do While
+                Exit Do
+            Else
+                EditedFile = EditedFile.Parent
+                SentNodeTag = CType(EditedFile.Tag, ExtendedFileProperties)
+            End If
+        Loop
+        MessageBox.Show(EditedFile.Text)
         'Next we want to check if that file has a parent (folder)
+        Dim ParentNode As TreeNode = EditedFile.Parent
+        Dim ParentIndex As Integer = EditedFile.Index
+        MessageBox.Show(ParentIndex)
+        'We need to double check if the new extended file properties resulted in a new folder or file name.
+        Dim NewFI As FileInfo
+        If Not IsNothing(NewExtendedFileProperties) AndAlso
+            Not SentNodeTag.FullFilePath = NewExtendedFileProperties.FullFilePath Then
+            NewFI = New FileInfo(NewExtendedFileProperties.FullFilePath)
+        Else
+            NewFI = New FileInfo(SentNodeTag.FullFilePath)
+        End If
+        'Create a new File Properties 
 
-        'We want to now delete the Node create a new File Properties 
-
+        Dim UpdatedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                    .Name = NewFI.Name,
+                    .FullFilePath = NewFI.FullName,
+                    .FileType = PackageType.Unchecked,
+                    .Index = 0,
+                    .length = FileLen(NewFI.FullName),
+                    .StoredData = New Byte() {}}
+        'Now We want to now delete the odl node and make a new one 
+        EditedFile.Remove()
+        'we want to get the sub files to be consistent
+        PackageInformation.GetFileParts(UpdatedFileProperties)
         'the Generate node function and put it where the old one was
-
+        Dim NewNode As TreeNode = GenerateNodeFromFile(UpdatedFileProperties)
+        If IsNothing(ParentNode) Then
+            TreeView1.Nodes.Insert(ParentIndex, NewNode)
+        Else
+            ParentNode.Nodes.Insert(ParentIndex, NewNode)
+        End If
+        TreeView1.SelectedNode = NewNode
         'make information loaded as false
-
+        InformationLoaded = False
+        Return True
     End Function
 
     Dim ProgressBarFont As Font = New Font("Arial", 8.25, FontStyle.Regular)
@@ -454,10 +507,7 @@ Public Class MainForm
                 If e.Node.Nodes.Count = 0 Then
                     'we want to pass the actual tag if we are editing it like Get file parts does.
                     PackageInformation.GetFileParts(NodeFileProperties)
-                    Dim CheckedNodes As TreeNode() = GeneratingSubNodesFromFile(NodeFileProperties)
-                    If Not IsNothing(CheckedNodes) Then
-                        e.Node.Nodes.AddRange(CheckedNodes)
-                    End If
+                    UpdateNodeWithFileInformation(e.Node)
                 End If
             End If
             Dim PageLoaded As TabPage = GetTabType(NodeFileProperties.FileType)
@@ -475,6 +525,7 @@ Public Class MainForm
             End If
         End If
     End Sub
+
 #End Region
 
 #Region "Tab Controls"
@@ -793,6 +844,7 @@ Public Class MainForm
         If PackageInformation.CheckInjectable(ParrentNodeTag.FileType) Then 'Hopefully this can expand to all
             If MessageBox.Show("Would you like to delete " & TreeView1.SelectedNode.Text & " ?", "Delete Part", MessageBoxButtons.OKCancel) = DialogResult.OK Then
                 FilePartHandlers.DeleteFilesFromParent(TreeView1.SelectedNode.Tag)
+                RebuildNodeFromUpdatedFiles(TreeView1.SelectedNode)
             End If
         Else
             MessageBox.Show("Not Yet Supported")
@@ -803,12 +855,9 @@ Public Class MainForm
 
     Private Sub CrawlToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CrawlToolStripMenuItem.Click
         TreeView1.SelectedNode.Nodes.Clear()
-        FilePartHandlers.GetAllSubItems(TreeView1.SelectedNode.Tag) 'Crawls All of the Nodes and then expands the node
-        Dim CheckedNodes As TreeNode() = GeneratingSubNodesFromFile(TreeView1.SelectedNode.Tag)
-        If Not IsNothing(CheckedNodes) Then
-            'We will want to make sure nodes are not already added
-            TreeView1.SelectedNode.Nodes.AddRange(CheckedNodes)
-        End If
+        'we update Extended File information inside the tag, so we only have to pass the node to update the information
+        FilePartHandlers.GetAllSubItems(TreeView1.SelectedNode.Tag)
+        UpdateNodeWithFileInformation(TreeView1.SelectedNode)
         TreeView1.SelectedNode.ExpandAll()
     End Sub
 

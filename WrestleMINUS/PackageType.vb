@@ -13,6 +13,7 @@
     BPE
     OODL
     TextureLibrary
+    TextureReference
     YANMPack
     YOBJ
     StringFile

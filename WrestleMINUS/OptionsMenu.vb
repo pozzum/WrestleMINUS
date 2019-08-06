@@ -2,6 +2,8 @@
 
 Public Class OptionsMenu
 
+#Region "Form Functions"
+
     Private Sub OptionsMenu_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = Me.Text & " Ver: " & My.Application.Info.Version.ToString
         LoadSettings()
@@ -9,6 +11,20 @@ Public Class OptionsMenu
 
     Sub LoadSettings()
         TextBoxHome.Text = Path.GetDirectoryName(My.Settings.ExeLocation)
+        LoadFileSelectTab()
+        LoadOptionsTab()
+        LoadAdvancedTab()
+    End Sub
+
+    Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
+        My.Settings.OptionMenuSelectedTab = TabControl1.SelectedIndex
+    End Sub
+
+#End Region
+
+#Region "File Select Tab"
+
+    Sub LoadFileSelectTab()
         TextBoxTexConv.Text = My.Settings.TexConvPath
         If Not File.Exists(My.Settings.TexConvPath) Then
             LabelTexConv.ForeColor = Color.Red
@@ -58,36 +74,12 @@ Public Class OptionsMenu
             LabelOodle.Text = "Oodle DLL Loaded: False"
             LabelOodle.ForeColor = Color.Red
             ButtonOodleSelect.Visible = True
-            ComboBoxCompLevel.Enabled = False
+            ComboBoxOodleCompressionLevel.Enabled = False
         Else
             LabelOodle.ForeColor = Color.Black
         End If
-        ComboBoxCompLevel.Items.AddRange(System.Enum.GetNames(GetType(PackUnpack.OodleCompressionLevel)))
-        ComboBoxCompLevel.SelectedIndex = My.Settings.OODLCompressionLevel
-        CheckBoxLoadHome.Checked = My.Settings.LoadHomeOnLaunch
-        CheckBoxBackup.Checked = My.Settings.BackupInjections
-        CheckBoxDeleteTempBMP.Checked = My.Settings.DeleteTempBMP
-        CheckBoxRecycleDeletedFiles.Checked = My.Settings.RecycleDeletedFiles
-        CheckBoxTreeNodeIcons.Checked = My.Settings.UseTreeIcons
-        CheckBoxDetailedFileNames.Checked = My.Settings.UseDetailedFileNames
-        CheckBoxExtractAllinPlace.Checked = My.Settings.DecompresstoFolder
-        CheckBoxOODLBypass.Checked = My.Settings.BypassOODLWarn
-        'extract all can only extract to folders with detailed file names
-        If CheckBoxDetailedFileNames.Checked Then
-            CheckBoxExtractAllinPlace.Enabled = True
-        Else
-            CheckBoxExtractAllinPlace.Checked = True
-            CheckBoxExtractAllinPlace.Enabled = False
-        End If
-        TrackBarDecimalNameLength.Value = My.Settings.DecimalNameMinLength
-        LabelDecimalNameLength.Text = "Decimal File Name Min Length: " & TrackBarDecimalNameLength.Value
-        TrackBarHexLength.Value = My.Settings.HexViewLength
-        TabControl1.SelectedIndex = My.Settings.OptionMenuSelectedTab
-        UpdateViewLength()
     End Sub
-    Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
-        My.Settings.OptionMenuSelectedTab = TabControl1.SelectedIndex
-    End Sub
+
     Private Sub ButtonSelectHome_Click(sender As Object, e As EventArgs) Handles ButtonSelectHome.Click
         SettingsHandlers.SelectHomeDirectory()
         LoadSettings()
@@ -150,8 +142,26 @@ Public Class OptionsMenu
         LoadSettings()
     End Sub
 
-    Private Sub ComboBoxCompLevel_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBoxCompLevel.SelectedIndexChanged
-        My.Settings.OODLCompressionLevel = ComboBoxCompLevel.SelectedIndex
+#End Region
+
+#Region "Options Tab"
+
+    Sub LoadOptionsTab()
+        CheckBoxLoadHome.Checked = My.Settings.LoadHomeOnLaunch
+        CheckBoxBackup.Checked = My.Settings.BackupInjections
+        CheckBoxDeleteTempBMP.Checked = My.Settings.DeleteTempBMP
+        CheckBoxRecycleDeletedFiles.Checked = My.Settings.RecycleDeletedFiles
+        CheckBoxTreeNodeIcons.Checked = My.Settings.UseTreeIcons
+        CheckBoxDetailedFileNames.Checked = My.Settings.UseDetailedFileNames
+        CheckBoxExtractAllinPlace.Checked = My.Settings.DecompresstoFolder
+        CheckBoxOODLBypass.Checked = My.Settings.BypassOODLWarn
+        'extract all can only extract to folders with detailed file names
+        If CheckBoxDetailedFileNames.Checked Then
+            CheckBoxExtractAllinPlace.Enabled = True
+        Else
+            CheckBoxExtractAllinPlace.Checked = True
+            CheckBoxExtractAllinPlace.Enabled = False
+        End If
     End Sub
 
     Private Sub CheckBoxLoadHome_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxLoadHome.CheckedChanged
@@ -193,6 +203,61 @@ Public Class OptionsMenu
         My.Settings.BypassOODLWarn = CheckBoxOODLBypass.Checked
     End Sub
 
+
+#End Region
+
+#Region "Advanced Tab"
+
+    Sub LoadAdvancedTab()
+        CheckBoxAppendDef.Checked = My.Settings.AppendDefFileRebuild
+        CheckDisableModPref.Checked = My.Settings.DisableModPref
+        CheckRelocateMods.Checked = My.Settings.RelocateModFolderMods
+        UpdateDefOptions()
+        ComboBoxOodleCompressionLevel.Items.AddRange(System.Enum.GetNames(GetType(PackUnpack.OodleCompressionLevel)))
+        ComboBoxOodleCompressionLevel.SelectedIndex = My.Settings.OODLCompressionLevel
+        TrackBarDecimalNameLength.Value = My.Settings.DecimalNameMinLength
+        LabelDecimalNameLength.Text = "Decimal File Name Min Length: " & TrackBarDecimalNameLength.Value
+        TrackBarHexLength.Value = My.Settings.HexViewLength
+        TabControl1.SelectedIndex = My.Settings.OptionMenuSelectedTab
+        UpdateViewLength()
+    End Sub
+
+    Private Sub CheckBoxAppendDef_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxAppendDef.CheckedChanged
+        My.Settings.AppendDefFileRebuild = CheckBoxAppendDef.Checked
+        UpdateDefOptions()
+    End Sub
+
+    Private Sub CheckDisableModPref_CheckedChanged(sender As Object, e As EventArgs) Handles CheckDisableModPref.CheckedChanged
+        My.Settings.DisableModPref = CheckDisableModPref.Checked
+        UpdateDefOptions()
+    End Sub
+
+    Private Sub CheckRelocateMods_CheckedChanged(sender As Object, e As EventArgs) Handles CheckRelocateMods.CheckedChanged
+        My.Settings.RelocateModFolderMods = CheckRelocateMods.Checked
+        UpdateDefOptions()
+    End Sub
+
+    Sub UpdateDefOptions()
+        If CheckBoxAppendDef.Checked Then
+            CheckDisableModPref.Checked = False
+            CheckDisableModPref.Enabled = False
+            CheckRelocateMods.Checked = False
+            CheckRelocateMods.Enabled = False
+        Else 'false
+            CheckDisableModPref.Enabled = True
+            If CheckDisableModPref.Checked Then
+                CheckRelocateMods.Enabled = True
+            Else
+                CheckRelocateMods.Checked = False
+                CheckRelocateMods.Enabled = False
+            End If
+        End If
+    End Sub
+
+    Private Sub ComboBoxCompLevel_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBoxOodleCompressionLevel.SelectedIndexChanged
+        My.Settings.OODLCompressionLevel = ComboBoxOodleCompressionLevel.SelectedIndex
+    End Sub
+
     Private Sub TrackBarDecimalNameLength_Scroll(sender As Object, e As EventArgs) Handles TrackBarDecimalNameLength.Scroll
         My.Settings.DecimalNameMinLength = TrackBarDecimalNameLength.Value
         LabelDecimalNameLength.Text = "Decimal File Name Min Length: " & TrackBarDecimalNameLength.Value
@@ -220,4 +285,7 @@ Public Class OptionsMenu
         MainForm.PacNumbers = New Integer(1024) {}
         MainForm.PacNumbers(0) = -1
     End Sub
+
+#End Region
+
 End Class

@@ -353,6 +353,42 @@ Namespace My
                 Me("OptionMenuSelectedTab") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property AppendDefFileRebuild() As Boolean
+            Get
+                Return CType(Me("AppendDefFileRebuild"),Boolean)
+            End Get
+            Set
+                Me("AppendDefFileRebuild") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property DisableModPref() As Boolean
+            Get
+                Return CType(Me("DisableModPref"),Boolean)
+            End Get
+            Set
+                Me("DisableModPref") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property RelocateModFolderMods() As Boolean
+            Get
+                Return CType(Me("RelocateModFolderMods"),Boolean)
+            End Get
+            Set
+                Me("RelocateModFolderMods") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

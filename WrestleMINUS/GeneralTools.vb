@@ -4,7 +4,7 @@ Public Class GeneralTools
 
 #Region "File Based General Tools"
 
-    'Here are App-seperate commands use as required.
+    'Here are App-separate commands use as required.
     Shared Sub FolderCheck(FolderPath As String)
         If Directory.Exists(FolderPath) = False Then
             Directory.CreateDirectory(FolderPath)
@@ -22,7 +22,7 @@ Public Class GeneralTools
             MakeFolderWriteable(Path)
             'FileIO Properties sends the items to recycling bin rather than deleting Permanently
             If My.Settings.RecycleDeletedFiles Then
-                'we need to recursevley recycle the files
+                'we need to recursive recycle the files
                 MessageBox.Show("Recycle")
                 My.Computer.FileSystem.DeleteDirectory(Path, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.SendToRecycleBin)
             Else
