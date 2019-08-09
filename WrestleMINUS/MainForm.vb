@@ -118,6 +118,8 @@ Public Class MainForm
                                     InjectedByte = BuildAttireFile()
                                 Case PackageType.TitleFile
                                     InjectedByte = BuildTitleFile()
+                                Case PackageType.VMUM
+                                    InjectedByte = BuildAssetArrayFile()
                             End Select
                             FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, InjectedByte)
                         Else 'Dialog Result No Save Canceled
@@ -3402,21 +3404,27 @@ Public Class MainForm
         Dim MyCell As DataGridViewCell = DataGridAssetView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         If e.ColumnIndex = 16 OrElse e.ColumnIndex = 17 Then
             'A File Name has been Added or Edited
-            Dim SplitUpString As String() = MyCell.Value.Split("_")
-            If SplitUpString.Count > 3 AndAlso
+            If MyCell.Value.ToString.Contains("_") Then
+                Dim SplitUpString As String() = MyCell.Value.Split("_")
+                If SplitUpString.Count > 3 AndAlso
                 StartingStrings.Contains(SplitUpString(0)) Then
-                For i As Integer = 1 To SplitUpString.Count - 1
-                    If Not IsNumeric(SplitUpString(i)) Then
-                        MyCell.Value = OldValue
-                    End If
-                Next
+                    For i As Integer = 1 To SplitUpString.Count - 1
+                        If Not IsNumeric(SplitUpString(i)) Then
+                            MyCell.Value = OldValue
+                        End If
+                    Next
+                ElseIf MyCell.Value = "" Then
+                    'do nothing
+                Else
+                    MyCell.Value = OldValue
+                End If
             Else
                 MyCell.Value = OldValue
             End If
         ElseIf e.ColumnIndex = 4 OrElse e.ColumnIndex = 5 Then
-            'this can only be edited by the program
-        Else
-            If Not IsNumeric(MyCell.Value) OrElse
+                'this can only be edited by the program
+            Else
+                If Not IsNumeric(MyCell.Value) OrElse
            MyCell.Value < -1 Then
                 MyCell.Value = CUInt(OldValue)
             Else
