@@ -1,12 +1,13 @@
-﻿Imports System.IO   'Files
-Imports WrestleMINUS.MainForm
+﻿Imports System.IO
 Imports System.Text.RegularExpressions 'Text Replace
+
 Public Class TextDialogPrompt
     Public Result As DialogResult = DialogResult.Cancel
     Public OldFileName As String = ""
     Public EditedFileName As String = ""
     Public ContainerBeingEdited As PackageType = PackageType.bin
     Public CurrentRestriction As RestrictionTypes = RestrictionTypes.None
+
     Public Enum RestrictionTypes
         None
         Hex
@@ -16,6 +17,7 @@ Public Class TextDialogPrompt
         FileName
         Folder
     End Enum
+
     Private Sub TextDialogPrompt_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         If OldFileName = "hash" Then
             LabelOldFileHeader.Text = "Generating Name Hash:"
@@ -34,6 +36,7 @@ Public Class TextDialogPrompt
         ApplyRestrictions(ContainerBeingEdited)
         ResizeMenu()
     End Sub
+
     Sub ApplyRestrictions(ContainerType As PackageType)
         Select Case ContainerType
             Case PackageType.bin
@@ -75,6 +78,7 @@ Public Class TextDialogPrompt
         '    ParrentNodeTag.FileType = PackageType.PachDirectory OrElse
         '    ParrentNodeTag.FileType = PackageType.TextureLibrary
     End Sub
+
     Sub ResizeMenu()
         Dim MinSize As Integer = CalculateLabelWidth(LabelOldFileHeader)
         If MinSize < Me.Width Then
@@ -92,11 +96,13 @@ Public Class TextDialogPrompt
         '20 pixels on either side..
         Me.Width = MinSize + 40
     End Sub
+
     Function CalculateLabelWidth(TestedLabel As Label)
         Dim TextSize As Size = TextRenderer.MeasureText(TestedLabel.Text, TestedLabel.Font)
         Dim TextWidth As Integer = TextSize.Width
         Return TextWidth + TestedLabel.Padding.Horizontal
     End Function
+
     Private Sub TextBoxEditedName_TextChanged(sender As Object, e As EventArgs) Handles TextBoxEditedName.TextChanged
         Dim SentTextBox As TextBox = CType(sender, TextBox)
         Dim CursorPosition As Integer = SentTextBox.SelectionStart
@@ -117,6 +123,7 @@ Public Class TextDialogPrompt
         SentTextBox.SelectionStart = CursorPosition
         EditedFileName = SentTextBox.Text
     End Sub
+
     Function CheckValidName(TestedNewName As String) As Boolean
         Dim InitialLength As Integer = TestedNewName.Length
         Select Case CurrentRestriction
@@ -133,6 +140,7 @@ Public Class TextDialogPrompt
         End Select
         Return (InitialLength = TestedNewName.Length)
     End Function
+
     Private Sub ButtonAcceptChange_Click(sender As Object, e As EventArgs) Handles ButtonAcceptChange.Click
         If CheckValidName(TextBoxEditedName.Text) Then
             Result = DialogResult.OK
@@ -141,6 +149,7 @@ Public Class TextDialogPrompt
             MessageBox.Show("Error Validating New Name")
         End If
     End Sub
+
     Private Sub ButtonCancelChange_Click(sender As Object, e As EventArgs) Handles ButtonCancelChange.Click
         Result = DialogResult.Cancel
         Me.Close()

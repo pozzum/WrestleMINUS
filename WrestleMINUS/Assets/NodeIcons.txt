@@ -1,4 +1,4 @@
-﻿The Node Icon Files are 440pt BankGothic Font on a 256x256 Canvas Leters have a Gradient from #191919 to #646464
+﻿The Node Icon Files are 440pt BankGothic Font on a 256x256 Canvas Letters have a Gradient from #191919 to #646464
 0	Qu	-BIN
 		-Unchecked
 1	F	-FOLDER
@@ -6,6 +6,7 @@
 3	8	-EPK8
 4	E	-EPAC
 5	S	-SHDC
+		-SoundReference
 6	P	-PACH 
 		-PACHDIRECTORIES
 7	B	-BPE

@@ -203,7 +203,6 @@ Public Class OptionsMenu
         My.Settings.BypassOODLWarn = CheckBoxOODLBypass.Checked
     End Sub
 
-
 #End Region
 
 #Region "Advanced Tab"

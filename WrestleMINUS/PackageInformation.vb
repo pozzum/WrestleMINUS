@@ -1,5 +1,5 @@
-﻿Imports System.Text 'Text Encoding
-Imports System.IO   'Files
+﻿Imports System.IO   'Files
+Imports System.Text 'Text Encoding
 
 Public Class PackageInformation
 
@@ -30,8 +30,7 @@ Public Class PackageInformation
            TestType = PackageType.PachDirectory_4 OrElse
            TestType = PackageType.PachDirectory_8 OrElse
            TestType = PackageType.TextureLibrary OrElse
-           TestType = PackageType.YANMPack OrElse
-           TestType = PackageType.YOBJ Then
+           TestType = PackageType.YANMPack Then
             Return True
         End If
         Return False
@@ -48,6 +47,8 @@ Public Class PackageInformation
             Case PackageType.EPAC
                 Return 4
             Case PackageType.SHDC
+                Return 5
+            Case PackageType.SoundReference
                 Return 5
             Case PackageType.PACH
                 Return 6
@@ -158,9 +159,11 @@ Public Class PackageInformation
                 Return TestedString
         End Select
     End Function
+
 #End Region
 
 #Region "File Reading / Processing"
+
     Shared Function CheckHeaderType(Index As Long, ByVal ByteArray As Byte(), Optional FileNamePath As String = "") As PackageType
         'To be split into 2 separate functions once all processes are added
         Dim FirstFour As String
@@ -220,6 +223,8 @@ Public Class PackageInformation
                         Return PackageType.YOBJArray
                     Case FirstFour.Contains(" ¯0")
                         Return PackageType.TPL
+                    Case FirstFour.Substring(0, 1).Contains("g")
+                        Return PackageType.SoundReference
                     Case Else
                         'if we do not have a header text to guide us we have some additional text checks that are consistent.
                         'some of these checks don't 100% require this many bytes, but none should functionally have that little byte length
@@ -312,7 +317,9 @@ Public Class PackageInformation
                 ParentFileProperties.StoredData = New Byte() {}
                 GetFileParts(ParentFileProperties, Crawl)
                 Exit Sub 'Skips the crawler at the bottom and duping the host node update
+
 #Region "Primary Container Types {PAC}"
+
             Case PackageType.HSPC
                 Dim FileCount As Integer = BitConverter.ToUInt32(FileBytes, &H38)
                 Dim FileNameLength As Integer = BitConverter.ToUInt32(FileBytes, &H18)
@@ -411,8 +418,11 @@ Public Class PackageInformation
                     Next
                     ParentFileProperties.SubFiles.Add(DirectoryFileProperties)
                 Loop
+
 #End Region
+
 #Region "Secondary Container Types {PACH}"
+
             Case PackageType.SHDC
                 Dim TempHeaderCheck As Integer = BitConverter.ToUInt32(FileBytes, &H18)
                 Dim TempHeaderStart As Integer = BitConverter.ToUInt32(FileBytes, &H1C)
@@ -490,8 +500,11 @@ Public Class PackageInformation
                     .FileType = CheckHeaderType(.Index - ParentFileProperties.Index, FileBytes, ParentFileProperties.FullFilePath),
                     .Parent = ParentFileProperties}
                 ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+
 #End Region
+
 #Region "Compression Types"
+
             Case PackageType.ZLIB
                 ' Checking to make sure the node isn't already decompressed..
                 If Not IsNothing(ParentFileProperties.SubFiles) Then
@@ -594,8 +607,11 @@ Public Class PackageInformation
                         .Parent = ParentFileProperties}
                     ParentFileProperties.SubFiles.Add(ContainedFileProperties)
                 End If
+
 #End Region
+
 #Region "Library Types"
+
             Case PackageType.TextureLibrary
                 Dim TextureCount As Integer = FileBytes(0)
                 Dim BytesRevesed As Boolean = False
@@ -690,11 +706,17 @@ Public Class PackageInformation
                     partcount = partcount + 1
                     HeadIndex = HeadIndex + &H28
                 Loop
+
 #Region "To be Built"
+
             Case PackageType.YOBJ
+
 #End Region
+
 #End Region
+
 #Region "Stand Alone Files"
+
                 'Case PackageType.StringFile
                 'Case PackageType.bin
                 'Case PackageType.DDS
@@ -710,7 +732,9 @@ Public Class PackageInformation
                 'Case PackageType.OFOP
                 'Case PackageType.YANM
                 'Case PackageType.VMUM
+
 #End Region
+
         End Select
         If Crawl Then
             If Not IsNothing(ParentFileProperties.SubFiles) Then
@@ -727,7 +751,4 @@ Public Class PackageInformation
 
 #End Region
 
-#Region "Inject Into File"
-
-#End Region
 End Class

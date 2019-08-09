@@ -3,6 +3,7 @@ Imports System.IO   'Files
 Imports System.Runtime.Serialization.Formatters.Binary 'Binary Formatter
 
 Public Class SettingsHandlers
+
     Shared Sub SettingsCheck()
         If My.Settings.UpgradeRequired = True Then
             My.Settings.Upgrade()
@@ -73,6 +74,7 @@ Public Class SettingsHandlers
         End If
         My.Settings.Save()
     End Sub
+
     Shared Function SaveSettingsFiles() As DialogResult
         'WARNING MAIN FORM REFERENCES
         Try
@@ -97,7 +99,9 @@ Public Class SettingsHandlers
                             ex.Message & vbNewLine & "Continue?", "Settings Error", MessageBoxButtons.OKCancel)
         End Try
     End Function
+
 #Region "Finding Files & Folders"
+
     Shared Sub SelectHomeDirectory()
         Dim TempFileDialog As OpenFileDialog = New OpenFileDialog With {
             .FileName = "WWE2KXX.exe",
@@ -248,5 +252,7 @@ Public Class SettingsHandlers
             Return True
         End If
     End Function
+
 #End Region
+
 End Class

@@ -273,7 +273,13 @@ Public Class FilePartHandlers
                                  ParentBytes.Length - ((FileRequested.Index - ParentFileInformation.Index) + FileRequested.length))
         End If
         'Get Node Location
-        Dim SubFileLocation As Integer = FileRequested.Parent.SubFiles.IndexOf(FileRequested) '0 based
+        'TO DO Fix this for files that don't have a parent
+        Dim SubFileLocation As Integer
+        If Not IsNothing(FileRequested.Parent) Then
+            SubFileLocation = FileRequested.Parent.SubFiles.IndexOf(FileRequested) '0 based
+        Else
+            SubFileLocation = 0
+        End If
         'Adjust Headers
         Select Case ParentFileInformation.FileType
             Case PackageType.HSPC
@@ -476,7 +482,7 @@ Public Class FilePartHandlers
             Else
                 MessageBox.Show("Folder " & FileRequested.FullFilePath & " Not Found")
             End If
-            'We want to throw the returned answer here no matter the situation 
+            'We want to throw the returned answer here no matter the situation
             'This means that the menu will always be disposed of.
             Return ReturnedResult
         ElseIf FileRequested.Index = 0 AndAlso
@@ -513,7 +519,7 @@ Public Class FilePartHandlers
                 TextDialogInstance.Dispose()
             Else
             End If
-            'We want to throw the returned answer here no matter the situation 
+            'We want to throw the returned answer here no matter the situation
             'This means that the menu will always be disposed of.
             Return ReturnedResult
         End If
@@ -556,7 +562,7 @@ Public Class FilePartHandlers
             MessageBox.Show("Not Yet Supported")
             Return False
         End If
-        'Now we have generated the new name for the file part 
+        'Now we have generated the new name for the file part
         'Get Parent Node Bytes
         Dim ParentBytes As Byte() = FilePartHandlers.GetFilePartBytes(ParentFileProperties)
         Dim ParentNodeLocation As Integer = 0
@@ -792,12 +798,14 @@ Public Class FilePartHandlers
                 SizeDifference -= (&H800 - Math.Abs(SizeDifference) Mod &H800)
             End If
         End If
+
 #Region "Header Adjustments Lengths"
+
         'Here we want to add any header length changes based on a file being deleted..
         'Rounding should not need to happen because files have full length set in the item
         'WARNING THE ABOVE STATEMENT SHOULD BE CHECKED
         Dim HeaderLength As Integer = 0
-        'store adjustment as a negative for foreshortening 
+        'store adjustment as a negative for foreshortening
         Dim HeaderAdjustment As Integer = 0
         Select Case ParentFileInformation.FileType
             Case PackageType.HSPC
@@ -854,10 +862,12 @@ Public Class FilePartHandlers
                     HeaderAdjustment = -&H30
                 End If
         End Select
+
 #End Region
+
         'Create Byte Array of length
         Dim WrittenFileArray As Byte() = New Byte(ParentFileInformation.length + SizeDifference - 1 + HeaderAdjustment) {}
-        'Write File Prior to new file 
+        'Write File Prior to new file
         'We need to start at the old header and place it at the end of the adjusted header
         Array.Copy(ParentBytes, HeaderLength, WrittenFileArray, HeaderLength + HeaderAdjustment, CInt(FileRequested.Index - ParentFileInformation.Index) - HeaderLength)
         'write old file from after file part if there are any
@@ -870,11 +880,15 @@ Public Class FilePartHandlers
         End If
 
         '0 based
+
 #Region "Revise Header"
+
         'This has to be revised entirely.
         'we now need to copy from the Parent Byte array as we go..
         Select Case ParentFileInformation.FileType
+
 #Region "Case PackageType.HSPC"
+
             Case PackageType.HSPC
                 'Copy the start header, we will overwrite some of these bytes
                 Buffer.BlockCopy(ParentBytes, 0, WrittenFileArray, 0, &H40)
@@ -916,8 +930,11 @@ Public Class FilePartHandlers
                         Buffer.BlockCopy(ParentBytes, FileInformationStartPoint + i * &HC + 4, WrittenFileArray, FileInformationStartPoint + (i - 1) * &HC + 4, 8)
                     End If
                 Next
+
 #End Region
+
 #Region "Case PackageType.EPK8"
+
             Case PackageType.EPK8
                 'Check if Directory Index = -1 if it is then we are deleting a whole directory
                 If DirectoryIndex = -1 Then
@@ -1040,8 +1057,11 @@ Public Class FilePartHandlers
                         End If
                     Loop
                 End If
+
 #End Region
+
 #Region "Case PackageType.EPAC"
+
             Case PackageType.EPAC
                 'Check if Directory Index = -1 if it is then we are deleting a whole directory
                 If DirectoryIndex = -1 Then
@@ -1164,8 +1184,11 @@ Public Class FilePartHandlers
                         End If
                     Loop
                 End If
+
 #End Region
+
 #Region "Case PackageType.SHDC"
+
             Case PackageType.SHDC
                 'Copying the Starting Container Header we will update parts of this as needed
                 Array.Copy(ParentBytes, 0, WrittenFileArray, 0, &H40)
@@ -1210,7 +1233,7 @@ Public Class FilePartHandlers
                     ElseIf i = NodeLocation Then
                         'This is the file we are skipping over
                     Else 'this is after the file is removed
-                        'We need to place the information 1 file earlier than it was initially. 
+                        'We need to place the information 1 file earlier than it was initially.
                         'Here we will copy the "meta data" part
                         Array.Copy(ParentBytes, CUInt(MetaDataStart + i * &H14), WrittenFileArray, CUInt(MetaDataStart + (i - 1) * &H14), &H14)
                         'We want to read the index subtract the header adjustment
@@ -1220,8 +1243,11 @@ Public Class FilePartHandlers
                         Buffer.BlockCopy(BitConverter.GetBytes(CUInt(SubItemIndex - &H24 + SizeDifference)), 0, WrittenFileArray, FileInformationStart + ((i - 1) * &H10 + &H4 - &H14), 4)
                     End If
                 Next
+
 #End Region
+
 #Region "Case PackageType.TextureLibrary"
+
             Case PackageType.TextureLibrary
                 'Code the injection here..
                 'start with the header fixes and inject each part of the file
@@ -1265,12 +1291,15 @@ Public Class FilePartHandlers
                         End If
                     End If
                 Next
+
 #End Region
+
 #Region "Case PackageType.YANMPack"
+
             Case PackageType.YANMPack
                 'Copy the start header, we will overwrite some of these bytes
                 Buffer.BlockCopy(ParentBytes, 0, WrittenFileArray, 0, &H70)
-                'First we need to reduce the Header Length by &h28 - 
+                'First we need to reduce the Header Length by &h28 -
                 Dim SubHeaderLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentBytes, 0), 0)
                 Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(SubHeaderLength - &H28))), 0, WrittenFileArray, 0, 4)
                 'Next bytes are the full file length sans header
@@ -1298,8 +1327,11 @@ Public Class FilePartHandlers
                     End If
                 Next
         End Select
+
 #End Region
+
 #End Region
+
         Dim ReturnTest As Boolean = True
         If ParentFileInformation.Index = 0 AndAlso
             ParentFileInformation.StoredData.Length = 0 Then
@@ -1318,5 +1350,7 @@ Public Class FilePartHandlers
         End If
         Return ReturnTest
     End Function
+
 #End Region
+
 End Class

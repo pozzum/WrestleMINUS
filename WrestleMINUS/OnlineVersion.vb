@@ -8,6 +8,7 @@ Public Class OnlineVersion
         checkUpdateThread.SetApartmentState(ApartmentState.STA)
         checkUpdateThread.Start()
     End Sub
+
     'uses smrando's updater as a base https://github.com/Dessyreqt/smrandomizer/blob/master/SuperMetroidRandomizer/Net/RandomizerVersion.cs
     Public Enum UpdateType
         None
