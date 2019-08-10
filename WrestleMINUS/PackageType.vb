@@ -33,7 +33,7 @@
     SoundReference
     LSD
 
-    'here are additional ufc type files that we will have no handling for.  Hoever we want to properly cover them for adding in future.
+    'here are additional ufc type files that we will have no handling for.  However we want to properly cover them for adding in future.
     UFC_MAP
 
     UFC_HKX
@@ -42,7 +42,7 @@
     UFC_CVX
     UFC_BIN
 
-    'Day of Recconing GV File Types added as needed
+    'Day of Reckoning GV File Types added as needed
     TPL
 
     DUMY

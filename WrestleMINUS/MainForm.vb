@@ -8,12 +8,14 @@ Imports FontAwesome.Sharp
 Public Class MainForm
 
     Friend Shared StringReferences() As String
+    Friend Shared StringRead As Boolean = False
     Friend Shared PacNumbers() As Integer
+    Friend Shared PacsRead As Boolean = False
     Dim SelectedFiles() As String
     'Injection Properties used across multiple forms
-    Dim SavePending As Boolean = False
-    Dim ReadNode As TreeNode
-    Dim OldValue
+    Friend Shared SavePending As Boolean = False
+    Friend Shared ReadNode As TreeNode
+    Friend Shared OldValue
     Public Shared InformationLoaded As Boolean = False
 
 #Region "Main Form Loading Functions"
@@ -174,9 +176,6 @@ Public Class MainForm
         End If
         My.Settings.Save()
     End Sub
-
-    Dim StringRead As Boolean = False
-    Dim PacsRead As Boolean = False
 
     Sub ApplyFormSettings()
         HexViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
@@ -933,7 +932,7 @@ Public Class MainForm
         SentDataGrid.Rows.Clear()
         Return CloneRow
     End Function
-    Dim ReadOnlyCellStyle As DataGridViewCellStyle = New DataGridViewCellStyle With {
+    Public ReadOnlyCellStyle As DataGridViewCellStyle = New DataGridViewCellStyle With {
         .BackColor = SystemColors.Control,
         .ForeColor = SystemColors.ControlText}
 #End Region
@@ -3556,10 +3555,8 @@ Public Class MainForm
         Dim TitleCount As Integer = BitConverter.ToInt32(TitleBytes, &H8)
         ProgressBar1.Maximum = TitleCount - 1
         ProgressBar1.Value = 0
-        ReadNode = SelectedData
         DataGridTitleView.Rows.Clear()
         'Adjusting Title Game Combo Box
-        Dim index As UInt32 = &H10
         Dim TitleSize As Integer = (TitleBytes.Length - &H10) / TitleCount
         If TitleSize = 480 Then '480 1E0 2K19 Titles
             TitleGameComboBox.SelectedIndex = 4
