@@ -31,6 +31,7 @@
     VMUM
     TitleFile
     SoundReference
+    LSD
 
     'here are additional ufc type files that we will have no handling for.  Hoever we want to properly cover them for adding in future.
     UFC_MAP

@@ -24,10 +24,10 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStripMainForm = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -285,16 +285,14 @@ Partial Class MainForm
         Me.Check2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MUSOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EVTOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MusicID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TitantronNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MiniNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.HeaderNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.WallNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.RampNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.WallRightNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.WallLeftNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RawTronEnabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.SmackDownTronEnabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.ClassicTronEnabled = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Check4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Check5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Check6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MUSFileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -308,27 +306,23 @@ Partial Class MainForm
         Me.TitleEnabled = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PropRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TitleNameNum1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TitleNameNum1Full = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TitleNameNum2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TitleNameNum2Full = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TitleNameNum3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TitleNameNum3Full = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Name1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Name1Full = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Name2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Name2Full = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Name3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Name3Full = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MyWWE1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MyWWE1Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MyWWE2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MyWWE2Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TitleUni1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UniTitle1Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TitleUni2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UniTitle2Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TitleTemp1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Uni1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Uni2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Temp1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Temp2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TitleFemale = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.TitleTagTeam = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.TitleCruiserweight = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Female = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.TagTeam = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Cruiserweight = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.UnlockNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TitleTemp4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Temp4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripTitleView = New System.Windows.Forms.MenuStrip()
         Me.TitleGameComboBox = New System.Windows.Forms.ToolStripComboBox()
         Me.StringLoadedTitleMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -345,6 +339,14 @@ Partial Class MainForm
         Me.MenuStripSoundView = New System.Windows.Forms.MenuStrip()
         Me.ToolStripSoundRefSearch = New System.Windows.Forms.ToolStripTextBox()
         Me.SaveChangesSoundMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LSDView = New System.Windows.Forms.TabPage()
+        Me.ToolStripContainer1 = New System.Windows.Forms.ToolStripContainer()
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.ToolStripTextBox1 = New System.Windows.Forms.ToolStripTextBox()
+        Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DataGridLSDView = New System.Windows.Forms.DataGridView()
+        Me.EventID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StringID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripPictureView = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -400,6 +402,10 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MyApplicationBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.Splitter1 = New System.Windows.Forms.Splitter()
+        Me.FileCountToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LockedSlot = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripMainForm.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -447,8 +453,15 @@ Partial Class MainForm
         Me.SoundView.SuspendLayout()
         CType(Me.DataGridSoundView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripSoundView.SuspendLayout()
+        Me.LSDView.SuspendLayout()
+        Me.ToolStripContainer1.ContentPanel.SuspendLayout()
+        Me.ToolStripContainer1.TopToolStripPanel.SuspendLayout()
+        Me.ToolStripContainer1.SuspendLayout()
+        Me.MenuStrip1.SuspendLayout()
+        CType(Me.DataGridLSDView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripPictureView.SuspendLayout()
         Me.TreeViewContext.SuspendLayout()
+        CType(Me.MyApplicationBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStripMainForm
@@ -712,6 +725,7 @@ Partial Class MainForm
         Me.TabControl1.Controls.Add(Me.AssetView)
         Me.TabControl1.Controls.Add(Me.TitleView)
         Me.TabControl1.Controls.Add(Me.SoundView)
+        Me.TabControl1.Controls.Add(Me.LSDView)
         Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
@@ -2286,9 +2300,9 @@ Partial Class MainForm
         '
         'YobjArryIndex
         '
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle5
         Me.YobjArryIndex.HeaderText = "Index"
         Me.YobjArryIndex.Name = "YobjArryIndex"
         Me.YobjArryIndex.ReadOnly = True
@@ -2296,9 +2310,9 @@ Partial Class MainForm
         '
         'ObjArrayParent
         '
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle6
         Me.ObjArrayParent.HeaderText = "Parent"
         Me.ObjArrayParent.MinimumWidth = 100
         Me.ObjArrayParent.Name = "ObjArrayParent"
@@ -2369,9 +2383,9 @@ Partial Class MainForm
         '
         'ContainedYobjArray
         '
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle7
         Me.ContainedYobjArray.HeaderText = "Objects"
         Me.ContainedYobjArray.Name = "ContainedYobjArray"
         Me.ContainedYobjArray.ReadOnly = True
@@ -2379,9 +2393,9 @@ Partial Class MainForm
         '
         'StartIndexYobjArray
         '
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle8
         Me.StartIndexYobjArray.HeaderText = "Start Index"
         Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
         Me.StartIndexYobjArray.ReadOnly = True
@@ -2449,7 +2463,7 @@ Partial Class MainForm
         Me.DataGridAssetView.AllowUserToDeleteRows = False
         Me.DataGridAssetView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.DataGridAssetView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridAssetView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.PacNumber, Me.AttireNum, Me.AudioNum, Me.Check2, Me.MUSOffset, Me.EVTOffset, Me.MusicID, Me.TitantronNum, Me.HeaderNum, Me.WallNum, Me.RampNum, Me.WallRightNum, Me.WallLeftNum, Me.RawTronEnabled, Me.SmackDownTronEnabled, Me.ClassicTronEnabled, Me.Check5, Me.Check6, Me.MUSFileName, Me.EVTFileName, Me.AddAsset, Me.DeleteAsset})
+        Me.DataGridAssetView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.PacNumber, Me.AttireNum, Me.AudioNum, Me.Check2, Me.MUSOffset, Me.EVTOffset, Me.TitantronNum, Me.MiniNum, Me.HeaderNum, Me.WallNum, Me.RampNum, Me.WallRightNum, Me.WallLeftNum, Me.Check4, Me.Check5, Me.Check6, Me.MUSFileName, Me.EVTFileName, Me.AddAsset, Me.DeleteAsset})
         Me.DataGridAssetView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridAssetView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridAssetView.Name = "DataGridAssetView"
@@ -2499,19 +2513,19 @@ Partial Class MainForm
         Me.EVTOffset.Name = "EVTOffset"
         Me.EVTOffset.Width = 84
         '
-        'MusicID
-        '
-        Me.MusicID.HeaderText = "Music ID"
-        Me.MusicID.MaxInputLength = 11
-        Me.MusicID.Name = "MusicID"
-        Me.MusicID.Width = 74
-        '
         'TitantronNum
         '
-        Me.TitantronNum.HeaderText = "Titantron Num"
+        Me.TitantronNum.HeaderText = "TitantronNum"
         Me.TitantronNum.MaxInputLength = 11
         Me.TitantronNum.Name = "TitantronNum"
-        Me.TitantronNum.Width = 99
+        Me.TitantronNum.Width = 96
+        '
+        'MiniNum
+        '
+        Me.MiniNum.HeaderText = "MiniNum"
+        Me.MiniNum.MaxInputLength = 11
+        Me.MiniNum.Name = "MiniNum"
+        Me.MiniNum.Width = 73
         '
         'HeaderNum
         '
@@ -2547,23 +2561,12 @@ Partial Class MainForm
         Me.WallLeftNum.Name = "WallLeftNum"
         Me.WallLeftNum.Width = 93
         '
-        'RawTronEnabled
+        'Check4
         '
-        Me.RawTronEnabled.HeaderText = "Raw Tron"
-        Me.RawTronEnabled.Name = "RawTronEnabled"
-        Me.RawTronEnabled.Width = 60
-        '
-        'SmackDownTronEnabled
-        '
-        Me.SmackDownTronEnabled.HeaderText = "SD Tron"
-        Me.SmackDownTronEnabled.Name = "SmackDownTronEnabled"
-        Me.SmackDownTronEnabled.Width = 53
-        '
-        'ClassicTronEnabled
-        '
-        Me.ClassicTronEnabled.HeaderText = "Classic Tron"
-        Me.ClassicTronEnabled.Name = "ClassicTronEnabled"
-        Me.ClassicTronEnabled.Width = 71
+        Me.Check4.HeaderText = "Check4"
+        Me.Check4.MaxInputLength = 11
+        Me.Check4.Name = "Check4"
+        Me.Check4.Width = 69
         '
         'Check5
         '
@@ -2643,7 +2646,7 @@ Partial Class MainForm
         Me.DataGridTitleView.AllowUserToDeleteRows = False
         Me.DataGridTitleView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
         Me.DataGridTitleView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridTitleView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.TitleEnabled, Me.PropRef, Me.MenuNumber, Me.TitleNameNum1, Me.TitleNameNum1Full, Me.TitleNameNum2, Me.TitleNameNum2Full, Me.TitleNameNum3, Me.TitleNameNum3Full, Me.MyWWE1, Me.MyWWE1Name, Me.MyWWE2, Me.MyWWE2Name, Me.TitleUni1, Me.UniTitle1Name, Me.TitleUni2, Me.UniTitle2Name, Me.TitleTemp1, Me.Temp2, Me.TitleFemale, Me.TitleTagTeam, Me.TitleCruiserweight, Me.UnlockNum, Me.TitleTemp4})
+        Me.DataGridTitleView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.TitleEnabled, Me.PropRef, Me.MenuNumber, Me.Name1, Me.Name1Full, Me.Name2, Me.Name2Full, Me.Name3, Me.Name3Full, Me.MyWWE1, Me.MyWWE2, Me.Uni1, Me.Uni2, Me.Temp1, Me.Temp2, Me.Female, Me.TagTeam, Me.Cruiserweight, Me.UnlockNum, Me.Temp4})
         Me.DataGridTitleView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridTitleView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridTitleView.Name = "DataGridTitleView"
@@ -2673,53 +2676,53 @@ Partial Class MainForm
         Me.MenuNumber.Name = "MenuNumber"
         Me.MenuNumber.Width = 81
         '
-        'TitleNameNum1
+        'Name1
         '
-        Me.TitleNameNum1.HeaderText = "Name1Ref"
-        Me.TitleNameNum1.MaxInputLength = 8
-        Me.TitleNameNum1.Name = "TitleNameNum1"
-        Me.TitleNameNum1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.TitleNameNum1.Width = 64
+        Me.Name1.HeaderText = "Name1"
+        Me.Name1.MaxInputLength = 8
+        Me.Name1.Name = "Name1"
+        Me.Name1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Name1.Width = 47
         '
-        'TitleNameNum1Full
+        'Name1Full
         '
-        Me.TitleNameNum1Full.HeaderText = "Name1Full"
-        Me.TitleNameNum1Full.Name = "TitleNameNum1Full"
-        Me.TitleNameNum1Full.ReadOnly = True
-        Me.TitleNameNum1Full.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.TitleNameNum1Full.Width = 63
+        Me.Name1Full.HeaderText = "Name1Full"
+        Me.Name1Full.Name = "Name1Full"
+        Me.Name1Full.ReadOnly = True
+        Me.Name1Full.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Name1Full.Width = 63
         '
-        'TitleNameNum2
+        'Name2
         '
-        Me.TitleNameNum2.HeaderText = "Name2Ref"
-        Me.TitleNameNum2.MaxInputLength = 8
-        Me.TitleNameNum2.Name = "TitleNameNum2"
-        Me.TitleNameNum2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.TitleNameNum2.Width = 64
+        Me.Name2.HeaderText = "Name2"
+        Me.Name2.MaxInputLength = 8
+        Me.Name2.Name = "Name2"
+        Me.Name2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Name2.Width = 47
         '
-        'TitleNameNum2Full
+        'Name2Full
         '
-        Me.TitleNameNum2Full.HeaderText = "Name2Full"
-        Me.TitleNameNum2Full.Name = "TitleNameNum2Full"
-        Me.TitleNameNum2Full.ReadOnly = True
-        Me.TitleNameNum2Full.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.TitleNameNum2Full.Width = 63
+        Me.Name2Full.HeaderText = "Name2Full"
+        Me.Name2Full.Name = "Name2Full"
+        Me.Name2Full.ReadOnly = True
+        Me.Name2Full.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Name2Full.Width = 63
         '
-        'TitleNameNum3
+        'Name3
         '
-        Me.TitleNameNum3.HeaderText = "Name3Ref"
-        Me.TitleNameNum3.MaxInputLength = 8
-        Me.TitleNameNum3.Name = "TitleNameNum3"
-        Me.TitleNameNum3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.TitleNameNum3.Width = 64
+        Me.Name3.HeaderText = "Name3"
+        Me.Name3.MaxInputLength = 8
+        Me.Name3.Name = "Name3"
+        Me.Name3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Name3.Width = 47
         '
-        'TitleNameNum3Full
+        'Name3Full
         '
-        Me.TitleNameNum3Full.HeaderText = "Name3Full"
-        Me.TitleNameNum3Full.Name = "TitleNameNum3Full"
-        Me.TitleNameNum3Full.ReadOnly = True
-        Me.TitleNameNum3Full.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.TitleNameNum3Full.Width = 63
+        Me.Name3Full.HeaderText = "Name3Full"
+        Me.Name3Full.Name = "Name3Full"
+        Me.Name3Full.ReadOnly = True
+        Me.Name3Full.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Name3Full.Width = 63
         '
         'MyWWE1
         '
@@ -2729,14 +2732,6 @@ Partial Class MainForm
         Me.MyWWE1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.MyWWE1.Width = 62
         '
-        'MyWWE1Name
-        '
-        Me.MyWWE1Name.HeaderText = "MyWWE1Name"
-        Me.MyWWE1Name.Name = "MyWWE1Name"
-        Me.MyWWE1Name.ReadOnly = True
-        Me.MyWWE1Name.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.MyWWE1Name.Width = 90
-        '
         'MyWWE2
         '
         Me.MyWWE2.HeaderText = "MyWWE2"
@@ -2745,78 +2740,54 @@ Partial Class MainForm
         Me.MyWWE2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.MyWWE2.Width = 62
         '
-        'MyWWE2Name
+        'Uni1
         '
-        Me.MyWWE2Name.HeaderText = "MyWWE2Name"
-        Me.MyWWE2Name.Name = "MyWWE2Name"
-        Me.MyWWE2Name.ReadOnly = True
-        Me.MyWWE2Name.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.MyWWE2Name.Width = 90
+        Me.Uni1.HeaderText = "Uni1"
+        Me.Uni1.MaxInputLength = 4
+        Me.Uni1.Name = "Uni1"
+        Me.Uni1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Uni1.Width = 35
         '
-        'TitleUni1
+        'Uni2
         '
-        Me.TitleUni1.HeaderText = "Uni1"
-        Me.TitleUni1.MaxInputLength = 4
-        Me.TitleUni1.Name = "TitleUni1"
-        Me.TitleUni1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.TitleUni1.Width = 35
+        Me.Uni2.HeaderText = "Uni2"
+        Me.Uni2.MaxInputLength = 4
+        Me.Uni2.Name = "Uni2"
+        Me.Uni2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Uni2.Width = 35
         '
-        'UniTitle1Name
+        'Temp1
         '
-        Me.UniTitle1Name.HeaderText = "UniTitle1Name"
-        Me.UniTitle1Name.Name = "UniTitle1Name"
-        Me.UniTitle1Name.ReadOnly = True
-        Me.UniTitle1Name.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.UniTitle1Name.Width = 83
-        '
-        'TitleUni2
-        '
-        Me.TitleUni2.HeaderText = "Uni2"
-        Me.TitleUni2.MaxInputLength = 4
-        Me.TitleUni2.Name = "TitleUni2"
-        Me.TitleUni2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.TitleUni2.Width = 35
-        '
-        'UniTitle2Name
-        '
-        Me.UniTitle2Name.HeaderText = "UniTitle2Name"
-        Me.UniTitle2Name.Name = "UniTitle2Name"
-        Me.UniTitle2Name.ReadOnly = True
-        Me.UniTitle2Name.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.UniTitle2Name.Width = 83
-        '
-        'TitleTemp1
-        '
-        Me.TitleTemp1.HeaderText = "Temp1"
-        Me.TitleTemp1.MaxInputLength = 8
-        Me.TitleTemp1.Name = "TitleTemp1"
-        Me.TitleTemp1.Width = 65
+        Me.Temp1.HeaderText = "Temp1"
+        Me.Temp1.MaxInputLength = 8
+        Me.Temp1.Name = "Temp1"
+        Me.Temp1.Width = 65
         '
         'Temp2
         '
-        Me.Temp2.HeaderText = "TitleType"
+        Me.Temp2.HeaderText = "Temp2"
         Me.Temp2.MaxInputLength = 8
         Me.Temp2.Name = "Temp2"
         Me.Temp2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Temp2.Width = 57
+        Me.Temp2.Width = 46
         '
-        'TitleFemale
+        'Female
         '
-        Me.TitleFemale.HeaderText = "Female"
-        Me.TitleFemale.Name = "TitleFemale"
-        Me.TitleFemale.Width = 47
+        Me.Female.HeaderText = "Female"
+        Me.Female.Name = "Female"
+        Me.Female.Width = 47
         '
-        'TitleTagTeam
+        'TagTeam
         '
-        Me.TitleTagTeam.HeaderText = "TagTeam"
-        Me.TitleTagTeam.Name = "TitleTagTeam"
-        Me.TitleTagTeam.Width = 59
+        Me.TagTeam.HeaderText = "TagTeam"
+        Me.TagTeam.Name = "TagTeam"
+        Me.TagTeam.Width = 59
         '
-        'TitleCruiserweight
+        'Cruiserweight
         '
-        Me.TitleCruiserweight.HeaderText = "Cruiser"
-        Me.TitleCruiserweight.Name = "TitleCruiserweight"
-        Me.TitleCruiserweight.Width = 45
+        Me.Cruiserweight.HeaderText = "Cruiser"
+        Me.Cruiserweight.Name = "Cruiserweight"
+        Me.Cruiserweight.Width = 45
         '
         'UnlockNum
         '
@@ -2826,13 +2797,13 @@ Partial Class MainForm
         Me.UnlockNum.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.UnlockNum.Width = 69
         '
-        'TitleTemp4
+        'Temp4
         '
-        Me.TitleTemp4.HeaderText = "Temp4"
-        Me.TitleTemp4.MaxInputLength = 8
-        Me.TitleTemp4.Name = "TitleTemp4"
-        Me.TitleTemp4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.TitleTemp4.Width = 46
+        Me.Temp4.HeaderText = "Temp4"
+        Me.Temp4.MaxInputLength = 8
+        Me.Temp4.Name = "Temp4"
+        Me.Temp4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Temp4.Width = 46
         '
         'MenuStripTitleView
         '
@@ -2959,6 +2930,80 @@ Partial Class MainForm
         Me.SaveChangesSoundMenuItem.Size = New System.Drawing.Size(92, 23)
         Me.SaveChangesSoundMenuItem.Text = "Save Changes"
         Me.SaveChangesSoundMenuItem.Visible = False
+        '
+        'LSDView
+        '
+        Me.LSDView.Controls.Add(Me.ToolStripContainer1)
+        Me.LSDView.Controls.Add(Me.DataGridLSDView)
+        Me.LSDView.Location = New System.Drawing.Point(4, 22)
+        Me.LSDView.Name = "LSDView"
+        Me.LSDView.Padding = New System.Windows.Forms.Padding(3)
+        Me.LSDView.Size = New System.Drawing.Size(1053, 411)
+        Me.LSDView.TabIndex = 16
+        Me.LSDView.Text = "LSDView"
+        Me.LSDView.UseVisualStyleBackColor = True
+        '
+        'ToolStripContainer1
+        '
+        Me.ToolStripContainer1.BottomToolStripPanelVisible = False
+        '
+        'ToolStripContainer1.ContentPanel
+        '
+        Me.ToolStripContainer1.ContentPanel.Controls.Add(Me.Splitter1)
+        Me.ToolStripContainer1.ContentPanel.Size = New System.Drawing.Size(1052, 0)
+        Me.ToolStripContainer1.LeftToolStripPanelVisible = False
+        Me.ToolStripContainer1.Location = New System.Drawing.Point(0, 0)
+        Me.ToolStripContainer1.Name = "ToolStripContainer1"
+        Me.ToolStripContainer1.RightToolStripPanelVisible = False
+        Me.ToolStripContainer1.Size = New System.Drawing.Size(1052, 25)
+        Me.ToolStripContainer1.TabIndex = 1
+        Me.ToolStripContainer1.Text = "ToolStripContainer1"
+        '
+        'ToolStripContainer1.TopToolStripPanel
+        '
+        Me.ToolStripContainer1.TopToolStripPanel.Controls.Add(Me.MenuStrip1)
+        '
+        'MenuStrip1
+        '
+        Me.MenuStrip1.Dock = System.Windows.Forms.DockStyle.None
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripTextBox1, Me.ToolStripMenuItem3, Me.FileCountToolStripMenuItem})
+        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.MenuStrip1.Name = "MenuStrip1"
+        Me.MenuStrip1.Size = New System.Drawing.Size(1052, 27)
+        Me.MenuStrip1.TabIndex = 1
+        Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'ToolStripTextBox1
+        '
+        Me.ToolStripTextBox1.Name = "ToolStripTextBox1"
+        Me.ToolStripTextBox1.Size = New System.Drawing.Size(100, 23)
+        Me.ToolStripTextBox1.Text = "Search..."
+        '
+        'ToolStripMenuItem3
+        '
+        Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
+        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(92, 23)
+        Me.ToolStripMenuItem3.Text = "Save Changes"
+        Me.ToolStripMenuItem3.Visible = False
+        '
+        'DataGridLSDView
+        '
+        Me.DataGridLSDView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridLSDView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.EventID, Me.StringID, Me.LockedSlot})
+        Me.DataGridLSDView.Location = New System.Drawing.Point(0, 25)
+        Me.DataGridLSDView.Name = "DataGridLSDView"
+        Me.DataGridLSDView.Size = New System.Drawing.Size(1047, 367)
+        Me.DataGridLSDView.TabIndex = 0
+        '
+        'EventID
+        '
+        Me.EventID.HeaderText = "Event ID"
+        Me.EventID.Name = "EventID"
+        '
+        'StringID
+        '
+        Me.StringID.HeaderText = "String ID"
+        Me.StringID.Name = "StringID"
         '
         'MenuStripPictureView
         '
@@ -3299,6 +3344,29 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn35.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn35.Width = 41
         '
+        'MyApplicationBindingSource
+        '
+        Me.MyApplicationBindingSource.DataSource = GetType(WrestleMINUS.My.MyApplication)
+        '
+        'Splitter1
+        '
+        Me.Splitter1.Location = New System.Drawing.Point(0, 0)
+        Me.Splitter1.Name = "Splitter1"
+        Me.Splitter1.Size = New System.Drawing.Size(3, 0)
+        Me.Splitter1.TabIndex = 0
+        Me.Splitter1.TabStop = False
+        '
+        'FileCountToolStripMenuItem
+        '
+        Me.FileCountToolStripMenuItem.Name = "FileCountToolStripMenuItem"
+        Me.FileCountToolStripMenuItem.Size = New System.Drawing.Size(74, 23)
+        Me.FileCountToolStripMenuItem.Text = "File count:"
+        '
+        'LockedSlot
+        '
+        Me.LockedSlot.HeaderText = "Locked to slot"
+        Me.LockedSlot.Name = "LockedSlot"
+        '
         'MainForm
         '
         Me.AllowDrop = True
@@ -3387,9 +3455,19 @@ Partial Class MainForm
         CType(Me.DataGridSoundView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStripSoundView.ResumeLayout(False)
         Me.MenuStripSoundView.PerformLayout()
+        Me.LSDView.ResumeLayout(False)
+        Me.ToolStripContainer1.ContentPanel.ResumeLayout(False)
+        Me.ToolStripContainer1.TopToolStripPanel.ResumeLayout(False)
+        Me.ToolStripContainer1.TopToolStripPanel.PerformLayout()
+        Me.ToolStripContainer1.ResumeLayout(False)
+        Me.ToolStripContainer1.PerformLayout()
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
+        CType(Me.DataGridLSDView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStripPictureView.ResumeLayout(False)
         Me.MenuStripPictureView.PerformLayout()
         Me.TreeViewContext.ResumeLayout(False)
+        CType(Me.MyApplicationBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -3558,6 +3636,26 @@ Partial Class MainForm
     Friend WithEvents PacsLoadedTitleMenuItem As ToolStripMenuItem
     Friend WithEvents SaveChangesTitleMenuItem As ToolStripMenuItem
     Friend WithEvents TitleGameComboBox As ToolStripComboBox
+    Friend WithEvents TitleEnabled As DataGridViewTextBoxColumn
+    Friend WithEvents PropRef As DataGridViewTextBoxColumn
+    Friend WithEvents MenuNumber As DataGridViewTextBoxColumn
+    Friend WithEvents Name1 As DataGridViewTextBoxColumn
+    Friend WithEvents Name1Full As DataGridViewTextBoxColumn
+    Friend WithEvents Name2 As DataGridViewTextBoxColumn
+    Friend WithEvents Name2Full As DataGridViewTextBoxColumn
+    Friend WithEvents Name3 As DataGridViewTextBoxColumn
+    Friend WithEvents Name3Full As DataGridViewTextBoxColumn
+    Friend WithEvents MyWWE1 As DataGridViewTextBoxColumn
+    Friend WithEvents MyWWE2 As DataGridViewTextBoxColumn
+    Friend WithEvents Uni1 As DataGridViewTextBoxColumn
+    Friend WithEvents Uni2 As DataGridViewTextBoxColumn
+    Friend WithEvents Temp1 As DataGridViewTextBoxColumn
+    Friend WithEvents Temp2 As DataGridViewTextBoxColumn
+    Friend WithEvents Female As DataGridViewCheckBoxColumn
+    Friend WithEvents TagTeam As DataGridViewCheckBoxColumn
+    Friend WithEvents Cruiserweight As DataGridViewCheckBoxColumn
+    Friend WithEvents UnlockNum As DataGridViewTextBoxColumn
+    Friend WithEvents Temp4 As DataGridViewTextBoxColumn
     Friend WithEvents SupportToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents GitHubIssuesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents OptionsToolStripMenuItem As ToolStripMenuItem
@@ -3728,44 +3826,30 @@ Partial Class MainForm
     Friend WithEvents Check2 As DataGridViewTextBoxColumn
     Friend WithEvents MUSOffset As DataGridViewTextBoxColumn
     Friend WithEvents EVTOffset As DataGridViewTextBoxColumn
-    Friend WithEvents MusicID As DataGridViewTextBoxColumn
     Friend WithEvents TitantronNum As DataGridViewTextBoxColumn
+    Friend WithEvents MiniNum As DataGridViewTextBoxColumn
     Friend WithEvents HeaderNum As DataGridViewTextBoxColumn
     Friend WithEvents WallNum As DataGridViewTextBoxColumn
     Friend WithEvents RampNum As DataGridViewTextBoxColumn
     Friend WithEvents WallRightNum As DataGridViewTextBoxColumn
     Friend WithEvents WallLeftNum As DataGridViewTextBoxColumn
-    Friend WithEvents RawTronEnabled As DataGridViewCheckBoxColumn
-    Friend WithEvents SmackDownTronEnabled As DataGridViewCheckBoxColumn
-    Friend WithEvents ClassicTronEnabled As DataGridViewCheckBoxColumn
+    Friend WithEvents Check4 As DataGridViewTextBoxColumn
     Friend WithEvents Check5 As DataGridViewTextBoxColumn
     Friend WithEvents Check6 As DataGridViewTextBoxColumn
     Friend WithEvents MUSFileName As DataGridViewTextBoxColumn
     Friend WithEvents EVTFileName As DataGridViewTextBoxColumn
     Friend WithEvents AddAsset As DataGridViewButtonColumn
     Friend WithEvents DeleteAsset As DataGridViewButtonColumn
-    Friend WithEvents TitleEnabled As DataGridViewTextBoxColumn
-    Friend WithEvents PropRef As DataGridViewTextBoxColumn
-    Friend WithEvents MenuNumber As DataGridViewTextBoxColumn
-    Friend WithEvents TitleNameNum1 As DataGridViewTextBoxColumn
-    Friend WithEvents TitleNameNum1Full As DataGridViewTextBoxColumn
-    Friend WithEvents TitleNameNum2 As DataGridViewTextBoxColumn
-    Friend WithEvents TitleNameNum2Full As DataGridViewTextBoxColumn
-    Friend WithEvents TitleNameNum3 As DataGridViewTextBoxColumn
-    Friend WithEvents TitleNameNum3Full As DataGridViewTextBoxColumn
-    Friend WithEvents MyWWE1 As DataGridViewTextBoxColumn
-    Friend WithEvents MyWWE1Name As DataGridViewTextBoxColumn
-    Friend WithEvents MyWWE2 As DataGridViewTextBoxColumn
-    Friend WithEvents MyWWE2Name As DataGridViewTextBoxColumn
-    Friend WithEvents TitleUni1 As DataGridViewTextBoxColumn
-    Friend WithEvents UniTitle1Name As DataGridViewTextBoxColumn
-    Friend WithEvents TitleUni2 As DataGridViewTextBoxColumn
-    Friend WithEvents UniTitle2Name As DataGridViewTextBoxColumn
-    Friend WithEvents TitleTemp1 As DataGridViewTextBoxColumn
-    Friend WithEvents Temp2 As DataGridViewTextBoxColumn
-    Friend WithEvents TitleFemale As DataGridViewCheckBoxColumn
-    Friend WithEvents TitleTagTeam As DataGridViewCheckBoxColumn
-    Friend WithEvents TitleCruiserweight As DataGridViewCheckBoxColumn
-    Friend WithEvents UnlockNum As DataGridViewTextBoxColumn
-    Friend WithEvents TitleTemp4 As DataGridViewTextBoxColumn
+    Friend WithEvents LSDView As TabPage
+    Friend WithEvents DataGridLSDView As DataGridView
+    Friend WithEvents EventID As DataGridViewTextBoxColumn
+    Friend WithEvents StringID As DataGridViewTextBoxColumn
+    Friend WithEvents MyApplicationBindingSource As BindingSource
+    Friend WithEvents ToolStripContainer1 As ToolStripContainer
+    Friend WithEvents MenuStrip1 As MenuStrip
+    Friend WithEvents ToolStripTextBox1 As ToolStripTextBox
+    Friend WithEvents ToolStripMenuItem3 As ToolStripMenuItem
+    Friend WithEvents Splitter1 As Splitter
+    Friend WithEvents FileCountToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents LockedSlot As DataGridViewTextBoxColumn
 End Class

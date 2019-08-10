@@ -118,12 +118,6 @@ Public Class MainForm
                                     InjectedByte = BuildAttireFile()
                                 Case PackageType.TitleFile
                                     InjectedByte = BuildTitleFile()
-                                Case PackageType.VMUM
-                                    InjectedByte = BuildAssetArrayFile()
-                                Case PackageType.TitleFile
-                                    InjectedByte = BuildTitleFile()
-                                Case PackageType.SoundReference
-                                    InjectedByte = BuildSoundRefFile()
                             End Select
                             FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, InjectedByte)
                         Else 'Dialog Result No Save Canceled
@@ -154,7 +148,6 @@ Public Class MainForm
             MainForm.TreeView1.ImageList = Nothing
         End If
     End Sub
-
     Sub FillCompressionMenu()
         'Tool Menu Compress in place
         If PackUnpack.CheckBPEExe() Then
@@ -174,28 +167,12 @@ Public Class MainForm
         End If
         My.Settings.Save()
     End Sub
-
-    Dim StringRead As Boolean = False
-    Dim PacsRead As Boolean = False
-
     Sub ApplyFormSettings()
         HexViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         TextViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         MiscViewType.SelectedIndex = My.Settings.MiscModeIndex
         ShowViewType.SelectedIndex = My.Settings.ShowModeIndex
-        If Not StringReferences(0) = "String Not Read" Then
-            StringRead = True
-        End If
-        StringLoadedShowMenuItem.Text = "String Loaded: " & StringRead.ToString
-        StringLoadedAttireMenuItem.Text = "String Loaded: " & StringRead.ToString
-        StringLoadedTitleMenuItem.Text = "String Loaded: " & StringRead.ToString
-        If Not PacNumbers(0) = -1 Then
-            PacsRead = True
-        End If
-        PacsLoadedAttireMenuItem.Text = "Pacs Loaded: " & PacsRead.ToString
-        PacsLoadedTitleMenuItem.Text = "Pacs Loaded: " & PacsRead.ToString
     End Sub
-
 #End Region
 
 #Region "Menu Strip"
@@ -580,9 +557,11 @@ Public Class MainForm
                     Case AssetView.Name
                         FillAssetFileView(ReadNode)
                     Case TitleView.Name
-                        FillTitleFileView(ReadNode)
+                        LoadTitleFileView(ReadNode)
                     Case SoundView.Name
-                        FillSoundRefFileView(ReadNode)
+                        LoadSoundRefFileView(ReadNode)
+                        'Case LSDView.Name
+                        'LoadLSDFileView(ReadNode)
                 End Select
             End If
         End If
@@ -615,6 +594,8 @@ Public Class MainForm
                 Return TitleView
             Case PackageType.SoundReference
                 Return SoundView
+            Case PackageType.LSD
+                Return LSDView
             Case Else
                 Return Nothing
         End Select
@@ -893,7 +874,6 @@ Public Class MainForm
 #End Region
 
 #Region "View Controls"
-
 #Region "Multi-View Controls"
     'Commands that should be generic to be used across multiple tabs.
     Private Sub StoreOldComboBoxValue(sender As Object, e As EventArgs) Handles HexViewBitWidth.Enter,
@@ -904,11 +884,8 @@ Public Class MainForm
                                                                                                     DataGridShowView.CellEnter,
                                                                                                     DataGridNIBJView.CellEnter,
                                                                                                     DataGridAttireView.CellEnter,
-                                                                                                    DataGridMaskView.CellEnter,
                                                                                                     DataGridObjArrayView.CellEnter,
-                                                                                                    DataGridAssetView.CellEnter,
-                                                                                                    DataGridTitleView.CellEnter,
-                                                                                                    DataGridSoundView.CellEnter
+                                                                                                    DataGridAssetView.CellEnter
         OldValue = sender.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
     End Sub
     Sub SaveFileNoLongerPending()
@@ -923,7 +900,6 @@ Public Class MainForm
         SaveYOBJArrayChangesToolStripMenuItem.Visible = False
         SaveAssetViewChangesToolStripMenuItem.Visible = False
         SaveChangesTitleMenuItem.Visible = False
-        SaveChangesSoundMenuItem.Visible = False
         'TO DO Update this to include all save buttons
     End Sub
     Function ClearandGetClone(SentDataGrid) As DataGridViewRow
@@ -1767,13 +1743,17 @@ Public Class MainForm
 #End Region
 
 #Region "Show View Controls"
-
     Sub FillShowView(SelectedData As TreeNode)
         '&h74 2K15 (&h4e), 2K16 (&h78) 2K17 (&h79),
         '&h78 2K18 (&h79)
         '&h7C 2K19 (&h99)
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridShowView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        Dim StringRead As Boolean = False
+        If Not StringReferences(0) = "String Not Read" Then
+            StringRead = True
+        End If
+        StringLoadedShowMenuItem.Text = "String Loaded: " & StringRead.ToString
         Dim ShowBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
         Dim FileLength As Integer = ShowBytes.Length
         Dim GameTypeTest As UInt32 = BitConverter.ToInt32(ShowBytes, 8)
@@ -2035,7 +2015,6 @@ Public Class MainForm
                 End If
         End Select
     End Sub
-
     Private Sub DataGridNIBJView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridNIBJView.CellEndEdit
         Dim MyCell As DataGridViewCell = DataGridNIBJView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         If Not GeneralTools.HexCheck(MyCell.Value) OrElse
@@ -2054,7 +2033,6 @@ Public Class MainForm
             SaveNIBJChangesToolStripMenuItem.Visible = True
         End If
     End Sub
-
     Private Sub SaveNIBJChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveNIBJChangesToolStripMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildNIBJFile())
     End Sub
@@ -2125,6 +2103,16 @@ Public Class MainForm
         RemoveHandler DataGridAttireView.RowsAdded, AddressOf DataGridAttireView_RowsAdded
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridAttireView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        Dim StringRead As Boolean = False
+        If Not StringReferences(0) = "String Not Read" Then
+            StringRead = True
+        End If
+        StringLoadedAttireMenuItem.Text = "String Loaded: " & StringRead.ToString
+        Dim PacsRead As Boolean = False
+        If Not PacNumbers(0) = -1 Then
+            PacsRead = True
+        End If
+        PacsLoadedAttireMenuItem.Text = "Pacs Loaded: " & PacsRead.ToString
         Dim AttireBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
         Dim WrestlerCount As Integer = BitConverter.ToInt32(AttireBytes, &H8)
         Dim WrestlerPacs(WrestlerCount - 1) As Integer
@@ -2393,7 +2381,7 @@ Public Class MainForm
         Dim MaskBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
         Dim MaskHeader As Integer = BitConverter.ToInt32(MaskBytes, &H4) ' should be C
         If Not MaskHeader = &HC Then
-            MessageBox.Show("Unknown error with CE header")
+            MessageBox.Show("Unkown error with CE header")
             Exit Sub
         End If
         Dim ActiveIndex As Long = MaskHeader
@@ -2788,7 +2776,6 @@ Public Class MainForm
         BodyPartCount = 0
     End Sub
 #End Region
-
 #Region "Tutorial Links"
     Private Sub TutorialVideoToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TutorialVideoToolStripMenuItem.Click
         Try
@@ -2826,9 +2813,7 @@ Public Class MainForm
         End Try
     End Sub
 #End Region
-
 #Region "DataGridView Actions"
-
     Private Sub DataGridMaskView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridMaskView.CellContentClick
         Dim senderGrid = DirectCast(sender, DataGridView)
         If TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewButtonColumn Then
@@ -2851,7 +2836,13 @@ Public Class MainForm
             End If
         End If
     End Sub
-
+    Private Sub DataGridMaskView_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridMaskView.CellEnter
+        If e.ColumnIndex = 0 OrElse
+           e.ColumnIndex = 1 OrElse
+           e.ColumnIndex = 2 Then 'Hex Text Reference Editing
+            OldValue = DataGridMaskView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
+        End If
+    End Sub
     Private Sub DataGridMaskView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridMaskView.CellEndEdit
         Dim MyCell As DataGridViewCell = DataGridMaskView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         Dim NewValue As String = MyCell.Value
@@ -2905,12 +2896,10 @@ Public Class MainForm
         SaveMaskChangesToolStripMenuItem.Visible = True
     End Sub
 #End Region
-
 #End Region
 
 #Region "Object Array Controls"
     Dim ObjArrayContainerCount As Integer = 0
-
     Sub FillObjectArrayView(SelectedData As TreeNode)
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridObjArrayView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
@@ -2937,6 +2926,7 @@ Public Class MainForm
             TempGridRow.Cells(3).Value = BitConverter.ToBoolean(ObjArrayBytes, &H20 + i * 8) 'Enabled
             If InternalItemCount > 0 Then
                 TempGridRow.Cells(3).ReadOnly = True
+                TempGridRow.Cells(3).Style = ReadOnlyCellStyle
             End If
             TempGridRow.Cells(4).Value = ItemString  'Object Name
             TempGridRow.Cells(5).Value = BitConverter.ToSingle(ObjArrayBytes, &H30 + ChairCount * 8 + i * &H30) 'X Float
@@ -2951,7 +2941,6 @@ Public Class MainForm
         Next
         DataGridObjArrayView.Rows.AddRange(WorkingCollection.ToArray())
     End Sub
-
     Sub LoadObjectArrayView(CSVString As String())
         'Line 0 should be the header lione and ignored
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridObjArrayView)
@@ -2984,7 +2973,6 @@ Public Class MainForm
         Next
         DataGridObjArrayView.Rows.AddRange(WorkingCollection.ToArray())
     End Sub
-
     Private Sub DataGridObjArrayView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridObjArrayView.CellEndEdit
         Dim MyCell As DataGridViewCell = DataGridObjArrayView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         Select Case e.ColumnIndex
@@ -3020,7 +3008,6 @@ Public Class MainForm
         End Select
         SaveYOBJArrayChangesToolStripMenuItem.Visible = True
     End Sub
-
     Private Sub DataGridObjArrayView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridObjArrayView.CellContentClick
         Dim senderGrid = DirectCast(sender, DataGridView)
         If TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewButtonColumn AndAlso
@@ -3046,7 +3033,6 @@ Public Class MainForm
             End If
         End If
     End Sub
-
     Sub AddObjArrayContainer(index As Integer)
         'This function adds a new container object with 1 item at the location of index+1
         Dim Duplicaterow As DataGridViewRow = DataGridObjArrayView.Rows(index).Clone
@@ -3073,7 +3059,6 @@ Public Class MainForm
         MessageBox.Show("Adding Sub Object " & LastItemOfPreviousContainerToCopy)
         AddObjArrayIndividualObject(LastItemOfPreviousContainerToCopy, True)
     End Sub
-
     Sub AddObjArrayIndividualObject(index As Integer, Optional NewContainer As Boolean = False)
         'This function adds a duplicate row at index + 1, but index + 1 has to have true index updated as well
         Dim Duplicaterow As DataGridViewRow = DataGridObjArrayView.Rows(index).Clone
@@ -3106,7 +3091,6 @@ Public Class MainForm
             End If
         Next
     End Sub
-
     Sub DeleteObjArrayContainer(index As Integer)
         'This function runs before the container is actually deleted
         If CInt(DataGridObjArrayView.Rows(index).Cells(11).Value) > 0 Then
@@ -3136,7 +3120,6 @@ Public Class MainForm
             ObjArrayContainerCount -= 1
         End If
     End Sub
-
     Sub DeleteObjArrayIndividualObject(index As Integer)
         'This function runs before the index is actually deleted
         For i As Integer = index + 1 To DataGridObjArrayView.Rows.Count - 1
@@ -3163,11 +3146,9 @@ Public Class MainForm
         DataGridObjArrayView.Rows.RemoveAt(index)
         If DeleteContainer Then DeleteObjArrayContainer(ContainertoDelete)
     End Sub
-
     Private Sub SaveYOBJArrayChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveYOBJArrayChangesToolStripMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildYOBJArrayFile())
     End Sub
-
     Private Function BuildYOBJArrayFile() As Byte()
         Dim ShowBytes As Byte() = FilePartHandlers.GetFilePartBytes(ReadNode.Tag)
         Dim ReturnedBytes As Byte() = New Byte(&H20 + ((&H30 + &H8) * DataGridObjArrayView.Rows.Count) - 1) {}
@@ -3222,7 +3203,6 @@ Public Class MainForm
         Next
         Return ReturnedBytes
     End Function
-
     Private Sub ExportYOBJArrayToCSVToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportYOBJArrayToCSVToolStripMenuItem.Click
         Dim SaveCSVFile As SaveFileDialog = New SaveFileDialog With {
             .FileName = "Object Array.csv",
@@ -3259,7 +3239,6 @@ Public Class MainForm
             MessageBox.Show("File Saved")
         End If
     End Sub
-
     Private Sub ImportYOBJArrayFromCSVToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportYOBJArrayFromCSVToolStripMenuItem.Click
         Dim OpenCSVFile As OpenFileDialog = New OpenFileDialog With {
             .FileName = "Object Array.csv",
@@ -3271,10 +3250,14 @@ Public Class MainForm
             End If
         End If
     End Sub
-
 #End Region
 
+    'Left off refactoring here
+    'Forms to Use CellEndEdit instead of Cell value changed as it fixes a lot of stupid handling issues.
+    'TO DO Increase speed of data grid population with collections
+    'These is the potential for better programming using data binding data grid views.
 #Region "Asset View Controls"
+    'TO Add Saving to this menu
 
     Public Class AssetFileInformation
         Public PacNumber As UInt32 = 0
@@ -3283,18 +3266,17 @@ Public Class MainForm
         Public Check2 As UInt32 = 0
         Public MusicOffset As UInt32 = 0
         Public EVTOffset As UInt32 = 0
-        Public MusicNum As UInt32 = 0
         Public TitantronNum As UInt32 = 0
+        Public MiniNum As UInt32 = 0
         Public HeaderNum As UInt32 = 0
         Public WallNum As UInt32 = 0
         Public RampNum As UInt32 = 0
         Public WallRightNum As UInt32 = 0
         Public WallLeftNum As UInt32 = 0
-        Public RawTronEnabled As Boolean = False
-        Public SDTronEnabled As Boolean = False
-        Public ClassicTronEnable As Boolean = False
+        Public Check4 As UInt32 = 0
         Public Check5 As UInt32 = 0
         Public Check6 As UInt32 = 0
+        Public CAEMenuItemNum As UInt16 = 0
     End Class
 
     Sub FillAssetFileView(SelectedData As TreeNode)
@@ -3338,24 +3320,22 @@ Public Class MainForm
             TempGridRow.Cells(3).Value = TempAssetFile.Check2
             TempGridRow.Cells(4).Value = TempAssetFile.MusicOffset
             TempGridRow.Cells(5).Value = TempAssetFile.EVTOffset
-            TempGridRow.Cells(6).Value = TempAssetFile.MusicNum
-            TempGridRow.Cells(7).Value = TempAssetFile.TitantronNum
+            TempGridRow.Cells(6).Value = TempAssetFile.TitantronNum
+            TempGridRow.Cells(7).Value = TempAssetFile.MiniNum
             TempGridRow.Cells(8).Value = TempAssetFile.HeaderNum
             TempGridRow.Cells(9).Value = TempAssetFile.WallNum
             TempGridRow.Cells(10).Value = TempAssetFile.RampNum
             TempGridRow.Cells(11).Value = TempAssetFile.WallRightNum
             TempGridRow.Cells(12).Value = TempAssetFile.WallLeftNum
-            TempGridRow.Cells(13).Value = TempAssetFile.RawTronEnabled
-            TempGridRow.Cells(14).Value = TempAssetFile.SDTronEnabled
-            TempGridRow.Cells(15).Value = TempAssetFile.ClassicTronEnable
-            TempGridRow.Cells(16).Value = TempAssetFile.Check5
-            TempGridRow.Cells(17).Value = TempAssetFile.Check6
-            TempGridRow.Cells(18).Value = MUSFileName
-            TempGridRow.Cells(19).Value = EVTFileName
-            TempGridRow.HeaderCell.Value = i.ToString
+            TempGridRow.Cells(13).Value = TempAssetFile.Check4
+            TempGridRow.Cells(14).Value = TempAssetFile.Check5
+            TempGridRow.Cells(15).Value = TempAssetFile.Check6
+            TempGridRow.Cells(16).Value = MUSFileName
+            TempGridRow.Cells(17).Value = EVTFileName
             TempGridRow.Tag = TempAssetFile
             WorkingCollection.Add(TempGridRow)
             ProgressBar1.Value = i
+            'DataGridAssetView.Rows.Add(PacNumber, AttireNum, AudioNum, Check2, Check3, FileOffset, TitantronNum, MiniNum, HeaderNum, WallNum, RampNum, WallRightNum, WallLeftNum, Check4, Check5, Check6, FileName)
         Next
         DataGridAssetView.Rows.AddRange(WorkingCollection.ToArray)
     End Sub
@@ -3368,21 +3348,19 @@ Public Class MainForm
             .Check2 = BitConverter.ToUInt32(TestedByteArray, 12),
             .MusicOffset = BitConverter.ToUInt32(TestedByteArray, 16),
             .EVTOffset = BitConverter.ToUInt32(TestedByteArray, 20),
-            .MusicNum = BitConverter.ToUInt32(TestedByteArray, 24),
-            .TitantronNum = BitConverter.ToUInt32(TestedByteArray, 28),
+            .TitantronNum = BitConverter.ToUInt32(TestedByteArray, 24),
+            .MiniNum = BitConverter.ToUInt32(TestedByteArray, 28),
             .HeaderNum = BitConverter.ToUInt32(TestedByteArray, 32),
             .WallNum = BitConverter.ToUInt32(TestedByteArray, 36),
             .RampNum = BitConverter.ToUInt32(TestedByteArray, 40),
             .WallRightNum = BitConverter.ToUInt32(TestedByteArray, 44),
             .WallLeftNum = BitConverter.ToUInt32(TestedByteArray, 48),
-            .RawTronEnabled = BitConverter.ToBoolean(TestedByteArray, 52),
-            .SDTronEnabled = BitConverter.ToBoolean(TestedByteArray, 53),
-            .ClassicTronEnable = BitConverter.ToBoolean(TestedByteArray, 54),
+            .Check4 = BitConverter.ToUInt32(TestedByteArray, 52),
             .Check5 = BitConverter.ToUInt32(TestedByteArray, 56),
             .Check6 = BitConverter.ToUInt32(TestedByteArray, 60)}
     End Function
 
-    Function GetBytesFromAssetFileDataGridRow(RequestedByteRow As DataGridViewRow) As Byte()
+    Function GetBytesFromDataGridRow(RequestedByteRow As DataGridViewRow) As Byte()
         Dim ReturnedBytes As Byte() = New Byte(&H40) {}
         Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(0).Value)), 0, ReturnedBytes, 0, 4)
         Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(1).Value)), 0, ReturnedBytes, 4, 4)
@@ -3397,11 +3375,9 @@ Public Class MainForm
         Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(10).Value)), 0, ReturnedBytes, 40, 4)
         Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(11).Value)), 0, ReturnedBytes, 44, 4)
         Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(12).Value)), 0, ReturnedBytes, 48, 4)
-        Array.Copy(BitConverter.GetBytes(CBool(RequestedByteRow.Cells(13).Value)), 0, ReturnedBytes, 52, 1)
-        Array.Copy(BitConverter.GetBytes(CBool(RequestedByteRow.Cells(14).Value)), 0, ReturnedBytes, 53, 1)
-        Array.Copy(BitConverter.GetBytes(CBool(RequestedByteRow.Cells(15).Value)), 0, ReturnedBytes, 54, 1)
-        Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(16).Value)), 0, ReturnedBytes, 56, 4)
-        Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(17).Value)), 0, ReturnedBytes, 60, 4)
+        Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(13).Value)), 0, ReturnedBytes, 52, 4)
+        Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(14).Value)), 0, ReturnedBytes, 56, 4)
+        Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(15).Value)), 0, ReturnedBytes, 60, 4)
         Return ReturnedBytes
     End Function
 
@@ -3424,26 +3400,21 @@ Public Class MainForm
         Return (CurrentIndex - (CurrentIndex Mod &H100) + &H100)
     End Function
 
+
     Private Sub DataGridAssetView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridAssetView.CellEndEdit
         Dim StartingStrings As List(Of String) = New List(Of String)
         StartingStrings.AddRange({"ent", "cre", "tag", "MUS"})
         Dim MyCell As DataGridViewCell = DataGridAssetView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         If e.ColumnIndex = 16 OrElse e.ColumnIndex = 17 Then
             'A File Name has been Added or Edited
-            If MyCell.Value.ToString.Contains("_") Then
-                Dim SplitUpString As String() = MyCell.Value.Split("_")
-                If SplitUpString.Count > 3 AndAlso
+            Dim SplitUpString As String() = MyCell.Value.Split("_")
+            If SplitUpString.Count > 3 AndAlso
                 StartingStrings.Contains(SplitUpString(0)) Then
-                    For i As Integer = 1 To SplitUpString.Count - 1
-                        If Not IsNumeric(SplitUpString(i)) Then
-                            MyCell.Value = OldValue
-                        End If
-                    Next
-                ElseIf MyCell.Value = "" Then
-                    'do nothing
-                Else
-                    MyCell.Value = OldValue
-                End If
+                For i As Integer = 1 To SplitUpString.Count - 1
+                    If Not IsNumeric(SplitUpString(i)) Then
+                        MyCell.Value = OldValue
+                    End If
+                Next
             Else
                 MyCell.Value = OldValue
             End If
@@ -3501,7 +3472,7 @@ Public Class MainForm
         Array.Copy(New Byte() {&H56, &H4D, &H55, &H4D, &H10, &H0, &H0, &H0, &HE8, &H3, &H0, &H0, &H0, &H0, &H0, &H0, &H1, &H0, &H0, &H0, &H82, &H0, &H0, &H0}, 0, ReturnedBytes, 0, &H18)
         Array.Copy(BitConverter.GetBytes(CUInt(DataGridAssetView.Rows.Count)), 0, ReturnedBytes, &HC, 4)
         For i As Integer = 0 To DataGridAssetView.Rows.Count - 1
-            Array.Copy(GetBytesFromAssetFileDataGridRow(DataGridAssetView.Rows(i)), 0, ReturnedBytes, &H18 + i * &H40, &H40)
+            Array.Copy(GetBytesFromDataGridRow(DataGridAssetView.Rows(i)), 0, ReturnedBytes, &H18 + i * &H40, &H40)
             'Copying Music Names
             If DataGridAssetView.Rows(i).Cells(4).Value > 0 AndAlso DataGridAssetView.Rows(i).Cells(4).Value < (UInt32.MaxValue - 1) Then
                 Array.Copy(Encoding.Default.GetBytes(DataGridAssetView.Rows(i).Cells(16).Value), 0,
@@ -3517,389 +3488,271 @@ Public Class MainForm
         Next
         Return ReturnedBytes
     End Function
-
 #End Region
-
+    'TO DO... Combine some of these redundant Close view functions...
 #Region "Title View"
-
-    Public Class TitleInformation
-        Public Enabled As UInt32 = 0
-        Public PropID As UInt32 = 0
-        Public MenuNumber As UInt32 = 0
-        Public NameRef1 As UInt32 = 0
-        Public NameString1 As String = ""
-        Public NameRef2 As UInt32 = 0
-        Public NameString2 As String = ""
-        Public NameRef3 As UInt32 = 0
-        Public NameString3 As String = ""
-        Public WWEDefault1 As UInt32 = &H400 'default value for no champ
-        Public WWEDefault1Name As String = ""
-        Public WWEDefault2 As UInt32 = &H400
-        Public WWEDefault2Name As String = ""
-        Public UniDefault1 As UInt32 = &H400
-        Public UniDefault1Name As String = ""
-        Public UniDefault2 As UInt32 = &H400
-        Public UniDefault2Name As String = ""
-        Public Temp1 As UInt32 = 0
-        Public TitleTypeByte As UInt32 = 0
-        Public Female As Boolean = False
-        Public TagTeam As Boolean = False
-        Public Cuiserweight As Boolean = False
-        Public UnlockNum As UInt32 = 0
-        Public Temp4 As UInt32 = 0
-    End Class
-
-    Sub FillTitleFileView(SelectedData As TreeNode)
-        Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridTitleView)
-        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
-        Dim TitleBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
-        Dim TitleCount As Integer = BitConverter.ToInt32(TitleBytes, &H8)
-        ProgressBar1.Maximum = TitleCount - 1
-        ProgressBar1.Value = 0
+    Dim TitleHeaderBytes As Byte()
+    Sub CloseTitleView()
+        If SavePending Then
+            If MessageBox.Show("Changes have not yet been saved.  Would you like to save them now?", "Save Changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildTitleFile())
+            End If
+            SaveChangesTitleMenuItem.Visible = False
+            SavePending = False
+        End If
+        ReadNode = Nothing
+        TabControl1.TabPages.Remove(TitleView)
+    End Sub
+    Sub LoadTitleFileView(SelectedData As TreeNode)
         ReadNode = SelectedData
         DataGridTitleView.Rows.Clear()
-        'Adjusting Title Game Combo Box
+        Dim StringRead As Boolean = False
+        If Not StringReferences(0) = "String Not Read" Then
+            StringRead = True
+        End If
+        StringLoadedTitleMenuItem.Text = "String Loaded: " & StringRead.ToString
+        Dim PacsRead As Boolean = False
+        If Not PacNumbers(0) = -1 Then
+            PacsRead = True
+        End If
+        PacsLoadedTitleMenuItem.Text = "Pacs Loaded: " & PacsRead.ToString
+        Dim NodeTag As ExtendedFileProperties = New ExtendedFileProperties
+        NodeTag = CType(SelectedData.Tag, ExtendedFileProperties)
+        Dim TitleBytes As Byte()
+        If NodeTag.StoredData.Length > 0 Then
+            Dim FileBytes As Byte() = NodeTag.StoredData
+            TitleBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), TitleBytes, 0, CInt(NodeTag.length))
+        Else
+            Dim FileBytes As Byte() = File.ReadAllBytes(SelectedData.ToolTipText)
+            TitleBytes = New Byte(NodeTag.length - 1) {}
+            Array.Copy(FileBytes, CInt(NodeTag.Index), TitleBytes, 0, CInt(NodeTag.length))
+        End If
+        'creating header to copy to 
+        TitleHeaderBytes = New Byte(&H10) {}
+        Array.Copy(TitleBytes, TitleHeaderBytes, &H10)
+        Dim TitleCount As UInt32 = BitConverter.ToUInt32(TitleBytes, &H8)
         Dim index As UInt32 = &H10
-        Dim TitleSize As Integer = (TitleBytes.Length - &H10) / TitleCount
+        Dim TitleSize As Integer = NodeTag.length / TitleCount
         If TitleSize = 480 Then '480 1E0 2K19 Titles
             TitleGameComboBox.SelectedIndex = 4
         End If
         For i As Integer = 0 To TitleCount - 1
-            Dim TempTitleBytes As Byte() = New Byte(TitleSize - 1) {}
-            Array.Copy(TitleBytes, &H10 + i * TitleSize, TempTitleBytes, 0, TitleSize)
-            Dim TempTitleInformation As TitleInformation = ParseBytesToTitleInformation(TempTitleBytes)
-            Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
-            TempGridRow.Cells(0).Value = TempTitleInformation.Enabled
-            TempGridRow.Cells(1).Value = TempTitleInformation.PropID
-            TempGridRow.Cells(2).Value = TempTitleInformation.MenuNumber
-            TempGridRow.Cells(3).Value = Hex(TempTitleInformation.NameRef1)
-            TempGridRow.Cells(4).Value = TempTitleInformation.NameString1
-            TempGridRow.Cells(4).Style = ReadOnlyCellStyle
-            TempGridRow.Cells(5).Value = Hex(TempTitleInformation.NameRef2)
-            TempGridRow.Cells(6).Value = TempTitleInformation.NameString2
-            TempGridRow.Cells(6).Style = ReadOnlyCellStyle
-            TempGridRow.Cells(7).Value = Hex(TempTitleInformation.NameRef3)
-            TempGridRow.Cells(8).Value = TempTitleInformation.NameString3
-            TempGridRow.Cells(8).Style = ReadOnlyCellStyle
-            TempGridRow.Cells(9).Value = TempTitleInformation.WWEDefault1
-            TempGridRow.Cells(10).Value = TempTitleInformation.WWEDefault1Name
-            TempGridRow.Cells(10).Style = ReadOnlyCellStyle
-            TempGridRow.Cells(11).Value = TempTitleInformation.WWEDefault2
-            TempGridRow.Cells(12).Value = TempTitleInformation.WWEDefault2Name
-            TempGridRow.Cells(12).Style = ReadOnlyCellStyle
-            TempGridRow.Cells(13).Value = TempTitleInformation.UniDefault1
-            TempGridRow.Cells(14).Value = TempTitleInformation.UniDefault1Name
-            TempGridRow.Cells(14).Style = ReadOnlyCellStyle
-            TempGridRow.Cells(15).Value = TempTitleInformation.UniDefault2
-            TempGridRow.Cells(16).Value = TempTitleInformation.UniDefault2Name
-            TempGridRow.Cells(16).Style = ReadOnlyCellStyle
-            TempGridRow.Cells(17).Value = TempTitleInformation.Temp1
-            TempGridRow.Cells(18).Value = TempTitleInformation.TitleTypeByte
-            TempGridRow.Cells(19).Value = TempTitleInformation.Female
-            TempGridRow.Cells(20).Value = TempTitleInformation.TagTeam
-            TempGridRow.Cells(21).Value = TempTitleInformation.Cuiserweight
-            TempGridRow.Cells(22).Value = TempTitleInformation.UnlockNum
-            TempGridRow.Cells(23).Value = TempTitleInformation.Temp4
-            TempGridRow.HeaderCell.Value = i.ToString
-            TempGridRow.Tag = TempTitleInformation
-            WorkingCollection.Add(TempGridRow)
-            ProgressBar1.Value = i
+            Dim Enabled As UInt32 = BitConverter.ToUInt32(TitleBytes, index)
+            Dim PropID As UInt32 = BitConverter.ToUInt32(TitleBytes, index + 4)
+            Dim MenuNumber As UInt32 = BitConverter.ToUInt32(TitleBytes, index + 8)
+            Dim NameRef1 As UInt32 = BitConverter.ToUInt32(TitleBytes, index + &HC)
+            Dim NameRef2 As UInt32 = BitConverter.ToUInt32(TitleBytes, index + &H10)
+            Dim NameRef3 As UInt32 = BitConverter.ToUInt32(TitleBytes, index + &H14)
+            Dim WWEDefault1 As UInt32 = &H400 'default value for no champ
+            Dim WWEDefault2 As UInt32 = &H400
+            Dim UniDefault1 As UInt32 = &H400
+            Dim UniDefault2 As UInt32 = &H400
+            Dim Temp1 As UInt32 = 0
+            Dim Temp2 As UInt32 = 0
+            Dim UnlockNum As UInt32 = 0
+            Dim Temp4 As UInt32 = 0
+            Dim Female As Boolean = False
+            Dim Tag As Boolean = False
+            Dim Cuiserweight As Boolean = False
+            If TitleSize = 480 Then '480 1E0 2K19 Titles
+
+                '&h180 00 bytes
+                '&h18 FF bytes
+                '&h10 00 bytes
+                WWEDefault1 = BitConverter.ToUInt32(TitleBytes, index + &H1C0)
+                WWEDefault2 = BitConverter.ToUInt32(TitleBytes, index + &H1C4)
+                UniDefault1 = BitConverter.ToUInt32(TitleBytes, index + &H1C8)
+                UniDefault2 = BitConverter.ToUInt32(TitleBytes, index + &H1CC)
+                Temp1 = BitConverter.ToUInt32(TitleBytes, index + &H1D0)
+                Temp2 = BitConverter.ToUInt32(TitleBytes, index + &H1D4) 'contains Gender and tag information
+                UnlockNum = BitConverter.ToUInt32(TitleBytes, index + &H1D8)
+                Temp4 = BitConverter.ToUInt32(TitleBytes, index + &H1DC)
+                'Addrow
+                index += 480
+            ElseIf TitleSize = 188 Then '188 BC 2K18
+            End If
+            Dim NameString1 As String = ""
+            Dim NameString2 As String = ""
+            Dim NameString3 As String = ""
+            If StringRead Then
+                NameString1 = StringReferences(NameRef1)
+                NameString2 = StringReferences(NameRef2)
+                NameString3 = StringReferences(NameRef3)
+            End If
+            'REad Temp2 and translate to Bools
+            Dim TitleType As Integer = Temp2 Mod 8
+            If TitleType >= 4 Then
+                Cuiserweight = True
+            End If
+            TitleType = TitleType Mod 4
+            If TitleType >= 2 Then
+                Tag = True
+            End If
+            TitleType = TitleType Mod 2
+            If TitleType >= 1 Then
+                Female = True
+            End If
+            DataGridTitleView.Rows.Add(Enabled, PropID, MenuNumber, Hex(NameRef1), NameString1, Hex(NameRef2), NameString2, Hex(NameRef3), NameString3,
+                                        WWEDefault1, WWEDefault2, UniDefault1, UniDefault2, Hex(Temp1), Hex(Temp2), Female, Tag, Cuiserweight, Hex(UnlockNum), Hex(Temp4))
+            DataGridTitleView.Rows(i).HeaderCell.Value = i.ToString
+            'TO DO set to collection to write faster
         Next
-        DataGridTitleView.Rows.AddRange(WorkingCollection.ToArray)
         If StringRead Then 'True
             If PacsRead Then 'Strings and Pacs Read
-                'Show String
-                DataGridTitleView.Columns(4).Visible = True
-                DataGridTitleView.Columns(6).Visible = True
-                DataGridTitleView.Columns(8).Visible = True
-                'Show Wrestler Names
-                DataGridTitleView.Columns(10).Visible = True
-                DataGridTitleView.Columns(12).Visible = True
-                DataGridTitleView.Columns(14).Visible = True
-                DataGridTitleView.Columns(16).Visible = True
             Else 'Strings Read Only
-                'Show String
-                DataGridTitleView.Columns(4).Visible = True
-                DataGridTitleView.Columns(6).Visible = True
-                DataGridTitleView.Columns(8).Visible = True
-                'Hide Wrestler Names
-                DataGridTitleView.Columns(10).Visible = False
-                DataGridTitleView.Columns(12).Visible = False
-                DataGridTitleView.Columns(14).Visible = False
-                DataGridTitleView.Columns(16).Visible = False
+
             End If
-        Else 'Pacs Read Only can't do anything so we don't check it
-            'Hide String
-            DataGridTitleView.Columns(4).Visible = False
-            DataGridTitleView.Columns(6).Visible = False
-            DataGridTitleView.Columns(8).Visible = False
-            'Hide Wrestler Names
-            DataGridTitleView.Columns(10).Visible = False
-            DataGridTitleView.Columns(12).Visible = False
-            DataGridTitleView.Columns(14).Visible = False
-            DataGridTitleView.Columns(16).Visible = False
+        Else 'Pacs Read Only can't do much
+            'Hide Strings
+            DataGridTitleView.Columns(3).Visible = False
+            DataGridTitleView.Columns(5).Visible = False
+            DataGridTitleView.Columns(7).Visible = False
         End If
-        'Adding titles won't do anything until we figure out other information
+        AddHandler DataGridTitleView.CellValueChanged, AddressOf DataGridTitleView_CellValueChanged
+        AddHandler DataGridTitleView.CellEnter, AddressOf DataGridTitleView_CellEnter
+        'AddHandler DataGridAttireView.RowsAdded, AddressOf DataGridAttireView_RowsAdded
+        'Addint titles won't do anything until we figure out other information
     End Sub
-
-    Function ParseBytesToTitleInformation(TestedByteArray As Byte()) As TitleInformation
-        Dim ReturnedTitleInfo As TitleInformation = New TitleInformation With {
-           .Enabled = BitConverter.ToUInt32(TestedByteArray, 0),
-           .PropID = BitConverter.ToUInt32(TestedByteArray, 4),
-           .MenuNumber = BitConverter.ToUInt32(TestedByteArray, 8),
-           .NameRef1 = BitConverter.ToUInt32(TestedByteArray, &HC),
-           .NameRef2 = BitConverter.ToUInt32(TestedByteArray, &H10),
-           .NameRef3 = BitConverter.ToUInt32(TestedByteArray, &H14)}
-        If TestedByteArray.Length = 480 Then '480 1E0 2K19 Titles
-            '&h180 00 bytes
-            '&h18 FF bytes
-            '&h10 00 bytes
-            ReturnedTitleInfo.WWEDefault1 = BitConverter.ToUInt32(TestedByteArray, &H1C0)
-            ReturnedTitleInfo.WWEDefault2 = BitConverter.ToUInt32(TestedByteArray, &H1C4)
-            ReturnedTitleInfo.UniDefault1 = BitConverter.ToUInt32(TestedByteArray, &H1C8)
-            ReturnedTitleInfo.UniDefault2 = BitConverter.ToUInt32(TestedByteArray, &H1CC)
-            ReturnedTitleInfo.Temp1 = BitConverter.ToUInt32(TestedByteArray, &H1D0)
-            ReturnedTitleInfo.TitleTypeByte = BitConverter.ToUInt32(TestedByteArray, &H1D4) 'contains Gender and tag information
-            ReturnedTitleInfo.UnlockNum = BitConverter.ToUInt32(TestedByteArray, &H1D8)
-            ReturnedTitleInfo.Temp4 = BitConverter.ToUInt32(TestedByteArray, &H1DC)
-            If StringRead Then
-                ReturnedTitleInfo.NameString1 = StringReferences(ReturnedTitleInfo.NameRef1)
-                ReturnedTitleInfo.NameString2 = StringReferences(ReturnedTitleInfo.NameRef2)
-                ReturnedTitleInfo.NameString3 = StringReferences(ReturnedTitleInfo.NameRef3)
-                If PacsRead Then
-                    ReturnedTitleInfo.WWEDefault1Name = StringReferences(PacNumbers(ReturnedTitleInfo.WWEDefault1))
-                    ReturnedTitleInfo.WWEDefault2Name = StringReferences(PacNumbers(ReturnedTitleInfo.WWEDefault2))
-                    ReturnedTitleInfo.UniDefault1Name = StringReferences(PacNumbers(ReturnedTitleInfo.UniDefault1))
-                    ReturnedTitleInfo.UniDefault2Name = StringReferences(PacNumbers(ReturnedTitleInfo.UniDefault2))
-                End If
+    Private Sub DataGridTitleView_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs)
+        If e.ColumnIndex = 0 Then 'Enabled Make sure between 0 & 6 inclusive
+            If Not IsNumeric(DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) Then
+                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            ElseIf CInt(DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) < 0 OrElse
+               CInt(DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) > 6 Then
+                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
             End If
-        End If
-        'Read TitleTypeByte and translate to Title SEttings
-        Dim TitleType As Integer = ReturnedTitleInfo.TitleTypeByte Mod 8
-        If TitleType >= 4 Then
-            ReturnedTitleInfo.Cuiserweight = True
-        End If
-        TitleType = TitleType Mod 4
-        If TitleType >= 2 Then
-            ReturnedTitleInfo.TagTeam = True
-        End If
-        TitleType = TitleType Mod 2
-        If TitleType >= 1 Then
-            ReturnedTitleInfo.Female = True
-        End If
-        Return ReturnedTitleInfo
-    End Function
-
-    Function GetBytesFromTitleInformationDataGridRow(RequestedByteRow As DataGridViewRow) As Byte()
-        If TitleGameComboBox.SelectedIndex = 4 Then
-            Dim ReturnedBytes As Byte() = New Byte(&H1E0 - 1) {}
-            Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(0).Value)), 0, ReturnedBytes, 0, 4)
-            Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(1).Value)), 0, ReturnedBytes, 4, 4)
-            Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(2).Value)), 0, ReturnedBytes, 8, 4)
-            Array.Copy(BitConverter.GetBytes(CUInt("&H" & RequestedByteRow.Cells(3).Value)), 0, ReturnedBytes, &HC, 4)
-            Array.Copy(BitConverter.GetBytes(CUInt("&H" & RequestedByteRow.Cells(5).Value)), 0, ReturnedBytes, &H10, 4)
-            Array.Copy(BitConverter.GetBytes(CUInt("&H" & RequestedByteRow.Cells(7).Value)), 0, ReturnedBytes, &H14, 4)
-            Array.Copy(New Byte() {
-                       &HFF, &HFF, &HFF, &HFF, &HFF, &HFF, &HFF, &HFF,
-                       &HFF, &HFF, &HFF, &HFF, &HFF, &HFF, &HFF, &HFF,
-                       &HFF, &HFF, &HFF, &HFF, &HFF, &HFF, &HFF, &HFF}, 0, ReturnedBytes, &H198, &H18)
-            Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(9).Value)), 0, ReturnedBytes, &H1C0, 4)
-            Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(11).Value)), 0, ReturnedBytes, &H1C4, 4)
-            Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(13).Value)), 0, ReturnedBytes, &H1C8, 4)
-            Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(15).Value)), 0, ReturnedBytes, &H1CC, 4)
-            Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(17).Value)), 0, ReturnedBytes, &H1D0, 4)
-            Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(18).Value)), 0, ReturnedBytes, &H1D4, 4)
-            Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(22).Value)), 0, ReturnedBytes, &H1D8, 4)
-            Array.Copy(BitConverter.GetBytes(CUInt(RequestedByteRow.Cells(23).Value)), 0, ReturnedBytes, &H1DC, 4)
-            Return ReturnedBytes
-        Else
-            MessageBox.Show("Build Failure")
-            Return Nothing
-        End If
-    End Function
-
-    Private Sub DataGridTitleView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridTitleView.CellEndEdit
-        Dim MyCell As DataGridViewCell = DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex)
-        If e.ColumnIndex < 3 Then
-            If Not IsNumeric(MyCell.Value) Then
-                MyCell.Value = OldValue
+        ElseIf e.ColumnIndex = 1 Then 'Attire Count, Verify Number <= 9999
+            If Not IsNumeric(DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) Then
+                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            ElseIf CInt(DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) < 0 OrElse
+               CInt(DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) > 9999 Then
+                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            End If
+        ElseIf e.ColumnIndex = 2 Then 'Attire Count, Verify Number <= 9999
+            If Not IsNumeric(DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) Then
+                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            ElseIf CInt(DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) < 0 OrElse
+               CInt(DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) > 9999 Then
+                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            End If
+        ElseIf e.ColumnIndex = 3 OrElse e.ColumnIndex = 5 OrElse e.ColumnIndex = 7 Then 'Attire Name
+            Dim HexString As String = DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
+            Dim hexcheck As Boolean = HexString.All(Function(c) "0123456789abcdefABCDEF".Contains(c))
+            If Not hexcheck Then
+                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            ElseIf StringReferences(CUInt("&H" & HexString)) > &HFFFFF Then
+                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
             Else
-                If e.ColumnIndex = 0 Then
-                    'Enabled Make sure between 0 & 6 inclusive
-                    If CInt(MyCell.Value) = 0 OrElse
-                    CInt(MyCell.Value) > 6 Then
-                        MyCell.Value = OldValue
-                    End If
-                ElseIf e.ColumnIndex = 1 Then
-                    'Prop Number, Verify Number <= 9999
-                    If CInt(MyCell.Value) < 0 OrElse
-                    CInt(MyCell.Value) > 9999 Then
-                        MyCell.Value = OldValue
-                    End If
-                ElseIf e.ColumnIndex = 2 Then
-                    'Menu Number, Verify Number <= 1024
-                    If CInt(MyCell.Value) < 0 OrElse
-                    CInt(MyCell.Value) > 1024 Then
-                        MyCell.Value = OldValue
-                    End If
-                End If
+                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = StringReferences(CUInt("&H" & HexString))
             End If
-        ElseIf e.ColumnIndex < 9 Then
-            'String Reference Information
-            If Not GeneralTools.HexCheck(MyCell.Value) Then
-                MyCell.Value = OldValue
-            ElseIf CUInt("&H" & MyCell.Value) > StringReferences.LongCount Then
-                MyCell.Value = OldValue
-            Else
-                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = StringReferences(CUInt("&H" & MyCell.Value))
+        ElseIf e.ColumnIndex > 8 AndAlso e.ColumnIndex < 13 Then 'Enabled Make sure between 0 & 1024 inclusive
+            If Not IsNumeric(DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) Then
+                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
+            ElseIf CInt(DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) < 0 OrElse
+                   CInt(DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) > 1024 Then
+                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
             End If
-        ElseIf e.ColumnIndex > 8 AndAlso e.ColumnIndex < 17 Then
-            'Wrestler reference Number Make sure between 0 & 1024 inclusive
-            If Not IsNumeric(MyCell.Value) Then
-                MyCell.Value = OldValue
-            ElseIf CInt(MyCell.Value) < 0 OrElse
-                   CInt(MyCell.Value) > 1024 Then
-                MyCell.Value = OldValue
-            Else
-                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = StringReferences(PacNumbers(CUInt(MyCell.Value)))
-            End If
-        ElseIf e.ColumnIndex < 19 Then
-            'Temp1 and Title temp byte
-            If Not IsNumeric(MyCell.Value) Then
-                MyCell.Value = OldValue
-            ElseIf CInt(MyCell.Value) < 0 OrElse
-                   CInt(MyCell.Value) > 9999 Then
-                MyCell.Value = OldValue
-            ElseIf e.ColumnIndex = 18 Then
-                Dim TitleType As Integer = CInt(MyCell.Value) Mod 8
-                If TitleType >= 4 Then
-                    'Cruiser-weight
-                    DataGridTitleView.Rows(e.RowIndex).Cells(21).Value = True
-                Else
-                    DataGridTitleView.Rows(e.RowIndex).Cells(21).Value = False
-                End If
-                TitleType = TitleType Mod 4
-                If TitleType >= 2 Then
-                    'Tag Title
-                    DataGridTitleView.Rows(e.RowIndex).Cells(20).Value = True
-                Else
-                    DataGridTitleView.Rows(e.RowIndex).Cells(20).Value = False
-                End If
-                TitleType = TitleType Mod 2
-                If TitleType >= 1 Then
-                    'Female Title
-                    DataGridTitleView.Rows(e.RowIndex).Cells(19).Value = True
-                Else
-                    DataGridTitleView.Rows(e.RowIndex).Cells(19).Value = False
-                End If
-            End If
-        ElseIf e.ColumnIndex < 22 Then
-            Dim OldTitleType As Integer = CInt(DataGridTitleView.Rows(e.RowIndex).Cells(18).Value)
-            If e.ColumnIndex = 19 Then 'Female Check box
-                If DataGridTitleView.Rows(e.RowIndex).Cells(19).Value Then
-                    If (OldTitleType Mod 2) >= 1 Then
-                        'do nothing already Female
-                    Else
-                        OldTitleType += 1
-                    End If
-                Else
-                    If (OldTitleType Mod 2) >= 1 Then
-                        OldTitleType = OldTitleType - 1
-                    Else
-                        'do nothing already Not Female
-                    End If
-                End If
-            ElseIf e.ColumnIndex = 20 Then 'Tag Team Check box
-                If DataGridTitleView.Rows(e.RowIndex).Cells(20).Value Then
-                    If (OldTitleType Mod 4) >= 2 Then
-                        'do nothing already Tag Team
-                    Else
-                        OldTitleType += 2
-                    End If
-                Else
-                    If (OldTitleType Mod 4) >= 2 Then
-                        OldTitleType = OldTitleType - 2
-                    Else
-                        'do nothing already Not Tag Team
-                    End If
-                End If
-            ElseIf e.ColumnIndex = 21 Then 'Cruiser-weight Check box
-                If DataGridTitleView.Rows(e.RowIndex).Cells(21).Value Then
-                    If (OldTitleType Mod 8) >= 4 Then
-                        'do nothing already Cruise-wight
-                    Else
-                        OldTitleType += 4
-                    End If
-                Else
-                    If (OldTitleType Mod 8) >= 4 Then
-                        OldTitleType = OldTitleType - 4
-                    Else
-                        'do nothing already Not Cruise-wight
-                    End If
-                End If
-            End If
-            DataGridTitleView.Rows(e.RowIndex).Cells(18).Value = OldTitleType
-        ElseIf e.ColumnIndex > 21 Then
-            If Not IsNumeric(MyCell.Value) Then
-                MyCell.Value = OldValue
-            ElseIf CLng(MyCell.Value) < 0 OrElse
-                    CLng(MyCell.Value) > UInt32.MaxValue Then
-                MyCell.Value = OldValue
+        ElseIf e.ColumnIndex = 13 OrElse e.ColumnIndex = 14 OrElse e.ColumnIndex = 18 OrElse e.ColumnIndex = 19 Then
+            Dim HexString As String = DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
+            Dim hexcheck As Boolean = HexString.All(Function(c) "0123456789abcdefABCDEF".Contains(c))
+            If Not hexcheck Then
+                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = OldValue
             End If
         End If
         SavePending = True
         SaveChangesTitleMenuItem.Visible = True
     End Sub
-
+    Private Sub DataGridTitleView_CellEnter(sender As Object, e As DataGridViewCellEventArgs)
+        OldValue = DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
+    End Sub
     Private Sub SaveTitleChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesTitleMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildTitleFile())
+        ReadNode = Nothing
+        SaveChangesTitleMenuItem.Visible = False
+        SavePending = False
     End Sub
-
     Function BuildTitleFile() As Byte()
-        Dim ShowBytes As Byte() = FilePartHandlers.GetFilePartBytes(ReadNode.Tag)
         Dim ReturnedBytes As Byte() = New Byte() {}
         If TitleGameComboBox.SelectedIndex = 4 Then
-            '2K19
-            ReturnedBytes = New Byte(&H10 + (DataGridTitleView.RowCount * &H1E0) - 1) {}
+            ReturnedBytes = New Byte(&H10 + ((DataGridTitleView.RowCount) * &H1E0) - 1) {}
             'copy first 10 bytes from existing file
-            Array.Copy(ShowBytes, ReturnedBytes, &H10)
+            Array.Copy(TitleHeaderBytes, ReturnedBytes, &H10)
             'rewriting for the heck of it
             ReturnedBytes(8) = DataGridTitleView.RowCount
-            For i As Integer = 0 To DataGridTitleView.RowCount - 1
-                Dim TempBytes As Byte() = GetBytesFromTitleInformationDataGridRow(DataGridTitleView.Rows(i))
-                Array.Copy(TempBytes, 0, ReturnedBytes, &H10 + i * TempBytes.Length, TempBytes.Length)
+            For i As Integer = 0 To DataGridTitleView.RowCount - 1 '2 because because of a hidden row
+                'Enabled Num
+                Array.Copy(BitConverter.GetBytes(CUInt(DataGridTitleView.Rows(i).Cells(0).Value)), 0, ReturnedBytes, &H10 + i * &H1E0, 4)
+                'Prop Number
+                Array.Copy(BitConverter.GetBytes(CUInt(DataGridTitleView.Rows(i).Cells(1).Value)), 0, ReturnedBytes, &H10 + i * &H1E0 + 4, 4)
+                'Menu Number
+                Array.Copy(BitConverter.GetBytes(CUInt(DataGridTitleView.Rows(i).Cells(2).Value)), 0, ReturnedBytes, &H10 + i * &H1E0 + 8, 4)
+                'Title Names
+                Array.Copy(BitConverter.GetBytes(CUInt("&H" & (DataGridTitleView.Rows(i).Cells(3).Value))), 0, ReturnedBytes, &H10 + i * &H1E0 + &HC, 4)
+                Array.Copy(BitConverter.GetBytes(CUInt("&H" & (DataGridTitleView.Rows(i).Cells(5).Value))), 0, ReturnedBytes, &H10 + i * &H1E0 + &H10, 4)
+                Array.Copy(BitConverter.GetBytes(CUInt("&H" & (DataGridTitleView.Rows(i).Cells(7).Value))), 0, ReturnedBytes, &H10 + i * &H1E0 + &H14, 4)
+                'Add in extra FF bytes
+                Dim FBytes As Byte() = {&HFF, &HFF, &HFF, &HFF, &HFF, &HFF, &HFF, &HFF,
+                           &HFF, &HFF, &HFF, &HFF, &HFF, &HFF, &HFF, &HFF,
+                           &HFF, &HFF, &HFF, &HFF, &HFF, &HFF, &HFF, &HFF}
+                Array.Copy(FBytes, 0, ReturnedBytes, &H10 + i * &H1E0 + &H198, &H18)
+                'Default Champs
+                Array.Copy(BitConverter.GetBytes(CUInt(DataGridTitleView.Rows(i).Cells(9).Value)), 0, ReturnedBytes, &H10 + i * &H1E0 + &H1C0, 4)
+                Array.Copy(BitConverter.GetBytes(CUInt(DataGridTitleView.Rows(i).Cells(10).Value)), 0, ReturnedBytes, &H10 + i * &H1E0 + &H1C4, 4)
+                Array.Copy(BitConverter.GetBytes(CUInt(DataGridTitleView.Rows(i).Cells(11).Value)), 0, ReturnedBytes, &H10 + i * &H1E0 + &H1C8, 4)
+                Array.Copy(BitConverter.GetBytes(CUInt(DataGridTitleView.Rows(i).Cells(12).Value)), 0, ReturnedBytes, &H10 + i * &H1E0 + &H1CC, 4)
+                'Other Information
+                Array.Copy(BitConverter.GetBytes(CUInt("&H" & (DataGridTitleView.Rows(i).Cells(13).Value))), 0, ReturnedBytes, &H10 + i * &H1E0 + &H1D0, 4)
+                Dim TempTitleType As UInt32 = CUInt("&H" & (DataGridTitleView.Rows(i).Cells(14).Value))
+                TempTitleType -= TempTitleType Mod 8
+                If DataGridTitleView.Rows(i).Cells(17).Value Then
+                    TempTitleType += 4
+                End If
+                If DataGridTitleView.Rows(i).Cells(16).Value Then
+                    TempTitleType += 2
+                End If
+                If DataGridTitleView.Rows(i).Cells(15).Value Then
+                    TempTitleType += 1
+                End If
+                Array.Copy(BitConverter.GetBytes(TempTitleType), 0, ReturnedBytes, &H10 + i * &H1E0 + &H1D4, 4)
+                Array.Copy(BitConverter.GetBytes(CUInt("&H" & (DataGridTitleView.Rows(i).Cells(18).Value))), 0, ReturnedBytes, &H10 + i * &H1E0 + &H1D8, 4)
+                Array.Copy(BitConverter.GetBytes(CUInt("&H" & (DataGridTitleView.Rows(i).Cells(19).Value))), 0, ReturnedBytes, &H10 + i * &H1E0 + &H1DC, 4)
             Next
         End If
         Return ReturnedBytes
     End Function
-
 #End Region
-
-    'Forms to Use CellEndEdit instead of Cell value changed as it fixes a lot of stupid handling issues.
-    'TO DO Increase speed of data grid population with collections
-    'These is the potential for better programming using data binding data grid views.
-    'TO DO... Combine some of these redundant Close view functions...
 #Region "Sound Ref View"
-
-    Dim SoundContainerCount As UInt32 = 0
-
-    Sub FillSoundRefFileView(SelectedData As TreeNode)
+    Sub CloseSoundView()
+        If SavePending Then
+            If MessageBox.Show("Changes have not yet been saved.  Would you like to save them now?", "Save Changes?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildSoundRefFile())
+            End If
+            SaveChangesTitleMenuItem.Visible = False
+            SavePending = False
+        End If
+        ReadNode = Nothing
+        TabControl1.TabPages.Remove(SoundView)
+    End Sub
+    Dim FullSoundCollection As DataGridViewRow()
+    Sub LoadSoundRefFileView(SelectedData As TreeNode)
+        ReadNode = SelectedData
+        DataGridSoundView.Rows.Clear()
         Dim SoundRefBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
-        SoundContainerCount = BitConverter.ToUInt32(SoundRefBytes, &HC)
+        Dim ContainerCount As UInt32 = BitConverter.ToUInt32(SoundRefBytes, &HC)
         'getting a generic row so we can create one for the collection
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridSoundView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
-        ProgressBar1.Maximum = SoundContainerCount - 1
+        ProgressBar1.Maximum = ContainerCount - 1
         ProgressBar1.Value = 0
-        For i As Integer = 0 To SoundContainerCount - 1
+        For i As Integer = 0 To ContainerCount - 1
             Dim ContainerName As Integer = BitConverter.ToInt32(SoundRefBytes, &H10 + i * &HC + 0)
             Dim ContainerIndex As Integer = BitConverter.ToInt32(SoundRefBytes, &H10 + i * &HC + 4)
             Dim ContainerSubCount As Integer = BitConverter.ToInt16(SoundRefBytes, &H10 + i * &HC + 8)
             For J As Integer = 0 To ContainerSubCount - 1
                 Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
                 TempGridRow.Cells(0).Value = ContainerName
-                TempGridRow.Cells(0).Style = ReadOnlyCellStyle
-                Dim ReferenceNumberBytes As Byte() = GeneralTools.EndianReverse(SoundRefBytes, &H10 + SoundContainerCount * &HC + ContainerIndex + J * 8, 4)
+                Dim ReferenceNumberBytes As Byte() = GeneralTools.EndianReverse(SoundRefBytes, &H10 + ContainerCount * &HC + ContainerIndex + J * 8, 4)
                 If ReferenceNumberBytes(0) > 0 Then
                     TempGridRow.Cells(1).Value = BitConverter.ToUInt32(ReferenceNumberBytes, 0)
                 ElseIf ReferenceNumberBytes(1) > 0 Then
@@ -3910,72 +3763,74 @@ Public Class MainForm
                 Else
                     TempGridRow.Cells(1).Value = ReferenceNumberBytes(3)
                 End If
-                TempGridRow.Cells(2).Value = Hex(BitConverter.ToUInt32(SoundRefBytes, &H10 + SoundContainerCount * &HC + ContainerIndex + J * 8 + 4))
-                TempGridRow.Cells(3).Value = Hex(&H10 + SoundContainerCount * &HC + ContainerIndex + J * 8)
-                TempGridRow.Cells(3).Style = ReadOnlyCellStyle
+                TempGridRow.Cells(2).Value = Hex(BitConverter.ToUInt32(SoundRefBytes, &H10 + ContainerCount * &HC + ContainerIndex + J * 8 + 4))
+                TempGridRow.Cells(3).Value = Hex(&H10 + ContainerCount * &HC + ContainerIndex + J * 8)
+                'TempGridRow.Cells(4).Value = "Remove"
+                'TempGridRow.Tag = TempStringBytes
                 WorkingCollection.Add(TempGridRow)
             Next
             ProgressBar1.Value = i
         Next
-        'FullSoundCollection.AddRange(WorkingCollection.ToArray())
+        FullSoundCollection = WorkingCollection.ToArray()
         DataGridSoundView.Rows.AddRange(WorkingCollection.ToArray())
     End Sub
-
-    Private Sub SaveChangesSoundMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesSoundMenuItem.Click
-        FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildSoundRefFile())
-    End Sub
-
     Function BuildSoundRefFile() As Byte()
-        Dim SoundInformationBytes As Byte() = FilePartHandlers.GetFilePartBytes(ReadNode.Tag)
-        Dim ReturnedBytes As Byte() = New Byte(&H10 + SoundContainerCount * &HC + DataGridSoundView.Rows.Count * 8 - 1) {}
-        Dim ContainerCount As UInt32 = 0
-        Dim ObjectCount As UInt32 = 0
-        For i As Integer = 0 To DataGridObjArrayView.Rows.Count - 1
-            If CInt(DataGridObjArrayView.Rows(i).Cells(11).Value) > 0 Then
-                ContainerCount += 1
-            Else
-                ObjectCount = DataGridObjArrayView.Rows.Count - ContainerCount
-                Exit For
-            End If
-        Next
-        Return ReturnedBytes
-    End Function
 
+    End Function
     Private Sub ToolStripSoundRefSearch_Enter(sender As Object, e As EventArgs) Handles ToolStripSoundRefSearch.Enter
         If ToolStripSoundRefSearch.Text = "Search..." Then
             ToolStripSoundRefSearch.Text = ""
         End If
     End Sub
-
     Private Sub ToolStripSoundRefSearch_Leave(sender As Object, e As EventArgs) Handles ToolStripSoundRefSearch.Leave
-        'FullSoundCollection = DataGridSoundView.Rows
         If ToolStripSoundRefSearch.Text = "" Then
             ToolStripSoundRefSearch.Text = "Search..."
         End If
-        Dim TemporaryCollection As DataGridViewRow() = New DataGridViewRow(DataGridSoundView.Rows.Count - 1) {}
-        DataGridSoundView.Rows.CopyTo(TemporaryCollection, 0)
         DataGridSoundView.Rows.Clear()
-        ProgressBar1.Maximum = TemporaryCollection.Count - 1
+        ProgressBar1.Maximum = FullSoundCollection.Count - 1
         ProgressBar1.Value = 0
         If ToolStripSoundRefSearch.Text = "" OrElse
-            ToolStripSoundRefSearch.Text = "Search..." Then
-            For i As Integer = 0 To TemporaryCollection.Count - 1
-                TemporaryCollection(i).Visible = True
+        ToolStripSoundRefSearch.Text = "Search..." Then
+            For i As Integer = 0 To FullSoundCollection.Count - 1
+                FullSoundCollection(i).Visible = True
                 ProgressBar1.Value = i
             Next
         Else
-            For i As Integer = 0 To TemporaryCollection.Count - 1
-                If TemporaryCollection(i).Cells(1).Value.ToString.ToLower.Contains(ToolStripSoundRefSearch.Text.ToLower) Then
-                    TemporaryCollection(i).Visible = True
+            For i As Integer = 0 To FullSoundCollection.Count - 1
+                If FullSoundCollection(i).Cells(1).Value.ToString.ToLower.Contains(ToolStripSoundRefSearch.Text.ToLower) Then
+                    FullSoundCollection(i).Visible = True
                 Else
-                    TemporaryCollection(i).Visible = False
+                    FullSoundCollection(i).Visible = False
                 End If
                 ProgressBar1.Value = i
             Next
         End If
-        DataGridSoundView.Rows.AddRange(TemporaryCollection.ToArray)
+        DataGridSoundView.Rows.AddRange(FullSoundCollection.ToArray)
     End Sub
 #End Region
+#Region "LSD"
+    'Private Function BuildCAEItemFile() As Byte()
+    'Sub LoadLSDFileView(SelectedData As TreeNode)
+    'ReadNode = SelectedData
+    'DataGridLSDView.Rows.Clear()
+
+    'Dim ShowBytes As Byte() = FilePartHandlers.GetFilePartBytes(ReadNode.Tag)
+    'Dim FileCount As Int16 = GeneralTools.EndianReverse()
+    'Dim OtherFiles As Int16 = 0    'Refers to second listing for DLC.
+    'File Header
+    'Array.Copy(New Byte() {FileCount, OtherFiles})
+
+
+
+    'End Function
+
+
+
+#End Region
+
+
+
+
 
 #End Region
 End Class
