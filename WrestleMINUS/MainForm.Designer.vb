@@ -336,12 +336,6 @@ Partial Class MainForm
         Me.SaveChangesTitleMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SoundView = New System.Windows.Forms.TabPage()
         Me.DataGridSoundView = New System.Windows.Forms.DataGridView()
-        Me.SoundContainerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SoundRefNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SoundHashRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SoundOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SoundInfoAdd = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.SoundInfoDel = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStripSoundView = New System.Windows.Forms.MenuStrip()
         Me.ToolStripSoundRefSearch = New System.Windows.Forms.ToolStripTextBox()
         Me.SaveChangesSoundMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -400,6 +394,12 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SoundContainerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SoundRefNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SoundHashRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SoundOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SoundInfoAdd = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.SoundInfoDel = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStripMainForm.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -2898,46 +2898,6 @@ Partial Class MainForm
         Me.DataGridSoundView.Size = New System.Drawing.Size(1047, 378)
         Me.DataGridSoundView.TabIndex = 1
         '
-        'SoundContainerNumber
-        '
-        Me.SoundContainerNumber.HeaderText = "Container"
-        Me.SoundContainerNumber.Name = "SoundContainerNumber"
-        Me.SoundContainerNumber.ReadOnly = True
-        Me.SoundContainerNumber.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'SoundRefNum
-        '
-        Me.SoundRefNum.HeaderText = "Ref Num"
-        Me.SoundRefNum.Name = "SoundRefNum"
-        Me.SoundRefNum.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'SoundHashRef
-        '
-        Me.SoundHashRef.HeaderText = "Hash Bytes"
-        Me.SoundHashRef.Name = "SoundHashRef"
-        Me.SoundHashRef.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'SoundOffset
-        '
-        Me.SoundOffset.HeaderText = "Offset"
-        Me.SoundOffset.Name = "SoundOffset"
-        Me.SoundOffset.ReadOnly = True
-        Me.SoundOffset.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'SoundInfoAdd
-        '
-        Me.SoundInfoAdd.HeaderText = "Add"
-        Me.SoundInfoAdd.Name = "SoundInfoAdd"
-        Me.SoundInfoAdd.Text = "Add"
-        Me.SoundInfoAdd.UseColumnTextForButtonValue = True
-        '
-        'SoundInfoDel
-        '
-        Me.SoundInfoDel.HeaderText = "Delete"
-        Me.SoundInfoDel.Name = "SoundInfoDel"
-        Me.SoundInfoDel.Text = "Delete"
-        Me.SoundInfoDel.UseColumnTextForButtonValue = True
-        '
         'MenuStripSoundView
         '
         Me.MenuStripSoundView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripSoundRefSearch, Me.SaveChangesSoundMenuItem})
@@ -3298,6 +3258,48 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn35.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewTextBoxColumn35.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn35.Width = 41
+        '
+        'SoundContainerNumber
+        '
+        Me.SoundContainerNumber.HeaderText = "Container"
+        Me.SoundContainerNumber.Name = "SoundContainerNumber"
+        Me.SoundContainerNumber.ReadOnly = True
+        Me.SoundContainerNumber.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'SoundRefNum
+        '
+        Me.SoundRefNum.HeaderText = "Ref Num"
+        Me.SoundRefNum.MaxInputLength = 11
+        Me.SoundRefNum.Name = "SoundRefNum"
+        Me.SoundRefNum.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'SoundHashRef
+        '
+        Me.SoundHashRef.HeaderText = "Hash Bytes"
+        Me.SoundHashRef.MaxInputLength = 8
+        Me.SoundHashRef.Name = "SoundHashRef"
+        Me.SoundHashRef.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'SoundOffset
+        '
+        Me.SoundOffset.HeaderText = "Offset"
+        Me.SoundOffset.Name = "SoundOffset"
+        Me.SoundOffset.ReadOnly = True
+        Me.SoundOffset.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'SoundInfoAdd
+        '
+        Me.SoundInfoAdd.HeaderText = "Add"
+        Me.SoundInfoAdd.Name = "SoundInfoAdd"
+        Me.SoundInfoAdd.Text = "Add"
+        Me.SoundInfoAdd.UseColumnTextForButtonValue = True
+        '
+        'SoundInfoDel
+        '
+        Me.SoundInfoDel.HeaderText = "Delete"
+        Me.SoundInfoDel.Name = "SoundInfoDel"
+        Me.SoundInfoDel.Text = "Delete"
+        Me.SoundInfoDel.UseColumnTextForButtonValue = True
         '
         'MainForm
         '
@@ -3716,12 +3718,6 @@ Partial Class MainForm
     Friend WithEvents ToolStripSoundRefSearch As ToolStripTextBox
     Friend WithEvents MenuStripAssetView As MenuStrip
     Friend WithEvents SaveAssetViewChangesToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents SoundContainerNumber As DataGridViewTextBoxColumn
-    Friend WithEvents SoundRefNum As DataGridViewTextBoxColumn
-    Friend WithEvents SoundHashRef As DataGridViewTextBoxColumn
-    Friend WithEvents SoundOffset As DataGridViewTextBoxColumn
-    Friend WithEvents SoundInfoAdd As DataGridViewButtonColumn
-    Friend WithEvents SoundInfoDel As DataGridViewButtonColumn
     Friend WithEvents PacNumber As DataGridViewTextBoxColumn
     Friend WithEvents AttireNum As DataGridViewTextBoxColumn
     Friend WithEvents AudioNum As DataGridViewTextBoxColumn
@@ -3768,4 +3764,10 @@ Partial Class MainForm
     Friend WithEvents TitleCruiserweight As DataGridViewCheckBoxColumn
     Friend WithEvents UnlockNum As DataGridViewTextBoxColumn
     Friend WithEvents TitleTemp4 As DataGridViewTextBoxColumn
+    Friend WithEvents SoundContainerNumber As DataGridViewTextBoxColumn
+    Friend WithEvents SoundRefNum As DataGridViewTextBoxColumn
+    Friend WithEvents SoundHashRef As DataGridViewTextBoxColumn
+    Friend WithEvents SoundOffset As DataGridViewTextBoxColumn
+    Friend WithEvents SoundInfoAdd As DataGridViewButtonColumn
+    Friend WithEvents SoundInfoDel As DataGridViewButtonColumn
 End Class

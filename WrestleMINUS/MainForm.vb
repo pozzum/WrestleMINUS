@@ -3921,6 +3921,54 @@ Public Class MainForm
         DataGridSoundView.Rows.AddRange(WorkingCollection.ToArray())
     End Sub
 
+    Private Sub DataGridSoundView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridSoundView.CellEndEdit
+        Dim MyCell As DataGridViewCell = DataGridSoundView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+        Select Case e.ColumnIndex
+            Case 1 'Must be an integer
+                If Not IsNumeric(MyCell.Value) Then
+                    MyCell.Value = OldValue
+                ElseIf CLng(MyCell.Value) < 0 OrElse
+                CLng(MyCell.Value) > Int32.MaxValue Then
+                    MyCell.Value = OldValue
+                Else MyCell.Value = CInt(MyCell.Value)
+                End If
+            Case 2 'must be Hex String
+                If Not GeneralTools.HexCheck(MyCell.Value) Then
+                    MyCell.Value = OldValue
+                End If
+        End Select
+        SaveYOBJArrayChangesToolStripMenuItem.Visible = True
+    End Sub
+
+    Private Sub DataGridSoundView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridSoundView.CellContentClick
+        Dim senderGrid = DirectCast(sender, DataGridView)
+        If TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewButtonColumn AndAlso
+           e.RowIndex >= 0 Then
+            If e.ColumnIndex = 4 Then 'add button
+                'This function adds a duplicate row at index + 1
+                Dim Duplicaterow As DataGridViewRow = DataGridSoundView.Rows(e.RowIndex).Clone
+                For i As Integer = 0 To DataGridSoundView.Rows(e.RowIndex).Cells.Count - 1
+                    Duplicaterow.Cells(i).Value = DataGridSoundView.Rows(e.RowIndex).Cells(i).Value
+                Next
+                DataGridSoundView.Rows.Insert(e.RowIndex + 1, Duplicaterow)
+                For i As Integer = e.RowIndex + 1 To DataGridSoundView.Rows.Count - 1
+                    DataGridSoundView.Rows(i).Cells(3).Value = Hex(CUInt("&h" & DataGridSoundView.Rows(i).Cells(3).Value) + 8)
+                Next
+                SavePending = True
+                SaveChangesSoundMenuItem.Visible = True
+            ElseIf e.ColumnIndex = 5 Then 'Delete button
+                DataGridSoundView.Rows.RemoveAt(e.RowIndex)
+                For i As Integer = e.RowIndex To DataGridSoundView.Rows.Count - 1
+                    DataGridSoundView.Rows(i).Cells(3).Value = Hex(CUInt("&H" & DataGridSoundView.Rows(i).Cells(3).Value) - 8)
+                Next
+                SavePending = True
+                SaveChangesSoundMenuItem.Visible = True
+            Else
+                'do nothing
+            End If
+        End If
+    End Sub
+
     Private Sub SaveChangesSoundMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesSoundMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildSoundRefFile())
     End Sub
@@ -3975,6 +4023,7 @@ Public Class MainForm
         End If
         DataGridSoundView.Rows.AddRange(TemporaryCollection.ToArray)
     End Sub
+
 #End Region
 
 #End Region
