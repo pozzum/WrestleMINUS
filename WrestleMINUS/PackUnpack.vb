@@ -136,8 +136,8 @@ Public Class PackUnpack
             Dim TempOutput As String = TempInput & ".bpe"
             File.Copy(My.Settings.BPEExePath, TempBPEExe, True)
             File.WriteAllBytes(TempInput, SentBytes)
-            Dim Info As ProcessStartInfo = New ProcessStartInfo("cmd.exe")
-            Info.Arguments = "/C """ & TempBPEExe & """ " & Path.GetFileName(TempInput) & " " & Path.GetFileName(TempOutput)
+            Dim Info As ProcessStartInfo = New ProcessStartInfo("cmd.exe") With {
+            .Arguments = "/C """ & TempBPEExe & """ " & Path.GetFileName(TempInput) & " " & Path.GetFileName(TempOutput)}
             Process.Start(Info).WaitForExit()
             CompressedBuffer = File.ReadAllBytes(TempOutput)
             If Not Path.GetDirectoryName(Application.ExecutablePath) = Path.GetDirectoryName(My.Settings.BPEExePath) Then

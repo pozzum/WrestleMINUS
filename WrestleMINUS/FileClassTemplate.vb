@@ -20,8 +20,8 @@
         Public DUMMYBool2 As Boolean = False
     End Class
 
-    Dim DUMMYHeaderLength As UInt32 = &H10 'ADJUST
-    Dim DUMMYPartSize As Integer = &H1E0 'ADJUST
+    ReadOnly DUMMYHeaderLength As UInt32 = &H10 'ADJUST
+    ReadOnly DUMMYPartSize As Integer = &H1E0 'ADJUST
 
     Sub FillTitleFileView(SelectedData As TreeNode)
         Dim CloneRow As DataGridViewRow = MainForm.ClearandGetClone(DataGridDUMMYView)

@@ -109,12 +109,15 @@ Public Class GeneralTools
         End If
     End Function
 
-    Shared Function HexStringToByte(HexString As String) As Byte()
+    Shared Function HexStringToByte(HexString As String, Optional Reverse As Boolean = False) As Byte()
         Dim NumberofCharacters As Integer = HexString.Length
         Dim ReturnedBytes As Byte() = New Byte(NumberofCharacters / 2 - 1) {}
         For i As Integer = 0 To NumberofCharacters - 1 Step 2
             ReturnedBytes(i / 2) = Convert.ToByte(HexString.Substring(i, 2), 16)
         Next
+        If Reverse Then
+            ReturnedBytes = EndianReverse(ReturnedBytes, 0, ReturnedBytes.Length)
+        End If
         Return ReturnedBytes
     End Function
 

@@ -1,9 +1,7 @@
 ﻿Imports System.IO   'Files
-Imports System.Text 'Text Encoding 
-Imports System.Environment 'appdata
-Imports System.Runtime.Serialization.Formatters.Binary 'Binary Formatter
-Imports Newtonsoft.Json
+Imports System.Text 'Binary Formatter
 Imports FontAwesome.Sharp
+Imports Newtonsoft.Json
 
 Public Class MainForm
 
@@ -12,13 +10,16 @@ Public Class MainForm
     Friend Shared PacNumbers() As Integer
     Friend Shared PacsRead As Boolean = False
     Dim SelectedFiles() As String
+
     'Injection Properties used across multiple forms
     Friend Shared SavePending As Boolean = False
+
     Friend Shared ReadNode As TreeNode
     Friend Shared OldValue
     Public Shared InformationLoaded As Boolean = False
 
 #Region "Main Form Loading Functions"
+
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = Me.Text & " Ver: " & My.Application.Info.Version.ToString
         OnlineVersion.CheckUpdate()
@@ -29,6 +30,7 @@ Public Class MainForm
         HideTabs(Nothing)
         CreatedImages = New List(Of String)
     End Sub
+
     Private Sub MainForm_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         If CheckCommands() Then
             LoadInitalFilesToTree()
@@ -36,6 +38,7 @@ Public Class MainForm
             LoadHome()
         End If
     End Sub
+
     Private Sub MainForm_DragEnter(sender As Object, e As DragEventArgs) Handles MyBase.DragEnter,
                                                                                 Hex_Selected.DragEnter,
                                                                                 Text_Selected.DragEnter
@@ -45,6 +48,7 @@ Public Class MainForm
             e.Effect = DragDropEffects.None
         End If
     End Sub
+
     Private Sub MainForm_DragDrop(sender As Object, e As DragEventArgs) Handles MyBase.DragDrop,
                                                                                 Hex_Selected.DragDrop,
                                                                                 Text_Selected.DragDrop
@@ -56,6 +60,7 @@ Public Class MainForm
         'ListBox1.Items.Add(s(i))
         'Next i
     End Sub
+
     Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         If My.Settings.DeleteTempBMP Then
             DeleteTempImages()
@@ -69,6 +74,7 @@ Public Class MainForm
             e.Cancel = True
         End If
     End Sub
+
     Shared Function CheckCommands() As Boolean
         Dim args As String() = Environment.GetCommandLineArgs()
         Dim parameters As Boolean = False
@@ -81,7 +87,9 @@ Public Class MainForm
         End If
         Return parameters
     End Function
+
     Dim MuscleViewStartupRemoved As Boolean = False
+
     Function HideTabs(ExcludedTab As TabPage) As DialogResult
         If IsNothing(ExcludedTab) Then
             ExcludedTab = New TabPage()
@@ -137,6 +145,7 @@ Public Class MainForm
         Next
         Return DialogResult.OK
     End Function
+
     Sub LoadFontAwesomeIcons()
         If SettingsHandlers.CheckFontAwesome() Then
             LoadHomeToolStripMenuItem.Image = IconChar.Home.ToBitmap(16, Color.Black)
@@ -149,6 +158,7 @@ Public Class MainForm
             'https://fontawesome.com/cheatsheet?from=io
         End If
     End Sub
+
     Shared Sub LoadIcons()
         If My.Settings.UseTreeIcons Then
             MainForm.TreeView1.ImageList = MainForm.ImageList1
@@ -198,10 +208,13 @@ Public Class MainForm
 #End Region
 
 #Region "Menu Strip"
+
 #Region "File Sub Menu"
+
     Private Sub LoadHomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoadHomeToolStripMenuItem.Click
         LoadHome()
     End Sub
+
     Private Sub OpenToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenToolStripMenuItem.Click
         Dim OpenFileOrFolderDialog As New OpenFileDialog With {
             .CheckFileExists = False,
@@ -217,13 +230,17 @@ Public Class MainForm
             LoadInitalFilesToTree()
         End If
     End Sub
+
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
         Application.Exit()
     End Sub
+
     Private Sub OptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsToolStripMenuItem.Click
         OptionsMenu.Show() '
     End Sub
+
 #End Region
+
 #Region "Tool Tool-strip"
 
     Private Sub BPEBatchCompressToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BPEBatchCompressToolStripMenuItem.Click
@@ -347,21 +364,29 @@ Public Class MainForm
             MessageBox.Show("File Selection Failure")
         End If
     End Sub
+
 #End Region
+
 #Region "HelpToolStrip"
+
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
         Process.Start("https://pozzum.github.io/WrestleMINUS/")
     End Sub
+
     Private Sub SupportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SupportToolStripMenuItem.Click
         Process.Start("https://smacktalks.org/forums/topic/70048-wrestleminus/")
     End Sub
+
     Private Sub GitHubIssuesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GitHubIssuesToolStripMenuItem.Click
         Process.Start("https://github.com/pozzum/WrestleMINUS/issues")
     End Sub
+
 #End Region
+
 #End Region
 
     'TO DO Add UpdateProgress to more functions, Flesh out with parameters
+
 #Region "TreeView Population"
 
     Function GenerateNodeFromFile(SentFileProperties As ExtendedFileProperties, Optional ExitingNode As TreeNode = Nothing) As TreeNode
@@ -378,6 +403,7 @@ Public Class MainForm
         End If
         Return TempNode
     End Function
+
     Sub UpdateNodeWithFileInformation(ExitingNode As TreeNode)
         If IsNothing(ExitingNode.Parent) Then
             TreeView1.Nodes.Insert(ExitingNode.Index + 1, GenerateNodeFromFile(ExitingNode.Tag))
@@ -413,7 +439,7 @@ Public Class MainForm
         Else
             NewFI = New FileInfo(SentNodeTag.FullFilePath)
         End If
-        'Create a new File Properties 
+        'Create a new File Properties
 
         Dim UpdatedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
                     .Name = NewFI.Name,
@@ -422,7 +448,7 @@ Public Class MainForm
                     .Index = 0,
                     .length = FileLen(NewFI.FullName),
                     .StoredData = New Byte() {}}
-        'Now We want to now delete the odl node and make a new one 
+        'Now We want to now delete the odl node and make a new one
         EditedFile.Remove()
         'we want to get the sub files to be consistent
         PackageInformation.GetFileParts(UpdatedFileProperties)
@@ -440,6 +466,7 @@ Public Class MainForm
     End Function
 
     Dim ProgressBarFont As Font = New Font("Arial", 8.25, FontStyle.Regular)
+
     'TO DO Add this to more locations
     Sub UpdateProgress()
         If ProgressBar1.Value < ProgressBar1.Maximum Then
@@ -551,6 +578,7 @@ Public Class MainForm
 #End Region
 
 #Region "Tab Controls"
+
     'moving functions from on tree view to on tab select to reduce load times during tree movement on keyboard
     Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
         If e.TabPage.Name = StringView.Name Then
@@ -586,6 +614,7 @@ Public Class MainForm
             End If
         End If
     End Sub
+
     Function GetTabType(SelectedType As PackageType) As TabPage
         Select Case SelectedType
             Case PackageType.StringFile
@@ -618,6 +647,7 @@ Public Class MainForm
                 Return Nothing
         End Select
     End Function
+
     Sub LoadTab(NewTab As TabPage)
         If Not TabControl1.TabPages.Contains(NewTab) Then
             TabControl1.TabPages.Add(NewTab)
@@ -629,6 +659,7 @@ Public Class MainForm
             FillMuscleView(ReadNode)
         End If
     End Sub
+
 #End Region
 
 #Region "Context Menu Strip"
@@ -756,6 +787,7 @@ Public Class MainForm
             Process.Start(My.Settings.DDSexeLocation, filepath)
         End If
     End Sub
+
     'Possible Additions
     'Model Editor
     'Hex Editor
@@ -842,6 +874,7 @@ Public Class MainForm
 #End Region
 
     'Re-factored From here so far..
+
 #Region "Delete Options"
 
     Private Sub DeleteFileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeleteFileToolStripMenuItem.Click
@@ -894,11 +927,13 @@ Public Class MainForm
 #Region "View Controls"
 
 #Region "Multi-View Controls"
+
     'Commands that should be generic to be used across multiple tabs.
     Private Sub StoreOldComboBoxValue(sender As Object, e As EventArgs) Handles HexViewBitWidth.Enter,
                                                                         TextViewBitWidth.Enter
         OldValue = sender.text
     End Sub
+
     Private Sub StoreOldDataGridViewValue(sender As DataGridView, e As DataGridViewCellEventArgs) Handles DataGridMiscView.CellEnter,
                                                                                                     DataGridShowView.CellEnter,
                                                                                                     DataGridNIBJView.CellEnter,
@@ -910,6 +945,7 @@ Public Class MainForm
                                                                                                     DataGridSoundView.CellEnter
         OldValue = sender.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
     End Sub
+
     Sub SaveFileNoLongerPending()
         ReadNode = Nothing
         SavePending = False
@@ -925,6 +961,7 @@ Public Class MainForm
         SaveChangesSoundMenuItem.Visible = False
         'TO DO Update this to include all save buttons
     End Sub
+
     Function ClearandGetClone(SentDataGrid) As DataGridViewRow
         SentDataGrid.Rows.Clear()
         SentDataGrid.Rows.Add()
@@ -932,12 +969,17 @@ Public Class MainForm
         SentDataGrid.Rows.Clear()
         Return CloneRow
     End Function
+
     Public ReadOnlyCellStyle As DataGridViewCellStyle = New DataGridViewCellStyle With {
         .BackColor = SystemColors.Control,
         .ForeColor = SystemColors.ControlText}
+
 #End Region
+
     'TO DO Request Direct Editing of Hex Edit View
+
 #Region "Hex View Controls"
+
     Sub AddHexText(SelectedNode As TreeNode)
         If File.Exists(SelectedNode.ToolTipText) Then
             Dim bitwidth As Integer = 0
@@ -962,9 +1004,10 @@ Public Class MainForm
             Hex_Selected.Text = builder.ToString()
         End If
     End Sub
+
     Private Sub HexViewBitWidth_TextChanged(sender As Object, e As EventArgs) Handles HexViewBitWidth.TextChanged
         If HexViewBitWidth.Text = "" Then
-            'Do Nothing 
+            'Do Nothing
             Exit Sub
         ElseIf Not IsNumeric(HexViewBitWidth.Text) Then
             HexViewBitWidth.Text = OldValue
@@ -986,6 +1029,7 @@ Public Class MainForm
 #End Region
 
 #Region "Text View Controls"
+
     Sub AddText(SelectedNode As TreeNode)
         If File.Exists(SelectedNode.ToolTipText) Then
             Dim bitwidth As Integer = 0
@@ -1020,9 +1064,10 @@ Public Class MainForm
             End If
         End If
     End Sub
+
     Private Sub TextViewBitWidth_TextChanged(sender As Object, e As EventArgs) Handles TextViewBitWidth.TextChanged
         If TextViewBitWidth.Text = "" Then
-            'Do Nothing 
+            'Do Nothing
             Exit Sub
         ElseIf Not IsNumeric(TextViewBitWidth.Text) Then
             TextViewBitWidth.Text = OldValue
@@ -1044,6 +1089,7 @@ Public Class MainForm
 #End Region
 
 #Region "String View Controls"
+
     Sub FillStringView(SelectedData As TreeNode)
         Dim Testing As String = ""
         'getting a generic row so we can create one for the collection
@@ -1122,8 +1168,10 @@ Public Class MainForm
     Private Sub SortStringsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SortStringsToolStripMenuItem.Click
         SortStringView()
     End Sub
+
     Dim OldLength As Integer
     Dim LengthTheSame As Boolean = False
+
     Private Sub DataGridStringView_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridStringView.CellEnter
         If e.ColumnIndex = 0 Then 'Hex Text Reference Editing
             OldValue = DataGridStringView.Rows(e.RowIndex).Cells(0).Value
@@ -1135,9 +1183,10 @@ Public Class MainForm
             OldValue = DataGridStringView.Rows(e.RowIndex).Cells(2).Value
         End If
     End Sub
+
     Private Sub DataGridStringView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridStringView.CellEndEdit
         Dim MyCell As DataGridViewCell = DataGridStringView.Rows(e.RowIndex).Cells(e.ColumnIndex)
-        If e.ColumnIndex = 0 Then 'Hexvalue
+        If e.ColumnIndex = 0 Then 'Hex value
             If Not GeneralTools.HexCheck(MyCell.Value) Then
                 MyCell.Value = OldValue
             Else
@@ -1183,6 +1232,7 @@ Public Class MainForm
 
         End If
     End Sub
+
     Private Sub DataGridStringView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridStringView.CellContentClick
         Dim senderGrid = DirectCast(sender, DataGridView)
         If TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewButtonColumn Then
@@ -1201,11 +1251,13 @@ Public Class MainForm
             'do nothing
         End If
     End Sub
+
     Private Sub ToolStripTextBoxSearch_Enter(sender As Object, e As EventArgs) Handles ToolStripTextBoxSearch.Enter
         If ToolStripTextBoxSearch.Text = "Search..." Then
             ToolStripTextBoxSearch.Text = ""
         End If
     End Sub
+
     Private Sub ToolStripTextBoxSearch_Leave(sender As Object, e As EventArgs) Handles ToolStripTextBoxSearch.Leave
         If ToolStripTextBoxSearch.Text = "" Then
             ToolStripTextBoxSearch.Text = "Search..."
@@ -1233,6 +1285,7 @@ Public Class MainForm
         End If
         DataGridStringView.Rows.AddRange(TemporaryCollection.ToArray)
     End Sub
+
     Private Function BuildStringFile() As Byte()
         Dim StringCount As Integer = DataGridStringView.RowCount
         Dim StringSum As Integer = 0
@@ -1262,9 +1315,11 @@ Public Class MainForm
         Next
         Return ReturnedBytes
     End Function
+
 #End Region
 
 #Region "Misc View Controls"
+
     Public Class ArenaInformation
         Public Stadium As Integer = -2
         Public Advertisement As Integer = -2
@@ -1551,7 +1606,7 @@ Public Class MainForm
         ProgressBar1.Maximum = DataGridMiscView.RowCount - 1
         ProgressBar1.Value = 0
         For i As Integer = 0 To DataGridMiscView.RowCount - 1
-            'Making the header 
+            'Making the header
             Dim Part_Head_Array As Byte() = New Byte(&H20) {}
             'Adding the text parts.
             Dim ArenaInfoBytes As Byte() = Encoding.ASCII.GetBytes("arenaInfo" & DataGridMiscView.Rows(i).Cells(0).Value)
@@ -1810,33 +1865,33 @@ Public Class MainForm
             'TO DO Build out controls for games other than 2K19
             Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
             Dim StringRef As UInt32 = BitConverter.ToUInt32(ShowBytes, current_poition)
-            TempGridRow.Cells(0).Value = Hex(StringRef) ' Dim NameRef As String = 
+            TempGridRow.Cells(0).Value = Hex(StringRef) ' Dim NameRef As String =
             TempGridRow.Cells(1).Value = StringReferences(StringRef) 'Name as string =
             TempGridRow.Cells(2).Value = BitConverter.ToUInt16(ShowBytes, current_poition + 4) 'Dim SelectNum As int16 =
-            TempGridRow.Cells(3).Value = BitConverter.ToUInt16(ShowBytes, current_poition + 6) 'Dim SelectNumSecond As int16 = 
+            TempGridRow.Cells(3).Value = BitConverter.ToUInt16(ShowBytes, current_poition + 6) 'Dim SelectNumSecond As int16 =
             TempGridRow.Cells(4).Value = BitConverter.ToUInt16(ShowBytes, current_poition + 8) 'Dim A1 As int16 =
-            TempGridRow.Cells(5).Value = BitConverter.ToUInt16(ShowBytes, current_poition + 10) 'Dim A2 As int16 = 
-            TempGridRow.Cells(6).Value = Hex(BitConverter.ToInt16(ShowBytes, current_poition + 12)) 'Dim B1 As String = 
-            TempGridRow.Cells(7).Value = Hex(BitConverter.ToInt16(ShowBytes, current_poition + 14)) 'Dim B2 As String = 
-            TempGridRow.Cells(8).Value = Hex(BitConverter.ToInt16(ShowBytes, current_poition + 16)) 'Dim B3 As String = 
+            TempGridRow.Cells(5).Value = BitConverter.ToUInt16(ShowBytes, current_poition + 10) 'Dim A2 As int16 =
+            TempGridRow.Cells(6).Value = Hex(BitConverter.ToInt16(ShowBytes, current_poition + 12)) 'Dim B1 As String =
+            TempGridRow.Cells(7).Value = Hex(BitConverter.ToInt16(ShowBytes, current_poition + 14)) 'Dim B2 As String =
+            TempGridRow.Cells(8).Value = Hex(BitConverter.ToInt16(ShowBytes, current_poition + 16)) 'Dim B3 As String =
             '7 Bytes 00
-            TempGridRow.Cells(9).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 25) 'Dim C1 As Boolean = 
-            TempGridRow.Cells(10).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 26) ' Dim C2 As Boolean = 
-            TempGridRow.Cells(11).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 27) 'Dim C3 As Boolean = 
-            TempGridRow.Cells(12).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 28) ' Dim C4 As Boolean = 
-            TempGridRow.Cells(13).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 29) 'Dim C5 As Boolean = 
-            TempGridRow.Cells(14).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 30) 'Dim C6 As Boolean = 
-            TempGridRow.Cells(15).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 31) 'Dim C7 As Boolean = 
+            TempGridRow.Cells(9).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 25) 'Dim C1 As Boolean =
+            TempGridRow.Cells(10).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 26) ' Dim C2 As Boolean =
+            TempGridRow.Cells(11).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 27) 'Dim C3 As Boolean =
+            TempGridRow.Cells(12).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 28) ' Dim C4 As Boolean =
+            TempGridRow.Cells(13).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 29) 'Dim C5 As Boolean =
+            TempGridRow.Cells(14).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 30) 'Dim C6 As Boolean =
+            TempGridRow.Cells(15).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 31) 'Dim C7 As Boolean =
             '2 Bytes 00
-            TempGridRow.Cells(16).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 34) 'Dim C8 As Boolean = 
-            TempGridRow.Cells(17).Value = ShowBytes(current_poition + 35) 'Dim Stage As byte = 
+            TempGridRow.Cells(16).Value = BitConverter.ToBoolean(ShowBytes, current_poition + 34) 'Dim C8 As Boolean =
+            TempGridRow.Cells(17).Value = ShowBytes(current_poition + 35) 'Dim Stage As byte =
             '2 bytes 00
-            TempGridRow.Cells(18).Value = ShowBytes(current_poition + 38) 'Dim D1 As byte = 
-            TempGridRow.Cells(19).Value = ShowBytes(current_poition + 39) 'Dim D2 As byte = 
-            TempGridRow.Cells(20).Value = ShowBytes(current_poition + 40) 'Dim D3 As byte = 
-            TempGridRow.Cells(21).Value = ShowBytes(current_poition + 41) 'Dim D4 As byte = 
+            TempGridRow.Cells(18).Value = ShowBytes(current_poition + 38) 'Dim D1 As byte =
+            TempGridRow.Cells(19).Value = ShowBytes(current_poition + 39) 'Dim D2 As byte =
+            TempGridRow.Cells(20).Value = ShowBytes(current_poition + 40) 'Dim D3 As byte =
+            TempGridRow.Cells(21).Value = ShowBytes(current_poition + 41) 'Dim D4 As byte =
             '1 byte 00
-            TempGridRow.Cells(22).Value = ShowBytes(current_poition + 43) 'Dim D5 As byte = 
+            TempGridRow.Cells(22).Value = ShowBytes(current_poition + 43) 'Dim D5 As byte =
             TempGridRow.Cells(23).Value = ShowBytes(current_poition + 44) 'Dim Ref As byte =
             'Dim Filter As String
             TempGridRow.Cells(24).Value = Hex(ShowBytes(current_poition + 45)).PadLeft(2, "0") &
@@ -1880,6 +1935,7 @@ Public Class MainForm
         End While
         DataGridShowView.Rows.AddRange(WorkingCollection.ToArray())
     End Sub
+
     Private Sub DataGridShowView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridShowView.CellEndEdit
         Dim MyCell As DataGridViewCell = DataGridShowView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         Select Case e.ColumnIndex
@@ -1912,9 +1968,11 @@ Public Class MainForm
                 End If
         End Select
     End Sub
+
     Private Sub SaveShowChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveShowChangesToolStripMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildShowFile())
     End Sub
+
     Private Function BuildShowFile() As Byte()
         Dim ShowLength As UInt16 = &H74
         Select Case ShowViewType.SelectedIndex
@@ -1980,9 +2038,11 @@ Public Class MainForm
         Next
         Return ReturnedBytes
     End Function
+
 #End Region
 
 #Region "NIJB View Controls"
+
     'TO DO Build out other NIBJ Types
     Sub FillNIBJView(SelectedData As TreeNode)
         DataGridNIBJView.Rows.Clear()
@@ -2057,6 +2117,7 @@ Public Class MainForm
     Private Sub SaveNIBJChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveNIBJChangesToolStripMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildNIBJFile())
     End Sub
+
     Private Function BuildNIBJFile() As Byte()
         Dim ShowBytes As Byte() = FilePartHandlers.GetFilePartBytes(ReadNode.Tag)
         Dim ReturnedBytes As Byte() = New Byte(ShowBytes.Length - 1) {}
@@ -2071,10 +2132,13 @@ Public Class MainForm
         Next
         Return ReturnedBytes
     End Function
+
 #End Region
 
 #Region "Picture View Controls"
+
     Dim CreatedImages As List(Of String)
+
     Sub FillPictureView(SelectedData As TreeNode)
         Dim PictureBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
         Dim ImageStream As MemoryStream = New MemoryStream(PictureBytes)
@@ -2104,6 +2168,7 @@ Public Class MainForm
         CreatedImages.Add(TempBMP)
         File.Delete(TempName)
     End Sub
+
     Sub DeleteTempImages()
         PictureBox2.Image = Nothing
         For Each CurrentImage As String In CreatedImages
@@ -2117,9 +2182,11 @@ Public Class MainForm
         Next
         CreatedImages.Clear()
     End Sub
+
 #End Region
 
 #Region "Attire Editor View"
+
     Sub FillAttireView(SelectedData As TreeNode)
         RemoveHandler DataGridAttireView.RowsAdded, AddressOf DataGridAttireView_RowsAdded
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridAttireView)
@@ -2238,6 +2305,7 @@ Public Class MainForm
         DataGridAttireView.Rows.AddRange(WorkingCollection.ToArray())
         AddHandler DataGridAttireView.RowsAdded, AddressOf DataGridAttireView_RowsAdded
     End Sub
+
     Private Sub DataGridAttireView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridAttireView.CellEndEdit
         Dim MyCell As DataGridViewCell = DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         If e.ColumnIndex = 0 Then 'Pac Number, Verify Number <= 1024
@@ -2276,6 +2344,7 @@ Public Class MainForm
         SavePending = True
         SaveChangesAttireMenuItem.Visible = True
     End Sub
+
     Private Sub DataGridAttireView_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs)
         If DataGridAttireView.RowCount > 1 Then
             Dim NewRow As DataGridViewRow = DataGridAttireView.Rows(e.RowIndex - 1)
@@ -2296,6 +2365,7 @@ Public Class MainForm
             End If
         End If
     End Sub
+
     Private Sub DataGridAttireView_Sorted(sender As Object, e As EventArgs) Handles DataGridAttireView.Sorted
         If DataGridAttireView.RowCount > 100 Then
             For i As Integer = 0 To 99
@@ -2310,9 +2380,11 @@ Public Class MainForm
             Next
         End If
     End Sub
+
     Private Sub SaveAttireChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesAttireMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildAttireFile())
     End Sub
+
     Private Function BuildAttireFile() As Byte()
         Dim ReturnedBytes As Byte() = New Byte(&HC + ((DataGridAttireView.RowCount - 1) * &HA8) - 1) {}
         'COS
@@ -2339,9 +2411,11 @@ Public Class MainForm
         Next
         Return ReturnedBytes
     End Function
+
 #End Region
 
 #Region "Muscle View Controls"
+
     'TO DO Streamline integration with Object models whenever Object viewer is actually built.
     Sub FillMuscleView(SelectedData As TreeNode)
         Dim MuscleBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
@@ -2368,6 +2442,7 @@ Public Class MainForm
             End If
         Next
     End Sub
+
     Function GetMuscleRow(MuscleName As String)
         For i As Integer = 0 To DataGridMuscleView.RowCount - 1
             If DataGridMuscleView(0, i).Value = MuscleName Then
@@ -2376,15 +2451,18 @@ Public Class MainForm
         Next
         Return -1
     End Function
+
     Private Sub CloseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseToolStripMenuItem.Click
         If TabControl1.TabPages.Contains(MuscleView) Then
             TabControl1.SelectedIndex = 0
             TabControl1.TabPages.Remove(MuscleView)
         End If
     End Sub
+
 #End Region
 
 #Region "Mask View Controls"
+
     Sub FillMaskView(SelectedData As TreeNode)
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridMaskView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
@@ -2492,6 +2570,7 @@ Public Class MainForm
         Next
         DataGridMaskView.Rows.AddRange(WorkingCollection.ToArray())
     End Sub
+
     Private Sub FillMaskDataGrid(ByVal Source As String)
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridMaskView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
@@ -2552,6 +2631,7 @@ Public Class MainForm
         DataGridMaskView.Rows.AddRange(WorkingCollection.ToArray())
         SaveMaskChangesToolStripMenuItem.Visible = True
     End Sub
+
     Private Sub ImportMasksFromTXTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportMasksFromTXTToolStripMenuItem.Click
         Dim OpenTxtFile As OpenFileDialog = New OpenFileDialog With {
             .FileName = "CE_mask_list.txt",
@@ -2562,6 +2642,7 @@ Public Class MainForm
             End If
         End If
     End Sub
+
     Private Sub ExportMaskstoTXTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExportMaskstoTXTToolStripMenuItem.Click
         Dim SaveTxtFile As SaveFileDialog = New SaveFileDialog With {
             .FileName = "CE_mask_list.txt",
@@ -2617,13 +2698,17 @@ Public Class MainForm
             End If
         End If
     End Sub
+
 #Region "Save Mask Functions"
+
     Private Sub SaveMaskChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveMaskChangesToolStripMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildMaskFile())
         SaveMaskChangesToolStripMenuItem.Visible = False
     End Sub
+
     'actively used when making a save
     Dim CurrentDataGridRow As Integer = 0
+
     Dim CurrentContainer As String = ""
     Dim ContainerByteArray As Byte() = New Byte() {}
     Dim ContainerCount As Integer = 0
@@ -2634,6 +2719,7 @@ Public Class MainForm
     Dim SingleMaskByteArray As Byte() = New Byte() {}
     Dim SingleArrayCount As Integer = 0
     Dim NumberByteArray As Byte() = New Byte() {}
+
     Private Function BuildMaskFile() As Byte()
         For Each row As DataGridViewRow In DataGridMaskView.Rows
             If row.Cells(1).Value.ToString = "nil" OrElse row.Cells(2).Value.ToString = "nil" Then
@@ -2705,17 +2791,20 @@ Public Class MainForm
         Buffer.BlockCopy(ContainerByteArray, 0, total_file, &HC, ContainerByteArray.Length - 1)
         Return total_file
     End Function
+
     Sub AddMoreNumbersToByteArray()
         Dim old_length As Integer = NumberByteArray.Length
         ReDim Preserve NumberByteArray(old_length + 7)
         Buffer.BlockCopy(BitConverter.GetBytes(CInt(DataGridMaskView(1, CurrentDataGridRow).Value)), 0, NumberByteArray, old_length, 4)
         Buffer.BlockCopy(BitConverter.GetBytes(CInt(DataGridMaskView(2, CurrentDataGridRow).Value)), 0, NumberByteArray, old_length + 4, 4)
     End Sub
+
     Sub MakeNewNumberByteArray()
         ReDim NumberByteArray(7)
         Buffer.BlockCopy(BitConverter.GetBytes(CInt(DataGridMaskView(1, CurrentDataGridRow).Value)), 0, NumberByteArray, 0, 4)
         Buffer.BlockCopy(BitConverter.GetBytes(CInt(DataGridMaskView(2, CurrentDataGridRow).Value)), 0, NumberByteArray, 4, 4)
     End Sub
+
     Private Sub FormMaskByteArray()
         Dim old_length As Integer = SingleMaskByteArray.Length - 1
         ReDim Preserve SingleMaskByteArray((SingleMaskByteArray.Length) + (NumberByteArray.Length) + &H10 - 1)
@@ -2738,9 +2827,11 @@ Public Class MainForm
         End If
         'Make New Number Array for new mask
     End Sub
+
     Sub MakeNewMaskByteArray()
         SingleMaskByteArray = New Byte(0) {}
     End Sub
+
     Sub FormBodyByteArray()
         Dim old_length As Integer = BodyPartArray.Length - 1
         ReDim Preserve BodyPartArray(BodyPartArray.Length + SingleMaskByteArray.Length + &H10 - 2)
@@ -2762,9 +2853,11 @@ Public Class MainForm
         MakeNewMaskByteArray()
         SingleArrayCount = 0
     End Sub
+
     Sub MakeNewBodyPartByteArray()
         BodyPartArray = New Byte(0) {}
     End Sub
+
     Sub FormContainerByteArray()
         Dim old_length As Integer = ContainerByteArray.Length - 1
         ReDim Preserve ContainerByteArray(ContainerByteArray.Length + BodyPartArray.Length + &H4C - 2)
@@ -2786,9 +2879,11 @@ Public Class MainForm
         MakeNewBodyPartByteArray()
         BodyPartCount = 0
     End Sub
+
 #End Region
 
 #Region "Tutorial Links"
+
     Private Sub TutorialVideoToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TutorialVideoToolStripMenuItem.Click
         Try
             Process.Start("https://www.youtube.com/watch?v=e7WNIh-WYB4")
@@ -2796,6 +2891,7 @@ Public Class MainForm
             MessageBox.Show(ex.Message)
         End Try
     End Sub
+
     Private Sub DSImportScriptToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DSImportScriptToolStripMenuItem.Click
         Try
             Process.Start("http://velociterium.com/3FYJ")
@@ -2803,6 +2899,7 @@ Public Class MainForm
             MessageBox.Show(ex.Message)
         End Try
     End Sub
+
     Private Sub DSSelectionScriptToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DSSelectionScriptToolStripMenuItem.Click
         Try
             Process.Start("http://velociterium.com/3FZt")
@@ -2810,6 +2907,7 @@ Public Class MainForm
             MessageBox.Show(ex.Message)
         End Try
     End Sub
+
     Private Sub DSExportScriptToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DSExportScriptToolStripMenuItem.Click
         Try
             Process.Start("http://velociterium.com/3Fd2")
@@ -2817,6 +2915,7 @@ Public Class MainForm
             MessageBox.Show(ex.Message)
         End Try
     End Sub
+
     Private Sub AznTutorialToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AznTutorialToolStripMenuItem.Click
         Try
             Process.Start("http://velociterium.com/4t4q")
@@ -2824,6 +2923,7 @@ Public Class MainForm
             MessageBox.Show(ex.Message)
         End Try
     End Sub
+
 #End Region
 
 #Region "DataGridView Actions"
@@ -2903,11 +3003,13 @@ Public Class MainForm
         SavePending = True
         SaveMaskChangesToolStripMenuItem.Visible = True
     End Sub
+
 #End Region
 
 #End Region
 
 #Region "Object Array Controls"
+
     Dim ObjArrayContainerCount As Integer = 0
 
     Sub FillObjectArrayView(SelectedData As TreeNode)
@@ -2988,7 +3090,7 @@ Public Class MainForm
         Dim MyCell As DataGridViewCell = DataGridObjArrayView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         Select Case e.ColumnIndex
             'Case 0 OrElse 1 'Index and Parent are Read Only
-            Case 2 'Integer Object Number 
+            Case 2 'Integer Object Number
                 If Not IsNumeric(MyCell.Value) Then
                     MyCell.Value = OldValue
                 ElseIf Not (Math.Floor(MyCell.Value) = Math.Ceiling(MyCell.Value)) Then
@@ -3061,7 +3163,7 @@ Public Class MainForm
         For i As Integer = 0 To ObjArrayContainerCount
             'if the start index is beyond or equal to the added object we need to +1 to the start index
             If CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) >= index Then
-                'if the index matches then the added item was added to the previous 
+                'if the index matches then the added item was added to the previous
                 DataGridObjArrayView.Rows(i).Cells(12).Value = CInt(DataGridObjArrayView.Rows(i).Cells(12).Value) + 1
             End If
         Next
@@ -3872,10 +3974,6 @@ Public Class MainForm
 
 #End Region
 
-    'Forms to Use CellEndEdit instead of Cell value changed as it fixes a lot of stupid handling issues.
-    'TO DO Increase speed of data grid population with collections
-    'These is the potential for better programming using data binding data grid views.
-    'TO DO... Combine some of these redundant Close view functions...
 #Region "Sound Ref View"
 
     Dim SoundContainerCount As UInt32 = 0
@@ -3892,26 +3990,29 @@ Public Class MainForm
             Dim ContainerName As Integer = BitConverter.ToInt32(SoundRefBytes, &H10 + i * &HC + 0)
             Dim ContainerIndex As Integer = BitConverter.ToInt32(SoundRefBytes, &H10 + i * &HC + 4)
             Dim ContainerSubCount As Integer = BitConverter.ToInt16(SoundRefBytes, &H10 + i * &HC + 8)
-            For J As Integer = 0 To ContainerSubCount - 1
+            If ContainerSubCount = 0 Then
                 Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
                 TempGridRow.Cells(0).Value = ContainerName
                 TempGridRow.Cells(0).Style = ReadOnlyCellStyle
-                Dim ReferenceNumberBytes As Byte() = GeneralTools.EndianReverse(SoundRefBytes, &H10 + SoundContainerCount * &HC + ContainerIndex + J * 8, 4)
-                If ReferenceNumberBytes(0) > 0 Then
-                    TempGridRow.Cells(1).Value = BitConverter.ToUInt32(ReferenceNumberBytes, 0)
-                ElseIf ReferenceNumberBytes(1) > 0 Then
-                    ReDim Preserve ReferenceNumberBytes(5)
-                    TempGridRow.Cells(1).Value = BitConverter.ToUInt32(ReferenceNumberBytes, 1)
-                ElseIf ReferenceNumberBytes(2) > 0 Then
-                    TempGridRow.Cells(1).Value = BitConverter.ToUInt16(ReferenceNumberBytes, 2)
-                Else
-                    TempGridRow.Cells(1).Value = ReferenceNumberBytes(3)
-                End If
-                TempGridRow.Cells(2).Value = Hex(BitConverter.ToUInt32(SoundRefBytes, &H10 + SoundContainerCount * &HC + ContainerIndex + J * 8 + 4))
-                TempGridRow.Cells(3).Value = Hex(&H10 + SoundContainerCount * &HC + ContainerIndex + J * 8)
+                TempGridRow.Cells(1).Value = ""
+                TempGridRow.Cells(2).Value = ""
+                TempGridRow.Cells(3).Value = Hex(&H10 + SoundContainerCount * &HC + ContainerIndex)
                 TempGridRow.Cells(3).Style = ReadOnlyCellStyle
                 WorkingCollection.Add(TempGridRow)
-            Next
+            Else
+                For J As Integer = 0 To ContainerSubCount - 1
+                    Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
+                    TempGridRow.Cells(0).Value = ContainerName
+                    TempGridRow.Cells(0).Style = ReadOnlyCellStyle
+                    'reference number
+                    TempGridRow.Cells(1).Value = BitConverter.ToUInt32(SoundRefBytes, &H10 + SoundContainerCount * &HC + ContainerIndex + J * 8)
+                    'Hex Text
+                    TempGridRow.Cells(2).Value = Hex(BitConverter.ToUInt32(SoundRefBytes, &H10 + SoundContainerCount * &HC + ContainerIndex + J * 8 + 4))
+                    TempGridRow.Cells(3).Value = Hex(&H10 + SoundContainerCount * &HC + ContainerIndex + J * 8)
+                    TempGridRow.Cells(3).Style = ReadOnlyCellStyle
+                    WorkingCollection.Add(TempGridRow)
+                Next
+            End If
             ProgressBar1.Value = i
         Next
         'FullSoundCollection.AddRange(WorkingCollection.ToArray())
@@ -3934,7 +4035,8 @@ Public Class MainForm
                     MyCell.Value = OldValue
                 End If
         End Select
-        SaveYOBJArrayChangesToolStripMenuItem.Visible = True
+        SavePending = True
+        SaveChangesSoundMenuItem.Visible = True
     End Sub
 
     Private Sub DataGridSoundView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridSoundView.CellContentClick
@@ -3954,17 +4056,34 @@ Public Class MainForm
                 SavePending = True
                 SaveChangesSoundMenuItem.Visible = True
             ElseIf e.ColumnIndex = 5 Then 'Delete button
-                DataGridSoundView.Rows.RemoveAt(e.RowIndex)
-                For i As Integer = e.RowIndex To DataGridSoundView.Rows.Count - 1
-                    DataGridSoundView.Rows(i).Cells(3).Value = Hex(CUInt("&H" & DataGridSoundView.Rows(i).Cells(3).Value) - 8)
-                Next
-                SavePending = True
-                SaveChangesSoundMenuItem.Visible = True
+                'we don't want to delete it if there are no other objects in the container.
+                If Not (LastIteminContainerCheck(e.RowIndex)) Then
+                    DataGridSoundView.Rows.RemoveAt(e.RowIndex)
+                    For i As Integer = e.RowIndex To DataGridSoundView.Rows.Count - 1
+                        DataGridSoundView.Rows(i).Cells(3).Value = Hex(CUInt("&H" & DataGridSoundView.Rows(i).Cells(3).Value) - 8)
+                    Next
+                    SavePending = True
+                    SaveChangesSoundMenuItem.Visible = True
+                End If
             Else
                 'do nothing
             End If
         End If
     End Sub
+
+    Function LastIteminContainerCheck(IndexonMenu As Integer) As Boolean
+        If IndexonMenu > 0 Then
+            If DataGridSoundView.Rows(IndexonMenu).Cells(0).Value = DataGridSoundView.Rows(IndexonMenu - 1).Cells(0).Value Then
+                Return False
+            End If
+        End If
+        If IndexonMenu < DataGridSoundView.Rows.Count Then
+            If DataGridSoundView.Rows(IndexonMenu).Cells(0).Value = DataGridSoundView.Rows(IndexonMenu + 1).Cells(0).Value Then
+                Return False
+            End If
+        End If
+        Return True
+    End Function
 
     Private Sub SaveChangesSoundMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesSoundMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildSoundRefFile())
@@ -3973,18 +4092,65 @@ Public Class MainForm
     Function BuildSoundRefFile() As Byte()
         Dim SoundInformationBytes As Byte() = FilePartHandlers.GetFilePartBytes(ReadNode.Tag)
         Dim ReturnedBytes As Byte() = New Byte(&H10 + SoundContainerCount * &HC + DataGridSoundView.Rows.Count * 8 - 1) {}
-        Dim ContainerCount As UInt32 = 0
+        Dim ContainerNumber As Int32 = -1
+        Dim ContainerCount As Int32 = -1 'use as a 0 index
+        Dim ContainerStart As Int32 = 0
         Dim ObjectCount As UInt32 = 0
-        For i As Integer = 0 To DataGridObjArrayView.Rows.Count - 1
-            If CInt(DataGridObjArrayView.Rows(i).Cells(11).Value) > 0 Then
-                ContainerCount += 1
+        Dim EmptyRows As UInt32 = 0
+        'First we are going to Build the header
+        ReturnedBytes(0) = &H67
+        ReturnedBytes(4) = &H10
+        ReturnedBytes(&HC) = SoundContainerCount
+        'Next we want to build all of the header containers
+        For i As Integer = 0 To DataGridSoundView.Rows.Count - 1
+            If CInt(DataGridSoundView.Rows(i).Cells(0).Value) = ContainerNumber Then
+                ObjectCount += 1
             Else
-                ObjectCount = DataGridObjArrayView.Rows.Count - ContainerCount
-                Exit For
+                'We have to capture the new container
+                If ContainerCount = -1 Then
+                    'Just make the new container we don't need to write it
+                    ContainerNumber = CInt(DataGridSoundView.Rows(i).Cells(0).Value)
+                    ContainerCount = 0
+                    ContainerStart = i - EmptyRows
+                    ObjectCount = 1
+                Else
+                    'we want to write the header array
+                    Array.Copy(BitConverter.GetBytes(CUInt(ContainerNumber)), 0, ReturnedBytes, &H10 + ContainerCount * &HC, 4)
+                    Array.Copy(BitConverter.GetBytes(CUInt(ContainerStart * 8)), 0, ReturnedBytes, &H10 + ContainerCount * &HC + 4, 4)
+                    Array.Copy(BitConverter.GetBytes(CUInt(ObjectCount)), 0, ReturnedBytes, &H10 + ContainerCount * &HC + 8, 4)
+                    Array.Copy(New Byte() {&HF0}, 0, ReturnedBytes, &H10 + ContainerCount * &HC + &HB, 1)
+                    ContainerNumber = CInt(DataGridSoundView.Rows(i).Cells(0).Value)
+                    'MessageBox.Show(ContainerNumber)
+                    ContainerCount += 1
+                    ContainerStart = i - EmptyRows
+                    ObjectCount = 0
+                    If Not DataGridSoundView.Rows(i).Cells(1).Value.ToString = "" AndAlso Not DataGridSoundView.Rows(i).Cells(2).Value.ToString = "" Then
+                        ObjectCount = 1
+                    Else
+                        EmptyRows += 1
+                    End If
+                End If
+            End If
+            'Now we want to write the bytes of the array since we store and update the offset
+            If Not DataGridSoundView.Rows(i).Cells(1).Value.ToString = "" Then
+                If Not DataGridSoundView.Rows(i).Cells(2).Value.ToString = "" Then
+                    Array.Copy(BitConverter.GetBytes(CUInt(DataGridSoundView.Rows(i).Cells(1).Value)), 0, ReturnedBytes, CUInt("&H" & DataGridSoundView.Rows(i).Cells(3).Value.ToString), 4)
+                    Array.Copy(GeneralTools.HexStringToByte(DataGridSoundView.Rows(i).Cells(2).Value.ToString.PadLeft(8, "0"), True), 0, ReturnedBytes, CUInt("&H" & DataGridSoundView.Rows(i).Cells(3).Value.ToString) + 4, 4)
+                End If
             End If
         Next
+        'Now we want to add the last container bytes
+        Array.Copy(BitConverter.GetBytes(CUInt(ContainerNumber)), 0, ReturnedBytes, &H10 + ContainerCount * &HC, 4)
+        Array.Copy(BitConverter.GetBytes(CUInt(ContainerStart * 8)), 0, ReturnedBytes, &H10 + ContainerCount * &HC + 4, 4)
+        Array.Copy(BitConverter.GetBytes(CUInt(ObjectCount)), 0, ReturnedBytes, &H10 + ContainerCount * &HC + 8, 4)
+        Array.Copy(New Byte() {&HF0}, 0, ReturnedBytes, &H10 + ContainerCount * &HC + &HB, 1)
+        'now we want to trim the empty row count of rows from the end
+        ReDim Preserve ReturnedBytes(&H10 + SoundContainerCount * &HC + DataGridSoundView.Rows.Count * 8 - 1 - EmptyRows * 8)
+        Array.Copy(BitConverter.GetBytes(CUInt(ReturnedBytes.Length - &H10)), 0, ReturnedBytes, 8, 4)
         Return ReturnedBytes
     End Function
+
+#Region "Sound Search Bar"
 
     Private Sub ToolStripSoundRefSearch_Enter(sender As Object, e As EventArgs) Handles ToolStripSoundRefSearch.Enter
         If ToolStripSoundRefSearch.Text = "Search..." Then
@@ -4024,4 +4190,8 @@ Public Class MainForm
 #End Region
 
 #End Region
+
+#End Region
+
+    'There is the potential for better programming using data binding data grid views.
 End Class
