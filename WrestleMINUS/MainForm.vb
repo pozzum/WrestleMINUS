@@ -107,7 +107,15 @@ Public Class MainForm
                         MuscleViewStartupRemoved = True
                     End If
                 Case ExcludedTab.Name
+                    'MessageBox.Show(TabControl1.SelectedTab.Text)
+                    'MessageBox.Show(ExcludedTab.Text)
                     'Excluded
+                    If TabControl1.SelectedTab.Text = ExcludedTab.Text Then
+                        'MessageBox.Show("Rebuild Table")
+                        'Here we should be able to reset the tab.
+                        ReadNode = TreeView1.SelectedNode
+                        FillTabDataGrid(ExcludedTab)
+                    End If
                 Case Else
                     'Here we will add the save pending check and file injection
                     If SavePending Then
@@ -134,6 +142,8 @@ Public Class MainForm
                                     InjectedByte = BuildTitleFile()
                                 Case PackageType.SoundReference
                                     InjectedByte = BuildSoundRefFile()
+                                Case PackageType.LSD
+                                    InjectedByte = BuildMenuItemFile()
                             End Select
                             FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, InjectedByte)
                         Else 'Dialog Result No Save Canceled
@@ -198,11 +208,13 @@ Public Class MainForm
         StringLoadedShowMenuItem.Text = "String Loaded: " & StringRead.ToString
         StringLoadedAttireMenuItem.Text = "String Loaded: " & StringRead.ToString
         StringLoadedTitleMenuItem.Text = "String Loaded: " & StringRead.ToString
+        StringLoadedCAEMenuItem.Text = "String Loaded: " & StringRead.ToString
         If Not PacNumbers(0) = -1 Then
             PacsRead = True
         End If
         PacsLoadedAttireMenuItem.Text = "Pacs Loaded: " & PacsRead.ToString
         PacsLoadedTitleMenuItem.Text = "Pacs Loaded: " & PacsRead.ToString
+        PacsLoadedCAEMenuItem.Text = "Pacs Loaded: " & PacsRead.ToString
     End Sub
 
 #End Region
@@ -587,32 +599,37 @@ Public Class MainForm
         Else
             If InformationLoaded = False Then
                 InformationLoaded = True
-                Select Case e.TabPage.Name
-                    Case MiscView.Name
-                        FillMiscView(ReadNode)
-                    Case ShowView.Name
-                        FillShowView(ReadNode)
-                    Case NIBJView.Name
-                        FillNIBJView(ReadNode)
-                    Case PictureView.Name
-                        FillPictureView(ReadNode)
-                    Case AttireView.Name
-                        FillAttireView(ReadNode)
-                    Case MuscleView.Name
-                        FillMuscleView(ReadNode)
-                    Case MaskView.Name
-                        FillMaskView(ReadNode)
-                    Case ObjArrayView.Name
-                        FillObjectArrayView(ReadNode)
-                    Case AssetView.Name
-                        FillAssetFileView(ReadNode)
-                    Case TitleView.Name
-                        FillTitleFileView(ReadNode)
-                    Case SoundView.Name
-                        FillSoundRefFileView(ReadNode)
-                End Select
+                FillTabDataGrid(e.TabPage)
             End If
         End If
+    End Sub
+    Private Sub FillTabDataGrid(SelectedTab As TabPage)
+        Select Case SelectedTab.Name
+            Case MiscView.Name
+                FillMiscView(ReadNode)
+            Case ShowView.Name
+                FillShowView(ReadNode)
+            Case NIBJView.Name
+                FillNIBJView(ReadNode)
+            Case PictureView.Name
+                FillPictureView(ReadNode)
+            Case AttireView.Name
+                FillAttireView(ReadNode)
+            Case MuscleView.Name
+                FillMuscleView(ReadNode)
+            Case MaskView.Name
+                FillMaskView(ReadNode)
+            Case ObjArrayView.Name
+                FillObjectArrayView(ReadNode)
+            Case AssetView.Name
+                FillAssetFileView(ReadNode)
+            Case TitleView.Name
+                FillTitleFileView(ReadNode)
+            Case SoundView.Name
+                FillSoundRefFileView(ReadNode)
+            Case MenuItemView.Name
+                FillMenuItemView(ReadNode)
+        End Select
     End Sub
 
     Function GetTabType(SelectedType As PackageType) As TabPage
@@ -643,6 +660,8 @@ Public Class MainForm
                 Return TitleView
             Case PackageType.SoundReference
                 Return SoundView
+            Case PackageType.LSD
+                Return MenuItemView
             Case Else
                 Return Nothing
         End Select
@@ -942,23 +961,25 @@ Public Class MainForm
                                                                                                     DataGridObjArrayView.CellEnter,
                                                                                                     DataGridAssetView.CellEnter,
                                                                                                     DataGridTitleView.CellEnter,
-                                                                                                    DataGridSoundView.CellEnter
+                                                                                                    DataGridSoundView.CellEnter,
+                                                                                                    DataGridMenuItemView.CellEnter
         OldValue = sender.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
     End Sub
 
     Sub SaveFileNoLongerPending()
         ReadNode = Nothing
         SavePending = False
-        SaveStringChangesToolStripMenuItem.Visible = False
-        SaveMiscChangesToolStripMenuItem.Visible = False
-        SaveShowChangesToolStripMenuItem.Visible = False
-        SaveNIBJChangesToolStripMenuItem.Visible = False
+        SaveChangesStringMenuItem.Visible = False
+        SaveChangesMiscMenuItem.Visible = False
+        SaveChangesShowMenuItem.Visible = False
+        SaveChangesNIBJMenuItem.Visible = False
         SaveChangesAttireMenuItem.Visible = False
-        SaveMaskChangesToolStripMenuItem.Visible = False
-        SaveYOBJArrayChangesToolStripMenuItem.Visible = False
-        SaveAssetViewChangesToolStripMenuItem.Visible = False
+        SaveChangesMaskMenuItem.Visible = False
+        SaveChangesYOBJArrayMenuItem.Visible = False
+        SaveChangesAssetViewMenuItem.Visible = False
         SaveChangesTitleMenuItem.Visible = False
         SaveChangesSoundMenuItem.Visible = False
+        SaveChangesMenuItemMenuItem.Visible = False
         'TO DO Update this to include all save buttons
     End Sub
 
@@ -1158,7 +1179,7 @@ Public Class MainForm
         Return False
     End Function
 
-    Private Sub SaveChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveStringChangesToolStripMenuItem.Click
+    Private Sub SaveChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesStringMenuItem.Click
         SortStringView()
         If Not CheckDuplicateStrings() Then
             FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildStringFile())
@@ -1191,7 +1212,7 @@ Public Class MainForm
                 MyCell.Value = OldValue
             Else
                 SortStringsToolStripMenuItem.Visible = True
-                SaveStringChangesToolStripMenuItem.Visible = True
+                SaveChangesStringMenuItem.Visible = True
             End If
         ElseIf e.ColumnIndex = 1 Then 'string text
             If LengthTheSame Then
@@ -1212,7 +1233,7 @@ Public Class MainForm
             'this redim keeps the right length for a super string type string where there are several 0 chars at the end
             ReDim Preserve DataGridStringView.Rows(e.RowIndex).Tag(DataGridStringView.Rows(e.RowIndex).Cells(2).Value - 1)
             SavePending = True
-            SaveStringChangesToolStripMenuItem.Visible = True
+            SaveChangesStringMenuItem.Visible = True
         ElseIf e.ColumnIndex = 2 Then 'Adjusting Length only
             If Not IsNumeric(MyCell.Value) OrElse
                MyCell.Value < 1 Then
@@ -1227,7 +1248,7 @@ Public Class MainForm
                     ReDim Preserve DataGridStringView.Rows(e.RowIndex).Tag(MyCell.Value - 1)
                 End If
                 SavePending = True
-                SaveStringChangesToolStripMenuItem.Visible = True
+                SaveChangesStringMenuItem.Visible = True
             End If
 
         End If
@@ -1589,11 +1610,11 @@ Public Class MainForm
             MyCell.Value = OldValue
         Else
             SavePending = True
-            SaveMiscChangesToolStripMenuItem.Visible = True
+            SaveChangesMiscMenuItem.Visible = True
         End If
     End Sub
 
-    Private Sub SaveMiscChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveMiscChangesToolStripMenuItem.Click
+    Private Sub SaveMiscChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesMiscMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildMiscFile())
     End Sub
 
@@ -1948,7 +1969,7 @@ Public Class MainForm
                     MyCell.Value = OldValue
                 Else
                     SavePending = True
-                    SaveShowChangesToolStripMenuItem.Visible = True
+                    SaveChangesShowMenuItem.Visible = True
                 End If
 
             Case Else 'Hex Text Required
@@ -1964,12 +1985,12 @@ Public Class MainForm
                         MyCell.Value = MyCell.Value.ToString.PadRight(68, "0")
                     End If
                     SavePending = True
-                    SaveShowChangesToolStripMenuItem.Visible = True
+                    SaveChangesShowMenuItem.Visible = True
                 End If
         End Select
     End Sub
 
-    Private Sub SaveShowChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveShowChangesToolStripMenuItem.Click
+    Private Sub SaveShowChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesShowMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildShowFile())
     End Sub
 
@@ -2110,11 +2131,11 @@ Public Class MainForm
                                                               Hex(&HFF - MyCell.Style.BackColor.B).PadLeft(2, "0"))
             MyCell.Style.ForeColor = FontColor
             SavePending = True
-            SaveNIBJChangesToolStripMenuItem.Visible = True
+            SaveChangesNIBJMenuItem.Visible = True
         End If
     End Sub
 
-    Private Sub SaveNIBJChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveNIBJChangesToolStripMenuItem.Click
+    Private Sub SaveNIBJChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesNIBJMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildNIBJFile())
     End Sub
 
@@ -2629,7 +2650,7 @@ Public Class MainForm
             End If
         Next
         DataGridMaskView.Rows.AddRange(WorkingCollection.ToArray())
-        SaveMaskChangesToolStripMenuItem.Visible = True
+        SaveChangesMaskMenuItem.Visible = True
     End Sub
 
     Private Sub ImportMasksFromTXTToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportMasksFromTXTToolStripMenuItem.Click
@@ -2701,9 +2722,9 @@ Public Class MainForm
 
 #Region "Save Mask Functions"
 
-    Private Sub SaveMaskChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveMaskChangesToolStripMenuItem.Click
+    Private Sub SaveMaskChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesMaskMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildMaskFile())
-        SaveMaskChangesToolStripMenuItem.Visible = False
+        SaveChangesMaskMenuItem.Visible = False
     End Sub
 
     'actively used when making a save
@@ -2939,12 +2960,12 @@ Public Class MainForm
                 temprow.Cells(2).Value = DataGridMaskView.Rows(e.RowIndex).Cells(2).Value
                 DataGridMaskView.Rows.Insert(e.RowIndex + 1, temprow)
                 SavePending = True
-                SaveMaskChangesToolStripMenuItem.Visible = True
+                SaveChangesMaskMenuItem.Visible = True
             ElseIf e.ColumnIndex = 4 Then
                 'delete row of mask
                 DataGridMaskView.Rows.Remove(DataGridMaskView.Rows(e.RowIndex))
                 SavePending = True
-                SaveMaskChangesToolStripMenuItem.Visible = True
+                SaveChangesMaskMenuItem.Visible = True
             Else
                 'do nothing because a not button column at this time.
             End If
@@ -3001,7 +3022,7 @@ Public Class MainForm
             End If
         End If
         SavePending = True
-        SaveMaskChangesToolStripMenuItem.Visible = True
+        SaveChangesMaskMenuItem.Visible = True
     End Sub
 
 #End Region
@@ -3119,7 +3140,7 @@ Public Class MainForm
                 End If
                 'Case 11 OrElse 12 'Item Count and Starting Index Should be Changed by User. Only by Add / Delete Buttons.
         End Select
-        SaveYOBJArrayChangesToolStripMenuItem.Visible = True
+        SaveChangesYOBJArrayMenuItem.Visible = True
     End Sub
 
     Private Sub DataGridObjArrayView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridObjArrayView.CellContentClick
@@ -3265,7 +3286,7 @@ Public Class MainForm
         If DeleteContainer Then DeleteObjArrayContainer(ContainertoDelete)
     End Sub
 
-    Private Sub SaveYOBJArrayChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveYOBJArrayChangesToolStripMenuItem.Click
+    Private Sub SaveYOBJArrayChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesYOBJArrayMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildYOBJArrayFile())
     End Sub
 
@@ -3368,7 +3389,7 @@ Public Class MainForm
         If OpenCSVFile.ShowDialog = System.Windows.Forms.DialogResult.OK Then
             If File.Exists(OpenCSVFile.FileName) Then
                 LoadObjectArrayView(File.ReadAllLines(OpenCSVFile.FileName))
-                SaveYOBJArrayChangesToolStripMenuItem.Visible = True
+                SaveChangesYOBJArrayMenuItem.Visible = True
             End If
         End If
     End Sub
@@ -3558,7 +3579,7 @@ Public Class MainForm
                 Dim TempTest As ULong = CULng(MyCell.Value)
                 If TempTest < UInt32.MaxValue Then
                     SavePending = True
-                    SaveAssetViewChangesToolStripMenuItem.Visible = True
+                    SaveChangesAssetViewMenuItem.Visible = True
                     MyCell.Value = CUInt(MyCell.Value)
                 Else
                     MyCell.Value = CUInt(OldValue)
@@ -3579,18 +3600,18 @@ Public Class MainForm
                 Next
                 DataGridAssetView.Rows.Insert(e.RowIndex + 1, Duplicaterow)
                 SavePending = True
-                SaveAssetViewChangesToolStripMenuItem.Visible = True
+                SaveChangesAssetViewMenuItem.Visible = True
             ElseIf e.ColumnIndex = 19 Then 'Delete button
                 DataGridAssetView.Rows.RemoveAt(e.RowIndex)
                 SavePending = True
-                SaveAssetViewChangesToolStripMenuItem.Visible = True
+                SaveChangesAssetViewMenuItem.Visible = True
             Else
                 'do nothing
             End If
         End If
     End Sub
 
-    Private Sub SaveAssetViewChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveAssetViewChangesToolStripMenuItem.Click
+    Private Sub SaveAssetViewChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesAssetViewMenuItem.Click
         FilePartHandlers.InjectBytesIntoFile(ReadNode.Tag, BuildAssetArrayFile())
     End Sub
 
@@ -4188,6 +4209,197 @@ Public Class MainForm
     End Sub
 
 #End Region
+
+#End Region
+
+#Region "CAE Menu Item View"
+    Public Class CreateEntranceInformation
+        Public EventID As UInt32 = 0
+        Public PacNumber1 As UInt16 = 0
+        Public PacName1 As String = ""
+        Public PacNumber2 As UInt16 = 0
+        Public PacName2 As String = ""
+        Public PacNumber3 As UInt16 = 0
+        Public PacName3 As String = ""
+        Public PacNumber4 As UInt16 = 0
+        Public PacName4 As String = ""
+        Public PacNumber5 As UInt16 = 0
+        Public PacName5 As String = ""
+        Public PacDefaultRef As UInt16 = 0
+        Public HasPacDefault As Boolean = False
+        Public Promo1 As UInt16 = 0
+        Public Promo2 As UInt16 = 0
+        Public Promo3 As Byte = 0
+        Public Promo4 As Byte = 0
+        Public BufferBytes As UInt16 = 0
+        Public StringReference As UInt32 = 0
+        Public StringText As String = ""
+        Public Unkown1 As UInt16 = 0
+        Public Unkown2 As UInt16 = 0
+        Public PacLockedNum As UInt32 = 0
+        Public DLCFlagNum As UInt32 = 0
+    End Class
+
+    Sub FillMenuItemView(SelectedData As TreeNode)
+        Dim CAEMenuBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
+        Dim CAEMenuContainerCount As UInt16 = BitConverter.ToUInt16(CAEMenuBytes, 0)
+        'getting a generic row so we can create one for the collection
+        Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridMenuItemView)
+        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = CAEMenuContainerCount - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To CAEMenuContainerCount - 1
+            Dim TempCAEMenuBytes As Byte() = New Byte(&H28 - 1) {}
+            Array.Copy(CAEMenuBytes, &H4 + i * &H28, TempCAEMenuBytes, 0, &H28)
+            Dim TempCAEMenuInformation As CreateEntranceInformation = ParseBytesToCAEInformation(TempCAEMenuBytes)
+            Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
+            TempGridRow.Cells(0).Value = TempCAEMenuInformation.EventID
+            TempGridRow.Cells(1).Value = Hex(TempCAEMenuInformation.StringReference)
+            TempGridRow.Cells(2).Value = TempCAEMenuInformation.StringText
+            TempGridRow.Cells(2).Style = ReadOnlyCellStyle
+            'Pac Num 1
+            TempGridRow.Cells(3).Value = TempCAEMenuInformation.PacNumber1
+            TempGridRow.Cells(4).Value = TempCAEMenuInformation.PacName1
+            TempGridRow.Cells(4).Style = ReadOnlyCellStyle
+            TempGridRow.Cells(5).Value = TempCAEMenuInformation.PacNumber2
+            TempGridRow.Cells(6).Value = TempCAEMenuInformation.PacName2
+            TempGridRow.Cells(6).Style = ReadOnlyCellStyle
+            TempGridRow.Cells(7).Value = TempCAEMenuInformation.PacNumber3
+            TempGridRow.Cells(8).Value = TempCAEMenuInformation.PacName3
+            TempGridRow.Cells(8).Style = ReadOnlyCellStyle
+            TempGridRow.Cells(9).Value = TempCAEMenuInformation.PacNumber4
+            TempGridRow.Cells(10).Value = TempCAEMenuInformation.PacName4
+            TempGridRow.Cells(10).Style = ReadOnlyCellStyle
+            TempGridRow.Cells(11).Value = TempCAEMenuInformation.PacNumber5
+            TempGridRow.Cells(12).Value = TempCAEMenuInformation.PacName5
+            TempGridRow.Cells(12).Style = ReadOnlyCellStyle
+            'Has Pac
+            TempGridRow.Cells(13).Value = TempCAEMenuInformation.HasPacDefault
+            'Add Read Only Style in reverse
+            If Not TempCAEMenuInformation.HasPacDefault Then
+                TempGridRow.Cells(3).ReadOnly = True
+                TempGridRow.Cells(3).Style = ReadOnlyCellStyle
+            End If
+            For J As Integer = 5 To 11 Step 2
+                If TempGridRow.Cells(J - 2).Value = &HFFFF Then
+                    TempGridRow.Cells(J).ReadOnly = True
+                    TempGridRow.Cells(J).Style = ReadOnlyCellStyle
+                End If
+            Next
+            'Promo Columns
+            TempGridRow.Cells(14).Value = TempCAEMenuInformation.Promo1
+            TempGridRow.Cells(15).Value = TempCAEMenuInformation.Promo2
+            TempGridRow.Cells(16).Value = TempCAEMenuInformation.Promo3
+            TempGridRow.Cells(17).Value = TempCAEMenuInformation.Promo4
+            'Tests
+            TempGridRow.Cells(18).Value = TempCAEMenuInformation.BufferBytes
+            TempGridRow.Cells(19).Value = TempCAEMenuInformation.Unkown1
+            TempGridRow.Cells(20).Value = TempCAEMenuInformation.Unkown2
+            TempGridRow.Cells(21).Value = TempCAEMenuInformation.PacLockedNum
+            TempGridRow.Cells(22).Value = TempCAEMenuInformation.DLCFlagNum
+            WorkingCollection.Add(TempGridRow)
+            ProgressBar1.Value = i
+        Next
+        DataGridMenuItemView.Rows.AddRange(WorkingCollection.ToArray())
+        'Here we want to hide some columns depending on what type of file we are working with.
+        If DataGridMenuItemView.Rows(0).Cells(14).Value = &HFFFF Then
+            'Not Promo
+            For i As Integer = 3 To 13
+                DataGridMenuItemView.Columns(i).Visible = True
+            Next
+            For i As Integer = 14 To 17
+                DataGridMenuItemView.Columns(i).Visible = False
+            Next
+            For i As Integer = 18 To 22
+                DataGridMenuItemView.Columns(i).Visible = True
+            Next
+        Else
+            'Here is a promo file
+            For i As Integer = 3 To 13
+                DataGridMenuItemView.Columns(i).Visible = False
+            Next
+            For i As Integer = 14 To 17
+                DataGridMenuItemView.Columns(i).Visible = True
+            Next
+            For i As Integer = 18 To 22
+                DataGridMenuItemView.Columns(i).Visible = False
+            Next
+        End If
+        'This will hide Columns if Pac Numbers or String Refs if they are not loaded.
+        If StringRead Then 'True
+            If PacsRead Then 'Strings and Pacs Read
+                'Show String
+                DataGridMenuItemView.Columns(2).Visible = True
+                ''Show Wrestler Names
+                DataGridMenuItemView.Columns(4).Visible = True
+                DataGridMenuItemView.Columns(6).Visible = True
+                DataGridMenuItemView.Columns(8).Visible = True
+                DataGridMenuItemView.Columns(10).Visible = True
+                DataGridMenuItemView.Columns(12).Visible = True
+            Else 'Strings Read Only
+                'Show String
+                DataGridMenuItemView.Columns(2).Visible = True
+                ''Hide Wrestler Names
+                DataGridMenuItemView.Columns(4).Visible = False
+                DataGridMenuItemView.Columns(6).Visible = False
+                DataGridMenuItemView.Columns(8).Visible = False
+                DataGridMenuItemView.Columns(10).Visible = False
+                DataGridMenuItemView.Columns(12).Visible = False
+            End If
+        Else 'Pacs Read Only can't do anything so we don't check it
+            ''Hide String
+            DataGridMenuItemView.Columns(2).Visible = False
+            'Hide Wrestler Names
+            DataGridMenuItemView.Columns(4).Visible = False
+            DataGridMenuItemView.Columns(6).Visible = False
+            DataGridMenuItemView.Columns(8).Visible = False
+            DataGridMenuItemView.Columns(10).Visible = False
+            DataGridMenuItemView.Columns(12).Visible = False
+        End If
+        DataGridMenuItemView.Columns(18).Visible = False
+    End Sub
+
+    Function ParseBytesToCAEInformation(TestedByteArray As Byte()) As CreateEntranceInformation
+        Dim ReturnedCAEInfo As CreateEntranceInformation = New CreateEntranceInformation With {
+           .EventID = BitConverter.ToUInt32(TestedByteArray, 0),
+           .PacNumber1 = BitConverter.ToUInt16(TestedByteArray, 4),
+           .PacNumber2 = BitConverter.ToUInt16(TestedByteArray, 6),
+           .PacNumber3 = BitConverter.ToUInt16(TestedByteArray, 8),
+           .PacNumber4 = BitConverter.ToUInt16(TestedByteArray, &HA),
+           .PacNumber5 = BitConverter.ToUInt16(TestedByteArray, &HC),
+           .PacDefaultRef = BitConverter.ToUInt16(TestedByteArray, &HE),
+           .Promo1 = BitConverter.ToUInt16(TestedByteArray, &H10),
+           .Promo2 = BitConverter.ToUInt16(TestedByteArray, &H12),
+           .Promo3 = TestedByteArray(&H14),
+           .Promo4 = TestedByteArray(&H15),
+           .BufferBytes = BitConverter.ToUInt16(TestedByteArray, &H16),
+           .StringReference = BitConverter.ToUInt32(TestedByteArray, &H18),
+           .Unkown1 = BitConverter.ToUInt16(TestedByteArray, &H1C),
+           .Unkown2 = BitConverter.ToUInt16(TestedByteArray, &H1E),
+           .PacLockedNum = BitConverter.ToUInt32(TestedByteArray, &H20),
+           .DLCFlagNum = BitConverter.ToUInt32(TestedByteArray, &H24)}
+        If ReturnedCAEInfo.PacDefaultRef = 0 Then
+            ReturnedCAEInfo.HasPacDefault = True
+        Else
+            ReturnedCAEInfo.HasPacDefault = False
+        End If
+        If StringRead Then 'True
+            ReturnedCAEInfo.StringText = StringReferences(ReturnedCAEInfo.StringReference)
+            If PacsRead Then
+                'Strings and Pacs Read
+                ReturnedCAEInfo.PacName1 = StringReferences(PacNumbers(ReturnedCAEInfo.PacNumber1))
+                ReturnedCAEInfo.PacName2 = StringReferences(PacNumbers(ReturnedCAEInfo.PacNumber2))
+                ReturnedCAEInfo.PacName3 = StringReferences(PacNumbers(ReturnedCAEInfo.PacNumber3))
+                ReturnedCAEInfo.PacName4 = StringReferences(PacNumbers(ReturnedCAEInfo.PacNumber4))
+                ReturnedCAEInfo.PacName5 = StringReferences(PacNumbers(ReturnedCAEInfo.PacNumber5))
+            End If
+        End If
+        Return ReturnedCAEInfo
+    End Function
+
+    Function BuildMenuItemFile() As Byte()
+
+    End Function
 
 #End Region
 

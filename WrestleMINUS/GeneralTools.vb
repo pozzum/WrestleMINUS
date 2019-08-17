@@ -139,4 +139,18 @@ Public Class GeneralTools
 
 #End Region
 
+#Region "String General Tools"
+
+    Shared Function CountCharOccuranceInString(TestedString As String, SearchedCharacter As Char) As Integer
+        Dim Count As Integer = 0
+        For Each c As Char In TestedString
+            If c = SearchedCharacter Then
+                Count += 1
+            End If
+        Next
+        Return Count
+    End Function
+
+#End Region
+
 End Class

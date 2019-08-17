@@ -1,11 +1,103 @@
 ﻿Public Class FileClassTemplate
+#Region "Package Handling Code"
+    'Add your item to the PackageType Enum
+    'for the template we use DUMMY since DUMY is actually used in the UFC games
+    '
+    'DUMMY
+    '
+#Region "PackageInformation Code"
+    'In order to properly handle the files the code needs at minimum a function added to CheckHeaderType
+    'This would preferably a "Magic Number" at the start however that is not always possible
+    'Several other checks have been implemented for different file types
+    'here we simulate the files simulate 16th byte starts a DUMMY string
+    '
+    'Case Encoding.Default.GetChars(ByteArray, Index + &H10, 5) = "DUMMY"
+    'Return PackageType.DUMMY
+    '
 
+    'We will always need to add GetImageIndex so the menu shows an image
+    'We would show D for DUMMY
+    'D is 14
+    'If a Letter is not already collected you have to add it on the NodeIcons.txt
+    '
+    'Case PackageType.DUMMY
+    'Return 14
+
+
+    'If the file is self contained ignore the following region
+#Region "Handling SubItems of containers"
+
+    'First Function we need to add to is CheckExpandable
+    'Add the item if it contains sub items.
+
+    'If the file has sub items and we want to be able to inject into it we want to add it to the Injectable Command.
+    'CheckInjectable
+
+    'If the file is injectable we also want to spell out how the file names are formatted so we can rename them
+    'ValidateTruncation
+    'The following code is for a 4 Character Decimal Name 
+    'Case PackageType.DUMMY
+    'Return TestedString.PadLeft(Math.Min(4, My.Settings.DecimalNameMinLength), "0").ToUpper
+
+    'If the file is expandable we need to add the file to GetFileParts so it can generate the sub items.
+    '
+    'Dim FileCount As Integer = BitConverter.ToUInt32(FileBytes, &FileCountIndex)
+    'If IsNothing(ParentFileProperties.SubFiles) Then
+    '                    ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+    '                End If
+    'End If
+    'For i As Integer = 0 To FileCount - 1
+    '   Dim FileName As String = Hex(BitConverter.ToUInt32(FileBytes, TempHeaderStart + (i * FileHeaderLengthPer) + FileNameOffset))
+    '   FileName = FileName.PadLeft(My.Settings.DecimalNameMinLength, "0")
+    '   Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+    '                    .Name = FileName,
+    '                    .FullFilePath = ParentFileProperties.FullFilePath,
+    '                    .Index = BitConverter.ToUInt32(FileBytes, FileNameLength + i * FileHeaderLengthPer + FileIndexOffset) + ParentFileProperties.Index,
+    '                    .length = BitConverter.ToUInt32(FileBytes, FileNameLength + i * FileHeaderLengthPer + FileLengthOffset),
+    '                    .StoredData = ParentFileProperties.StoredData,
+    '                    .FileType = CheckHeaderType(.Index - ParentFileProperties.Index, FileBytes, ParentFileProperties.FullFilePath),
+    '                    .Parent = ParentFileProperties}
+    '                ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+    'Next
+#End Region
+
+
+#End Region
+#End Region
+
+#Region "MainForm Code"
 
 #Region "Main Form Objects"
     Dim WithEvents DataGridDUMMYView As DataGridView
     'Make 1 column per information type + add and byte button columns if applicable
     Dim WithEvents SaveChangesDUMMYMenuItem As MenuItem
+    Dim WithEvents DUMMYView As TabPage
 #End Region
+
+#Region "Main Form Code"
+    'HideTabs needs a shortcut to the byte array
+    '    Case PackageType.DUMMY
+    '    InjectedByte = BuildDUMMYFile()
+
+    'TabControl1_Selecting needs to know what tab you select transitions to reading the file
+    '   Case DUMMYView.Name
+    '   FillDUMMYView(ReadNode)
+
+    'GetTabType needs to return the tab that should read the file information
+    '   Case PackageType.DUMMY
+    '   Return DUMMYView
+
+    'SHARED TAB Functions
+
+    'StoreOldDataGridViewValue handles DataGridDUMMYView.CellEnter
+
+    'SaveFileNoLongerPending()
+
+    'SaveChangesDUMMYMenuItem.Visible = False
+#End Region
+
+
+
 #Region "DUMMY View"
 
     Public Class DUMMYInformation
@@ -126,5 +218,6 @@
         Return ReturnedBytes
     End Function
 
+#End Region
 #End Region
 End Class

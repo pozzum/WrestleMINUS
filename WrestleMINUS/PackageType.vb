@@ -32,6 +32,7 @@
     TitleFile
     SoundReference
     LSD
+    LSD_BIN
 
     'here are additional ufc type files that we will have no handling for.  However we want to properly cover them for adding in future.
     UFC_MAP

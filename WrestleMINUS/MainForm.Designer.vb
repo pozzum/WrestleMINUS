@@ -24,10 +24,10 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle36 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStripMainForm = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -79,7 +79,7 @@ Partial Class MainForm
         Me.MenuStripStringView = New System.Windows.Forms.MenuStrip()
         Me.StringCountToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripTextBoxSearch = New System.Windows.Forms.ToolStripTextBox()
-        Me.SaveStringChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveChangesStringMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SortStringsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MiscView = New System.Windows.Forms.TabPage()
         Me.DataGridMiscView = New System.Windows.Forms.DataGridView()
@@ -120,7 +120,7 @@ Partial Class MainForm
         Me.Col_version = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripMiscView = New System.Windows.Forms.MenuStrip()
         Me.MiscViewType = New System.Windows.Forms.ToolStripComboBox()
-        Me.SaveMiscChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveChangesMiscMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowView = New System.Windows.Forms.TabPage()
         Me.DataGridShowView = New System.Windows.Forms.DataGridView()
         Me.StrName = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -166,12 +166,12 @@ Partial Class MainForm
         Me.MenuStripShowView = New System.Windows.Forms.MenuStrip()
         Me.ShowViewType = New System.Windows.Forms.ToolStripComboBox()
         Me.StringLoadedShowMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SaveShowChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveChangesShowMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NIBJView = New System.Windows.Forms.TabPage()
         Me.DataGridNIBJView = New System.Windows.Forms.DataGridView()
         Me.MenuStripNIBJView = New System.Windows.Forms.MenuStrip()
         Me.FileAttributesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SaveNIBJChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveChangesNIBJMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PictureView = New System.Windows.Forms.TabPage()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.ObjectView = New System.Windows.Forms.TabPage()
@@ -248,7 +248,7 @@ Partial Class MainForm
         Me.MenuStripMaskView = New System.Windows.Forms.MenuStrip()
         Me.ImportMasksFromTXTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportMaskstoTXTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SaveMaskChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveChangesMaskMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.TekkenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TutorialVideoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -276,7 +276,7 @@ Partial Class MainForm
         Me.MenuStripObjectArrayView = New System.Windows.Forms.MenuStrip()
         Me.ImportYOBJArrayFromCSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportYOBJArrayToCSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SaveYOBJArrayChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveChangesYOBJArrayMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AssetView = New System.Windows.Forms.TabPage()
         Me.DataGridAssetView = New System.Windows.Forms.DataGridView()
         Me.PacNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -302,7 +302,7 @@ Partial Class MainForm
         Me.AddAsset = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.DeleteAsset = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStripAssetView = New System.Windows.Forms.MenuStrip()
-        Me.SaveAssetViewChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveChangesAssetViewMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TitleView = New System.Windows.Forms.TabPage()
         Me.DataGridTitleView = New System.Windows.Forms.DataGridView()
         Me.TitleEnabled = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -336,9 +336,19 @@ Partial Class MainForm
         Me.SaveChangesTitleMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SoundView = New System.Windows.Forms.TabPage()
         Me.DataGridSoundView = New System.Windows.Forms.DataGridView()
+        Me.SoundContainerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SoundRefNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SoundHashRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SoundOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SoundInfoAdd = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.SoundInfoDel = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStripSoundView = New System.Windows.Forms.MenuStrip()
         Me.ToolStripSoundRefSearch = New System.Windows.Forms.ToolStripTextBox()
         Me.SaveChangesSoundMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuItemView = New System.Windows.Forms.TabPage()
+        Me.DataGridMenuItemView = New System.Windows.Forms.DataGridView()
+        Me.MenuStripMenuItemView = New System.Windows.Forms.MenuStrip()
+        Me.SaveChangesMenuItemMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripPictureView = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -394,12 +404,31 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SoundContainerNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SoundRefNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SoundHashRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SoundOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SoundInfoAdd = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.SoundInfoDel = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.StringLoadedCAEMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PacsLoadedCAEMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CAEEventID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEStringRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEStringPrint = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacNum1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacName1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacNum2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacName2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacNum3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacName3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacNum4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacName4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacNum5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacName5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEDefaultWrestlerNum = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.CAEPromo1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPromo2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPromo3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPromo4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEBuffer = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEUknown1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEUknown2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAELoackedtoPac = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEDLCFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripMainForm.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -447,6 +476,9 @@ Partial Class MainForm
         Me.SoundView.SuspendLayout()
         CType(Me.DataGridSoundView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripSoundView.SuspendLayout()
+        Me.MenuItemView.SuspendLayout()
+        CType(Me.DataGridMenuItemView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MenuStripMenuItemView.SuspendLayout()
         Me.MenuStripPictureView.SuspendLayout()
         Me.TreeViewContext.SuspendLayout()
         Me.SuspendLayout()
@@ -456,7 +488,7 @@ Partial Class MainForm
         Me.MenuStripMainForm.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.OptionsToolStripMenuItem, Me.ToolsToolStripMenuItem, Me.HelpToolStripMenuItem})
         Me.MenuStripMainForm.Location = New System.Drawing.Point(0, 0)
         Me.MenuStripMainForm.Name = "MenuStripMainForm"
-        Me.MenuStripMainForm.Size = New System.Drawing.Size(1284, 24)
+        Me.MenuStripMainForm.Size = New System.Drawing.Size(1484, 24)
         Me.MenuStripMainForm.TabIndex = 0
         Me.MenuStripMainForm.Text = "MenuStrip1"
         '
@@ -626,8 +658,8 @@ Partial Class MainForm
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.TabControl1)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1284, 437)
-        Me.SplitContainer1.SplitterDistance = 219
+        Me.SplitContainer1.Size = New System.Drawing.Size(1484, 437)
+        Me.SplitContainer1.SplitterDistance = 253
         Me.SplitContainer1.TabIndex = 1
         '
         'TreeView1
@@ -639,7 +671,7 @@ Partial Class MainForm
         Me.TreeView1.Name = "TreeView1"
         Me.TreeView1.SelectedImageIndex = 0
         Me.TreeView1.ShowNodeToolTips = True
-        Me.TreeView1.Size = New System.Drawing.Size(219, 390)
+        Me.TreeView1.Size = New System.Drawing.Size(253, 390)
         Me.TreeView1.TabIndex = 0
         '
         'ImageList1
@@ -671,13 +703,14 @@ Partial Class MainForm
         Me.ImageList1.Images.SetKeyName(22, "V.png")
         Me.ImageList1.Images.SetKeyName(23, "W.png")
         Me.ImageList1.Images.SetKeyName(24, "R.png")
+        Me.ImageList1.Images.SetKeyName(25, "L.png")
         '
         'ProgressBar1
         '
         Me.ProgressBar1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.ProgressBar1.Location = New System.Drawing.Point(0, 414)
         Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(219, 23)
+        Me.ProgressBar1.Size = New System.Drawing.Size(253, 23)
         Me.ProgressBar1.TabIndex = 2
         '
         'MenuStripTreeView
@@ -685,7 +718,7 @@ Partial Class MainForm
         Me.MenuStripTreeView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CurrentViewToolStripMenuItem})
         Me.MenuStripTreeView.Location = New System.Drawing.Point(0, 0)
         Me.MenuStripTreeView.Name = "MenuStripTreeView"
-        Me.MenuStripTreeView.Size = New System.Drawing.Size(219, 24)
+        Me.MenuStripTreeView.Size = New System.Drawing.Size(253, 24)
         Me.MenuStripTreeView.TabIndex = 1
         Me.MenuStripTreeView.Text = "MenuStrip2"
         '
@@ -712,11 +745,12 @@ Partial Class MainForm
         Me.TabControl1.Controls.Add(Me.AssetView)
         Me.TabControl1.Controls.Add(Me.TitleView)
         Me.TabControl1.Controls.Add(Me.SoundView)
+        Me.TabControl1.Controls.Add(Me.MenuItemView)
         Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1061, 437)
+        Me.TabControl1.Size = New System.Drawing.Size(1227, 437)
         Me.TabControl1.TabIndex = 1
         '
         'HexView
@@ -726,7 +760,7 @@ Partial Class MainForm
         Me.HexView.Location = New System.Drawing.Point(4, 22)
         Me.HexView.Name = "HexView"
         Me.HexView.Padding = New System.Windows.Forms.Padding(3)
-        Me.HexView.Size = New System.Drawing.Size(1053, 411)
+        Me.HexView.Size = New System.Drawing.Size(1219, 411)
         Me.HexView.TabIndex = 0
         Me.HexView.Text = "Hex View"
         Me.HexView.UseVisualStyleBackColor = True
@@ -738,7 +772,7 @@ Partial Class MainForm
         Me.Hex_Selected.Location = New System.Drawing.Point(3, 30)
         Me.Hex_Selected.Name = "Hex_Selected"
         Me.Hex_Selected.ReadOnly = True
-        Me.Hex_Selected.Size = New System.Drawing.Size(1047, 378)
+        Me.Hex_Selected.Size = New System.Drawing.Size(1213, 378)
         Me.Hex_Selected.TabIndex = 2
         Me.Hex_Selected.Text = ""
         '
@@ -747,7 +781,7 @@ Partial Class MainForm
         Me.MenuStripHexView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HexViewBitWidth, Me.HexViewFileName})
         Me.MenuStripHexView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripHexView.Name = "MenuStripHexView"
-        Me.MenuStripHexView.Size = New System.Drawing.Size(1047, 27)
+        Me.MenuStripHexView.Size = New System.Drawing.Size(1213, 27)
         Me.MenuStripHexView.TabIndex = 1
         Me.MenuStripHexView.Text = "MenuStrip3"
         '
@@ -771,7 +805,7 @@ Partial Class MainForm
         Me.TextView.Location = New System.Drawing.Point(4, 22)
         Me.TextView.Name = "TextView"
         Me.TextView.Padding = New System.Windows.Forms.Padding(3)
-        Me.TextView.Size = New System.Drawing.Size(1053, 411)
+        Me.TextView.Size = New System.Drawing.Size(1219, 411)
         Me.TextView.TabIndex = 1
         Me.TextView.Text = "Text View"
         Me.TextView.UseVisualStyleBackColor = True
@@ -783,7 +817,7 @@ Partial Class MainForm
         Me.Text_Selected.Location = New System.Drawing.Point(3, 30)
         Me.Text_Selected.Name = "Text_Selected"
         Me.Text_Selected.ReadOnly = True
-        Me.Text_Selected.Size = New System.Drawing.Size(1047, 378)
+        Me.Text_Selected.Size = New System.Drawing.Size(1213, 378)
         Me.Text_Selected.TabIndex = 2
         Me.Text_Selected.Text = ""
         '
@@ -792,7 +826,7 @@ Partial Class MainForm
         Me.MenuStripTextView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TextViewBitWidth, Me.TextViewFileName})
         Me.MenuStripTextView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripTextView.Name = "MenuStripTextView"
-        Me.MenuStripTextView.Size = New System.Drawing.Size(1047, 27)
+        Me.MenuStripTextView.Size = New System.Drawing.Size(1213, 27)
         Me.MenuStripTextView.TabIndex = 0
         Me.MenuStripTextView.Text = "MenuStrip3"
         '
@@ -816,7 +850,7 @@ Partial Class MainForm
         Me.StringView.Location = New System.Drawing.Point(4, 22)
         Me.StringView.Name = "StringView"
         Me.StringView.Padding = New System.Windows.Forms.Padding(3)
-        Me.StringView.Size = New System.Drawing.Size(1053, 411)
+        Me.StringView.Size = New System.Drawing.Size(1219, 411)
         Me.StringView.TabIndex = 2
         Me.StringView.Text = "String Viewer"
         Me.StringView.UseVisualStyleBackColor = True
@@ -834,7 +868,7 @@ Partial Class MainForm
         Me.DataGridStringView.MultiSelect = False
         Me.DataGridStringView.Name = "DataGridStringView"
         Me.DataGridStringView.RowHeadersVisible = False
-        Me.DataGridStringView.Size = New System.Drawing.Size(1047, 378)
+        Me.DataGridStringView.Size = New System.Drawing.Size(1213, 378)
         Me.DataGridStringView.TabIndex = 2
         '
         'HexRef
@@ -876,10 +910,10 @@ Partial Class MainForm
         '
         'MenuStripStringView
         '
-        Me.MenuStripStringView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringCountToolStripMenuItem, Me.ToolStripTextBoxSearch, Me.SaveStringChangesToolStripMenuItem, Me.SortStringsToolStripMenuItem})
+        Me.MenuStripStringView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringCountToolStripMenuItem, Me.ToolStripTextBoxSearch, Me.SaveChangesStringMenuItem, Me.SortStringsToolStripMenuItem})
         Me.MenuStripStringView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripStringView.Name = "MenuStripStringView"
-        Me.MenuStripStringView.Size = New System.Drawing.Size(1047, 27)
+        Me.MenuStripStringView.Size = New System.Drawing.Size(1213, 27)
         Me.MenuStripStringView.TabIndex = 0
         Me.MenuStripStringView.Text = "MenuStrip2"
         '
@@ -896,12 +930,12 @@ Partial Class MainForm
         Me.ToolStripTextBoxSearch.Size = New System.Drawing.Size(100, 23)
         Me.ToolStripTextBoxSearch.Text = "Search..."
         '
-        'SaveStringChangesToolStripMenuItem
+        'SaveChangesStringMenuItem
         '
-        Me.SaveStringChangesToolStripMenuItem.Name = "SaveStringChangesToolStripMenuItem"
-        Me.SaveStringChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 23)
-        Me.SaveStringChangesToolStripMenuItem.Text = "Save Changes"
-        Me.SaveStringChangesToolStripMenuItem.Visible = False
+        Me.SaveChangesStringMenuItem.Name = "SaveChangesStringMenuItem"
+        Me.SaveChangesStringMenuItem.Size = New System.Drawing.Size(92, 23)
+        Me.SaveChangesStringMenuItem.Text = "Save Changes"
+        Me.SaveChangesStringMenuItem.Visible = False
         '
         'SortStringsToolStripMenuItem
         '
@@ -917,7 +951,7 @@ Partial Class MainForm
         Me.MiscView.Location = New System.Drawing.Point(4, 22)
         Me.MiscView.Name = "MiscView"
         Me.MiscView.Padding = New System.Windows.Forms.Padding(3)
-        Me.MiscView.Size = New System.Drawing.Size(1053, 411)
+        Me.MiscView.Size = New System.Drawing.Size(1219, 411)
         Me.MiscView.TabIndex = 3
         Me.MiscView.Text = "Misc View"
         Me.MiscView.UseVisualStyleBackColor = True
@@ -935,7 +969,7 @@ Partial Class MainForm
         Me.DataGridMiscView.Name = "DataGridMiscView"
         Me.DataGridMiscView.RowHeadersVisible = False
         Me.DataGridMiscView.RowHeadersWidth = 70
-        Me.DataGridMiscView.Size = New System.Drawing.Size(1047, 378)
+        Me.DataGridMiscView.Size = New System.Drawing.Size(1213, 378)
         Me.DataGridMiscView.TabIndex = 1
         '
         'Col_ArenaNumber
@@ -1220,10 +1254,10 @@ Partial Class MainForm
         '
         'MenuStripMiscView
         '
-        Me.MenuStripMiscView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MiscViewType, Me.SaveMiscChangesToolStripMenuItem})
+        Me.MenuStripMiscView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MiscViewType, Me.SaveChangesMiscMenuItem})
         Me.MenuStripMiscView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripMiscView.Name = "MenuStripMiscView"
-        Me.MenuStripMiscView.Size = New System.Drawing.Size(1047, 27)
+        Me.MenuStripMiscView.Size = New System.Drawing.Size(1213, 27)
         Me.MenuStripMiscView.TabIndex = 0
         Me.MenuStripMiscView.Text = "MenuStrip2"
         '
@@ -1235,12 +1269,12 @@ Partial Class MainForm
         Me.MiscViewType.Name = "MiscViewType"
         Me.MiscViewType.Size = New System.Drawing.Size(121, 23)
         '
-        'SaveMiscChangesToolStripMenuItem
+        'SaveChangesMiscMenuItem
         '
-        Me.SaveMiscChangesToolStripMenuItem.Name = "SaveMiscChangesToolStripMenuItem"
-        Me.SaveMiscChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 23)
-        Me.SaveMiscChangesToolStripMenuItem.Text = "Save Changes"
-        Me.SaveMiscChangesToolStripMenuItem.Visible = False
+        Me.SaveChangesMiscMenuItem.Name = "SaveChangesMiscMenuItem"
+        Me.SaveChangesMiscMenuItem.Size = New System.Drawing.Size(92, 23)
+        Me.SaveChangesMiscMenuItem.Text = "Save Changes"
+        Me.SaveChangesMiscMenuItem.Visible = False
         '
         'ShowView
         '
@@ -1249,7 +1283,7 @@ Partial Class MainForm
         Me.ShowView.Location = New System.Drawing.Point(4, 22)
         Me.ShowView.Name = "ShowView"
         Me.ShowView.Padding = New System.Windows.Forms.Padding(3)
-        Me.ShowView.Size = New System.Drawing.Size(1053, 411)
+        Me.ShowView.Size = New System.Drawing.Size(1219, 411)
         Me.ShowView.TabIndex = 4
         Me.ShowView.Text = "Show View"
         Me.ShowView.UseVisualStyleBackColor = True
@@ -1265,7 +1299,7 @@ Partial Class MainForm
         Me.DataGridShowView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridShowView.Name = "DataGridShowView"
         Me.DataGridShowView.RowHeadersWidth = 60
-        Me.DataGridShowView.Size = New System.Drawing.Size(1047, 378)
+        Me.DataGridShowView.Size = New System.Drawing.Size(1213, 378)
         Me.DataGridShowView.TabIndex = 2
         '
         'StrName
@@ -1543,10 +1577,10 @@ Partial Class MainForm
         '
         'MenuStripShowView
         '
-        Me.MenuStripShowView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ShowViewType, Me.StringLoadedShowMenuItem, Me.SaveShowChangesToolStripMenuItem})
+        Me.MenuStripShowView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ShowViewType, Me.StringLoadedShowMenuItem, Me.SaveChangesShowMenuItem})
         Me.MenuStripShowView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripShowView.Name = "MenuStripShowView"
-        Me.MenuStripShowView.Size = New System.Drawing.Size(1047, 27)
+        Me.MenuStripShowView.Size = New System.Drawing.Size(1213, 27)
         Me.MenuStripShowView.TabIndex = 0
         Me.MenuStripShowView.Text = "MenuStrip2"
         '
@@ -1563,12 +1597,12 @@ Partial Class MainForm
         Me.StringLoadedShowMenuItem.Size = New System.Drawing.Size(95, 23)
         Me.StringLoadedShowMenuItem.Text = "String Loaded:"
         '
-        'SaveShowChangesToolStripMenuItem
+        'SaveChangesShowMenuItem
         '
-        Me.SaveShowChangesToolStripMenuItem.Name = "SaveShowChangesToolStripMenuItem"
-        Me.SaveShowChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 23)
-        Me.SaveShowChangesToolStripMenuItem.Text = "Save Changes"
-        Me.SaveShowChangesToolStripMenuItem.Visible = False
+        Me.SaveChangesShowMenuItem.Name = "SaveChangesShowMenuItem"
+        Me.SaveChangesShowMenuItem.Size = New System.Drawing.Size(92, 23)
+        Me.SaveChangesShowMenuItem.Text = "Save Changes"
+        Me.SaveChangesShowMenuItem.Visible = False
         '
         'NIBJView
         '
@@ -1577,7 +1611,7 @@ Partial Class MainForm
         Me.NIBJView.Location = New System.Drawing.Point(4, 22)
         Me.NIBJView.Name = "NIBJView"
         Me.NIBJView.Padding = New System.Windows.Forms.Padding(3)
-        Me.NIBJView.Size = New System.Drawing.Size(1053, 411)
+        Me.NIBJView.Size = New System.Drawing.Size(1219, 411)
         Me.NIBJView.TabIndex = 5
         Me.NIBJView.Text = "NIBJView"
         Me.NIBJView.UseVisualStyleBackColor = True
@@ -1591,15 +1625,15 @@ Partial Class MainForm
         Me.DataGridNIBJView.MultiSelect = False
         Me.DataGridNIBJView.Name = "DataGridNIBJView"
         Me.DataGridNIBJView.RowHeadersWidth = 60
-        Me.DataGridNIBJView.Size = New System.Drawing.Size(1047, 381)
+        Me.DataGridNIBJView.Size = New System.Drawing.Size(1213, 381)
         Me.DataGridNIBJView.TabIndex = 2
         '
         'MenuStripNIBJView
         '
-        Me.MenuStripNIBJView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileAttributesToolStripMenuItem, Me.SaveNIBJChangesToolStripMenuItem})
+        Me.MenuStripNIBJView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileAttributesToolStripMenuItem, Me.SaveChangesNIBJMenuItem})
         Me.MenuStripNIBJView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripNIBJView.Name = "MenuStripNIBJView"
-        Me.MenuStripNIBJView.Size = New System.Drawing.Size(1047, 24)
+        Me.MenuStripNIBJView.Size = New System.Drawing.Size(1213, 24)
         Me.MenuStripNIBJView.TabIndex = 0
         Me.MenuStripNIBJView.Text = "MenuStrip2"
         '
@@ -1609,19 +1643,19 @@ Partial Class MainForm
         Me.FileAttributesToolStripMenuItem.Size = New System.Drawing.Size(92, 20)
         Me.FileAttributesToolStripMenuItem.Text = "File Attributes"
         '
-        'SaveNIBJChangesToolStripMenuItem
+        'SaveChangesNIBJMenuItem
         '
-        Me.SaveNIBJChangesToolStripMenuItem.Name = "SaveNIBJChangesToolStripMenuItem"
-        Me.SaveNIBJChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 20)
-        Me.SaveNIBJChangesToolStripMenuItem.Text = "Save Changes"
-        Me.SaveNIBJChangesToolStripMenuItem.Visible = False
+        Me.SaveChangesNIBJMenuItem.Name = "SaveChangesNIBJMenuItem"
+        Me.SaveChangesNIBJMenuItem.Size = New System.Drawing.Size(92, 20)
+        Me.SaveChangesNIBJMenuItem.Text = "Save Changes"
+        Me.SaveChangesNIBJMenuItem.Visible = False
         '
         'PictureView
         '
         Me.PictureView.Controls.Add(Me.PictureBox2)
         Me.PictureView.Location = New System.Drawing.Point(4, 22)
         Me.PictureView.Name = "PictureView"
-        Me.PictureView.Size = New System.Drawing.Size(1053, 411)
+        Me.PictureView.Size = New System.Drawing.Size(1219, 411)
         Me.PictureView.TabIndex = 8
         Me.PictureView.Text = "Picture View"
         Me.PictureView.UseVisualStyleBackColor = True
@@ -1631,7 +1665,7 @@ Partial Class MainForm
         Me.PictureBox2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PictureBox2.Location = New System.Drawing.Point(0, 0)
         Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(1053, 411)
+        Me.PictureBox2.Size = New System.Drawing.Size(1219, 411)
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.PictureBox2.TabIndex = 2
         Me.PictureBox2.TabStop = False
@@ -1642,7 +1676,7 @@ Partial Class MainForm
         Me.ObjectView.Location = New System.Drawing.Point(4, 22)
         Me.ObjectView.Name = "ObjectView"
         Me.ObjectView.Padding = New System.Windows.Forms.Padding(3)
-        Me.ObjectView.Size = New System.Drawing.Size(1053, 411)
+        Me.ObjectView.Size = New System.Drawing.Size(1219, 411)
         Me.ObjectView.TabIndex = 7
         Me.ObjectView.Text = "Object View"
         Me.ObjectView.UseVisualStyleBackColor = True
@@ -1652,7 +1686,7 @@ Partial Class MainForm
         Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label1.Location = New System.Drawing.Point(3, 3)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(1047, 405)
+        Me.Label1.Size = New System.Drawing.Size(1213, 405)
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "To Be Added :("
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1664,7 +1698,7 @@ Partial Class MainForm
         Me.AttireView.Location = New System.Drawing.Point(4, 22)
         Me.AttireView.Name = "AttireView"
         Me.AttireView.Padding = New System.Windows.Forms.Padding(3)
-        Me.AttireView.Size = New System.Drawing.Size(1053, 411)
+        Me.AttireView.Size = New System.Drawing.Size(1219, 411)
         Me.AttireView.TabIndex = 9
         Me.AttireView.Text = "Attire View"
         Me.AttireView.UseVisualStyleBackColor = True
@@ -1677,7 +1711,7 @@ Partial Class MainForm
         Me.DataGridAttireView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridAttireView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridAttireView.Name = "DataGridAttireView"
-        Me.DataGridAttireView.Size = New System.Drawing.Size(1047, 381)
+        Me.DataGridAttireView.Size = New System.Drawing.Size(1213, 381)
         Me.DataGridAttireView.TabIndex = 1
         '
         'Pach
@@ -2069,7 +2103,7 @@ Partial Class MainForm
         Me.MenuStripAttireView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringLoadedAttireMenuItem, Me.PacsLoadedAttireMenuItem, Me.SaveChangesAttireMenuItem})
         Me.MenuStripAttireView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripAttireView.Name = "MenuStripAttireView"
-        Me.MenuStripAttireView.Size = New System.Drawing.Size(1047, 24)
+        Me.MenuStripAttireView.Size = New System.Drawing.Size(1213, 24)
         Me.MenuStripAttireView.TabIndex = 0
         Me.MenuStripAttireView.Text = "MenuStrip2"
         '
@@ -2101,7 +2135,7 @@ Partial Class MainForm
         Me.MuscleView.Location = New System.Drawing.Point(4, 22)
         Me.MuscleView.Name = "MuscleView"
         Me.MuscleView.Padding = New System.Windows.Forms.Padding(3)
-        Me.MuscleView.Size = New System.Drawing.Size(1053, 411)
+        Me.MuscleView.Size = New System.Drawing.Size(1219, 411)
         Me.MuscleView.TabIndex = 10
         Me.MuscleView.Text = "Muscle View"
         Me.MuscleView.UseVisualStyleBackColor = True
@@ -2115,7 +2149,7 @@ Partial Class MainForm
         Me.DataGridMuscleView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridMuscleView.Name = "DataGridMuscleView"
         Me.DataGridMuscleView.RowHeadersVisible = False
-        Me.DataGridMuscleView.Size = New System.Drawing.Size(1047, 381)
+        Me.DataGridMuscleView.Size = New System.Drawing.Size(1213, 381)
         Me.DataGridMuscleView.TabIndex = 2
         '
         'MenuStripMuscleView
@@ -2123,7 +2157,7 @@ Partial Class MainForm
         Me.MenuStripMuscleView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CloseToolStripMenuItem})
         Me.MenuStripMuscleView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripMuscleView.Name = "MenuStripMuscleView"
-        Me.MenuStripMuscleView.Size = New System.Drawing.Size(1047, 24)
+        Me.MenuStripMuscleView.Size = New System.Drawing.Size(1213, 24)
         Me.MenuStripMuscleView.TabIndex = 0
         Me.MenuStripMuscleView.Text = "MenuStrip3"
         '
@@ -2140,7 +2174,7 @@ Partial Class MainForm
         Me.MaskView.Location = New System.Drawing.Point(4, 22)
         Me.MaskView.Name = "MaskView"
         Me.MaskView.Padding = New System.Windows.Forms.Padding(3)
-        Me.MaskView.Size = New System.Drawing.Size(1053, 411)
+        Me.MaskView.Size = New System.Drawing.Size(1219, 411)
         Me.MaskView.TabIndex = 11
         Me.MaskView.Text = "Mask View"
         Me.MaskView.UseVisualStyleBackColor = True
@@ -2153,7 +2187,7 @@ Partial Class MainForm
         Me.DataGridMaskView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridMaskView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridMaskView.Name = "DataGridMaskView"
-        Me.DataGridMaskView.Size = New System.Drawing.Size(1047, 381)
+        Me.DataGridMaskView.Size = New System.Drawing.Size(1213, 381)
         Me.DataGridMaskView.TabIndex = 2
         '
         'Mask_Name
@@ -2187,10 +2221,10 @@ Partial Class MainForm
         '
         'MenuStripMaskView
         '
-        Me.MenuStripMaskView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportMasksFromTXTToolStripMenuItem, Me.ExportMaskstoTXTToolStripMenuItem, Me.SaveMaskChangesToolStripMenuItem, Me.ToolStripMenuItem2})
+        Me.MenuStripMaskView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportMasksFromTXTToolStripMenuItem, Me.ExportMaskstoTXTToolStripMenuItem, Me.SaveChangesMaskMenuItem, Me.ToolStripMenuItem2})
         Me.MenuStripMaskView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripMaskView.Name = "MenuStripMaskView"
-        Me.MenuStripMaskView.Size = New System.Drawing.Size(1047, 24)
+        Me.MenuStripMaskView.Size = New System.Drawing.Size(1213, 24)
         Me.MenuStripMaskView.TabIndex = 0
         Me.MenuStripMaskView.Text = "MenuStrip2"
         '
@@ -2206,12 +2240,12 @@ Partial Class MainForm
         Me.ExportMaskstoTXTToolStripMenuItem.Size = New System.Drawing.Size(125, 20)
         Me.ExportMaskstoTXTToolStripMenuItem.Text = "Export Masks to TXT"
         '
-        'SaveMaskChangesToolStripMenuItem
+        'SaveChangesMaskMenuItem
         '
-        Me.SaveMaskChangesToolStripMenuItem.Name = "SaveMaskChangesToolStripMenuItem"
-        Me.SaveMaskChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 20)
-        Me.SaveMaskChangesToolStripMenuItem.Text = "Save Changes"
-        Me.SaveMaskChangesToolStripMenuItem.Visible = False
+        Me.SaveChangesMaskMenuItem.Name = "SaveChangesMaskMenuItem"
+        Me.SaveChangesMaskMenuItem.Size = New System.Drawing.Size(92, 20)
+        Me.SaveChangesMaskMenuItem.Text = "Save Changes"
+        Me.SaveChangesMaskMenuItem.Visible = False
         '
         'ToolStripMenuItem2
         '
@@ -2265,7 +2299,7 @@ Partial Class MainForm
         Me.ObjArrayView.Location = New System.Drawing.Point(4, 22)
         Me.ObjArrayView.Name = "ObjArrayView"
         Me.ObjArrayView.Padding = New System.Windows.Forms.Padding(3)
-        Me.ObjArrayView.Size = New System.Drawing.Size(1053, 411)
+        Me.ObjArrayView.Size = New System.Drawing.Size(1219, 411)
         Me.ObjArrayView.TabIndex = 12
         Me.ObjArrayView.Text = "Object Array View"
         Me.ObjArrayView.UseVisualStyleBackColor = True
@@ -2281,14 +2315,14 @@ Partial Class MainForm
         Me.DataGridObjArrayView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridObjArrayView.Name = "DataGridObjArrayView"
         Me.DataGridObjArrayView.RowHeadersVisible = False
-        Me.DataGridObjArrayView.Size = New System.Drawing.Size(1047, 381)
+        Me.DataGridObjArrayView.Size = New System.Drawing.Size(1213, 381)
         Me.DataGridObjArrayView.TabIndex = 1
         '
         'YobjArryIndex
         '
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle33.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle33.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle33
         Me.YobjArryIndex.HeaderText = "Index"
         Me.YobjArryIndex.Name = "YobjArryIndex"
         Me.YobjArryIndex.ReadOnly = True
@@ -2296,9 +2330,9 @@ Partial Class MainForm
         '
         'ObjArrayParent
         '
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle34.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle34.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle34
         Me.ObjArrayParent.HeaderText = "Parent"
         Me.ObjArrayParent.MinimumWidth = 100
         Me.ObjArrayParent.Name = "ObjArrayParent"
@@ -2369,9 +2403,9 @@ Partial Class MainForm
         '
         'ContainedYobjArray
         '
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle35.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle35.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle35
         Me.ContainedYobjArray.HeaderText = "Objects"
         Me.ContainedYobjArray.Name = "ContainedYobjArray"
         Me.ContainedYobjArray.ReadOnly = True
@@ -2379,9 +2413,9 @@ Partial Class MainForm
         '
         'StartIndexYobjArray
         '
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle36.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle36.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle36
         Me.StartIndexYobjArray.HeaderText = "Start Index"
         Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
         Me.StartIndexYobjArray.ReadOnly = True
@@ -2405,10 +2439,10 @@ Partial Class MainForm
         '
         'MenuStripObjectArrayView
         '
-        Me.MenuStripObjectArrayView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportYOBJArrayFromCSVToolStripMenuItem, Me.ExportYOBJArrayToCSVToolStripMenuItem, Me.SaveYOBJArrayChangesToolStripMenuItem})
+        Me.MenuStripObjectArrayView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportYOBJArrayFromCSVToolStripMenuItem, Me.ExportYOBJArrayToCSVToolStripMenuItem, Me.SaveChangesYOBJArrayMenuItem})
         Me.MenuStripObjectArrayView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripObjectArrayView.Name = "MenuStripObjectArrayView"
-        Me.MenuStripObjectArrayView.Size = New System.Drawing.Size(1047, 24)
+        Me.MenuStripObjectArrayView.Size = New System.Drawing.Size(1213, 24)
         Me.MenuStripObjectArrayView.TabIndex = 0
         Me.MenuStripObjectArrayView.Text = "MenuStrip2"
         '
@@ -2424,12 +2458,12 @@ Partial Class MainForm
         Me.ExportYOBJArrayToCSVToolStripMenuItem.Size = New System.Drawing.Size(91, 20)
         Me.ExportYOBJArrayToCSVToolStripMenuItem.Text = "Export to CSV"
         '
-        'SaveYOBJArrayChangesToolStripMenuItem
+        'SaveChangesYOBJArrayMenuItem
         '
-        Me.SaveYOBJArrayChangesToolStripMenuItem.Name = "SaveYOBJArrayChangesToolStripMenuItem"
-        Me.SaveYOBJArrayChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 20)
-        Me.SaveYOBJArrayChangesToolStripMenuItem.Text = "Save Changes"
-        Me.SaveYOBJArrayChangesToolStripMenuItem.Visible = False
+        Me.SaveChangesYOBJArrayMenuItem.Name = "SaveChangesYOBJArrayMenuItem"
+        Me.SaveChangesYOBJArrayMenuItem.Size = New System.Drawing.Size(92, 20)
+        Me.SaveChangesYOBJArrayMenuItem.Text = "Save Changes"
+        Me.SaveChangesYOBJArrayMenuItem.Visible = False
         '
         'AssetView
         '
@@ -2438,7 +2472,7 @@ Partial Class MainForm
         Me.AssetView.Location = New System.Drawing.Point(4, 22)
         Me.AssetView.Name = "AssetView"
         Me.AssetView.Padding = New System.Windows.Forms.Padding(3)
-        Me.AssetView.Size = New System.Drawing.Size(1053, 411)
+        Me.AssetView.Size = New System.Drawing.Size(1219, 411)
         Me.AssetView.TabIndex = 13
         Me.AssetView.Text = "Asset View"
         Me.AssetView.UseVisualStyleBackColor = True
@@ -2454,7 +2488,7 @@ Partial Class MainForm
         Me.DataGridAssetView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridAssetView.Name = "DataGridAssetView"
         Me.DataGridAssetView.RowHeadersVisible = False
-        Me.DataGridAssetView.Size = New System.Drawing.Size(1047, 381)
+        Me.DataGridAssetView.Size = New System.Drawing.Size(1213, 381)
         Me.DataGridAssetView.TabIndex = 0
         '
         'PacNumber
@@ -2611,19 +2645,19 @@ Partial Class MainForm
         '
         'MenuStripAssetView
         '
-        Me.MenuStripAssetView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SaveAssetViewChangesToolStripMenuItem})
+        Me.MenuStripAssetView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SaveChangesAssetViewMenuItem})
         Me.MenuStripAssetView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripAssetView.Name = "MenuStripAssetView"
-        Me.MenuStripAssetView.Size = New System.Drawing.Size(1047, 24)
+        Me.MenuStripAssetView.Size = New System.Drawing.Size(1213, 24)
         Me.MenuStripAssetView.TabIndex = 1
         Me.MenuStripAssetView.Text = "MenuStrip1"
         '
-        'SaveAssetViewChangesToolStripMenuItem
+        'SaveChangesAssetViewMenuItem
         '
-        Me.SaveAssetViewChangesToolStripMenuItem.Name = "SaveAssetViewChangesToolStripMenuItem"
-        Me.SaveAssetViewChangesToolStripMenuItem.Size = New System.Drawing.Size(92, 20)
-        Me.SaveAssetViewChangesToolStripMenuItem.Text = "Save Changes"
-        Me.SaveAssetViewChangesToolStripMenuItem.Visible = False
+        Me.SaveChangesAssetViewMenuItem.Name = "SaveChangesAssetViewMenuItem"
+        Me.SaveChangesAssetViewMenuItem.Size = New System.Drawing.Size(92, 20)
+        Me.SaveChangesAssetViewMenuItem.Text = "Save Changes"
+        Me.SaveChangesAssetViewMenuItem.Visible = False
         '
         'TitleView
         '
@@ -2632,7 +2666,7 @@ Partial Class MainForm
         Me.TitleView.Location = New System.Drawing.Point(4, 22)
         Me.TitleView.Name = "TitleView"
         Me.TitleView.Padding = New System.Windows.Forms.Padding(3)
-        Me.TitleView.Size = New System.Drawing.Size(1053, 411)
+        Me.TitleView.Size = New System.Drawing.Size(1219, 411)
         Me.TitleView.TabIndex = 14
         Me.TitleView.Text = "Title View"
         Me.TitleView.UseVisualStyleBackColor = True
@@ -2648,7 +2682,7 @@ Partial Class MainForm
         Me.DataGridTitleView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridTitleView.Name = "DataGridTitleView"
         Me.DataGridTitleView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders
-        Me.DataGridTitleView.Size = New System.Drawing.Size(1047, 378)
+        Me.DataGridTitleView.Size = New System.Drawing.Size(1213, 378)
         Me.DataGridTitleView.TabIndex = 1
         '
         'TitleEnabled
@@ -2839,7 +2873,7 @@ Partial Class MainForm
         Me.MenuStripTitleView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TitleGameComboBox, Me.StringLoadedTitleMenuItem, Me.PacsLoadedTitleMenuItem, Me.SaveChangesTitleMenuItem})
         Me.MenuStripTitleView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripTitleView.Name = "MenuStripTitleView"
-        Me.MenuStripTitleView.Size = New System.Drawing.Size(1047, 27)
+        Me.MenuStripTitleView.Size = New System.Drawing.Size(1213, 27)
         Me.MenuStripTitleView.TabIndex = 0
         Me.MenuStripTitleView.Text = "MenuStrip3"
         '
@@ -2878,7 +2912,7 @@ Partial Class MainForm
         Me.SoundView.Location = New System.Drawing.Point(4, 22)
         Me.SoundView.Name = "SoundView"
         Me.SoundView.Padding = New System.Windows.Forms.Padding(3)
-        Me.SoundView.Size = New System.Drawing.Size(1053, 411)
+        Me.SoundView.Size = New System.Drawing.Size(1219, 411)
         Me.SoundView.TabIndex = 15
         Me.SoundView.Text = "Sound View"
         Me.SoundView.UseVisualStyleBackColor = True
@@ -2895,15 +2929,57 @@ Partial Class MainForm
         Me.DataGridSoundView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridSoundView.Name = "DataGridSoundView"
         Me.DataGridSoundView.RowHeadersVisible = False
-        Me.DataGridSoundView.Size = New System.Drawing.Size(1047, 378)
+        Me.DataGridSoundView.Size = New System.Drawing.Size(1213, 378)
         Me.DataGridSoundView.TabIndex = 1
+        '
+        'SoundContainerNumber
+        '
+        Me.SoundContainerNumber.HeaderText = "Container"
+        Me.SoundContainerNumber.Name = "SoundContainerNumber"
+        Me.SoundContainerNumber.ReadOnly = True
+        Me.SoundContainerNumber.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'SoundRefNum
+        '
+        Me.SoundRefNum.HeaderText = "Ref Num"
+        Me.SoundRefNum.MaxInputLength = 11
+        Me.SoundRefNum.Name = "SoundRefNum"
+        Me.SoundRefNum.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'SoundHashRef
+        '
+        Me.SoundHashRef.HeaderText = "Hash Bytes"
+        Me.SoundHashRef.MaxInputLength = 8
+        Me.SoundHashRef.Name = "SoundHashRef"
+        Me.SoundHashRef.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'SoundOffset
+        '
+        Me.SoundOffset.HeaderText = "Offset"
+        Me.SoundOffset.Name = "SoundOffset"
+        Me.SoundOffset.ReadOnly = True
+        Me.SoundOffset.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'SoundInfoAdd
+        '
+        Me.SoundInfoAdd.HeaderText = "Add"
+        Me.SoundInfoAdd.Name = "SoundInfoAdd"
+        Me.SoundInfoAdd.Text = "Add"
+        Me.SoundInfoAdd.UseColumnTextForButtonValue = True
+        '
+        'SoundInfoDel
+        '
+        Me.SoundInfoDel.HeaderText = "Delete"
+        Me.SoundInfoDel.Name = "SoundInfoDel"
+        Me.SoundInfoDel.Text = "Delete"
+        Me.SoundInfoDel.UseColumnTextForButtonValue = True
         '
         'MenuStripSoundView
         '
         Me.MenuStripSoundView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripSoundRefSearch, Me.SaveChangesSoundMenuItem})
         Me.MenuStripSoundView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripSoundView.Name = "MenuStripSoundView"
-        Me.MenuStripSoundView.Size = New System.Drawing.Size(1047, 27)
+        Me.MenuStripSoundView.Size = New System.Drawing.Size(1213, 27)
         Me.MenuStripSoundView.TabIndex = 0
         Me.MenuStripSoundView.Text = "MenuStrip1"
         '
@@ -2919,6 +2995,46 @@ Partial Class MainForm
         Me.SaveChangesSoundMenuItem.Size = New System.Drawing.Size(92, 23)
         Me.SaveChangesSoundMenuItem.Text = "Save Changes"
         Me.SaveChangesSoundMenuItem.Visible = False
+        '
+        'MenuItemView
+        '
+        Me.MenuItemView.Controls.Add(Me.DataGridMenuItemView)
+        Me.MenuItemView.Controls.Add(Me.MenuStripMenuItemView)
+        Me.MenuItemView.Location = New System.Drawing.Point(4, 22)
+        Me.MenuItemView.Name = "MenuItemView"
+        Me.MenuItemView.Size = New System.Drawing.Size(1219, 411)
+        Me.MenuItemView.TabIndex = 16
+        Me.MenuItemView.Text = "Menu Item View"
+        Me.MenuItemView.UseVisualStyleBackColor = True
+        '
+        'DataGridMenuItemView
+        '
+        Me.DataGridMenuItemView.AllowUserToAddRows = False
+        Me.DataGridMenuItemView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridMenuItemView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridMenuItemView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.CAEEventID, Me.CAEStringRef, Me.CAEStringPrint, Me.CAEPacNum1, Me.CAEPacName1, Me.CAEPacNum2, Me.CAEPacName2, Me.CAEPacNum3, Me.CAEPacName3, Me.CAEPacNum4, Me.CAEPacName4, Me.CAEPacNum5, Me.CAEPacName5, Me.CAEDefaultWrestlerNum, Me.CAEPromo1, Me.CAEPromo2, Me.CAEPromo3, Me.CAEPromo4, Me.CAEBuffer, Me.CAEUknown1, Me.CAEUknown2, Me.CAELoackedtoPac, Me.CAEDLCFlag})
+        Me.DataGridMenuItemView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridMenuItemView.Location = New System.Drawing.Point(0, 24)
+        Me.DataGridMenuItemView.Name = "DataGridMenuItemView"
+        Me.DataGridMenuItemView.RowHeadersVisible = False
+        Me.DataGridMenuItemView.Size = New System.Drawing.Size(1219, 387)
+        Me.DataGridMenuItemView.TabIndex = 1
+        '
+        'MenuStripMenuItemView
+        '
+        Me.MenuStripMenuItemView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringLoadedCAEMenuItem, Me.PacsLoadedCAEMenuItem, Me.SaveChangesMenuItemMenuItem})
+        Me.MenuStripMenuItemView.Location = New System.Drawing.Point(0, 0)
+        Me.MenuStripMenuItemView.Name = "MenuStripMenuItemView"
+        Me.MenuStripMenuItemView.Size = New System.Drawing.Size(1219, 24)
+        Me.MenuStripMenuItemView.TabIndex = 0
+        Me.MenuStripMenuItemView.Text = "MenuStrip1"
+        '
+        'SaveChangesMenuItemMenuItem
+        '
+        Me.SaveChangesMenuItemMenuItem.Name = "SaveChangesMenuItemMenuItem"
+        Me.SaveChangesMenuItemMenuItem.Size = New System.Drawing.Size(92, 20)
+        Me.SaveChangesMenuItemMenuItem.Text = "Save Changes"
+        Me.SaveChangesMenuItemMenuItem.Visible = False
         '
         'MenuStripPictureView
         '
@@ -3259,54 +3375,144 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn35.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn35.Width = 41
         '
-        'SoundContainerNumber
+        'StringLoadedCAEMenuItem
         '
-        Me.SoundContainerNumber.HeaderText = "Container"
-        Me.SoundContainerNumber.Name = "SoundContainerNumber"
-        Me.SoundContainerNumber.ReadOnly = True
-        Me.SoundContainerNumber.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.StringLoadedCAEMenuItem.Enabled = False
+        Me.StringLoadedCAEMenuItem.Name = "StringLoadedCAEMenuItem"
+        Me.StringLoadedCAEMenuItem.Size = New System.Drawing.Size(95, 20)
+        Me.StringLoadedCAEMenuItem.Text = "String Loaded:"
         '
-        'SoundRefNum
+        'PacsLoadedCAEMenuItem
         '
-        Me.SoundRefNum.HeaderText = "Ref Num"
-        Me.SoundRefNum.MaxInputLength = 11
-        Me.SoundRefNum.Name = "SoundRefNum"
-        Me.SoundRefNum.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.PacsLoadedCAEMenuItem.Enabled = False
+        Me.PacsLoadedCAEMenuItem.Name = "PacsLoadedCAEMenuItem"
+        Me.PacsLoadedCAEMenuItem.Size = New System.Drawing.Size(88, 20)
+        Me.PacsLoadedCAEMenuItem.Text = "Pacs Loaded:"
         '
-        'SoundHashRef
+        'CAEEventID
         '
-        Me.SoundHashRef.HeaderText = "Hash Bytes"
-        Me.SoundHashRef.MaxInputLength = 8
-        Me.SoundHashRef.Name = "SoundHashRef"
-        Me.SoundHashRef.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.CAEEventID.HeaderText = "Event ID"
+        Me.CAEEventID.Name = "CAEEventID"
         '
-        'SoundOffset
+        'CAEStringRef
         '
-        Me.SoundOffset.HeaderText = "Offset"
-        Me.SoundOffset.Name = "SoundOffset"
-        Me.SoundOffset.ReadOnly = True
-        Me.SoundOffset.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.CAEStringRef.HeaderText = "String Ref"
+        Me.CAEStringRef.Name = "CAEStringRef"
         '
-        'SoundInfoAdd
+        'CAEStringPrint
         '
-        Me.SoundInfoAdd.HeaderText = "Add"
-        Me.SoundInfoAdd.Name = "SoundInfoAdd"
-        Me.SoundInfoAdd.Text = "Add"
-        Me.SoundInfoAdd.UseColumnTextForButtonValue = True
+        Me.CAEStringPrint.HeaderText = "CAE Name"
+        Me.CAEStringPrint.Name = "CAEStringPrint"
+        Me.CAEStringPrint.ReadOnly = True
         '
-        'SoundInfoDel
+        'CAEPacNum1
         '
-        Me.SoundInfoDel.HeaderText = "Delete"
-        Me.SoundInfoDel.Name = "SoundInfoDel"
-        Me.SoundInfoDel.Text = "Delete"
-        Me.SoundInfoDel.UseColumnTextForButtonValue = True
+        Me.CAEPacNum1.HeaderText = "Pac Num 1"
+        Me.CAEPacNum1.Name = "CAEPacNum1"
+        '
+        'CAEPacName1
+        '
+        Me.CAEPacName1.HeaderText = "Pac Name 1"
+        Me.CAEPacName1.Name = "CAEPacName1"
+        '
+        'CAEPacNum2
+        '
+        Me.CAEPacNum2.HeaderText = "Pac Num 2"
+        Me.CAEPacNum2.Name = "CAEPacNum2"
+        '
+        'CAEPacName2
+        '
+        Me.CAEPacName2.HeaderText = "Pac Name 2"
+        Me.CAEPacName2.Name = "CAEPacName2"
+        '
+        'CAEPacNum3
+        '
+        Me.CAEPacNum3.HeaderText = "Pac Num 3"
+        Me.CAEPacNum3.Name = "CAEPacNum3"
+        '
+        'CAEPacName3
+        '
+        Me.CAEPacName3.HeaderText = "Pac Name 3"
+        Me.CAEPacName3.Name = "CAEPacName3"
+        '
+        'CAEPacNum4
+        '
+        Me.CAEPacNum4.HeaderText = "Pac Num 4"
+        Me.CAEPacNum4.Name = "CAEPacNum4"
+        '
+        'CAEPacName4
+        '
+        Me.CAEPacName4.HeaderText = "Pac Name 4"
+        Me.CAEPacName4.Name = "CAEPacName4"
+        '
+        'CAEPacNum5
+        '
+        Me.CAEPacNum5.HeaderText = "Pac Num 5"
+        Me.CAEPacNum5.Name = "CAEPacNum5"
+        '
+        'CAEPacName5
+        '
+        Me.CAEPacName5.HeaderText = "Pac Name 5"
+        Me.CAEPacName5.Name = "CAEPacName5"
+        '
+        'CAEDefaultWrestlerNum
+        '
+        Me.CAEDefaultWrestlerNum.HeaderText = "Has Pac"
+        Me.CAEDefaultWrestlerNum.Name = "CAEDefaultWrestlerNum"
+        Me.CAEDefaultWrestlerNum.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.CAEDefaultWrestlerNum.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'CAEPromo1
+        '
+        Me.CAEPromo1.HeaderText = "Promo 1"
+        Me.CAEPromo1.Name = "CAEPromo1"
+        '
+        'CAEPromo2
+        '
+        Me.CAEPromo2.HeaderText = "Promo 2"
+        Me.CAEPromo2.Name = "CAEPromo2"
+        '
+        'CAEPromo3
+        '
+        Me.CAEPromo3.HeaderText = "Promo 3"
+        Me.CAEPromo3.Name = "CAEPromo3"
+        '
+        'CAEPromo4
+        '
+        Me.CAEPromo4.HeaderText = "Promo 4"
+        Me.CAEPromo4.Name = "CAEPromo4"
+        '
+        'CAEBuffer
+        '
+        Me.CAEBuffer.HeaderText = "Buffer Bytes"
+        Me.CAEBuffer.Name = "CAEBuffer"
+        '
+        'CAEUknown1
+        '
+        Me.CAEUknown1.HeaderText = "Unkown 1"
+        Me.CAEUknown1.Name = "CAEUknown1"
+        '
+        'CAEUknown2
+        '
+        Me.CAEUknown2.HeaderText = "Unkown 2"
+        Me.CAEUknown2.Name = "CAEUknown2"
+        '
+        'CAELoackedtoPac
+        '
+        Me.CAELoackedtoPac.HeaderText = "Locked to Pac"
+        Me.CAELoackedtoPac.Name = "CAELoackedtoPac"
+        '
+        'CAEDLCFlag
+        '
+        Me.CAEDLCFlag.HeaderText = "DLC Flag"
+        Me.CAEDLCFlag.Name = "CAEDLCFlag"
         '
         'MainForm
         '
         Me.AllowDrop = True
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1284, 461)
+        Me.ClientSize = New System.Drawing.Size(1484, 461)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.MenuStripMainForm)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -3389,6 +3595,11 @@ Partial Class MainForm
         CType(Me.DataGridSoundView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStripSoundView.ResumeLayout(False)
         Me.MenuStripSoundView.PerformLayout()
+        Me.MenuItemView.ResumeLayout(False)
+        Me.MenuItemView.PerformLayout()
+        CType(Me.DataGridMenuItemView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MenuStripMenuItemView.ResumeLayout(False)
+        Me.MenuStripMenuItemView.PerformLayout()
         Me.MenuStripPictureView.ResumeLayout(False)
         Me.MenuStripPictureView.PerformLayout()
         Me.TreeViewContext.ResumeLayout(False)
@@ -3497,9 +3708,9 @@ Partial Class MainForm
     Friend WithEvents CrawlToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AssetView As TabPage
     Friend WithEvents DataGridAssetView As DataGridView
-    Friend WithEvents SaveStringChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SaveChangesStringMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripTextBoxSearch As ToolStripTextBox
-    Friend WithEvents SaveMiscChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SaveChangesMiscMenuItem As ToolStripMenuItem
     Friend WithEvents SaveChangesAttireMenuItem As ToolStripMenuItem
     Friend WithEvents Pach As DataGridViewTextBoxColumn
     Friend WithEvents Count As DataGridViewTextBoxColumn
@@ -3609,7 +3820,7 @@ Partial Class MainForm
     Friend WithEvents Col_RingMat_CM As DataGridViewTextBoxColumn
     Friend WithEvents Col_version As DataGridViewTextBoxColumn
     Friend WithEvents StringLoadedShowMenuItem As ToolStripMenuItem
-    Friend WithEvents SaveShowChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SaveChangesShowMenuItem As ToolStripMenuItem
     Friend WithEvents StrName As DataGridViewTextBoxColumn
     Friend WithEvents ShowStringName As DataGridViewTextBoxColumn
     Friend WithEvents ShowSelectNum As DataGridViewTextBoxColumn
@@ -3650,10 +3861,10 @@ Partial Class MainForm
     Friend WithEvents I3 As DataGridViewTextBoxColumn
     Friend WithEvents Live As DataGridViewTextBoxColumn
     Friend WithEvents J As DataGridViewTextBoxColumn
-    Friend WithEvents SaveNIBJChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SaveChangesNIBJMenuItem As ToolStripMenuItem
     Friend WithEvents ExportMaskstoTXTToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ImportMasksFromTXTToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents SaveMaskChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SaveChangesMaskMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem2 As ToolStripMenuItem
     Friend WithEvents TekkenToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents TutorialVideoToolStripMenuItem As ToolStripMenuItem
@@ -3661,7 +3872,7 @@ Partial Class MainForm
     Friend WithEvents DSSelectionScriptToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents DSExportScriptToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AznTutorialToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents SaveYOBJArrayChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SaveChangesYOBJArrayMenuItem As ToolStripMenuItem
     Friend WithEvents ExportYOBJArrayToCSVToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Mask_Name As DataGridViewTextBoxColumn
     Friend WithEvents Start_Face As DataGridViewTextBoxColumn
@@ -3717,7 +3928,7 @@ Partial Class MainForm
     Friend WithEvents SaveChangesSoundMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripSoundRefSearch As ToolStripTextBox
     Friend WithEvents MenuStripAssetView As MenuStrip
-    Friend WithEvents SaveAssetViewChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SaveChangesAssetViewMenuItem As ToolStripMenuItem
     Friend WithEvents PacNumber As DataGridViewTextBoxColumn
     Friend WithEvents AttireNum As DataGridViewTextBoxColumn
     Friend WithEvents AudioNum As DataGridViewTextBoxColumn
@@ -3770,4 +3981,33 @@ Partial Class MainForm
     Friend WithEvents SoundOffset As DataGridViewTextBoxColumn
     Friend WithEvents SoundInfoAdd As DataGridViewButtonColumn
     Friend WithEvents SoundInfoDel As DataGridViewButtonColumn
+    Friend WithEvents MenuItemView As TabPage
+    Friend WithEvents DataGridMenuItemView As DataGridView
+    Friend WithEvents MenuStripMenuItemView As MenuStrip
+    Friend WithEvents SaveChangesMenuItemMenuItem As ToolStripMenuItem
+    Friend WithEvents StringLoadedCAEMenuItem As ToolStripMenuItem
+    Friend WithEvents PacsLoadedCAEMenuItem As ToolStripMenuItem
+    Friend WithEvents CAEEventID As DataGridViewTextBoxColumn
+    Friend WithEvents CAEStringRef As DataGridViewTextBoxColumn
+    Friend WithEvents CAEStringPrint As DataGridViewTextBoxColumn
+    Friend WithEvents CAEPacNum1 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEPacName1 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEPacNum2 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEPacName2 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEPacNum3 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEPacName3 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEPacNum4 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEPacName4 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEPacNum5 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEPacName5 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEDefaultWrestlerNum As DataGridViewCheckBoxColumn
+    Friend WithEvents CAEPromo1 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEPromo2 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEPromo3 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEPromo4 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEBuffer As DataGridViewTextBoxColumn
+    Friend WithEvents CAEUknown1 As DataGridViewTextBoxColumn
+    Friend WithEvents CAEUknown2 As DataGridViewTextBoxColumn
+    Friend WithEvents CAELoackedtoPac As DataGridViewTextBoxColumn
+    Friend WithEvents CAEDLCFlag As DataGridViewTextBoxColumn
 End Class

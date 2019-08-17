@@ -157,6 +157,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Icon Sets.psd" />
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
@@ -184,6 +185,7 @@
     <Content Include="Assets\G.png" />
     <Content Include="Assets\H.png" />
     <Content Include="Assets\K.png" />
+    <Content Include="Assets\L.png" />
     <Content Include="Assets\M.png" />
     <Content Include="Assets\N.png" />
     <Content Include="Assets\NodeIcons.txt" />

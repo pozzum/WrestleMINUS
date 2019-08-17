@@ -34,4 +34,5 @@
 22	V	-VMUM
 23	W	-TitleFile (WWE TITLE)
 24  R   -TextureReference
+25	L	-LSD
 'UNUSED SO FAR IJLQRX

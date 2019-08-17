@@ -114,6 +114,10 @@ Public Class PackageInformation
                 Return 23
             Case PackageType.TextureReference
                 Return 24
+            Case PackageType.LSD
+                Return 25
+            Case PackageType.LSD_BIN
+                Return 25
             Case Else
                 Return 0
         End Select
@@ -227,8 +231,20 @@ Public Class PackageInformation
                         Return PackageType.SoundReference
                     Case Else
                         'if we do not have a header text to guide us we have some additional text checks that are consistent.
-                        'some of these checks don't 100% require this many bytes, but none should functionally have that little byte length
-                        If ByteArray.Length > &H30 Then
+                        If ByteArray.Length > &H20 Then
+                            Dim ShortNumberCheck As UInt32 = BitConverter.ToUInt16(ByteArray, Index + 0)
+                            If ShortNumberCheck > 0 Then
+                                If New String(Encoding.Default.GetChars(ByteArray, Index + 4, &HC)) = "¾ï¾ï¾ï¾ï¾ï¾ï" Then
+                                    Return PackageType.LSD_BIN
+                                ElseIf New String(Encoding.Default.GetChars(ByteArray, Index + 8, &HC)) = "ÿÿÿÿÿÿÿÿÿÿÿÿ" Then
+                                    Return PackageType.LSD
+                                ElseIf New String(Encoding.Default.GetChars(ByteArray, Index + &H14, 8)) = "ÿÿÿÿÿÿÿÿ" Then
+                                    Return PackageType.LSD
+                                End If
+                            End If
+                        End If
+                            'some of these checks don't 100% require this many bytes, but none should functionally have that little byte length
+                            If ByteArray.Length > &H30 Then
                             Select Case True
                                 Case Encoding.Default.GetChars(ByteArray, Index + &H10, 4) = "aren"
                                     Return PackageType.ArenaInfo
