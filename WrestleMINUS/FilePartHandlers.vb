@@ -239,6 +239,40 @@ Public Class FilePartHandlers
         Else
             ParentFileInformation = FileRequested.Parent
         End If
+        'Here we want to check if the parent is a compressed file type.. 
+        'If it Is we Then want To Get the compressed bytes Of that file type And make that the compressed bytes and move the parent & FileRequested up one file
+        If ParentFileInformation.FileType = PackageType.OODL OrElse
+         ParentFileInformation.FileType = PackageType.ZLIB OrElse
+         ParentFileInformation.FileType = PackageType.BPE Then
+            Dim CompressedByteArray As Byte()
+
+            If ParentFileInformation.FileType = PackageType.OODL Then
+                CompressedByteArray = PackUnpack.GetCompressedOodleBytes(SentBytes)
+            ElseIf ParentFileInformation.FileType = PackageType.ZLIB Then
+                CompressedByteArray = PackUnpack.GetCompressedZlibBytes(SentBytes)
+            ElseIf ParentFileInformation.FileType = PackageType.BPE Then
+                CompressedByteArray = PackUnpack.GetCompressedBPEBytes(SentBytes)
+            Else
+                CompressedByteArray = Nothing
+            End If
+            If ParentFileInformation.Index = 0 AndAlso ParentFileInformation.StoredData.Length = 0 Then
+                'File to be Written
+                Dim WrittenFile As String = FileRequested.FullFilePath
+                If My.Settings.BackupInjections AndAlso GeneralTools.CheckFileWriteable(WrittenFile & ".bak", False) Then
+                    File.Copy(WrittenFile, WrittenFile & ".bak", True)
+                End If
+                File.WriteAllBytes(WrittenFile, CompressedByteArray)
+                'Remove Save Pending Buttons when file written
+                MainForm.SaveFileNoLongerPending()
+                Dim TempName As String = ParentFileInformation.Name
+                PackageInformation.GetFileParts(ParentFileInformation)
+                MainForm.InformationLoaded = False
+            Else
+                'we must go higher
+                FilePartHandlers.InjectBytesIntoFile(ParentFileInformation, CompressedByteArray)
+            End If
+            Return True
+        End If
         'skipping pach directories
         Dim DirectoryIndex As Integer = -1
         If ParentFileInformation.FileType = PackageType.PachDirectory_4 OrElse

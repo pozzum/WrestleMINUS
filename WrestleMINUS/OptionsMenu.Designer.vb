@@ -65,6 +65,8 @@ Partial Class OptionsMenu
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.ButtonResetFormSize = New System.Windows.Forms.Button()
+        Me.CheckBoxShowSelectedNode = New System.Windows.Forms.CheckBox()
         Me.ButtonResetPacs = New System.Windows.Forms.Button()
         Me.ButtonResetStrings = New System.Windows.Forms.Button()
         Me.LabelDecimalNameLength = New System.Windows.Forms.Label()
@@ -485,6 +487,8 @@ Partial Class OptionsMenu
         'TabPage3
         '
         Me.TabPage3.BackColor = System.Drawing.SystemColors.Control
+        Me.TabPage3.Controls.Add(Me.ButtonResetFormSize)
+        Me.TabPage3.Controls.Add(Me.CheckBoxShowSelectedNode)
         Me.TabPage3.Controls.Add(Me.ButtonResetPacs)
         Me.TabPage3.Controls.Add(Me.ButtonResetStrings)
         Me.TabPage3.Controls.Add(Me.LabelDecimalNameLength)
@@ -504,20 +508,39 @@ Partial Class OptionsMenu
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "Advanced"
         '
+        'ButtonResetFormSize
+        '
+        Me.ButtonResetFormSize.Location = New System.Drawing.Point(88, 253)
+        Me.ButtonResetFormSize.Name = "ButtonResetFormSize"
+        Me.ButtonResetFormSize.Size = New System.Drawing.Size(100, 23)
+        Me.ButtonResetFormSize.TabIndex = 50
+        Me.ButtonResetFormSize.Text = "Reset Form Size"
+        Me.ButtonResetFormSize.UseVisualStyleBackColor = True
+        '
+        'CheckBoxShowSelectedNode
+        '
+        Me.CheckBoxShowSelectedNode.AutoSize = True
+        Me.CheckBoxShowSelectedNode.Location = New System.Drawing.Point(6, 6)
+        Me.CheckBoxShowSelectedNode.Name = "CheckBoxShowSelectedNode"
+        Me.CheckBoxShowSelectedNode.Size = New System.Drawing.Size(205, 17)
+        Me.CheckBoxShowSelectedNode.TabIndex = 49
+        Me.CheckBoxShowSelectedNode.Text = "Show Selected Node on Current View"
+        Me.CheckBoxShowSelectedNode.UseVisualStyleBackColor = True
+        '
         'ButtonResetPacs
         '
-        Me.ButtonResetPacs.Location = New System.Drawing.Point(141, 231)
+        Me.ButtonResetPacs.Location = New System.Drawing.Point(190, 253)
         Me.ButtonResetPacs.Name = "ButtonResetPacs"
-        Me.ButtonResetPacs.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonResetPacs.Size = New System.Drawing.Size(80, 23)
         Me.ButtonResetPacs.TabIndex = 48
         Me.ButtonResetPacs.Text = "Reset Pacs"
         Me.ButtonResetPacs.UseVisualStyleBackColor = True
         '
         'ButtonResetStrings
         '
-        Me.ButtonResetStrings.Location = New System.Drawing.Point(6, 231)
+        Me.ButtonResetStrings.Location = New System.Drawing.Point(6, 253)
         Me.ButtonResetStrings.Name = "ButtonResetStrings"
-        Me.ButtonResetStrings.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonResetStrings.Size = New System.Drawing.Size(80, 23)
         Me.ButtonResetStrings.TabIndex = 47
         Me.ButtonResetStrings.Text = "Reset Strings"
         Me.ButtonResetStrings.UseVisualStyleBackColor = True
@@ -525,7 +548,7 @@ Partial Class OptionsMenu
         'LabelDecimalNameLength
         '
         Me.LabelDecimalNameLength.AutoSize = True
-        Me.LabelDecimalNameLength.Location = New System.Drawing.Point(6, 116)
+        Me.LabelDecimalNameLength.Location = New System.Drawing.Point(6, 138)
         Me.LabelDecimalNameLength.Name = "LabelDecimalNameLength"
         Me.LabelDecimalNameLength.Size = New System.Drawing.Size(163, 13)
         Me.LabelDecimalNameLength.TabIndex = 46
@@ -534,7 +557,7 @@ Partial Class OptionsMenu
         'LabelHexLength
         '
         Me.LabelHexLength.AutoSize = True
-        Me.LabelHexLength.Location = New System.Drawing.Point(6, 175)
+        Me.LabelHexLength.Location = New System.Drawing.Point(6, 197)
         Me.LabelHexLength.Name = "LabelHexLength"
         Me.LabelHexLength.Size = New System.Drawing.Size(140, 13)
         Me.LabelHexLength.TabIndex = 44
@@ -543,7 +566,7 @@ Partial Class OptionsMenu
         'TrackBarHexLength
         '
         Me.TrackBarHexLength.LargeChange = 100
-        Me.TrackBarHexLength.Location = New System.Drawing.Point(6, 191)
+        Me.TrackBarHexLength.Location = New System.Drawing.Point(6, 213)
         Me.TrackBarHexLength.Maximum = 500
         Me.TrackBarHexLength.Minimum = 1
         Me.TrackBarHexLength.Name = "TrackBarHexLength"
@@ -556,7 +579,7 @@ Partial Class OptionsMenu
         'TrackBarDecimalNameLength
         '
         Me.TrackBarDecimalNameLength.LargeChange = 2
-        Me.TrackBarDecimalNameLength.Location = New System.Drawing.Point(6, 142)
+        Me.TrackBarDecimalNameLength.Location = New System.Drawing.Point(6, 164)
         Me.TrackBarDecimalNameLength.Maximum = 8
         Me.TrackBarDecimalNameLength.Name = "TrackBarDecimalNameLength"
         Me.TrackBarDecimalNameLength.Size = New System.Drawing.Size(260, 45)
@@ -566,7 +589,7 @@ Partial Class OptionsMenu
         'LabelOodleCompLevel
         '
         Me.LabelOodleCompLevel.AutoSize = True
-        Me.LabelOodleCompLevel.Location = New System.Drawing.Point(6, 91)
+        Me.LabelOodleCompLevel.Location = New System.Drawing.Point(6, 113)
         Me.LabelOodleCompLevel.Name = "LabelOodleCompLevel"
         Me.LabelOodleCompLevel.Size = New System.Drawing.Size(130, 13)
         Me.LabelOodleCompLevel.TabIndex = 36
@@ -577,7 +600,7 @@ Partial Class OptionsMenu
         Me.ComboBoxOodleCompressionLevel.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.ComboBoxOodleCompressionLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBoxOodleCompressionLevel.FormattingEnabled = True
-        Me.ComboBoxOodleCompressionLevel.Location = New System.Drawing.Point(141, 88)
+        Me.ComboBoxOodleCompressionLevel.Location = New System.Drawing.Point(141, 110)
         Me.ComboBoxOodleCompressionLevel.Name = "ComboBoxOodleCompressionLevel"
         Me.ComboBoxOodleCompressionLevel.Size = New System.Drawing.Size(125, 21)
         Me.ComboBoxOodleCompressionLevel.TabIndex = 35
@@ -585,7 +608,7 @@ Partial Class OptionsMenu
         'CheckBoxAppendDef
         '
         Me.CheckBoxAppendDef.AutoSize = True
-        Me.CheckBoxAppendDef.Location = New System.Drawing.Point(6, 19)
+        Me.CheckBoxAppendDef.Location = New System.Drawing.Point(6, 41)
         Me.CheckBoxAppendDef.Name = "CheckBoxAppendDef"
         Me.CheckBoxAppendDef.Size = New System.Drawing.Size(141, 17)
         Me.CheckBoxAppendDef.TabIndex = 4
@@ -595,7 +618,7 @@ Partial Class OptionsMenu
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(3, 3)
+        Me.Label2.Location = New System.Drawing.Point(3, 25)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(105, 13)
         Me.Label2.TabIndex = 3
@@ -604,7 +627,7 @@ Partial Class OptionsMenu
         'CheckRelocateMods
         '
         Me.CheckRelocateMods.AutoSize = True
-        Me.CheckRelocateMods.Location = New System.Drawing.Point(6, 65)
+        Me.CheckRelocateMods.Location = New System.Drawing.Point(6, 87)
         Me.CheckRelocateMods.Name = "CheckRelocateMods"
         Me.CheckRelocateMods.Size = New System.Drawing.Size(236, 17)
         Me.CheckRelocateMods.TabIndex = 2
@@ -614,7 +637,7 @@ Partial Class OptionsMenu
         'CheckDisableModPref
         '
         Me.CheckDisableModPref.AutoSize = True
-        Me.CheckDisableModPref.Location = New System.Drawing.Point(6, 42)
+        Me.CheckDisableModPref.Location = New System.Drawing.Point(6, 64)
         Me.CheckDisableModPref.Name = "CheckDisableModPref"
         Me.CheckDisableModPref.Size = New System.Drawing.Size(172, 17)
         Me.CheckDisableModPref.TabIndex = 1
@@ -698,4 +721,6 @@ Partial Class OptionsMenu
     Friend WithEvents LabelHexLength As Label
     Friend WithEvents TrackBarHexLength As TrackBar
     Friend WithEvents TrackBarDecimalNameLength As TrackBar
+    Friend WithEvents CheckBoxShowSelectedNode As CheckBox
+    Friend WithEvents ButtonResetFormSize As Button
 End Class

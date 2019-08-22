@@ -211,6 +211,7 @@ Public Class OptionsMenu
         CheckBoxAppendDef.Checked = My.Settings.AppendDefFileRebuild
         CheckDisableModPref.Checked = My.Settings.DisableModPref
         CheckRelocateMods.Checked = My.Settings.RelocateModFolderMods
+        CheckBoxShowSelectedNode.Checked = My.Settings.ShowSelectedNode
         UpdateDefOptions()
         ComboBoxOodleCompressionLevel.Items.AddRange(System.Enum.GetNames(GetType(PackUnpack.OodleCompressionLevel)))
         ComboBoxOodleCompressionLevel.SelectedIndex = My.Settings.OODLCompressionLevel
@@ -234,6 +235,11 @@ Public Class OptionsMenu
     Private Sub CheckRelocateMods_CheckedChanged(sender As Object, e As EventArgs) Handles CheckRelocateMods.CheckedChanged
         My.Settings.RelocateModFolderMods = CheckRelocateMods.Checked
         UpdateDefOptions()
+    End Sub
+
+    Private Sub CheckBoxShowSelectedNode_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxShowSelectedNode.CheckedChanged
+        My.Settings.ShowSelectedNode = CheckBoxShowSelectedNode.Checked
+        MainForm.ApplyCurrentViewOption()
     End Sub
 
     Sub UpdateDefOptions()
@@ -280,11 +286,16 @@ Public Class OptionsMenu
         MainForm.StringReferences(0) = "String Not Read"
     End Sub
 
+    Private Sub ButtonResetFormSize_Click(sender As Object, e As EventArgs) Handles ButtonResetFormSize.Click
+        My.Settings.SavedSplitterDistance = 253
+        My.Settings.SavedFormSize = New Size(1500, 500)
+        MainForm.ApplyFormSettings()
+    End Sub
+
     Private Sub ButtonResetPacs_Click(sender As Object, e As EventArgs) Handles ButtonResetPacs.Click
         MainForm.PacNumbers = New Integer(1024) {}
         MainForm.PacNumbers(0) = -1
     End Sub
-
 #End Region
 
 End Class

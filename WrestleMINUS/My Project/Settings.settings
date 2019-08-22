@@ -86,5 +86,14 @@
     <Setting Name="RelocateModFolderMods" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="ShowSelectedNode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SavedSplitterDistance" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">250</Value>
+    </Setting>
+    <Setting Name="SavedFormSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">1500, 500</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

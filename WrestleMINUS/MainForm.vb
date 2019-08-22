@@ -17,6 +17,7 @@ Public Class MainForm
     Friend Shared ReadNode As TreeNode
     Friend Shared OldValue
     Public Shared InformationLoaded As Boolean = False
+    Shared CurrentViewText As String = ""
 
 #Region "Main Form Loading Functions"
 
@@ -27,6 +28,7 @@ Public Class MainForm
         LoadFontAwesomeIcons()
         FillCompressionMenu()
         ApplyFormSettings()
+        ApplyCurrentViewOption()
         HideTabs(Nothing)
         CreatedImages = New List(Of String)
     End Sub
@@ -114,6 +116,9 @@ Public Class MainForm
                         'MessageBox.Show("Rebuild Table")
                         'Here we should be able to reset the tab.
                         ReadNode = TreeView1.SelectedNode
+                        If My.Settings.ShowSelectedNode Then
+                            CurrentViewToolStripMenuItem.Text = CurrentViewText & vbNewLine & "Current Selected Node: " & ReadNode.Text
+                        End If
                         FillTabDataGrid(ExcludedTab)
                     End If
                 Case Else
@@ -198,6 +203,8 @@ Public Class MainForm
     End Sub
 
     Sub ApplyFormSettings()
+        SplitContainer1.SplitterDistance = My.Settings.SavedSplitterDistance
+        MyBase.Size = My.Settings.SavedFormSize
         HexViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         TextViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         MiscViewType.SelectedIndex = My.Settings.MiscModeIndex
@@ -217,10 +224,40 @@ Public Class MainForm
         PacsLoadedCAEMenuItem.Text = "Pacs Loaded: " & PacsRead.ToString
     End Sub
 
+    Shared Sub ApplyCurrentViewOption()
+        If My.Settings.ShowSelectedNode Then
+            MainForm.CurrentViewToolStripMenuItem.Height = 35
+            If IsNothing(ReadNode) Then
+                MainForm.CurrentViewToolStripMenuItem.Text = CurrentViewText
+            Else
+                MainForm.CurrentViewToolStripMenuItem.Text = CurrentViewText & vbNewLine & "Current Selected Node: " & MainForm.ReadNode.Text
+            End If
+        Else
+            MainForm.CurrentViewToolStripMenuItem.Height = 20
+            MainForm.CurrentViewToolStripMenuItem.Text = CurrentViewText
+        End If
+    End Sub
+
+    Private Sub SplitContainer1_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles SplitContainer1.SplitterMoved
+        CurrentViewToolStripMenuItem.Width = SplitContainer1.SplitterDistance - 10
+        If Not SplitContainer1.SplitterDistance = 253 Then
+            My.Settings.SavedSplitterDistance = SplitContainer1.SplitterDistance
+        End If
+    End Sub
+
+    Private Sub MainForm_ResizeEnd(sender As Object, e As EventArgs) Handles MyBase.ResizeEnd
+        'If Not MyBase.Size.Height = 500 Then
+        '    If Not MyBase.Size.Width = 1500 Then
+        My.Settings.SavedFormSize = MyBase.Size
+        '    End If
+        'End If
+    End Sub
+
+
+
 #End Region
 
 #Region "Menu Strip"
-
 #Region "File Sub Menu"
 
     Private Sub LoadHomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoadHomeToolStripMenuItem.Click
@@ -248,7 +285,7 @@ Public Class MainForm
     End Sub
 
     Private Sub OptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsToolStripMenuItem.Click
-        OptionsMenu.Show() '
+        OptionsMenu.Show()
     End Sub
 
 #End Region
@@ -498,10 +535,11 @@ Public Class MainForm
         ProgressBar1.Value = 0
         ProgressBar1.Maximum = SelectedFiles.Length
         If SelectedFiles.Length = 1 Then
-            CurrentViewToolStripMenuItem.Text = "Current View: " & Path.GetFileName(SelectedFiles(0))
+            CurrentViewText = "Current View: " & Path.GetFileName(SelectedFiles(0))
         Else
-            CurrentViewToolStripMenuItem.Text = "Current View: Multiple Files"
+            CurrentViewText = "Current View: Multiple Files"
         End If
+        CurrentViewToolStripMenuItem.Text = CurrentViewText
         For i As Integer = 0 To SelectedFiles.Length - 1
             If Not SelectedFiles(i) = "" Then
                 If File.Exists(SelectedFiles(i)) Then
@@ -540,7 +578,8 @@ Public Class MainForm
             TreeView1.Nodes.Clear()
             ProgressBar1.Value = 0
             Dim HomeDirectory As String = Path.GetDirectoryName(My.Settings.ExeLocation) & Path.DirectorySeparatorChar
-            CurrentViewToolStripMenuItem.Text = "Current View: " & HomeDirectory
+            CurrentViewText = "Current View: " & HomeDirectory
+            CurrentViewToolStripMenuItem.Text = CurrentViewText
             Dim HomeDI As DirectoryInfo = New DirectoryInfo(HomeDirectory)
             Dim InitalFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
                         .Name = HomeDI.Name,
@@ -574,6 +613,9 @@ Public Class MainForm
             Dim PageLoaded As TabPage = GetTabType(NodeFileProperties.FileType)
             If HideTabs(PageLoaded) = DialogResult.OK Then
                 ReadNode = e.Node
+                If My.Settings.ShowSelectedNode Then
+                    CurrentViewToolStripMenuItem.Text = CurrentViewText & vbNewLine & "Current Selected Node: " & ReadNode.Text
+                End If
                 HexViewFileName.Text = TreeView1.SelectedNode.Text
                 AddHexText(TreeView1.SelectedNode)
                 TextViewFileName.Text = TreeView1.SelectedNode.Text
@@ -968,6 +1010,7 @@ Public Class MainForm
 
     Sub SaveFileNoLongerPending()
         ReadNode = Nothing
+        CurrentViewToolStripMenuItem.Text = CurrentViewText
         SavePending = False
         SaveChangesStringMenuItem.Visible = False
         SaveChangesMiscMenuItem.Visible = False
@@ -4574,7 +4617,6 @@ Public Class MainForm
         Next
         Return ReturnedBytes
     End Function
-
 #End Region
 
 #End Region

@@ -253,7 +253,7 @@ Public Class PackUnpack
         Return output
     End Function
 
-    Shared Function GetCompressedZlibBytes(SentBytes As Byte())
+    Shared Function GetCompressedZlibBytes(SentBytes As Byte()) 
         Dim CompressedBuffer As Byte() = New Byte(SentBytes.LongLength - 1) {}
         Try
             Using MemStream As MemoryStream = New MemoryStream

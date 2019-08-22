@@ -24,10 +24,10 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStripMainForm = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -347,6 +347,32 @@ Partial Class MainForm
         Me.SaveChangesSoundMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuItemView = New System.Windows.Forms.TabPage()
         Me.DataGridMenuItemView = New System.Windows.Forms.DataGridView()
+        Me.CAEEventID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEStringRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEStringPrint = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacNum1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacName1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacNum2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacName2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacNum3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacName3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacNum4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacName4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacNum5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPacName5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEDefaultWrestlerNum = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.CAEPromo1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPromo2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPromo3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEPromo4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEBuffer = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEUknown1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEUknown2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAELoackedtoPac = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PacNumExcluded = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAEDLCFlag = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.CAEMenuItemAdd = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.CAEMenuItemDelete = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStripMenuItemView = New System.Windows.Forms.MenuStrip()
         Me.StringLoadedCAEMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PacsLoadedCAEMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -406,32 +432,6 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEEventID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEStringRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEStringPrint = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEPacNum1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEPacName1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEPacNum2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEPacName2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEPacNum3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEPacName3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEPacNum4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEPacName4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEPacNum5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEPacName5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEDefaultWrestlerNum = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.CAEPromo1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEPromo2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEPromo3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEPromo4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEBuffer = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEUknown1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEUknown2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAELoackedtoPac = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PacNumExcluded = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CAEDLCFlag = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.CAEMenuItemAdd = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.CAEMenuItemDelete = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStripMainForm.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -499,6 +499,7 @@ Partial Class MainForm
         '
         Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LoadHomeToolStripMenuItem, Me.OpenToolStripMenuItem, Me.ExitToolStripMenuItem})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
+        Me.FileToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
         Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
         Me.FileToolStripMenuItem.Text = "&File"
         '
@@ -529,6 +530,8 @@ Partial Class MainForm
         'OptionsToolStripMenuItem
         '
         Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
+        Me.OptionsToolStripMenuItem.ShortcutKeyDisplayString = ""
+        Me.OptionsToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1
         Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
         Me.OptionsToolStripMenuItem.Text = "&Options"
         '
@@ -670,11 +673,11 @@ Partial Class MainForm
         Me.TreeView1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TreeView1.ImageIndex = 0
         Me.TreeView1.ImageList = Me.ImageList1
-        Me.TreeView1.Location = New System.Drawing.Point(0, 24)
+        Me.TreeView1.Location = New System.Drawing.Point(0, 44)
         Me.TreeView1.Name = "TreeView1"
         Me.TreeView1.SelectedImageIndex = 0
         Me.TreeView1.ShowNodeToolTips = True
-        Me.TreeView1.Size = New System.Drawing.Size(253, 390)
+        Me.TreeView1.Size = New System.Drawing.Size(253, 370)
         Me.TreeView1.TabIndex = 0
         '
         'ImageList1
@@ -721,15 +724,18 @@ Partial Class MainForm
         Me.MenuStripTreeView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CurrentViewToolStripMenuItem})
         Me.MenuStripTreeView.Location = New System.Drawing.Point(0, 0)
         Me.MenuStripTreeView.Name = "MenuStripTreeView"
-        Me.MenuStripTreeView.Size = New System.Drawing.Size(253, 24)
+        Me.MenuStripTreeView.Size = New System.Drawing.Size(253, 44)
         Me.MenuStripTreeView.TabIndex = 1
         Me.MenuStripTreeView.Text = "MenuStrip2"
         '
         'CurrentViewToolStripMenuItem
         '
+        Me.CurrentViewToolStripMenuItem.AutoSize = False
+        Me.CurrentViewToolStripMenuItem.Enabled = False
         Me.CurrentViewToolStripMenuItem.Name = "CurrentViewToolStripMenuItem"
-        Me.CurrentViewToolStripMenuItem.Size = New System.Drawing.Size(90, 20)
+        Me.CurrentViewToolStripMenuItem.Size = New System.Drawing.Size(242, 40)
         Me.CurrentViewToolStripMenuItem.Text = "Current View:"
+        Me.CurrentViewToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.TopLeft
         '
         'TabControl1
         '
@@ -2323,9 +2329,9 @@ Partial Class MainForm
         '
         'YobjArryIndex
         '
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle13
         Me.YobjArryIndex.HeaderText = "Index"
         Me.YobjArryIndex.Name = "YobjArryIndex"
         Me.YobjArryIndex.ReadOnly = True
@@ -2333,9 +2339,9 @@ Partial Class MainForm
         '
         'ObjArrayParent
         '
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle14
         Me.ObjArrayParent.HeaderText = "Parent"
         Me.ObjArrayParent.MinimumWidth = 100
         Me.ObjArrayParent.Name = "ObjArrayParent"
@@ -2406,9 +2412,9 @@ Partial Class MainForm
         '
         'ContainedYobjArray
         '
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle15
         Me.ContainedYobjArray.HeaderText = "Objects"
         Me.ContainedYobjArray.Name = "ContainedYobjArray"
         Me.ContainedYobjArray.ReadOnly = True
@@ -2416,9 +2422,9 @@ Partial Class MainForm
         '
         'StartIndexYobjArray
         '
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle16
         Me.StartIndexYobjArray.HeaderText = "Start Index"
         Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
         Me.StartIndexYobjArray.ReadOnly = True
@@ -3023,6 +3029,161 @@ Partial Class MainForm
         Me.DataGridMenuItemView.Size = New System.Drawing.Size(1219, 387)
         Me.DataGridMenuItemView.TabIndex = 1
         '
+        'CAEEventID
+        '
+        Me.CAEEventID.HeaderText = "Event ID"
+        Me.CAEEventID.MaxInputLength = 10
+        Me.CAEEventID.Name = "CAEEventID"
+        '
+        'CAEStringRef
+        '
+        Me.CAEStringRef.HeaderText = "String Ref"
+        Me.CAEStringRef.MaxInputLength = 8
+        Me.CAEStringRef.Name = "CAEStringRef"
+        '
+        'CAEStringPrint
+        '
+        Me.CAEStringPrint.HeaderText = "CAE Name"
+        Me.CAEStringPrint.Name = "CAEStringPrint"
+        Me.CAEStringPrint.ReadOnly = True
+        '
+        'CAEPacNum1
+        '
+        Me.CAEPacNum1.HeaderText = "Pac Num 1"
+        Me.CAEPacNum1.MaxInputLength = 5
+        Me.CAEPacNum1.Name = "CAEPacNum1"
+        '
+        'CAEPacName1
+        '
+        Me.CAEPacName1.HeaderText = "Pac Name 1"
+        Me.CAEPacName1.Name = "CAEPacName1"
+        '
+        'CAEPacNum2
+        '
+        Me.CAEPacNum2.HeaderText = "Pac Num 2"
+        Me.CAEPacNum2.MaxInputLength = 5
+        Me.CAEPacNum2.Name = "CAEPacNum2"
+        '
+        'CAEPacName2
+        '
+        Me.CAEPacName2.HeaderText = "Pac Name 2"
+        Me.CAEPacName2.Name = "CAEPacName2"
+        '
+        'CAEPacNum3
+        '
+        Me.CAEPacNum3.HeaderText = "Pac Num 3"
+        Me.CAEPacNum3.MaxInputLength = 5
+        Me.CAEPacNum3.Name = "CAEPacNum3"
+        '
+        'CAEPacName3
+        '
+        Me.CAEPacName3.HeaderText = "Pac Name 3"
+        Me.CAEPacName3.Name = "CAEPacName3"
+        '
+        'CAEPacNum4
+        '
+        Me.CAEPacNum4.HeaderText = "Pac Num 4"
+        Me.CAEPacNum4.MaxInputLength = 5
+        Me.CAEPacNum4.Name = "CAEPacNum4"
+        '
+        'CAEPacName4
+        '
+        Me.CAEPacName4.HeaderText = "Pac Name 4"
+        Me.CAEPacName4.Name = "CAEPacName4"
+        '
+        'CAEPacNum5
+        '
+        Me.CAEPacNum5.HeaderText = "Pac Num 5"
+        Me.CAEPacNum5.MaxInputLength = 5
+        Me.CAEPacNum5.Name = "CAEPacNum5"
+        '
+        'CAEPacName5
+        '
+        Me.CAEPacName5.HeaderText = "Pac Name 5"
+        Me.CAEPacName5.Name = "CAEPacName5"
+        '
+        'CAEDefaultWrestlerNum
+        '
+        Me.CAEDefaultWrestlerNum.HeaderText = "Has Pac"
+        Me.CAEDefaultWrestlerNum.Name = "CAEDefaultWrestlerNum"
+        Me.CAEDefaultWrestlerNum.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.CAEDefaultWrestlerNum.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'CAEPromo1
+        '
+        Me.CAEPromo1.HeaderText = "Promo 1"
+        Me.CAEPromo1.MaxInputLength = 5
+        Me.CAEPromo1.Name = "CAEPromo1"
+        '
+        'CAEPromo2
+        '
+        Me.CAEPromo2.HeaderText = "Promo 2"
+        Me.CAEPromo2.MaxInputLength = 5
+        Me.CAEPromo2.Name = "CAEPromo2"
+        '
+        'CAEPromo3
+        '
+        Me.CAEPromo3.HeaderText = "Promo 3"
+        Me.CAEPromo3.MaxInputLength = 3
+        Me.CAEPromo3.Name = "CAEPromo3"
+        '
+        'CAEPromo4
+        '
+        Me.CAEPromo4.HeaderText = "Promo 4"
+        Me.CAEPromo4.MaxInputLength = 3
+        Me.CAEPromo4.Name = "CAEPromo4"
+        '
+        'CAEBuffer
+        '
+        Me.CAEBuffer.HeaderText = "Buffer Bytes"
+        Me.CAEBuffer.MaxInputLength = 5
+        Me.CAEBuffer.Name = "CAEBuffer"
+        '
+        'CAEUknown1
+        '
+        Me.CAEUknown1.HeaderText = "Unkown 1"
+        Me.CAEUknown1.MaxInputLength = 5
+        Me.CAEUknown1.Name = "CAEUknown1"
+        '
+        'CAEUknown2
+        '
+        Me.CAEUknown2.HeaderText = "Unkown 2"
+        Me.CAEUknown2.MaxInputLength = 5
+        Me.CAEUknown2.Name = "CAEUknown2"
+        '
+        'CAELoackedtoPac
+        '
+        Me.CAELoackedtoPac.HeaderText = "Locked to Pac"
+        Me.CAELoackedtoPac.MaxInputLength = 5
+        Me.CAELoackedtoPac.Name = "CAELoackedtoPac"
+        '
+        'PacNumExcluded
+        '
+        Me.PacNumExcluded.HeaderText = "Excluded Pac"
+        Me.PacNumExcluded.MaxInputLength = 5
+        Me.PacNumExcluded.Name = "PacNumExcluded"
+        '
+        'CAEDLCFlag
+        '
+        Me.CAEDLCFlag.HeaderText = "DLC Flag"
+        Me.CAEDLCFlag.Name = "CAEDLCFlag"
+        Me.CAEDLCFlag.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.CAEDLCFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'CAEMenuItemAdd
+        '
+        Me.CAEMenuItemAdd.HeaderText = "Add"
+        Me.CAEMenuItemAdd.Name = "CAEMenuItemAdd"
+        Me.CAEMenuItemAdd.Text = "Add"
+        Me.CAEMenuItemAdd.UseColumnTextForButtonValue = True
+        '
+        'CAEMenuItemDelete
+        '
+        Me.CAEMenuItemDelete.HeaderText = "Delete"
+        Me.CAEMenuItemDelete.Name = "CAEMenuItemDelete"
+        Me.CAEMenuItemDelete.Text = "Delete"
+        Me.CAEMenuItemDelete.UseColumnTextForButtonValue = True
+        '
         'MenuStripMenuItemView
         '
         Me.MenuStripMenuItemView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringLoadedCAEMenuItem, Me.PacsLoadedCAEMenuItem, Me.SaveChangesCAEMenuItemMenuItem})
@@ -3391,161 +3552,6 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn35.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewTextBoxColumn35.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn35.Width = 41
-        '
-        'CAEEventID
-        '
-        Me.CAEEventID.HeaderText = "Event ID"
-        Me.CAEEventID.MaxInputLength = 10
-        Me.CAEEventID.Name = "CAEEventID"
-        '
-        'CAEStringRef
-        '
-        Me.CAEStringRef.HeaderText = "String Ref"
-        Me.CAEStringRef.MaxInputLength = 8
-        Me.CAEStringRef.Name = "CAEStringRef"
-        '
-        'CAEStringPrint
-        '
-        Me.CAEStringPrint.HeaderText = "CAE Name"
-        Me.CAEStringPrint.Name = "CAEStringPrint"
-        Me.CAEStringPrint.ReadOnly = True
-        '
-        'CAEPacNum1
-        '
-        Me.CAEPacNum1.HeaderText = "Pac Num 1"
-        Me.CAEPacNum1.MaxInputLength = 5
-        Me.CAEPacNum1.Name = "CAEPacNum1"
-        '
-        'CAEPacName1
-        '
-        Me.CAEPacName1.HeaderText = "Pac Name 1"
-        Me.CAEPacName1.Name = "CAEPacName1"
-        '
-        'CAEPacNum2
-        '
-        Me.CAEPacNum2.HeaderText = "Pac Num 2"
-        Me.CAEPacNum2.MaxInputLength = 5
-        Me.CAEPacNum2.Name = "CAEPacNum2"
-        '
-        'CAEPacName2
-        '
-        Me.CAEPacName2.HeaderText = "Pac Name 2"
-        Me.CAEPacName2.Name = "CAEPacName2"
-        '
-        'CAEPacNum3
-        '
-        Me.CAEPacNum3.HeaderText = "Pac Num 3"
-        Me.CAEPacNum3.MaxInputLength = 5
-        Me.CAEPacNum3.Name = "CAEPacNum3"
-        '
-        'CAEPacName3
-        '
-        Me.CAEPacName3.HeaderText = "Pac Name 3"
-        Me.CAEPacName3.Name = "CAEPacName3"
-        '
-        'CAEPacNum4
-        '
-        Me.CAEPacNum4.HeaderText = "Pac Num 4"
-        Me.CAEPacNum4.MaxInputLength = 5
-        Me.CAEPacNum4.Name = "CAEPacNum4"
-        '
-        'CAEPacName4
-        '
-        Me.CAEPacName4.HeaderText = "Pac Name 4"
-        Me.CAEPacName4.Name = "CAEPacName4"
-        '
-        'CAEPacNum5
-        '
-        Me.CAEPacNum5.HeaderText = "Pac Num 5"
-        Me.CAEPacNum5.MaxInputLength = 5
-        Me.CAEPacNum5.Name = "CAEPacNum5"
-        '
-        'CAEPacName5
-        '
-        Me.CAEPacName5.HeaderText = "Pac Name 5"
-        Me.CAEPacName5.Name = "CAEPacName5"
-        '
-        'CAEDefaultWrestlerNum
-        '
-        Me.CAEDefaultWrestlerNum.HeaderText = "Has Pac"
-        Me.CAEDefaultWrestlerNum.Name = "CAEDefaultWrestlerNum"
-        Me.CAEDefaultWrestlerNum.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.CAEDefaultWrestlerNum.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        '
-        'CAEPromo1
-        '
-        Me.CAEPromo1.HeaderText = "Promo 1"
-        Me.CAEPromo1.MaxInputLength = 5
-        Me.CAEPromo1.Name = "CAEPromo1"
-        '
-        'CAEPromo2
-        '
-        Me.CAEPromo2.HeaderText = "Promo 2"
-        Me.CAEPromo2.MaxInputLength = 5
-        Me.CAEPromo2.Name = "CAEPromo2"
-        '
-        'CAEPromo3
-        '
-        Me.CAEPromo3.HeaderText = "Promo 3"
-        Me.CAEPromo3.MaxInputLength = 3
-        Me.CAEPromo3.Name = "CAEPromo3"
-        '
-        'CAEPromo4
-        '
-        Me.CAEPromo4.HeaderText = "Promo 4"
-        Me.CAEPromo4.MaxInputLength = 3
-        Me.CAEPromo4.Name = "CAEPromo4"
-        '
-        'CAEBuffer
-        '
-        Me.CAEBuffer.HeaderText = "Buffer Bytes"
-        Me.CAEBuffer.MaxInputLength = 5
-        Me.CAEBuffer.Name = "CAEBuffer"
-        '
-        'CAEUknown1
-        '
-        Me.CAEUknown1.HeaderText = "Unkown 1"
-        Me.CAEUknown1.MaxInputLength = 5
-        Me.CAEUknown1.Name = "CAEUknown1"
-        '
-        'CAEUknown2
-        '
-        Me.CAEUknown2.HeaderText = "Unkown 2"
-        Me.CAEUknown2.MaxInputLength = 5
-        Me.CAEUknown2.Name = "CAEUknown2"
-        '
-        'CAELoackedtoPac
-        '
-        Me.CAELoackedtoPac.HeaderText = "Locked to Pac"
-        Me.CAELoackedtoPac.MaxInputLength = 5
-        Me.CAELoackedtoPac.Name = "CAELoackedtoPac"
-        '
-        'PacNumExcluded
-        '
-        Me.PacNumExcluded.HeaderText = "Excluded Pac"
-        Me.PacNumExcluded.MaxInputLength = 5
-        Me.PacNumExcluded.Name = "PacNumExcluded"
-        '
-        'CAEDLCFlag
-        '
-        Me.CAEDLCFlag.HeaderText = "DLC Flag"
-        Me.CAEDLCFlag.Name = "CAEDLCFlag"
-        Me.CAEDLCFlag.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.CAEDLCFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        '
-        'CAEMenuItemAdd
-        '
-        Me.CAEMenuItemAdd.HeaderText = "Add"
-        Me.CAEMenuItemAdd.Name = "CAEMenuItemAdd"
-        Me.CAEMenuItemAdd.Text = "Add"
-        Me.CAEMenuItemAdd.UseColumnTextForButtonValue = True
-        '
-        'CAEMenuItemDelete
-        '
-        Me.CAEMenuItemDelete.HeaderText = "Delete"
-        Me.CAEMenuItemDelete.Name = "CAEMenuItemDelete"
-        Me.CAEMenuItemDelete.Text = "Delete"
-        Me.CAEMenuItemDelete.UseColumnTextForButtonValue = True
         '
         'MainForm
         '

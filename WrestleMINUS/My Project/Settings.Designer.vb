@@ -389,6 +389,42 @@ Namespace My
                 Me("RelocateModFolderMods") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property ShowSelectedNode() As Boolean
+            Get
+                Return CType(Me("ShowSelectedNode"),Boolean)
+            End Get
+            Set
+                Me("ShowSelectedNode") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("250")>  _
+        Public Property SavedSplitterDistance() As Integer
+            Get
+                Return CType(Me("SavedSplitterDistance"),Integer)
+            End Get
+            Set
+                Me("SavedSplitterDistance") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1500, 500")>  _
+        Public Property SavedFormSize() As Global.System.Drawing.Size
+            Get
+                Return CType(Me("SavedFormSize"),Global.System.Drawing.Size)
+            End Get
+            Set
+                Me("SavedFormSize") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
