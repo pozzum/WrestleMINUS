@@ -133,6 +133,9 @@ Public Class PackageInformation
            TestType = PackageType.PachDirectory_4 OrElse
            TestType = PackageType.PachDirectory_8 OrElse
            TestType = PackageType.TextureLibrary OrElse
+           TestType = PackageType.ZLIB OrElse
+           TestType = PackageType.OODL OrElse
+           TestType = PackageType.BPE OrElse
            TestType = PackageType.YANMPack Then
             Return True
         End If

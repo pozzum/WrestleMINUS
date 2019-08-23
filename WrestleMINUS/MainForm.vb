@@ -203,8 +203,8 @@ Public Class MainForm
     End Sub
 
     Sub ApplyFormSettings()
-        SplitContainer1.SplitterDistance = My.Settings.SavedSplitterDistance
         MyBase.Size = My.Settings.SavedFormSize
+        SplitContainer1.SplitterDistance = My.Settings.SavedSplitterDistance
         HexViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         TextViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         MiscViewType.SelectedIndex = My.Settings.MiscModeIndex
@@ -475,11 +475,11 @@ Public Class MainForm
                 SentNodeTag = CType(EditedFile.Tag, ExtendedFileProperties)
             End If
         Loop
-        MessageBox.Show(EditedFile.Text)
+        'MessageBox.Show(EditedFile.Text)
         'Next we want to check if that file has a parent (folder)
         Dim ParentNode As TreeNode = EditedFile.Parent
         Dim ParentIndex As Integer = EditedFile.Index
-        MessageBox.Show(ParentIndex)
+        'MessageBox.Show(ParentIndex)
         'We need to double check if the new extended file properties resulted in a new folder or file name.
         Dim NewFI As FileInfo
         If Not IsNothing(NewExtendedFileProperties) AndAlso
@@ -751,6 +751,8 @@ Public Class MainForm
             RenameFileToolStripMenuItem.Tag = True
             DeleteFileToolStripMenuItem.Tag = True
             ExtractPartToToolStripMenuItem.Visible = False
+            OpenFileLocationToolStripMenuItem.Tag = True
+            OpenFileLocationToolStripMenuItem.Text = "Open folder location"
         Else
             If NodeTag.Index > 0 OrElse
                        NodeTag.StoredData.Length > 0 Then
@@ -801,6 +803,8 @@ Public Class MainForm
                 'We are working on a File, not a file part
                 RenameFileToolStripMenuItem.Tag = True
                 DeleteFileToolStripMenuItem.Tag = True
+                OpenFileLocationToolStripMenuItem.Tag = True
+                OpenFileLocationToolStripMenuItem.Text = "Open file location"
             End If
             'TO DO more add Open With Items Somehow
             'Hex Editor
@@ -983,6 +987,14 @@ Public Class MainForm
         TreeView1.SelectedNode.ExpandAll()
     End Sub
 
+    Private Sub OpenFileLocationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenFileLocationToolStripMenuItem.Click
+        Dim WorkingFilePartProperties As ExtendedFileProperties = TreeView1.SelectedNode.Tag
+        If File.Exists(WorkingFilePartProperties.FullFilePath) Then
+            Process.Start("explorer.exe", "/select," & WorkingFilePartProperties.FullFilePath)
+        ElseIf Directory.Exists(WorkingFilePartProperties.FullFilePath) Then
+            Process.Start("explorer.exe", "/select," & WorkingFilePartProperties.FullFilePath)
+        End If
+    End Sub
 #End Region
 
 #Region "View Controls"
@@ -4617,6 +4629,7 @@ Public Class MainForm
         Next
         Return ReturnedBytes
     End Function
+
 #End Region
 
 #End Region
