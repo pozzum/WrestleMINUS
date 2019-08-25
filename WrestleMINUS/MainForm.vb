@@ -4673,16 +4673,41 @@ Public Class MainForm
             Dim TempAnimationInformation As AnimationHeaderInformation = ParseBytesToAnimationHeaderInformation(TempAnimationBytes)
             Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
             TempGridRow.Cells(0).Value = TempAnimationInformation.StartingID
-            TempGridRow.Cells(1).Value = TempAnimationInformation.HeaderLength
-            TempGridRow.Cells(2).Value = TempAnimationInformation.BoneType
-            TempGridRow.Cells(3).Value = TempAnimationInformation.OffsetA
-            TempGridRow.Cells(4).Value = TempAnimationInformation.IntegerA
-            TempGridRow.Cells(5).Value = TempAnimationInformation.OffsetB
-            TempGridRow.Cells(6).Value = TempAnimationInformation.IntegerB
-            TempGridRow.Cells(7).Value = TempAnimationInformation.RemByteString
+            TempGridRow.Cells(1).Value = Hex(TempAnimationInformation.StartingID)
+            TempGridRow.Cells(2).Value = TempAnimationInformation.HeaderLength
+            TempGridRow.Cells(3).Value = Hex(TempAnimationInformation.HeaderLength)
+            TempGridRow.Cells(4).Value = TempAnimationInformation.BoneType
+            TempGridRow.Cells(5).Value = Hex(TempAnimationInformation.BoneType)
+            TempGridRow.Cells(6).Value = TempAnimationInformation.OffsetA
+            TempGridRow.Cells(7).Value = Hex(TempAnimationInformation.OffsetA)
+            TempGridRow.Cells(8).Value = TempAnimationInformation.IntegerA
+            TempGridRow.Cells(9).Value = Hex(TempAnimationInformation.IntegerA)
+            TempGridRow.Cells(10).Value = TempAnimationInformation.OffsetB
+            TempGridRow.Cells(11).Value = Hex(TempAnimationInformation.OffsetB)
+            TempGridRow.Cells(12).Value = TempAnimationInformation.IntegerB
+            TempGridRow.Cells(13).Value = Hex(TempAnimationInformation.IntegerB)
+            TempGridRow.Cells(14).Value = TempAnimationInformation.RemByteString
             WorkingCollection.Add(TempGridRow)
             ProgressBar1.Value = i
         Next
+        If AnimationShowHexToolStripMenuItem.Text.Contains("☑") Then
+            DataGridAnimationView.Columns(1).Visible = True
+            DataGridAnimationView.Columns(3).Visible = True
+            DataGridAnimationView.Columns(5).Visible = True
+            DataGridAnimationView.Columns(7).Visible = True
+            DataGridAnimationView.Columns(9).Visible = True
+            DataGridAnimationView.Columns(11).Visible = True
+            DataGridAnimationView.Columns(13).Visible = True
+        Else
+            '☐
+            DataGridAnimationView.Columns(1).Visible = False
+            DataGridAnimationView.Columns(3).Visible = False
+            DataGridAnimationView.Columns(5).Visible = False
+            DataGridAnimationView.Columns(7).Visible = False
+            DataGridAnimationView.Columns(9).Visible = False
+            DataGridAnimationView.Columns(11).Visible = False
+            DataGridAnimationView.Columns(13).Visible = False
+        End If
         DataGridAnimationView.Rows.AddRange(WorkingCollection.ToArray())
     End Sub
 
@@ -4707,6 +4732,30 @@ Public Class MainForm
         End If
         Return ReturnedAnimationInfo
     End Function
+
+    Private Sub AnimationShowHexToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AnimationShowHexToolStripMenuItem.Click
+        If AnimationShowHexToolStripMenuItem.Text.Contains("☑") Then
+            'We will hide the hex columns now and then un-check the box.
+            DataGridAnimationView.Columns(1).Visible = False
+            DataGridAnimationView.Columns(3).Visible = False
+            DataGridAnimationView.Columns(5).Visible = False
+            DataGridAnimationView.Columns(7).Visible = False
+            DataGridAnimationView.Columns(9).Visible = False
+            DataGridAnimationView.Columns(11).Visible = False
+            DataGridAnimationView.Columns(13).Visible = False
+            AnimationShowHexToolStripMenuItem.Text = "☐ Show Hex"
+        Else
+            '☐
+            DataGridAnimationView.Columns(1).Visible = True
+            DataGridAnimationView.Columns(3).Visible = True
+            DataGridAnimationView.Columns(5).Visible = True
+            DataGridAnimationView.Columns(7).Visible = True
+            DataGridAnimationView.Columns(9).Visible = True
+            DataGridAnimationView.Columns(11).Visible = True
+            DataGridAnimationView.Columns(13).Visible = True
+            AnimationShowHexToolStripMenuItem.Text = "☑ Show Hex"
+        End If
+    End Sub
 
 #End Region
 

@@ -436,13 +436,22 @@ Partial Class MainForm
         Me.AnimationView = New System.Windows.Forms.TabPage()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.DataGridAnimationView = New System.Windows.Forms.DataGridView()
+        Me.SaveChangesAnimationMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AnimationShowHexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AnimationStartingInt = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationStartHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.AnimationHeaderLength = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationHeaderLengthHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.AnimationBoneType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationBoneTypeHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.AnimationOffsetA = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationOffsetAHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.AnimationIntA = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationIntAHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.AnimationOffsetB = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationOffsetBHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.AnimationIntB = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationIntBHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.AnimationRemainingBytes = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripMainForm.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -497,6 +506,7 @@ Partial Class MainForm
         Me.MenuStripPictureView.SuspendLayout()
         Me.TreeViewContext.SuspendLayout()
         Me.AnimationView.SuspendLayout()
+        Me.MenuStrip1.SuspendLayout()
         CType(Me.DataGridAnimationView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -3588,6 +3598,7 @@ Partial Class MainForm
         '
         'MenuStrip1
         '
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AnimationShowHexToolStripMenuItem, Me.SaveChangesAnimationMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(3, 3)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1213, 24)
@@ -3599,7 +3610,7 @@ Partial Class MainForm
         Me.DataGridAnimationView.AllowUserToAddRows = False
         Me.DataGridAnimationView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
         Me.DataGridAnimationView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridAnimationView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.AnimationStartingInt, Me.AnimationHeaderLength, Me.AnimationBoneType, Me.AnimationOffsetA, Me.AnimationIntA, Me.AnimationOffsetB, Me.AnimationIntB, Me.AnimationRemainingBytes})
+        Me.DataGridAnimationView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.AnimationStartingInt, Me.AnimationStartHex, Me.AnimationHeaderLength, Me.AnimationHeaderLengthHex, Me.AnimationBoneType, Me.AnimationBoneTypeHex, Me.AnimationOffsetA, Me.AnimationOffsetAHex, Me.AnimationIntA, Me.AnimationIntAHex, Me.AnimationOffsetB, Me.AnimationOffsetBHex, Me.AnimationIntB, Me.AnimationIntBHex, Me.AnimationRemainingBytes})
         Me.DataGridAnimationView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridAnimationView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridAnimationView.Name = "DataGridAnimationView"
@@ -3607,11 +3618,30 @@ Partial Class MainForm
         Me.DataGridAnimationView.Size = New System.Drawing.Size(1213, 381)
         Me.DataGridAnimationView.TabIndex = 1
         '
+        'SaveChangesAnimationMenuItem
+        '
+        Me.SaveChangesAnimationMenuItem.Name = "SaveChangesAnimationMenuItem"
+        Me.SaveChangesAnimationMenuItem.Size = New System.Drawing.Size(92, 20)
+        Me.SaveChangesAnimationMenuItem.Text = "Save Changes"
+        Me.SaveChangesAnimationMenuItem.Visible = False
+        '
+        'AnimationShowHexToolStripMenuItem
+        '
+        Me.AnimationShowHexToolStripMenuItem.Name = "AnimationShowHexToolStripMenuItem"
+        Me.AnimationShowHexToolStripMenuItem.Size = New System.Drawing.Size(87, 20)
+        Me.AnimationShowHexToolStripMenuItem.Text = "☑ Show Hex"
+        '
         'AnimationStartingInt
         '
         Me.AnimationStartingInt.HeaderText = "Start Int"
         Me.AnimationStartingInt.Name = "AnimationStartingInt"
         Me.AnimationStartingInt.Width = 69
+        '
+        'AnimationStartHex
+        '
+        Me.AnimationStartHex.HeaderText = "Start Hex"
+        Me.AnimationStartHex.Name = "AnimationStartHex"
+        Me.AnimationStartHex.Width = 76
         '
         'AnimationHeaderLength
         '
@@ -3619,11 +3649,23 @@ Partial Class MainForm
         Me.AnimationHeaderLength.Name = "AnimationHeaderLength"
         Me.AnimationHeaderLength.Width = 94
         '
+        'AnimationHeaderLengthHex
+        '
+        Me.AnimationHeaderLengthHex.HeaderText = "Length Hex"
+        Me.AnimationHeaderLengthHex.Name = "AnimationHeaderLengthHex"
+        Me.AnimationHeaderLengthHex.Width = 87
+        '
         'AnimationBoneType
         '
         Me.AnimationBoneType.HeaderText = "Bone Type"
         Me.AnimationBoneType.Name = "AnimationBoneType"
         Me.AnimationBoneType.Width = 84
+        '
+        'AnimationBoneTypeHex
+        '
+        Me.AnimationBoneTypeHex.HeaderText = "Bone as Hex"
+        Me.AnimationBoneTypeHex.Name = "AnimationBoneTypeHex"
+        Me.AnimationBoneTypeHex.Width = 93
         '
         'AnimationOffsetA
         '
@@ -3631,11 +3673,23 @@ Partial Class MainForm
         Me.AnimationOffsetA.Name = "AnimationOffsetA"
         Me.AnimationOffsetA.Width = 70
         '
+        'AnimationOffsetAHex
+        '
+        Me.AnimationOffsetAHex.HeaderText = "Offset A Hex"
+        Me.AnimationOffsetAHex.Name = "AnimationOffsetAHex"
+        Me.AnimationOffsetAHex.Width = 92
+        '
         'AnimationIntA
         '
         Me.AnimationIntA.HeaderText = "Int A"
         Me.AnimationIntA.Name = "AnimationIntA"
         Me.AnimationIntA.Width = 54
+        '
+        'AnimationIntAHex
+        '
+        Me.AnimationIntAHex.HeaderText = "Int A Hex"
+        Me.AnimationIntAHex.Name = "AnimationIntAHex"
+        Me.AnimationIntAHex.Width = 76
         '
         'AnimationOffsetB
         '
@@ -3643,11 +3697,23 @@ Partial Class MainForm
         Me.AnimationOffsetB.Name = "AnimationOffsetB"
         Me.AnimationOffsetB.Width = 70
         '
+        'AnimationOffsetBHex
+        '
+        Me.AnimationOffsetBHex.HeaderText = "Offset B Hex"
+        Me.AnimationOffsetBHex.Name = "AnimationOffsetBHex"
+        Me.AnimationOffsetBHex.Width = 92
+        '
         'AnimationIntB
         '
         Me.AnimationIntB.HeaderText = "Int B"
         Me.AnimationIntB.Name = "AnimationIntB"
         Me.AnimationIntB.Width = 54
+        '
+        'AnimationIntBHex
+        '
+        Me.AnimationIntBHex.HeaderText = "Int B Hex"
+        Me.AnimationIntBHex.Name = "AnimationIntBHex"
+        Me.AnimationIntBHex.Width = 76
         '
         'AnimationRemainingBytes
         '
@@ -3753,6 +3819,8 @@ Partial Class MainForm
         Me.TreeViewContext.ResumeLayout(False)
         Me.AnimationView.ResumeLayout(False)
         Me.AnimationView.PerformLayout()
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
         CType(Me.DataGridAnimationView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -4168,12 +4236,21 @@ Partial Class MainForm
     Friend WithEvents AnimationView As TabPage
     Friend WithEvents DataGridAnimationView As DataGridView
     Friend WithEvents MenuStrip1 As MenuStrip
+    Friend WithEvents SaveChangesAnimationMenuItem As ToolStripMenuItem
+    Friend WithEvents AnimationShowHexToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AnimationStartingInt As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationStartHex As DataGridViewTextBoxColumn
     Friend WithEvents AnimationHeaderLength As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationHeaderLengthHex As DataGridViewTextBoxColumn
     Friend WithEvents AnimationBoneType As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationBoneTypeHex As DataGridViewTextBoxColumn
     Friend WithEvents AnimationOffsetA As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationOffsetAHex As DataGridViewTextBoxColumn
     Friend WithEvents AnimationIntA As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationIntAHex As DataGridViewTextBoxColumn
     Friend WithEvents AnimationOffsetB As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationOffsetBHex As DataGridViewTextBoxColumn
     Friend WithEvents AnimationIntB As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationIntBHex As DataGridViewTextBoxColumn
     Friend WithEvents AnimationRemainingBytes As DataGridViewTextBoxColumn
 End Class
