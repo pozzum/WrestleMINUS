@@ -671,6 +671,8 @@ Public Class MainForm
                 FillSoundRefFileView(ReadNode)
             Case MenuItemView.Name
                 FillMenuItemView(ReadNode)
+            Case AnimationView.Name
+                FillAnimationView(ReadNode)
         End Select
     End Sub
 
@@ -704,6 +706,8 @@ Public Class MainForm
                 Return SoundView
             Case PackageType.LSD
                 Return MenuItemView
+            Case PackageType.YANM
+                Return AnimationView
             Case Else
                 Return Nothing
         End Select
@@ -4631,6 +4635,78 @@ Public Class MainForm
     End Function
 
 #End Region
+#End Region
+
+#Region "Animation View"
+
+    Public Class AnimationHeaderInformation
+        Public StartingID As UInt16 = 0
+        Public HeaderLength As UInt16 = 0
+        Public BoneType As UInt32 = 0
+        Public OffsetA As UInt32 = 0
+        Public IntegerA As UInt32 = 0
+        Public OffsetB As UInt32 = 0
+        Public IntegerB As UInt32 = 0
+        Public RemainingBytes As Byte() = New Byte() {}
+        Public RemByteString As String = ""
+    End Class
+
+    Sub FillAnimationView(SelectedData As TreeNode)
+        Dim AnimationBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
+        Dim AnimationBoneCount As UInt16 = BitConverter.ToUInt16(GeneralTools.EndianReverse(AnimationBytes, &HA, 2), 0)
+        'getting a generic row so we can create one for the collection
+        Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridAnimationView)
+        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = AnimationBoneCount - 2
+        ProgressBar1.Value = 0
+        Dim RollingIndex As UInt32 = &H10
+        For i As Integer = 0 To AnimationBoneCount - 2
+            Dim TempPartLength As UInt16 = BitConverter.ToUInt16(GeneralTools.EndianReverse(AnimationBytes, RollingIndex + 2, 2), 0)
+            Dim TempAnimationBytes As Byte() = New Byte(TempPartLength - 1) {}
+            Array.Copy(AnimationBytes, RollingIndex, TempAnimationBytes, 0, TempPartLength)
+            RollingIndex += TempPartLength
+            If Not TempPartLength = &H30 Then
+                If Not TempPartLength = &H18 Then
+                    MessageBox.Show(Hex(TempPartLength))
+                End If
+            End If
+            Dim TempAnimationInformation As AnimationHeaderInformation = ParseBytesToAnimationHeaderInformation(TempAnimationBytes)
+            Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
+            TempGridRow.Cells(0).Value = TempAnimationInformation.StartingID
+            TempGridRow.Cells(1).Value = TempAnimationInformation.HeaderLength
+            TempGridRow.Cells(2).Value = TempAnimationInformation.BoneType
+            TempGridRow.Cells(3).Value = TempAnimationInformation.OffsetA
+            TempGridRow.Cells(4).Value = TempAnimationInformation.IntegerA
+            TempGridRow.Cells(5).Value = TempAnimationInformation.OffsetB
+            TempGridRow.Cells(6).Value = TempAnimationInformation.IntegerB
+            TempGridRow.Cells(7).Value = TempAnimationInformation.RemByteString
+            WorkingCollection.Add(TempGridRow)
+            ProgressBar1.Value = i
+        Next
+        DataGridAnimationView.Rows.AddRange(WorkingCollection.ToArray())
+    End Sub
+
+    Function ParseBytesToAnimationHeaderInformation(TestedByteArray As Byte()) As AnimationHeaderInformation
+        Dim ReturnedAnimationInfo As AnimationHeaderInformation = New AnimationHeaderInformation With {
+           .StartingID = BitConverter.ToUInt16(GeneralTools.EndianReverse(TestedByteArray, 0, 2), 0),
+           .HeaderLength = BitConverter.ToUInt16(GeneralTools.EndianReverse(TestedByteArray, 2, 2), 0),
+           .BoneType = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, 4), 0),
+           .OffsetA = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, 8), 0),
+           .IntegerA = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HC), 0),
+           .OffsetB = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H10), 0),
+           .IntegerB = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H14), 0)}
+
+        If TestedByteArray.Length > &H18 Then
+            ReturnedAnimationInfo.RemainingBytes = New Byte(&H18 - 1) {}
+            Array.Copy(TestedByteArray, &H18, ReturnedAnimationInfo.RemainingBytes, 0, &H18)
+            ReturnedAnimationInfo.RemByteString = (BitConverter.ToString(ReturnedAnimationInfo.RemainingBytes).Replace("-", ""))
+        Else
+            ReturnedAnimationInfo.RemainingBytes = New Byte() {}
+            ReturnedAnimationInfo.RemByteString = ""
+
+        End If
+        Return ReturnedAnimationInfo
+    End Function
 
 #End Region
 

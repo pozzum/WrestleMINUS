@@ -24,10 +24,10 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStripMainForm = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -397,6 +397,7 @@ Partial Class MainForm
         Me.DeletePartToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RenameFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RenamePartToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OpenFileLocationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -432,7 +433,17 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.OpenFileLocationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AnimationView = New System.Windows.Forms.TabPage()
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.DataGridAnimationView = New System.Windows.Forms.DataGridView()
+        Me.AnimationStartingInt = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationHeaderLength = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationBoneType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationOffsetA = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationIntA = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationOffsetB = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationIntB = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationRemainingBytes = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripMainForm.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -485,6 +496,8 @@ Partial Class MainForm
         Me.MenuStripMenuItemView.SuspendLayout()
         Me.MenuStripPictureView.SuspendLayout()
         Me.TreeViewContext.SuspendLayout()
+        Me.AnimationView.SuspendLayout()
+        CType(Me.DataGridAnimationView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStripMainForm
@@ -756,6 +769,7 @@ Partial Class MainForm
         Me.TabControl1.Controls.Add(Me.TitleView)
         Me.TabControl1.Controls.Add(Me.SoundView)
         Me.TabControl1.Controls.Add(Me.MenuItemView)
+        Me.TabControl1.Controls.Add(Me.AnimationView)
         Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
@@ -2330,9 +2344,9 @@ Partial Class MainForm
         '
         'YobjArryIndex
         '
-        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle21
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle5
         Me.YobjArryIndex.HeaderText = "Index"
         Me.YobjArryIndex.Name = "YobjArryIndex"
         Me.YobjArryIndex.ReadOnly = True
@@ -2340,9 +2354,9 @@ Partial Class MainForm
         '
         'ObjArrayParent
         '
-        DataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle22
+        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle6
         Me.ObjArrayParent.HeaderText = "Parent"
         Me.ObjArrayParent.MinimumWidth = 100
         Me.ObjArrayParent.Name = "ObjArrayParent"
@@ -2413,9 +2427,9 @@ Partial Class MainForm
         '
         'ContainedYobjArray
         '
-        DataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle23
+        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle7
         Me.ContainedYobjArray.HeaderText = "Objects"
         Me.ContainedYobjArray.Name = "ContainedYobjArray"
         Me.ContainedYobjArray.ReadOnly = True
@@ -2423,9 +2437,9 @@ Partial Class MainForm
         '
         'StartIndexYobjArray
         '
-        DataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle24
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle8
         Me.StartIndexYobjArray.HeaderText = "Start Index"
         Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
         Me.StartIndexYobjArray.ReadOnly = True
@@ -3234,25 +3248,25 @@ Partial Class MainForm
         '
         Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenRADVideoToolStripMenuItem, Me.OpenImageWithToolStripMenuItem, Me.ExtractToolStripMenuItem, Me.InjectToolStripMenuItem, Me.CrawlToolStripMenuItem, Me.DeleteFileToolStripMenuItem, Me.DeletePartToolStripMenuItem, Me.RenameFileToolStripMenuItem, Me.RenamePartToolStripMenuItem, Me.OpenFileLocationToolStripMenuItem})
         Me.TreeViewContext.Name = "TreeViewContext"
-        Me.TreeViewContext.Size = New System.Drawing.Size(181, 246)
+        Me.TreeViewContext.Size = New System.Drawing.Size(169, 224)
         '
         'OpenRADVideoToolStripMenuItem
         '
         Me.OpenRADVideoToolStripMenuItem.Name = "OpenRADVideoToolStripMenuItem"
-        Me.OpenRADVideoToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.OpenRADVideoToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
         Me.OpenRADVideoToolStripMenuItem.Text = "Open"
         '
         'OpenImageWithToolStripMenuItem
         '
         Me.OpenImageWithToolStripMenuItem.Name = "OpenImageWithToolStripMenuItem"
-        Me.OpenImageWithToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.OpenImageWithToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
         Me.OpenImageWithToolStripMenuItem.Text = "Open With..."
         '
         'ExtractToolStripMenuItem
         '
         Me.ExtractToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExtractPartToToolStripMenuItem, Me.ExtractAllInPlaceToolStripMenuItem, Me.ExtractAllToToolStripMenuItem})
         Me.ExtractToolStripMenuItem.Name = "ExtractToolStripMenuItem"
-        Me.ExtractToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.ExtractToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
         Me.ExtractToolStripMenuItem.Text = "Extract"
         '
         'ExtractPartToToolStripMenuItem
@@ -3277,7 +3291,7 @@ Partial Class MainForm
         '
         Me.InjectToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.InjectUncompressedToolStripMenuItem, Me.InjectBPEToolStripMenuItem, Me.InjectZLIBToolStripMenuItem, Me.InjectOODLToolStripMenuItem})
         Me.InjectToolStripMenuItem.Name = "InjectToolStripMenuItem"
-        Me.InjectToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.InjectToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
         Me.InjectToolStripMenuItem.Text = "Inject"
         '
         'InjectUncompressedToolStripMenuItem
@@ -3307,32 +3321,38 @@ Partial Class MainForm
         'CrawlToolStripMenuItem
         '
         Me.CrawlToolStripMenuItem.Name = "CrawlToolStripMenuItem"
-        Me.CrawlToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.CrawlToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
         Me.CrawlToolStripMenuItem.Text = "Crawl"
         '
         'DeleteFileToolStripMenuItem
         '
         Me.DeleteFileToolStripMenuItem.Name = "DeleteFileToolStripMenuItem"
-        Me.DeleteFileToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.DeleteFileToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
         Me.DeleteFileToolStripMenuItem.Text = "Delete"
         '
         'DeletePartToolStripMenuItem
         '
         Me.DeletePartToolStripMenuItem.Name = "DeletePartToolStripMenuItem"
-        Me.DeletePartToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.DeletePartToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
         Me.DeletePartToolStripMenuItem.Text = "Delete"
         '
         'RenameFileToolStripMenuItem
         '
         Me.RenameFileToolStripMenuItem.Name = "RenameFileToolStripMenuItem"
-        Me.RenameFileToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.RenameFileToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
         Me.RenameFileToolStripMenuItem.Text = "Rename"
         '
         'RenamePartToolStripMenuItem
         '
         Me.RenamePartToolStripMenuItem.Name = "RenamePartToolStripMenuItem"
-        Me.RenamePartToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.RenamePartToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
         Me.RenamePartToolStripMenuItem.Text = "Rename"
+        '
+        'OpenFileLocationToolStripMenuItem
+        '
+        Me.OpenFileLocationToolStripMenuItem.Name = "OpenFileLocationToolStripMenuItem"
+        Me.OpenFileLocationToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.OpenFileLocationToolStripMenuItem.Text = "Open file location"
         '
         'DataGridViewTextBoxColumn1
         '
@@ -3554,11 +3574,86 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn35.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn35.Width = 41
         '
-        'OpenFileLocationToolStripMenuItem
+        'AnimationView
         '
-        Me.OpenFileLocationToolStripMenuItem.Name = "OpenFileLocationToolStripMenuItem"
-        Me.OpenFileLocationToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.OpenFileLocationToolStripMenuItem.Text = "Open file location"
+        Me.AnimationView.Controls.Add(Me.DataGridAnimationView)
+        Me.AnimationView.Controls.Add(Me.MenuStrip1)
+        Me.AnimationView.Location = New System.Drawing.Point(4, 22)
+        Me.AnimationView.Name = "AnimationView"
+        Me.AnimationView.Padding = New System.Windows.Forms.Padding(3)
+        Me.AnimationView.Size = New System.Drawing.Size(1219, 411)
+        Me.AnimationView.TabIndex = 17
+        Me.AnimationView.Text = "Animation View"
+        Me.AnimationView.UseVisualStyleBackColor = True
+        '
+        'MenuStrip1
+        '
+        Me.MenuStrip1.Location = New System.Drawing.Point(3, 3)
+        Me.MenuStrip1.Name = "MenuStrip1"
+        Me.MenuStrip1.Size = New System.Drawing.Size(1213, 24)
+        Me.MenuStrip1.TabIndex = 0
+        Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'DataGridAnimationView
+        '
+        Me.DataGridAnimationView.AllowUserToAddRows = False
+        Me.DataGridAnimationView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
+        Me.DataGridAnimationView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridAnimationView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.AnimationStartingInt, Me.AnimationHeaderLength, Me.AnimationBoneType, Me.AnimationOffsetA, Me.AnimationIntA, Me.AnimationOffsetB, Me.AnimationIntB, Me.AnimationRemainingBytes})
+        Me.DataGridAnimationView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridAnimationView.Location = New System.Drawing.Point(3, 27)
+        Me.DataGridAnimationView.Name = "DataGridAnimationView"
+        Me.DataGridAnimationView.RowHeadersVisible = False
+        Me.DataGridAnimationView.Size = New System.Drawing.Size(1213, 381)
+        Me.DataGridAnimationView.TabIndex = 1
+        '
+        'AnimationStartingInt
+        '
+        Me.AnimationStartingInt.HeaderText = "Start Int"
+        Me.AnimationStartingInt.Name = "AnimationStartingInt"
+        Me.AnimationStartingInt.Width = 69
+        '
+        'AnimationHeaderLength
+        '
+        Me.AnimationHeaderLength.HeaderText = "Head Length"
+        Me.AnimationHeaderLength.Name = "AnimationHeaderLength"
+        Me.AnimationHeaderLength.Width = 94
+        '
+        'AnimationBoneType
+        '
+        Me.AnimationBoneType.HeaderText = "Bone Type"
+        Me.AnimationBoneType.Name = "AnimationBoneType"
+        Me.AnimationBoneType.Width = 84
+        '
+        'AnimationOffsetA
+        '
+        Me.AnimationOffsetA.HeaderText = "Offset A"
+        Me.AnimationOffsetA.Name = "AnimationOffsetA"
+        Me.AnimationOffsetA.Width = 70
+        '
+        'AnimationIntA
+        '
+        Me.AnimationIntA.HeaderText = "Int A"
+        Me.AnimationIntA.Name = "AnimationIntA"
+        Me.AnimationIntA.Width = 54
+        '
+        'AnimationOffsetB
+        '
+        Me.AnimationOffsetB.HeaderText = "Offset B"
+        Me.AnimationOffsetB.Name = "AnimationOffsetB"
+        Me.AnimationOffsetB.Width = 70
+        '
+        'AnimationIntB
+        '
+        Me.AnimationIntB.HeaderText = "Int B"
+        Me.AnimationIntB.Name = "AnimationIntB"
+        Me.AnimationIntB.Width = 54
+        '
+        'AnimationRemainingBytes
+        '
+        Me.AnimationRemainingBytes.HeaderText = "Remaining Bytes"
+        Me.AnimationRemainingBytes.Name = "AnimationRemainingBytes"
+        Me.AnimationRemainingBytes.Width = 102
         '
         'MainForm
         '
@@ -3656,6 +3751,9 @@ Partial Class MainForm
         Me.MenuStripPictureView.ResumeLayout(False)
         Me.MenuStripPictureView.PerformLayout()
         Me.TreeViewContext.ResumeLayout(False)
+        Me.AnimationView.ResumeLayout(False)
+        Me.AnimationView.PerformLayout()
+        CType(Me.DataGridAnimationView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -4067,4 +4165,15 @@ Partial Class MainForm
     Friend WithEvents CAEMenuItemAdd As DataGridViewButtonColumn
     Friend WithEvents CAEMenuItemDelete As DataGridViewButtonColumn
     Friend WithEvents OpenFileLocationToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AnimationView As TabPage
+    Friend WithEvents DataGridAnimationView As DataGridView
+    Friend WithEvents MenuStrip1 As MenuStrip
+    Friend WithEvents AnimationStartingInt As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationHeaderLength As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationBoneType As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationOffsetA As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationIntA As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationOffsetB As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationIntB As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationRemainingBytes As DataGridViewTextBoxColumn
 End Class
