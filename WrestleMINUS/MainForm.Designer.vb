@@ -24,10 +24,10 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStripMainForm = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -118,51 +118,55 @@ Partial Class MainForm
         Me.Col_Turnbuckle_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Col_RingMat_CM = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Col_version = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ArenaMiscAddButton = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.ArenaMiscDelButton = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStripMiscView = New System.Windows.Forms.MenuStrip()
         Me.MiscViewType = New System.Windows.Forms.ToolStripComboBox()
         Me.SaveChangesMiscMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowView = New System.Windows.Forms.TabPage()
         Me.DataGridShowView = New System.Windows.Forms.DataGridView()
-        Me.StrName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ShowStringName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ShowSelectNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SelectNumSecond = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.A1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.A2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.B1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.B2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.B3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.C1 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.C2 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.C3 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.C4 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.C5 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.C6 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.C7 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.C8 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.Stage = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.D1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.D2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.D3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.D4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.D5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewStrName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewStringName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewSelectNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewNumSecond = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewA1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewA2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewB1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewB2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewB3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewC1 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ShowViewC2 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ShowViewC3 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ShowViewC4 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ShowViewC5 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ShowViewC6 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ShowViewC7 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ShowViewC8 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ShowViewStage = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewD1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewD2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewD3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewD4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowView5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Filter = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.F1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.F2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.F3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.F4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.H1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewF1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewF2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewF3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewF4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewH1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.H2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.H3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.H4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Bar = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Unknown = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.I1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.I2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.I3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Live = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.J = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewH3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewH4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewBar = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewUnknown = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewI1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewI2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewI3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewLive = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewJ = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShowViewAddButton = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.ShowViewDelete = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStripShowView = New System.Windows.Forms.MenuStrip()
         Me.ShowViewType = New System.Windows.Forms.ToolStripComboBox()
         Me.StringLoadedShowMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -377,6 +381,40 @@ Partial Class MainForm
         Me.StringLoadedCAEMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PacsLoadedCAEMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SaveChangesCAEMenuItemMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AnimationView = New System.Windows.Forms.TabPage()
+        Me.DataGridAnimationView = New System.Windows.Forms.DataGridView()
+        Me.AnimationBoneIndex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationStartingInt = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationStartHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationHeaderLength = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationHeaderLengthHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationBoneType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationBoneTypeHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationOffsetA = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationOffsetAHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationIntA = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationIntAHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationOffsetB = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationOffsetBHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationIntB = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationIntBHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationRemainingBytes = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationStartingData = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationSecondaryData = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationXTrans = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.AnimationYTrans = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.AnimationZTrans = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.AnimationXRotation = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.AnimationYRotation = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.AnimationZRotation = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.AnimationFramesDec = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationFramesHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationAnimationData = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AnimationAnimationDataParsed = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.AnimationShowHexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AnimationShowDebugToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveChangesAnimationMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripPictureView = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -433,26 +471,6 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationView = New System.Windows.Forms.TabPage()
-        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
-        Me.DataGridAnimationView = New System.Windows.Forms.DataGridView()
-        Me.SaveChangesAnimationMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AnimationShowHexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AnimationStartingInt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationStartHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationHeaderLength = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationHeaderLengthHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationBoneType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationBoneTypeHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationOffsetA = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationOffsetAHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationIntA = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationIntAHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationOffsetB = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationOffsetBHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationIntB = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationIntBHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AnimationRemainingBytes = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripMainForm.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -503,11 +521,11 @@ Partial Class MainForm
         Me.MenuItemView.SuspendLayout()
         CType(Me.DataGridMenuItemView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripMenuItemView.SuspendLayout()
+        Me.AnimationView.SuspendLayout()
+        CType(Me.DataGridAnimationView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MenuStrip1.SuspendLayout()
         Me.MenuStripPictureView.SuspendLayout()
         Me.TreeViewContext.SuspendLayout()
-        Me.AnimationView.SuspendLayout()
-        Me.MenuStrip1.SuspendLayout()
-        CType(Me.DataGridAnimationView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStripMainForm
@@ -995,9 +1013,9 @@ Partial Class MainForm
         Me.DataGridMiscView.AllowUserToAddRows = False
         Me.DataGridMiscView.AllowUserToDeleteRows = False
         Me.DataGridMiscView.AllowUserToResizeRows = False
-        Me.DataGridMiscView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
+        Me.DataGridMiscView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader
         Me.DataGridMiscView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridMiscView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Col_ArenaNumber, Me.Col_Stadium, Me.Col_Advertisement, Me.Col_CornerPost, Me.Col_LED_CornerPost, Me.Col_Rope, Me.Col_Apron, Me.Col_LED_Apron, Me.Col_Turnbuckle, Me.Col_Barricade, Me.Col_Fence, Me.Col_CeilingLighting, Me.Col_Spotlight, Me.Col_Stairs, Me.Col_CommentarySeat, Me.Col_RingMat, Me.Col_FloorMattress, Me.Col_Crowd, Me.Col_CrowdSeatsPlace, Me.Col_CrowdSeatsModel, Me.Col_IBL, Me.Col_Titantron, Me.Col_Minitron, Me.Col_Wall_L, Me.Col_Wall_R, Me.Col_Header, Me.Col_Floor, Me.Col_MiscObjects, Me.Col_LightingType, Me.Col_CornerPost_CM, Me.Col_Rope_CM, Me.Col_Apron_CM, Me.Col_Turnbuckle_CM, Me.Col_RingMat_CM, Me.Col_version})
+        Me.DataGridMiscView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Col_ArenaNumber, Me.Col_Stadium, Me.Col_Advertisement, Me.Col_CornerPost, Me.Col_LED_CornerPost, Me.Col_Rope, Me.Col_Apron, Me.Col_LED_Apron, Me.Col_Turnbuckle, Me.Col_Barricade, Me.Col_Fence, Me.Col_CeilingLighting, Me.Col_Spotlight, Me.Col_Stairs, Me.Col_CommentarySeat, Me.Col_RingMat, Me.Col_FloorMattress, Me.Col_Crowd, Me.Col_CrowdSeatsPlace, Me.Col_CrowdSeatsModel, Me.Col_IBL, Me.Col_Titantron, Me.Col_Minitron, Me.Col_Wall_L, Me.Col_Wall_R, Me.Col_Header, Me.Col_Floor, Me.Col_MiscObjects, Me.Col_LightingType, Me.Col_CornerPost_CM, Me.Col_Rope_CM, Me.Col_Apron_CM, Me.Col_Turnbuckle_CM, Me.Col_RingMat_CM, Me.Col_version, Me.ArenaMiscAddButton, Me.ArenaMiscDelButton})
         Me.DataGridMiscView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridMiscView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridMiscView.Name = "DataGridMiscView"
@@ -1008,6 +1026,7 @@ Partial Class MainForm
         '
         'Col_ArenaNumber
         '
+        Me.Col_ArenaNumber.Frozen = True
         Me.Col_ArenaNumber.HeaderText = "ArenaNum"
         Me.Col_ArenaNumber.MaxInputLength = 5
         Me.Col_ArenaNumber.Name = "Col_ArenaNumber"
@@ -1286,6 +1305,24 @@ Partial Class MainForm
         Me.Col_version.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.Col_version.Width = 47
         '
+        'ArenaMiscAddButton
+        '
+        Me.ArenaMiscAddButton.HeaderText = "Add"
+        Me.ArenaMiscAddButton.Name = "ArenaMiscAddButton"
+        Me.ArenaMiscAddButton.Text = "Add"
+        Me.ArenaMiscAddButton.UseColumnTextForButtonValue = True
+        Me.ArenaMiscAddButton.Width = 32
+        '
+        'ArenaMiscDelButton
+        '
+        Me.ArenaMiscDelButton.HeaderText = "Delete"
+        Me.ArenaMiscDelButton.Name = "ArenaMiscDelButton"
+        Me.ArenaMiscDelButton.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ArenaMiscDelButton.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.ArenaMiscDelButton.Text = "Delete"
+        Me.ArenaMiscDelButton.UseColumnTextForButtonValue = True
+        Me.ArenaMiscDelButton.Width = 63
+        '
         'MenuStripMiscView
         '
         Me.MenuStripMiscView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MiscViewType, Me.SaveChangesMiscMenuItem})
@@ -1328,7 +1365,7 @@ Partial Class MainForm
         Me.DataGridShowView.AllowUserToDeleteRows = False
         Me.DataGridShowView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
         Me.DataGridShowView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridShowView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.StrName, Me.ShowStringName, Me.ShowSelectNum, Me.SelectNumSecond, Me.A1, Me.A2, Me.B1, Me.B2, Me.B3, Me.C1, Me.C2, Me.C3, Me.C4, Me.C5, Me.C6, Me.C7, Me.C8, Me.Stage, Me.D1, Me.D2, Me.D3, Me.D4, Me.D5, Me.Ref, Me.Filter, Me.F1, Me.F2, Me.F3, Me.F4, Me.H1, Me.H2, Me.H3, Me.H4, Me.Bar, Me.Unknown, Me.I1, Me.I2, Me.I3, Me.Live, Me.J})
+        Me.DataGridShowView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ShowViewStrName, Me.ShowViewStringName, Me.ShowViewSelectNum, Me.ShowViewNumSecond, Me.ShowViewA1, Me.ShowViewA2, Me.ShowViewB1, Me.ShowViewB2, Me.ShowViewB3, Me.ShowViewC1, Me.ShowViewC2, Me.ShowViewC3, Me.ShowViewC4, Me.ShowViewC5, Me.ShowViewC6, Me.ShowViewC7, Me.ShowViewC8, Me.ShowViewStage, Me.ShowViewD1, Me.ShowViewD2, Me.ShowViewD3, Me.ShowViewD4, Me.ShowView5, Me.ShowViewRef, Me.Filter, Me.ShowViewF1, Me.ShowViewF2, Me.ShowViewF3, Me.ShowViewF4, Me.ShowViewH1, Me.H2, Me.ShowViewH3, Me.ShowViewH4, Me.ShowViewBar, Me.ShowViewUnknown, Me.ShowViewI1, Me.ShowViewI2, Me.ShowViewI3, Me.ShowViewLive, Me.ShowViewJ, Me.ShowViewAddButton, Me.ShowViewDelete})
         Me.DataGridShowView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridShowView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridShowView.Name = "DataGridShowView"
@@ -1336,165 +1373,165 @@ Partial Class MainForm
         Me.DataGridShowView.Size = New System.Drawing.Size(1213, 378)
         Me.DataGridShowView.TabIndex = 2
         '
-        'StrName
+        'ShowViewStrName
         '
-        Me.StrName.HeaderText = "StrName"
-        Me.StrName.MaxInputLength = 8
-        Me.StrName.Name = "StrName"
-        Me.StrName.Width = 73
+        Me.ShowViewStrName.HeaderText = "StrName"
+        Me.ShowViewStrName.MaxInputLength = 8
+        Me.ShowViewStrName.Name = "ShowViewStrName"
+        Me.ShowViewStrName.Width = 73
         '
-        'ShowStringName
+        'ShowViewStringName
         '
-        Me.ShowStringName.HeaderText = "Name"
-        Me.ShowStringName.Name = "ShowStringName"
-        Me.ShowStringName.ReadOnly = True
-        Me.ShowStringName.Width = 60
+        Me.ShowViewStringName.HeaderText = "Name"
+        Me.ShowViewStringName.Name = "ShowViewStringName"
+        Me.ShowViewStringName.ReadOnly = True
+        Me.ShowViewStringName.Width = 60
         '
-        'ShowSelectNum
+        'ShowViewSelectNum
         '
-        Me.ShowSelectNum.HeaderText = "SelectNum"
-        Me.ShowSelectNum.MaxInputLength = 3
-        Me.ShowSelectNum.Name = "ShowSelectNum"
-        Me.ShowSelectNum.Width = 84
+        Me.ShowViewSelectNum.HeaderText = "SelectNum"
+        Me.ShowViewSelectNum.MaxInputLength = 3
+        Me.ShowViewSelectNum.Name = "ShowViewSelectNum"
+        Me.ShowViewSelectNum.Width = 84
         '
-        'SelectNumSecond
+        'ShowViewNumSecond
         '
-        Me.SelectNumSecond.HeaderText = "SelectNum"
-        Me.SelectNumSecond.MaxInputLength = 3
-        Me.SelectNumSecond.Name = "SelectNumSecond"
-        Me.SelectNumSecond.Width = 84
+        Me.ShowViewNumSecond.HeaderText = "SelectNum"
+        Me.ShowViewNumSecond.MaxInputLength = 3
+        Me.ShowViewNumSecond.Name = "ShowViewNumSecond"
+        Me.ShowViewNumSecond.Width = 84
         '
-        'A1
+        'ShowViewA1
         '
-        Me.A1.HeaderText = "A1"
-        Me.A1.MaxInputLength = 3
-        Me.A1.Name = "A1"
-        Me.A1.Width = 45
+        Me.ShowViewA1.HeaderText = "A1"
+        Me.ShowViewA1.MaxInputLength = 3
+        Me.ShowViewA1.Name = "ShowViewA1"
+        Me.ShowViewA1.Width = 45
         '
-        'A2
+        'ShowViewA2
         '
-        Me.A2.HeaderText = "A2"
-        Me.A2.MaxInputLength = 3
-        Me.A2.Name = "A2"
-        Me.A2.Width = 45
+        Me.ShowViewA2.HeaderText = "A2"
+        Me.ShowViewA2.MaxInputLength = 3
+        Me.ShowViewA2.Name = "ShowViewA2"
+        Me.ShowViewA2.Width = 45
         '
-        'B1
+        'ShowViewB1
         '
-        Me.B1.HeaderText = "B1"
-        Me.B1.MaxInputLength = 4
-        Me.B1.Name = "B1"
-        Me.B1.Width = 45
+        Me.ShowViewB1.HeaderText = "B1"
+        Me.ShowViewB1.MaxInputLength = 4
+        Me.ShowViewB1.Name = "ShowViewB1"
+        Me.ShowViewB1.Width = 45
         '
-        'B2
+        'ShowViewB2
         '
-        Me.B2.HeaderText = "B2"
-        Me.B2.MaxInputLength = 4
-        Me.B2.Name = "B2"
-        Me.B2.Width = 45
+        Me.ShowViewB2.HeaderText = "B2"
+        Me.ShowViewB2.MaxInputLength = 4
+        Me.ShowViewB2.Name = "ShowViewB2"
+        Me.ShowViewB2.Width = 45
         '
-        'B3
+        'ShowViewB3
         '
-        Me.B3.HeaderText = "B3"
-        Me.B3.MaxInputLength = 4
-        Me.B3.Name = "B3"
-        Me.B3.Width = 45
+        Me.ShowViewB3.HeaderText = "B3"
+        Me.ShowViewB3.MaxInputLength = 4
+        Me.ShowViewB3.Name = "ShowViewB3"
+        Me.ShowViewB3.Width = 45
         '
-        'C1
+        'ShowViewC1
         '
-        Me.C1.HeaderText = "C1"
-        Me.C1.Name = "C1"
-        Me.C1.Width = 26
+        Me.ShowViewC1.HeaderText = "C1"
+        Me.ShowViewC1.Name = "ShowViewC1"
+        Me.ShowViewC1.Width = 26
         '
-        'C2
+        'ShowViewC2
         '
-        Me.C2.HeaderText = "C2"
-        Me.C2.Name = "C2"
-        Me.C2.Width = 26
+        Me.ShowViewC2.HeaderText = "C2"
+        Me.ShowViewC2.Name = "ShowViewC2"
+        Me.ShowViewC2.Width = 26
         '
-        'C3
+        'ShowViewC3
         '
-        Me.C3.HeaderText = "C3"
-        Me.C3.Name = "C3"
-        Me.C3.Width = 26
+        Me.ShowViewC3.HeaderText = "C3"
+        Me.ShowViewC3.Name = "ShowViewC3"
+        Me.ShowViewC3.Width = 26
         '
-        'C4
+        'ShowViewC4
         '
-        Me.C4.HeaderText = "C4"
-        Me.C4.Name = "C4"
-        Me.C4.Width = 26
+        Me.ShowViewC4.HeaderText = "C4"
+        Me.ShowViewC4.Name = "ShowViewC4"
+        Me.ShowViewC4.Width = 26
         '
-        'C5
+        'ShowViewC5
         '
-        Me.C5.HeaderText = "C5"
-        Me.C5.Name = "C5"
-        Me.C5.Width = 26
+        Me.ShowViewC5.HeaderText = "C5"
+        Me.ShowViewC5.Name = "ShowViewC5"
+        Me.ShowViewC5.Width = 26
         '
-        'C6
+        'ShowViewC6
         '
-        Me.C6.HeaderText = "C6"
-        Me.C6.Name = "C6"
-        Me.C6.Width = 26
+        Me.ShowViewC6.HeaderText = "C6"
+        Me.ShowViewC6.Name = "ShowViewC6"
+        Me.ShowViewC6.Width = 26
         '
-        'C7
+        'ShowViewC7
         '
-        Me.C7.HeaderText = "C7"
-        Me.C7.Name = "C7"
-        Me.C7.Width = 26
+        Me.ShowViewC7.HeaderText = "C7"
+        Me.ShowViewC7.Name = "ShowViewC7"
+        Me.ShowViewC7.Width = 26
         '
-        'C8
+        'ShowViewC8
         '
-        Me.C8.HeaderText = "C8"
-        Me.C8.Name = "C8"
-        Me.C8.Width = 26
+        Me.ShowViewC8.HeaderText = "C8"
+        Me.ShowViewC8.Name = "ShowViewC8"
+        Me.ShowViewC8.Width = 26
         '
-        'Stage
+        'ShowViewStage
         '
-        Me.Stage.HeaderText = "Stage"
-        Me.Stage.MaxInputLength = 1
-        Me.Stage.Name = "Stage"
-        Me.Stage.Width = 60
+        Me.ShowViewStage.HeaderText = "Stage"
+        Me.ShowViewStage.MaxInputLength = 1
+        Me.ShowViewStage.Name = "ShowViewStage"
+        Me.ShowViewStage.Width = 60
         '
-        'D1
+        'ShowViewD1
         '
-        Me.D1.HeaderText = "D1"
-        Me.D1.MaxInputLength = 1
-        Me.D1.Name = "D1"
-        Me.D1.Width = 46
+        Me.ShowViewD1.HeaderText = "D1"
+        Me.ShowViewD1.MaxInputLength = 1
+        Me.ShowViewD1.Name = "ShowViewD1"
+        Me.ShowViewD1.Width = 46
         '
-        'D2
+        'ShowViewD2
         '
-        Me.D2.HeaderText = "D2"
-        Me.D2.MaxInputLength = 1
-        Me.D2.Name = "D2"
-        Me.D2.Width = 46
+        Me.ShowViewD2.HeaderText = "D2"
+        Me.ShowViewD2.MaxInputLength = 1
+        Me.ShowViewD2.Name = "ShowViewD2"
+        Me.ShowViewD2.Width = 46
         '
-        'D3
+        'ShowViewD3
         '
-        Me.D3.HeaderText = "D3"
-        Me.D3.MaxInputLength = 1
-        Me.D3.Name = "D3"
-        Me.D3.Width = 46
+        Me.ShowViewD3.HeaderText = "D3"
+        Me.ShowViewD3.MaxInputLength = 1
+        Me.ShowViewD3.Name = "ShowViewD3"
+        Me.ShowViewD3.Width = 46
         '
-        'D4
+        'ShowViewD4
         '
-        Me.D4.HeaderText = "D4"
-        Me.D4.MaxInputLength = 1
-        Me.D4.Name = "D4"
-        Me.D4.Width = 46
+        Me.ShowViewD4.HeaderText = "D4"
+        Me.ShowViewD4.MaxInputLength = 1
+        Me.ShowViewD4.Name = "ShowViewD4"
+        Me.ShowViewD4.Width = 46
         '
-        'D5
+        'ShowView5
         '
-        Me.D5.HeaderText = "D5"
-        Me.D5.MaxInputLength = 1
-        Me.D5.Name = "D5"
-        Me.D5.Width = 46
+        Me.ShowView5.HeaderText = "D5"
+        Me.ShowView5.MaxInputLength = 1
+        Me.ShowView5.Name = "ShowView5"
+        Me.ShowView5.Width = 46
         '
-        'Ref
+        'ShowViewRef
         '
-        Me.Ref.HeaderText = "Ref"
-        Me.Ref.MaxInputLength = 1
-        Me.Ref.Name = "Ref"
-        Me.Ref.Width = 49
+        Me.ShowViewRef.HeaderText = "Ref"
+        Me.ShowViewRef.MaxInputLength = 1
+        Me.ShowViewRef.Name = "ShowViewRef"
+        Me.ShowViewRef.Width = 49
         '
         'Filter
         '
@@ -1503,41 +1540,41 @@ Partial Class MainForm
         Me.Filter.Name = "Filter"
         Me.Filter.Width = 54
         '
-        'F1
+        'ShowViewF1
         '
-        Me.F1.HeaderText = "F1"
-        Me.F1.MaxInputLength = 8
-        Me.F1.Name = "F1"
-        Me.F1.Width = 44
+        Me.ShowViewF1.HeaderText = "F1"
+        Me.ShowViewF1.MaxInputLength = 8
+        Me.ShowViewF1.Name = "ShowViewF1"
+        Me.ShowViewF1.Width = 44
         '
-        'F2
+        'ShowViewF2
         '
-        Me.F2.HeaderText = "F2"
-        Me.F2.MaxInputLength = 2
-        Me.F2.Name = "F2"
-        Me.F2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.F2.Width = 44
+        Me.ShowViewF2.HeaderText = "F2"
+        Me.ShowViewF2.MaxInputLength = 2
+        Me.ShowViewF2.Name = "ShowViewF2"
+        Me.ShowViewF2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ShowViewF2.Width = 44
         '
-        'F3
+        'ShowViewF3
         '
-        Me.F3.HeaderText = "F3"
-        Me.F3.MaxInputLength = 1
-        Me.F3.Name = "F3"
-        Me.F3.Width = 44
+        Me.ShowViewF3.HeaderText = "F3"
+        Me.ShowViewF3.MaxInputLength = 1
+        Me.ShowViewF3.Name = "ShowViewF3"
+        Me.ShowViewF3.Width = 44
         '
-        'F4
+        'ShowViewF4
         '
-        Me.F4.HeaderText = "F4"
-        Me.F4.MaxInputLength = 1
-        Me.F4.Name = "F4"
-        Me.F4.Width = 44
+        Me.ShowViewF4.HeaderText = "F4"
+        Me.ShowViewF4.MaxInputLength = 1
+        Me.ShowViewF4.Name = "ShowViewF4"
+        Me.ShowViewF4.Width = 44
         '
-        'H1
+        'ShowViewH1
         '
-        Me.H1.HeaderText = "H1"
-        Me.H1.MaxInputLength = 1
-        Me.H1.Name = "H1"
-        Me.H1.Width = 46
+        Me.ShowViewH1.HeaderText = "H1"
+        Me.ShowViewH1.MaxInputLength = 1
+        Me.ShowViewH1.Name = "ShowViewH1"
+        Me.ShowViewH1.Width = 46
         '
         'H2
         '
@@ -1546,68 +1583,84 @@ Partial Class MainForm
         Me.H2.Name = "H2"
         Me.H2.Width = 46
         '
-        'H3
+        'ShowViewH3
         '
-        Me.H3.HeaderText = "H3"
-        Me.H3.MaxInputLength = 1
-        Me.H3.Name = "H3"
-        Me.H3.Width = 46
+        Me.ShowViewH3.HeaderText = "H3"
+        Me.ShowViewH3.MaxInputLength = 1
+        Me.ShowViewH3.Name = "ShowViewH3"
+        Me.ShowViewH3.Width = 46
         '
-        'H4
+        'ShowViewH4
         '
-        Me.H4.HeaderText = "H4"
-        Me.H4.MaxInputLength = 1
-        Me.H4.Name = "H4"
-        Me.H4.Width = 46
+        Me.ShowViewH4.HeaderText = "H4"
+        Me.ShowViewH4.MaxInputLength = 1
+        Me.ShowViewH4.Name = "ShowViewH4"
+        Me.ShowViewH4.Width = 46
         '
-        'Bar
+        'ShowViewBar
         '
-        Me.Bar.HeaderText = "Bar"
-        Me.Bar.MaxInputLength = 1
-        Me.Bar.Name = "Bar"
-        Me.Bar.Width = 48
+        Me.ShowViewBar.HeaderText = "Bar"
+        Me.ShowViewBar.MaxInputLength = 1
+        Me.ShowViewBar.Name = "ShowViewBar"
+        Me.ShowViewBar.Width = 48
         '
-        'Unknown
+        'ShowViewUnknown
         '
-        Me.Unknown.HeaderText = "Unkown"
-        Me.Unknown.MaxInputLength = 68
-        Me.Unknown.Name = "Unknown"
-        Me.Unknown.Width = 72
+        Me.ShowViewUnknown.HeaderText = "Unkown"
+        Me.ShowViewUnknown.MaxInputLength = 68
+        Me.ShowViewUnknown.Name = "ShowViewUnknown"
+        Me.ShowViewUnknown.Width = 72
         '
-        'I1
+        'ShowViewI1
         '
-        Me.I1.HeaderText = "I1"
-        Me.I1.MaxInputLength = 1
-        Me.I1.Name = "I1"
-        Me.I1.Width = 41
+        Me.ShowViewI1.HeaderText = "I1"
+        Me.ShowViewI1.MaxInputLength = 1
+        Me.ShowViewI1.Name = "ShowViewI1"
+        Me.ShowViewI1.Width = 41
         '
-        'I2
+        'ShowViewI2
         '
-        Me.I2.HeaderText = "I2"
-        Me.I2.MaxInputLength = 1
-        Me.I2.Name = "I2"
-        Me.I2.Width = 41
+        Me.ShowViewI2.HeaderText = "I2"
+        Me.ShowViewI2.MaxInputLength = 1
+        Me.ShowViewI2.Name = "ShowViewI2"
+        Me.ShowViewI2.Width = 41
         '
-        'I3
+        'ShowViewI3
         '
-        Me.I3.HeaderText = "I3"
-        Me.I3.MaxInputLength = 2
-        Me.I3.Name = "I3"
-        Me.I3.Width = 41
+        Me.ShowViewI3.HeaderText = "I3"
+        Me.ShowViewI3.MaxInputLength = 2
+        Me.ShowViewI3.Name = "ShowViewI3"
+        Me.ShowViewI3.Width = 41
         '
-        'Live
+        'ShowViewLive
         '
-        Me.Live.HeaderText = "Live"
-        Me.Live.MaxInputLength = 1
-        Me.Live.Name = "Live"
-        Me.Live.Width = 52
+        Me.ShowViewLive.HeaderText = "Live"
+        Me.ShowViewLive.MaxInputLength = 1
+        Me.ShowViewLive.Name = "ShowViewLive"
+        Me.ShowViewLive.Width = 52
         '
-        'J
+        'ShowViewJ
         '
-        Me.J.HeaderText = "J"
-        Me.J.MaxInputLength = 1
-        Me.J.Name = "J"
-        Me.J.Width = 37
+        Me.ShowViewJ.HeaderText = "J"
+        Me.ShowViewJ.MaxInputLength = 1
+        Me.ShowViewJ.Name = "ShowViewJ"
+        Me.ShowViewJ.Width = 37
+        '
+        'ShowViewAddButton
+        '
+        Me.ShowViewAddButton.HeaderText = "Add"
+        Me.ShowViewAddButton.Name = "ShowViewAddButton"
+        Me.ShowViewAddButton.Text = "Add"
+        Me.ShowViewAddButton.UseColumnTextForButtonValue = True
+        Me.ShowViewAddButton.Width = 32
+        '
+        'ShowViewDelete
+        '
+        Me.ShowViewDelete.HeaderText = "Delete"
+        Me.ShowViewDelete.Name = "ShowViewDelete"
+        Me.ShowViewDelete.Text = "Delete"
+        Me.ShowViewDelete.UseColumnTextForButtonValue = True
+        Me.ShowViewDelete.Width = 44
         '
         'MenuStripShowView
         '
@@ -2354,9 +2407,9 @@ Partial Class MainForm
         '
         'YobjArryIndex
         '
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle1
         Me.YobjArryIndex.HeaderText = "Index"
         Me.YobjArryIndex.Name = "YobjArryIndex"
         Me.YobjArryIndex.ReadOnly = True
@@ -2364,9 +2417,9 @@ Partial Class MainForm
         '
         'ObjArrayParent
         '
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle2
         Me.ObjArrayParent.HeaderText = "Parent"
         Me.ObjArrayParent.MinimumWidth = 100
         Me.ObjArrayParent.Name = "ObjArrayParent"
@@ -2437,9 +2490,9 @@ Partial Class MainForm
         '
         'ContainedYobjArray
         '
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle3
         Me.ContainedYobjArray.HeaderText = "Objects"
         Me.ContainedYobjArray.Name = "ContainedYobjArray"
         Me.ContainedYobjArray.ReadOnly = True
@@ -2447,9 +2500,9 @@ Partial Class MainForm
         '
         'StartIndexYobjArray
         '
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle4
         Me.StartIndexYobjArray.HeaderText = "Start Index"
         Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
         Me.StartIndexYobjArray.ReadOnly = True
@@ -3239,6 +3292,234 @@ Partial Class MainForm
         Me.SaveChangesCAEMenuItemMenuItem.Text = "Save Changes"
         Me.SaveChangesCAEMenuItemMenuItem.Visible = False
         '
+        'AnimationView
+        '
+        Me.AnimationView.Controls.Add(Me.DataGridAnimationView)
+        Me.AnimationView.Controls.Add(Me.MenuStrip1)
+        Me.AnimationView.Location = New System.Drawing.Point(4, 22)
+        Me.AnimationView.Name = "AnimationView"
+        Me.AnimationView.Padding = New System.Windows.Forms.Padding(3)
+        Me.AnimationView.Size = New System.Drawing.Size(1219, 411)
+        Me.AnimationView.TabIndex = 17
+        Me.AnimationView.Text = "Animation View"
+        Me.AnimationView.UseVisualStyleBackColor = True
+        '
+        'DataGridAnimationView
+        '
+        Me.DataGridAnimationView.AllowUserToAddRows = False
+        Me.DataGridAnimationView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridAnimationView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.AnimationBoneIndex, Me.AnimationStartingInt, Me.AnimationStartHex, Me.AnimationHeaderLength, Me.AnimationHeaderLengthHex, Me.AnimationBoneType, Me.AnimationBoneTypeHex, Me.AnimationOffsetA, Me.AnimationOffsetAHex, Me.AnimationIntA, Me.AnimationIntAHex, Me.AnimationOffsetB, Me.AnimationOffsetBHex, Me.AnimationIntB, Me.AnimationIntBHex, Me.AnimationRemainingBytes, Me.AnimationStartingData, Me.AnimationSecondaryData, Me.AnimationXTrans, Me.AnimationYTrans, Me.AnimationZTrans, Me.AnimationXRotation, Me.AnimationYRotation, Me.AnimationZRotation, Me.AnimationFramesDec, Me.AnimationFramesHex, Me.AnimationAnimationData, Me.AnimationAnimationDataParsed})
+        Me.DataGridAnimationView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridAnimationView.Location = New System.Drawing.Point(3, 27)
+        Me.DataGridAnimationView.Name = "DataGridAnimationView"
+        Me.DataGridAnimationView.RowHeadersVisible = False
+        Me.DataGridAnimationView.Size = New System.Drawing.Size(1213, 381)
+        Me.DataGridAnimationView.TabIndex = 1
+        '
+        'AnimationBoneIndex
+        '
+        Me.AnimationBoneIndex.HeaderText = "Count"
+        Me.AnimationBoneIndex.Name = "AnimationBoneIndex"
+        Me.AnimationBoneIndex.ReadOnly = True
+        Me.AnimationBoneIndex.Width = 50
+        '
+        'AnimationStartingInt
+        '
+        Me.AnimationStartingInt.HeaderText = "Start Int"
+        Me.AnimationStartingInt.Name = "AnimationStartingInt"
+        Me.AnimationStartingInt.Width = 69
+        '
+        'AnimationStartHex
+        '
+        Me.AnimationStartHex.HeaderText = "Start Hex"
+        Me.AnimationStartHex.Name = "AnimationStartHex"
+        Me.AnimationStartHex.Width = 76
+        '
+        'AnimationHeaderLength
+        '
+        Me.AnimationHeaderLength.HeaderText = "Head Length"
+        Me.AnimationHeaderLength.Name = "AnimationHeaderLength"
+        Me.AnimationHeaderLength.Width = 94
+        '
+        'AnimationHeaderLengthHex
+        '
+        Me.AnimationHeaderLengthHex.HeaderText = "Length Hex"
+        Me.AnimationHeaderLengthHex.Name = "AnimationHeaderLengthHex"
+        Me.AnimationHeaderLengthHex.Width = 87
+        '
+        'AnimationBoneType
+        '
+        Me.AnimationBoneType.HeaderText = "Bone Type"
+        Me.AnimationBoneType.Name = "AnimationBoneType"
+        Me.AnimationBoneType.Width = 84
+        '
+        'AnimationBoneTypeHex
+        '
+        Me.AnimationBoneTypeHex.HeaderText = "Bone as Hex"
+        Me.AnimationBoneTypeHex.Name = "AnimationBoneTypeHex"
+        Me.AnimationBoneTypeHex.Width = 93
+        '
+        'AnimationOffsetA
+        '
+        Me.AnimationOffsetA.HeaderText = "Offset A"
+        Me.AnimationOffsetA.Name = "AnimationOffsetA"
+        Me.AnimationOffsetA.Width = 70
+        '
+        'AnimationOffsetAHex
+        '
+        Me.AnimationOffsetAHex.HeaderText = "Offset A Hex"
+        Me.AnimationOffsetAHex.Name = "AnimationOffsetAHex"
+        Me.AnimationOffsetAHex.Width = 92
+        '
+        'AnimationIntA
+        '
+        Me.AnimationIntA.HeaderText = "Length A"
+        Me.AnimationIntA.Name = "AnimationIntA"
+        Me.AnimationIntA.Width = 54
+        '
+        'AnimationIntAHex
+        '
+        Me.AnimationIntAHex.HeaderText = "Length A Hex"
+        Me.AnimationIntAHex.Name = "AnimationIntAHex"
+        Me.AnimationIntAHex.Width = 76
+        '
+        'AnimationOffsetB
+        '
+        Me.AnimationOffsetB.HeaderText = "Offset B"
+        Me.AnimationOffsetB.Name = "AnimationOffsetB"
+        Me.AnimationOffsetB.Width = 70
+        '
+        'AnimationOffsetBHex
+        '
+        Me.AnimationOffsetBHex.HeaderText = "Offset B Hex"
+        Me.AnimationOffsetBHex.Name = "AnimationOffsetBHex"
+        Me.AnimationOffsetBHex.Width = 92
+        '
+        'AnimationIntB
+        '
+        Me.AnimationIntB.HeaderText = "Length B"
+        Me.AnimationIntB.Name = "AnimationIntB"
+        Me.AnimationIntB.Width = 54
+        '
+        'AnimationIntBHex
+        '
+        Me.AnimationIntBHex.HeaderText = "Length B Hex"
+        Me.AnimationIntBHex.Name = "AnimationIntBHex"
+        Me.AnimationIntBHex.Width = 76
+        '
+        'AnimationRemainingBytes
+        '
+        Me.AnimationRemainingBytes.HeaderText = "Remaining Bytes"
+        Me.AnimationRemainingBytes.Name = "AnimationRemainingBytes"
+        Me.AnimationRemainingBytes.Width = 102
+        '
+        'AnimationStartingData
+        '
+        Me.AnimationStartingData.HeaderText = "File Part A"
+        Me.AnimationStartingData.Name = "AnimationStartingData"
+        Me.AnimationStartingData.Width = 69
+        '
+        'AnimationSecondaryData
+        '
+        Me.AnimationSecondaryData.HeaderText = "File Part B"
+        Me.AnimationSecondaryData.Name = "AnimationSecondaryData"
+        '
+        'AnimationXTrans
+        '
+        Me.AnimationXTrans.HeaderText = "X?"
+        Me.AnimationXTrans.Name = "AnimationXTrans"
+        Me.AnimationXTrans.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.AnimationXTrans.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.AnimationXTrans.Width = 50
+        '
+        'AnimationYTrans
+        '
+        Me.AnimationYTrans.HeaderText = "Y?"
+        Me.AnimationYTrans.Name = "AnimationYTrans"
+        Me.AnimationYTrans.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.AnimationYTrans.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.AnimationYTrans.Width = 50
+        '
+        'AnimationZTrans
+        '
+        Me.AnimationZTrans.HeaderText = "Z?"
+        Me.AnimationZTrans.Name = "AnimationZTrans"
+        Me.AnimationZTrans.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.AnimationZTrans.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.AnimationZTrans.Width = 50
+        '
+        'AnimationXRotation
+        '
+        Me.AnimationXRotation.HeaderText = "rX?"
+        Me.AnimationXRotation.Name = "AnimationXRotation"
+        Me.AnimationXRotation.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.AnimationXRotation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.AnimationXRotation.Width = 50
+        '
+        'AnimationYRotation
+        '
+        Me.AnimationYRotation.HeaderText = "rY?"
+        Me.AnimationYRotation.Name = "AnimationYRotation"
+        Me.AnimationYRotation.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.AnimationYRotation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.AnimationYRotation.Width = 50
+        '
+        'AnimationZRotation
+        '
+        Me.AnimationZRotation.HeaderText = "rZ?"
+        Me.AnimationZRotation.Name = "AnimationZRotation"
+        Me.AnimationZRotation.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.AnimationZRotation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.AnimationZRotation.Width = 50
+        '
+        'AnimationFramesDec
+        '
+        Me.AnimationFramesDec.HeaderText = "Frames Int"
+        Me.AnimationFramesDec.Name = "AnimationFramesDec"
+        '
+        'AnimationFramesHex
+        '
+        Me.AnimationFramesHex.HeaderText = "Frames Hex"
+        Me.AnimationFramesHex.Name = "AnimationFramesHex"
+        '
+        'AnimationAnimationData
+        '
+        Me.AnimationAnimationData.HeaderText = "Animation Bytes"
+        Me.AnimationAnimationData.Name = "AnimationAnimationData"
+        '
+        'AnimationAnimationDataParsed
+        '
+        Me.AnimationAnimationDataParsed.HeaderText = "Parsed Data"
+        Me.AnimationAnimationDataParsed.Name = "AnimationAnimationDataParsed"
+        '
+        'MenuStrip1
+        '
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AnimationShowHexToolStripMenuItem, Me.AnimationShowDebugToolStripMenuItem, Me.SaveChangesAnimationMenuItem})
+        Me.MenuStrip1.Location = New System.Drawing.Point(3, 3)
+        Me.MenuStrip1.Name = "MenuStrip1"
+        Me.MenuStrip1.Size = New System.Drawing.Size(1213, 24)
+        Me.MenuStrip1.TabIndex = 0
+        Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'AnimationShowHexToolStripMenuItem
+        '
+        Me.AnimationShowHexToolStripMenuItem.Name = "AnimationShowHexToolStripMenuItem"
+        Me.AnimationShowHexToolStripMenuItem.Size = New System.Drawing.Size(85, 20)
+        Me.AnimationShowHexToolStripMenuItem.Text = "☒ Show Hex"
+        '
+        'AnimationShowDebugToolStripMenuItem
+        '
+        Me.AnimationShowDebugToolStripMenuItem.Name = "AnimationShowDebugToolStripMenuItem"
+        Me.AnimationShowDebugToolStripMenuItem.Size = New System.Drawing.Size(99, 20)
+        Me.AnimationShowDebugToolStripMenuItem.Text = "☐ Show Debug"
+        '
+        'SaveChangesAnimationMenuItem
+        '
+        Me.SaveChangesAnimationMenuItem.Name = "SaveChangesAnimationMenuItem"
+        Me.SaveChangesAnimationMenuItem.Size = New System.Drawing.Size(92, 20)
+        Me.SaveChangesAnimationMenuItem.Text = "Save Changes"
+        Me.SaveChangesAnimationMenuItem.Visible = False
+        '
         'MenuStripPictureView
         '
         Me.MenuStripPictureView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
@@ -3258,25 +3539,25 @@ Partial Class MainForm
         '
         Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenRADVideoToolStripMenuItem, Me.OpenImageWithToolStripMenuItem, Me.ExtractToolStripMenuItem, Me.InjectToolStripMenuItem, Me.CrawlToolStripMenuItem, Me.DeleteFileToolStripMenuItem, Me.DeletePartToolStripMenuItem, Me.RenameFileToolStripMenuItem, Me.RenamePartToolStripMenuItem, Me.OpenFileLocationToolStripMenuItem})
         Me.TreeViewContext.Name = "TreeViewContext"
-        Me.TreeViewContext.Size = New System.Drawing.Size(169, 224)
+        Me.TreeViewContext.Size = New System.Drawing.Size(181, 246)
         '
         'OpenRADVideoToolStripMenuItem
         '
         Me.OpenRADVideoToolStripMenuItem.Name = "OpenRADVideoToolStripMenuItem"
-        Me.OpenRADVideoToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.OpenRADVideoToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.OpenRADVideoToolStripMenuItem.Text = "Open"
         '
         'OpenImageWithToolStripMenuItem
         '
         Me.OpenImageWithToolStripMenuItem.Name = "OpenImageWithToolStripMenuItem"
-        Me.OpenImageWithToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.OpenImageWithToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.OpenImageWithToolStripMenuItem.Text = "Open With..."
         '
         'ExtractToolStripMenuItem
         '
         Me.ExtractToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExtractPartToToolStripMenuItem, Me.ExtractAllInPlaceToolStripMenuItem, Me.ExtractAllToToolStripMenuItem})
         Me.ExtractToolStripMenuItem.Name = "ExtractToolStripMenuItem"
-        Me.ExtractToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.ExtractToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ExtractToolStripMenuItem.Text = "Extract"
         '
         'ExtractPartToToolStripMenuItem
@@ -3301,7 +3582,7 @@ Partial Class MainForm
         '
         Me.InjectToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.InjectUncompressedToolStripMenuItem, Me.InjectBPEToolStripMenuItem, Me.InjectZLIBToolStripMenuItem, Me.InjectOODLToolStripMenuItem})
         Me.InjectToolStripMenuItem.Name = "InjectToolStripMenuItem"
-        Me.InjectToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.InjectToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.InjectToolStripMenuItem.Text = "Inject"
         '
         'InjectUncompressedToolStripMenuItem
@@ -3331,37 +3612,37 @@ Partial Class MainForm
         'CrawlToolStripMenuItem
         '
         Me.CrawlToolStripMenuItem.Name = "CrawlToolStripMenuItem"
-        Me.CrawlToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.CrawlToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.CrawlToolStripMenuItem.Text = "Crawl"
         '
         'DeleteFileToolStripMenuItem
         '
         Me.DeleteFileToolStripMenuItem.Name = "DeleteFileToolStripMenuItem"
-        Me.DeleteFileToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.DeleteFileToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.DeleteFileToolStripMenuItem.Text = "Delete"
         '
         'DeletePartToolStripMenuItem
         '
         Me.DeletePartToolStripMenuItem.Name = "DeletePartToolStripMenuItem"
-        Me.DeletePartToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.DeletePartToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.DeletePartToolStripMenuItem.Text = "Delete"
         '
         'RenameFileToolStripMenuItem
         '
         Me.RenameFileToolStripMenuItem.Name = "RenameFileToolStripMenuItem"
-        Me.RenameFileToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.RenameFileToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.RenameFileToolStripMenuItem.Text = "Rename"
         '
         'RenamePartToolStripMenuItem
         '
         Me.RenamePartToolStripMenuItem.Name = "RenamePartToolStripMenuItem"
-        Me.RenamePartToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.RenamePartToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.RenamePartToolStripMenuItem.Text = "Rename"
         '
         'OpenFileLocationToolStripMenuItem
         '
         Me.OpenFileLocationToolStripMenuItem.Name = "OpenFileLocationToolStripMenuItem"
-        Me.OpenFileLocationToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.OpenFileLocationToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.OpenFileLocationToolStripMenuItem.Text = "Open file location"
         '
         'DataGridViewTextBoxColumn1
@@ -3584,143 +3865,6 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn35.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn35.Width = 41
         '
-        'AnimationView
-        '
-        Me.AnimationView.Controls.Add(Me.DataGridAnimationView)
-        Me.AnimationView.Controls.Add(Me.MenuStrip1)
-        Me.AnimationView.Location = New System.Drawing.Point(4, 22)
-        Me.AnimationView.Name = "AnimationView"
-        Me.AnimationView.Padding = New System.Windows.Forms.Padding(3)
-        Me.AnimationView.Size = New System.Drawing.Size(1219, 411)
-        Me.AnimationView.TabIndex = 17
-        Me.AnimationView.Text = "Animation View"
-        Me.AnimationView.UseVisualStyleBackColor = True
-        '
-        'MenuStrip1
-        '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AnimationShowHexToolStripMenuItem, Me.SaveChangesAnimationMenuItem})
-        Me.MenuStrip1.Location = New System.Drawing.Point(3, 3)
-        Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(1213, 24)
-        Me.MenuStrip1.TabIndex = 0
-        Me.MenuStrip1.Text = "MenuStrip1"
-        '
-        'DataGridAnimationView
-        '
-        Me.DataGridAnimationView.AllowUserToAddRows = False
-        Me.DataGridAnimationView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
-        Me.DataGridAnimationView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridAnimationView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.AnimationStartingInt, Me.AnimationStartHex, Me.AnimationHeaderLength, Me.AnimationHeaderLengthHex, Me.AnimationBoneType, Me.AnimationBoneTypeHex, Me.AnimationOffsetA, Me.AnimationOffsetAHex, Me.AnimationIntA, Me.AnimationIntAHex, Me.AnimationOffsetB, Me.AnimationOffsetBHex, Me.AnimationIntB, Me.AnimationIntBHex, Me.AnimationRemainingBytes})
-        Me.DataGridAnimationView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridAnimationView.Location = New System.Drawing.Point(3, 27)
-        Me.DataGridAnimationView.Name = "DataGridAnimationView"
-        Me.DataGridAnimationView.RowHeadersVisible = False
-        Me.DataGridAnimationView.Size = New System.Drawing.Size(1213, 381)
-        Me.DataGridAnimationView.TabIndex = 1
-        '
-        'SaveChangesAnimationMenuItem
-        '
-        Me.SaveChangesAnimationMenuItem.Name = "SaveChangesAnimationMenuItem"
-        Me.SaveChangesAnimationMenuItem.Size = New System.Drawing.Size(92, 20)
-        Me.SaveChangesAnimationMenuItem.Text = "Save Changes"
-        Me.SaveChangesAnimationMenuItem.Visible = False
-        '
-        'AnimationShowHexToolStripMenuItem
-        '
-        Me.AnimationShowHexToolStripMenuItem.Name = "AnimationShowHexToolStripMenuItem"
-        Me.AnimationShowHexToolStripMenuItem.Size = New System.Drawing.Size(87, 20)
-        Me.AnimationShowHexToolStripMenuItem.Text = "☑ Show Hex"
-        '
-        'AnimationStartingInt
-        '
-        Me.AnimationStartingInt.HeaderText = "Start Int"
-        Me.AnimationStartingInt.Name = "AnimationStartingInt"
-        Me.AnimationStartingInt.Width = 69
-        '
-        'AnimationStartHex
-        '
-        Me.AnimationStartHex.HeaderText = "Start Hex"
-        Me.AnimationStartHex.Name = "AnimationStartHex"
-        Me.AnimationStartHex.Width = 76
-        '
-        'AnimationHeaderLength
-        '
-        Me.AnimationHeaderLength.HeaderText = "Head Length"
-        Me.AnimationHeaderLength.Name = "AnimationHeaderLength"
-        Me.AnimationHeaderLength.Width = 94
-        '
-        'AnimationHeaderLengthHex
-        '
-        Me.AnimationHeaderLengthHex.HeaderText = "Length Hex"
-        Me.AnimationHeaderLengthHex.Name = "AnimationHeaderLengthHex"
-        Me.AnimationHeaderLengthHex.Width = 87
-        '
-        'AnimationBoneType
-        '
-        Me.AnimationBoneType.HeaderText = "Bone Type"
-        Me.AnimationBoneType.Name = "AnimationBoneType"
-        Me.AnimationBoneType.Width = 84
-        '
-        'AnimationBoneTypeHex
-        '
-        Me.AnimationBoneTypeHex.HeaderText = "Bone as Hex"
-        Me.AnimationBoneTypeHex.Name = "AnimationBoneTypeHex"
-        Me.AnimationBoneTypeHex.Width = 93
-        '
-        'AnimationOffsetA
-        '
-        Me.AnimationOffsetA.HeaderText = "Offset A"
-        Me.AnimationOffsetA.Name = "AnimationOffsetA"
-        Me.AnimationOffsetA.Width = 70
-        '
-        'AnimationOffsetAHex
-        '
-        Me.AnimationOffsetAHex.HeaderText = "Offset A Hex"
-        Me.AnimationOffsetAHex.Name = "AnimationOffsetAHex"
-        Me.AnimationOffsetAHex.Width = 92
-        '
-        'AnimationIntA
-        '
-        Me.AnimationIntA.HeaderText = "Int A"
-        Me.AnimationIntA.Name = "AnimationIntA"
-        Me.AnimationIntA.Width = 54
-        '
-        'AnimationIntAHex
-        '
-        Me.AnimationIntAHex.HeaderText = "Int A Hex"
-        Me.AnimationIntAHex.Name = "AnimationIntAHex"
-        Me.AnimationIntAHex.Width = 76
-        '
-        'AnimationOffsetB
-        '
-        Me.AnimationOffsetB.HeaderText = "Offset B"
-        Me.AnimationOffsetB.Name = "AnimationOffsetB"
-        Me.AnimationOffsetB.Width = 70
-        '
-        'AnimationOffsetBHex
-        '
-        Me.AnimationOffsetBHex.HeaderText = "Offset B Hex"
-        Me.AnimationOffsetBHex.Name = "AnimationOffsetBHex"
-        Me.AnimationOffsetBHex.Width = 92
-        '
-        'AnimationIntB
-        '
-        Me.AnimationIntB.HeaderText = "Int B"
-        Me.AnimationIntB.Name = "AnimationIntB"
-        Me.AnimationIntB.Width = 54
-        '
-        'AnimationIntBHex
-        '
-        Me.AnimationIntBHex.HeaderText = "Int B Hex"
-        Me.AnimationIntBHex.Name = "AnimationIntBHex"
-        Me.AnimationIntBHex.Width = 76
-        '
-        'AnimationRemainingBytes
-        '
-        Me.AnimationRemainingBytes.HeaderText = "Remaining Bytes"
-        Me.AnimationRemainingBytes.Name = "AnimationRemainingBytes"
-        Me.AnimationRemainingBytes.Width = 102
-        '
         'MainForm
         '
         Me.AllowDrop = True
@@ -3814,14 +3958,14 @@ Partial Class MainForm
         CType(Me.DataGridMenuItemView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStripMenuItemView.ResumeLayout(False)
         Me.MenuStripMenuItemView.PerformLayout()
+        Me.AnimationView.ResumeLayout(False)
+        Me.AnimationView.PerformLayout()
+        CType(Me.DataGridAnimationView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
         Me.MenuStripPictureView.ResumeLayout(False)
         Me.MenuStripPictureView.PerformLayout()
         Me.TreeViewContext.ResumeLayout(False)
-        Me.AnimationView.ResumeLayout(False)
-        Me.AnimationView.PerformLayout()
-        Me.MenuStrip1.ResumeLayout(False)
-        Me.MenuStrip1.PerformLayout()
-        CType(Me.DataGridAnimationView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -4003,83 +4147,8 @@ Partial Class MainForm
     Friend WithEvents Length As DataGridViewTextBoxColumn
     Friend WithEvents AddString As DataGridViewButtonColumn
     Friend WithEvents DeleteString As DataGridViewButtonColumn
-    Friend WithEvents Col_ArenaNumber As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Stadium As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Advertisement As DataGridViewTextBoxColumn
-    Friend WithEvents Col_CornerPost As DataGridViewTextBoxColumn
-    Friend WithEvents Col_LED_CornerPost As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Rope As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Apron As DataGridViewTextBoxColumn
-    Friend WithEvents Col_LED_Apron As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Turnbuckle As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Barricade As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Fence As DataGridViewTextBoxColumn
-    Friend WithEvents Col_CeilingLighting As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Spotlight As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Stairs As DataGridViewTextBoxColumn
-    Friend WithEvents Col_CommentarySeat As DataGridViewTextBoxColumn
-    Friend WithEvents Col_RingMat As DataGridViewTextBoxColumn
-    Friend WithEvents Col_FloorMattress As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Crowd As DataGridViewTextBoxColumn
-    Friend WithEvents Col_CrowdSeatsPlace As DataGridViewTextBoxColumn
-    Friend WithEvents Col_CrowdSeatsModel As DataGridViewTextBoxColumn
-    Friend WithEvents Col_IBL As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Titantron As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Minitron As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Wall_L As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Wall_R As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Header As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Floor As DataGridViewTextBoxColumn
-    Friend WithEvents Col_MiscObjects As DataGridViewTextBoxColumn
-    Friend WithEvents Col_LightingType As DataGridViewTextBoxColumn
-    Friend WithEvents Col_CornerPost_CM As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Rope_CM As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Apron_CM As DataGridViewTextBoxColumn
-    Friend WithEvents Col_Turnbuckle_CM As DataGridViewTextBoxColumn
-    Friend WithEvents Col_RingMat_CM As DataGridViewTextBoxColumn
-    Friend WithEvents Col_version As DataGridViewTextBoxColumn
     Friend WithEvents StringLoadedShowMenuItem As ToolStripMenuItem
     Friend WithEvents SaveChangesShowMenuItem As ToolStripMenuItem
-    Friend WithEvents StrName As DataGridViewTextBoxColumn
-    Friend WithEvents ShowStringName As DataGridViewTextBoxColumn
-    Friend WithEvents ShowSelectNum As DataGridViewTextBoxColumn
-    Friend WithEvents SelectNumSecond As DataGridViewTextBoxColumn
-    Friend WithEvents A1 As DataGridViewTextBoxColumn
-    Friend WithEvents A2 As DataGridViewTextBoxColumn
-    Friend WithEvents B1 As DataGridViewTextBoxColumn
-    Friend WithEvents B2 As DataGridViewTextBoxColumn
-    Friend WithEvents B3 As DataGridViewTextBoxColumn
-    Friend WithEvents C1 As DataGridViewCheckBoxColumn
-    Friend WithEvents C2 As DataGridViewCheckBoxColumn
-    Friend WithEvents C3 As DataGridViewCheckBoxColumn
-    Friend WithEvents C4 As DataGridViewCheckBoxColumn
-    Friend WithEvents C5 As DataGridViewCheckBoxColumn
-    Friend WithEvents C6 As DataGridViewCheckBoxColumn
-    Friend WithEvents C7 As DataGridViewCheckBoxColumn
-    Friend WithEvents C8 As DataGridViewCheckBoxColumn
-    Friend WithEvents Stage As DataGridViewTextBoxColumn
-    Friend WithEvents D1 As DataGridViewTextBoxColumn
-    Friend WithEvents D2 As DataGridViewTextBoxColumn
-    Friend WithEvents D3 As DataGridViewTextBoxColumn
-    Friend WithEvents D4 As DataGridViewTextBoxColumn
-    Friend WithEvents D5 As DataGridViewTextBoxColumn
-    Friend WithEvents Ref As DataGridViewTextBoxColumn
-    Friend WithEvents Filter As DataGridViewTextBoxColumn
-    Friend WithEvents F1 As DataGridViewTextBoxColumn
-    Friend WithEvents F2 As DataGridViewTextBoxColumn
-    Friend WithEvents F3 As DataGridViewTextBoxColumn
-    Friend WithEvents F4 As DataGridViewTextBoxColumn
-    Friend WithEvents H1 As DataGridViewTextBoxColumn
-    Friend WithEvents H2 As DataGridViewTextBoxColumn
-    Friend WithEvents H3 As DataGridViewTextBoxColumn
-    Friend WithEvents H4 As DataGridViewTextBoxColumn
-    Friend WithEvents Bar As DataGridViewTextBoxColumn
-    Friend WithEvents Unknown As DataGridViewTextBoxColumn
-    Friend WithEvents I1 As DataGridViewTextBoxColumn
-    Friend WithEvents I2 As DataGridViewTextBoxColumn
-    Friend WithEvents I3 As DataGridViewTextBoxColumn
-    Friend WithEvents Live As DataGridViewTextBoxColumn
-    Friend WithEvents J As DataGridViewTextBoxColumn
     Friend WithEvents SaveChangesNIBJMenuItem As ToolStripMenuItem
     Friend WithEvents ExportMaskstoTXTToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ImportMasksFromTXTToolStripMenuItem As ToolStripMenuItem
@@ -4238,6 +4307,8 @@ Partial Class MainForm
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents SaveChangesAnimationMenuItem As ToolStripMenuItem
     Friend WithEvents AnimationShowHexToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AnimationShowDebugToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AnimationBoneIndex As DataGridViewTextBoxColumn
     Friend WithEvents AnimationStartingInt As DataGridViewTextBoxColumn
     Friend WithEvents AnimationStartHex As DataGridViewTextBoxColumn
     Friend WithEvents AnimationHeaderLength As DataGridViewTextBoxColumn
@@ -4253,4 +4324,95 @@ Partial Class MainForm
     Friend WithEvents AnimationIntB As DataGridViewTextBoxColumn
     Friend WithEvents AnimationIntBHex As DataGridViewTextBoxColumn
     Friend WithEvents AnimationRemainingBytes As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationStartingData As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationSecondaryData As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationXTrans As DataGridViewCheckBoxColumn
+    Friend WithEvents AnimationYTrans As DataGridViewCheckBoxColumn
+    Friend WithEvents AnimationZTrans As DataGridViewCheckBoxColumn
+    Friend WithEvents AnimationXRotation As DataGridViewCheckBoxColumn
+    Friend WithEvents AnimationYRotation As DataGridViewCheckBoxColumn
+    Friend WithEvents AnimationZRotation As DataGridViewCheckBoxColumn
+    Friend WithEvents AnimationFramesDec As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationFramesHex As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationAnimationData As DataGridViewTextBoxColumn
+    Friend WithEvents AnimationAnimationDataParsed As DataGridViewTextBoxColumn
+    Friend WithEvents Col_ArenaNumber As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Stadium As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Advertisement As DataGridViewTextBoxColumn
+    Friend WithEvents Col_CornerPost As DataGridViewTextBoxColumn
+    Friend WithEvents Col_LED_CornerPost As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Rope As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Apron As DataGridViewTextBoxColumn
+    Friend WithEvents Col_LED_Apron As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Turnbuckle As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Barricade As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Fence As DataGridViewTextBoxColumn
+    Friend WithEvents Col_CeilingLighting As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Spotlight As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Stairs As DataGridViewTextBoxColumn
+    Friend WithEvents Col_CommentarySeat As DataGridViewTextBoxColumn
+    Friend WithEvents Col_RingMat As DataGridViewTextBoxColumn
+    Friend WithEvents Col_FloorMattress As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Crowd As DataGridViewTextBoxColumn
+    Friend WithEvents Col_CrowdSeatsPlace As DataGridViewTextBoxColumn
+    Friend WithEvents Col_CrowdSeatsModel As DataGridViewTextBoxColumn
+    Friend WithEvents Col_IBL As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Titantron As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Minitron As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Wall_L As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Wall_R As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Header As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Floor As DataGridViewTextBoxColumn
+    Friend WithEvents Col_MiscObjects As DataGridViewTextBoxColumn
+    Friend WithEvents Col_LightingType As DataGridViewTextBoxColumn
+    Friend WithEvents Col_CornerPost_CM As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Rope_CM As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Apron_CM As DataGridViewTextBoxColumn
+    Friend WithEvents Col_Turnbuckle_CM As DataGridViewTextBoxColumn
+    Friend WithEvents Col_RingMat_CM As DataGridViewTextBoxColumn
+    Friend WithEvents Col_version As DataGridViewTextBoxColumn
+    Friend WithEvents ArenaMiscAddButton As DataGridViewButtonColumn
+    Friend WithEvents ArenaMiscDelButton As DataGridViewButtonColumn
+    Friend WithEvents ShowViewStrName As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewStringName As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewSelectNum As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewNumSecond As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewA1 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewA2 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewB1 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewB2 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewB3 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewC1 As DataGridViewCheckBoxColumn
+    Friend WithEvents ShowViewC2 As DataGridViewCheckBoxColumn
+    Friend WithEvents ShowViewC3 As DataGridViewCheckBoxColumn
+    Friend WithEvents ShowViewC4 As DataGridViewCheckBoxColumn
+    Friend WithEvents ShowViewC5 As DataGridViewCheckBoxColumn
+    Friend WithEvents ShowViewC6 As DataGridViewCheckBoxColumn
+    Friend WithEvents ShowViewC7 As DataGridViewCheckBoxColumn
+    Friend WithEvents ShowViewC8 As DataGridViewCheckBoxColumn
+    Friend WithEvents ShowViewStage As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewD1 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewD2 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewD3 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewD4 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowView5 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewRef As DataGridViewTextBoxColumn
+    Friend WithEvents Filter As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewF1 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewF2 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewF3 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewF4 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewH1 As DataGridViewTextBoxColumn
+    Friend WithEvents H2 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewH3 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewH4 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewBar As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewUnknown As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewI1 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewI2 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewI3 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewLive As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewJ As DataGridViewTextBoxColumn
+    Friend WithEvents ShowViewAddButton As DataGridViewButtonColumn
+    Friend WithEvents ShowViewDelete As DataGridViewButtonColumn
 End Class

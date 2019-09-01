@@ -762,20 +762,23 @@ Public Class MainForm
                        NodeTag.StoredData.Length > 0 Then
                 ExtractToolStripMenuItem.Tag = True
                 ExtractPartToToolStripMenuItem.Visible = True
+                InjectBPEToolStripMenuItem.Visible = False
+                InjectZLIBToolStripMenuItem.Visible = False
+                InjectOODLToolStripMenuItem.Visible = False
                 If ParentNodeTag.FileType = PackageType.BPE Then
                     If PackUnpack.CheckBPEExe() Then
                         InjectToolStripMenuItem.Tag = True
-                        InjectBPEToolStripMenuItem.Visible = True
+                        'InjectBPEToolStripMenuItem.Visible = True
                     End If
                 ElseIf ParentNodeTag.FileType = PackageType.ZLIB Then
                     If PackUnpack.CheckIconicZlib() Then
                         InjectToolStripMenuItem.Tag = True
-                        InjectZLIBToolStripMenuItem.Visible = True
+                        'InjectZLIBToolStripMenuItem.Visible = True
                     End If
                 ElseIf ParentNodeTag.FileType = PackageType.OODL Then
                     If PackUnpack.CheckOodle() Then
                         InjectToolStripMenuItem.Tag = True
-                        InjectOODLToolStripMenuItem.Visible = True
+                        'InjectOODLToolStripMenuItem.Visible = True
                     End If
                 Else
                     'We are working with a actual file part
@@ -1490,6 +1493,9 @@ Public Class MainForm
             TempGridRow.Cells(33).Value = TempArena.RingMat_CM
             TempGridRow.Cells(34).Value = TempArena.version
             'Build the D byte list for error handling
+            TempGridRow.Cells(35).Style = ReadOnlyCellStyle
+            '35 = Add
+            '36 = Delete
             For K As Integer = 0 To ArenaArray.Length - 1
                 If ArenaArray(K) = &HA Then
                     If ArenaArray(K - 1) = &HD Then
@@ -1670,6 +1676,33 @@ Public Class MainForm
         Else
             SavePending = True
             SaveChangesMiscMenuItem.Visible = True
+        End If
+    End Sub
+
+    Private Sub DataGridMiscView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridMiscView.CellContentClick
+        Dim senderGrid = DirectCast(sender, DataGridView)
+        If TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewButtonColumn AndAlso
+           e.RowIndex >= 0 Then
+            If e.ColumnIndex = 35 Then 'add button
+                If Not DataGridMiscView.Rows(e.RowIndex).Cells(0).Value + 1 = DataGridMiscView.Rows(e.RowIndex + 1).Cells(0).Value Then
+                    Dim Duplicaterow As DataGridViewRow = DataGridMiscView.Rows(e.RowIndex).Clone
+                    For i As Integer = 0 To DataGridMiscView.Rows(e.RowIndex).Cells.Count - 1
+                        Duplicaterow.Cells(i).Value = DataGridMiscView.Rows(e.RowIndex).Cells(i).Value
+                    Next
+                    Duplicaterow.Cells(0).Value = (Duplicaterow.Cells(0).Value + 1).ToString.PadLeft(5, "0")
+                    Duplicaterow.Tag = DataGridMiscView.Rows(e.RowIndex).Tag
+                    DataGridMiscView.Rows.Insert(e.RowIndex + 1, Duplicaterow)
+                    SaveChangesMiscMenuItem.Visible = True
+                Else
+                    MessageBox.Show("Cannot Create New Arena Here")
+                End If
+            ElseIf e.ColumnIndex = 36 Then 'Delete button
+                DataGridMiscView.Rows.RemoveAt(e.RowIndex)
+                SaveChangesMiscMenuItem.Visible = True
+            Else
+                'do nothing
+            End If
+            'do nothing
         End If
     End Sub
 
@@ -2007,6 +2040,8 @@ Public Class MainForm
             TempGridRow.Cells(38).Value = ShowBytes(current_poition + 117) 'Dim live As byte
             '2 byte 00
             TempGridRow.Cells(39).Value = ShowBytes(current_poition + 120) 'Dim J As byte
+            '40 Add
+            '41 Delete
             TempGridRow.HeaderCell.Value = index.ToString
             WorkingCollection.Add(TempGridRow)
             index += 1
@@ -2047,6 +2082,35 @@ Public Class MainForm
                     SaveChangesShowMenuItem.Visible = True
                 End If
         End Select
+    End Sub
+
+
+    Private Sub DataGridShowView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridShowView.CellContentClick
+        Dim senderGrid = DirectCast(sender, DataGridView)
+        If e.RowIndex >= 0 AndAlso
+           e.ColumnIndex >= 0 AndAlso
+            TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewButtonColumn Then
+            If e.ColumnIndex = 40 Then 'add button
+                Dim Duplicaterow As DataGridViewRow = DataGridShowView.Rows(e.RowIndex).Clone
+                For i As Integer = 0 To DataGridShowView.Rows(e.RowIndex).Cells.Count - 1
+                    Duplicaterow.Cells(i).Value = DataGridShowView.Rows(e.RowIndex).Cells(i).Value
+                Next
+                DataGridShowView.Rows.Insert(e.RowIndex + 1, Duplicaterow)
+                SaveChangesShowMenuItem.Visible = True
+                For i As Integer = e.RowIndex To DataGridShowView.Rows.Count - 1
+                    DataGridShowView.Rows(i).HeaderCell.Value = i.ToString
+                Next
+            ElseIf e.ColumnIndex = 41 Then 'Delete button
+                DataGridShowView.Rows.RemoveAt(e.RowIndex)
+                SaveChangesShowMenuItem.Visible = True
+                For i As Integer = e.RowIndex To DataGridShowView.Rows.Count - 1
+                    DataGridShowView.Rows(i).HeaderCell.Value = i.ToString
+                Next
+            Else
+                'do nothing
+            End If
+            'do nothing
+        End If
     End Sub
 
     Private Sub SaveShowChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveChangesShowMenuItem.Click
@@ -4635,7 +4699,6 @@ Public Class MainForm
     End Function
 
 #End Region
-#End Region
 
 #Region "Animation View"
 
@@ -4643,12 +4706,25 @@ Public Class MainForm
         Public StartingID As UInt16 = 0
         Public HeaderLength As UInt16 = 0
         Public BoneType As UInt32 = 0
-        Public OffsetA As UInt32 = 0
-        Public IntegerA As UInt32 = 0
-        Public OffsetB As UInt32 = 0
-        Public IntegerB As UInt32 = 0
+        Public AnimationPartAIndex As UInt32 = 0
+        Public AnimationPartALength As UInt32 = 0
+        Public AnimationPartBIndex As UInt32 = 0
+        Public AnimationPartBLength As UInt32 = 0
         Public RemainingBytes As Byte() = New Byte() {}
         Public RemByteString As String = ""
+        Public AnimationPartABytes As Byte() = New Byte() {}
+        Public AnimationPartAString As String = ""
+        Public AnimationPartBBytes As Byte() = New Byte() {}
+        Public AnimationPartBString As String = ""
+        Public XTranslation As Boolean = False
+        Public YTranslation As Boolean = False
+        Public ZTranslation As Boolean = False
+        Public XRotation As Boolean = False
+        Public YRotation As Boolean = False
+        Public ZRotation As Boolean = False
+        Public FrameCount As UInt32 = 0
+        Public FinalAnimationString As String = ""
+        Public FinalAnimationParsed As String = ""
     End Class
 
     Sub FillAnimationView(SelectedData As TreeNode)
@@ -4672,43 +4748,50 @@ Public Class MainForm
             End If
             Dim TempAnimationInformation As AnimationHeaderInformation = ParseBytesToAnimationHeaderInformation(TempAnimationBytes)
             Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
-            TempGridRow.Cells(0).Value = TempAnimationInformation.StartingID
-            TempGridRow.Cells(1).Value = Hex(TempAnimationInformation.StartingID)
-            TempGridRow.Cells(2).Value = TempAnimationInformation.HeaderLength
-            TempGridRow.Cells(3).Value = Hex(TempAnimationInformation.HeaderLength)
-            TempGridRow.Cells(4).Value = TempAnimationInformation.BoneType
-            TempGridRow.Cells(5).Value = Hex(TempAnimationInformation.BoneType)
-            TempGridRow.Cells(6).Value = TempAnimationInformation.OffsetA
-            TempGridRow.Cells(7).Value = Hex(TempAnimationInformation.OffsetA)
-            TempGridRow.Cells(8).Value = TempAnimationInformation.IntegerA
-            TempGridRow.Cells(9).Value = Hex(TempAnimationInformation.IntegerA)
-            TempGridRow.Cells(10).Value = TempAnimationInformation.OffsetB
-            TempGridRow.Cells(11).Value = Hex(TempAnimationInformation.OffsetB)
-            TempGridRow.Cells(12).Value = TempAnimationInformation.IntegerB
-            TempGridRow.Cells(13).Value = Hex(TempAnimationInformation.IntegerB)
-            TempGridRow.Cells(14).Value = TempAnimationInformation.RemByteString
+            TempGridRow.Cells(0).Value = i
+            TempGridRow.Cells(1).Value = TempAnimationInformation.StartingID
+            TempGridRow.Cells(2).Value = Hex(TempAnimationInformation.StartingID)
+            TempGridRow.Cells(3).Value = TempAnimationInformation.HeaderLength
+            TempGridRow.Cells(4).Value = Hex(TempAnimationInformation.HeaderLength)
+            TempGridRow.Cells(5).Value = TempAnimationInformation.BoneType
+            TempGridRow.Cells(6).Value = Hex(TempAnimationInformation.BoneType).PadLeft(8, "0")
+            TempGridRow.Cells(7).Value = TempAnimationInformation.AnimationPartAIndex
+            TempGridRow.Cells(8).Value = Hex(TempAnimationInformation.AnimationPartAIndex)
+            TempGridRow.Cells(9).Value = TempAnimationInformation.AnimationPartALength * 8
+            TempGridRow.Cells(10).Value = Hex(TempAnimationInformation.AnimationPartALength * 8)
+            TempGridRow.Cells(11).Value = TempAnimationInformation.AnimationPartBIndex
+            TempGridRow.Cells(12).Value = Hex(TempAnimationInformation.AnimationPartBIndex)
+            TempGridRow.Cells(13).Value = TempAnimationInformation.AnimationPartBLength * 8
+            TempGridRow.Cells(14).Value = Hex(TempAnimationInformation.AnimationPartBLength * 8)
+            TempGridRow.Cells(15).Value = TempAnimationInformation.RemByteString
+            'Getting Animation Information from the main file
+            TempAnimationInformation.AnimationPartABytes = New Byte(TempAnimationInformation.AnimationPartALength * 8 - 1) {}
+            Array.Copy(AnimationBytes, TempAnimationInformation.AnimationPartAIndex + 8, TempAnimationInformation.AnimationPartABytes, 0, TempAnimationInformation.AnimationPartALength * 8)
+            TempAnimationInformation.AnimationPartBBytes = New Byte(TempAnimationInformation.AnimationPartBLength * 8 - 1) {}
+            Array.Copy(AnimationBytes, TempAnimationInformation.AnimationPartBIndex + 8, TempAnimationInformation.AnimationPartBBytes, 0, TempAnimationInformation.AnimationPartBLength * 8)
+            FinishAnimationParse(TempAnimationInformation)
+            'Applying the additional information to the additional columns
+            TempGridRow.Cells(16).Value = TempAnimationInformation.AnimationPartAString
+            TempGridRow.Cells(17).Value = TempAnimationInformation.AnimationPartBString
+            TempGridRow.Cells(18).Value = TempAnimationInformation.XTranslation
+            TempGridRow.Cells(19).Value = TempAnimationInformation.YTranslation
+            TempGridRow.Cells(20).Value = TempAnimationInformation.ZTranslation
+            TempGridRow.Cells(21).Value = TempAnimationInformation.XRotation
+            TempGridRow.Cells(22).Value = TempAnimationInformation.YRotation
+            TempGridRow.Cells(23).Value = TempAnimationInformation.ZRotation
+            TempGridRow.Cells(24).Value = TempAnimationInformation.FrameCount
+            TempGridRow.Cells(25).Value = Hex(TempAnimationInformation.FrameCount)
+            TempGridRow.Cells(26).Value = TempAnimationInformation.FinalAnimationString
+            TempGridRow.Cells(27).Value = TempAnimationInformation.FinalAnimationParsed
             WorkingCollection.Add(TempGridRow)
             ProgressBar1.Value = i
         Next
-        If AnimationShowHexToolStripMenuItem.Text.Contains("☑") Then
-            DataGridAnimationView.Columns(1).Visible = True
-            DataGridAnimationView.Columns(3).Visible = True
-            DataGridAnimationView.Columns(5).Visible = True
-            DataGridAnimationView.Columns(7).Visible = True
-            DataGridAnimationView.Columns(9).Visible = True
-            DataGridAnimationView.Columns(11).Visible = True
-            DataGridAnimationView.Columns(13).Visible = True
-        Else
-            '☐
-            DataGridAnimationView.Columns(1).Visible = False
-            DataGridAnimationView.Columns(3).Visible = False
-            DataGridAnimationView.Columns(5).Visible = False
-            DataGridAnimationView.Columns(7).Visible = False
-            DataGridAnimationView.Columns(9).Visible = False
-            DataGridAnimationView.Columns(11).Visible = False
-            DataGridAnimationView.Columns(13).Visible = False
-        End If
+        GetDisplayedColumns()
         DataGridAnimationView.Rows.AddRange(WorkingCollection.ToArray())
+        For i As Integer = 0 To DataGridAnimationView.Rows.Count - 1
+            DataGridAnimationView.Rows(i).HeaderCell.Value = i + 1
+        Next
+
     End Sub
 
     Function ParseBytesToAnimationHeaderInformation(TestedByteArray As Byte()) As AnimationHeaderInformation
@@ -4716,15 +4799,14 @@ Public Class MainForm
            .StartingID = BitConverter.ToUInt16(GeneralTools.EndianReverse(TestedByteArray, 0, 2), 0),
            .HeaderLength = BitConverter.ToUInt16(GeneralTools.EndianReverse(TestedByteArray, 2, 2), 0),
            .BoneType = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, 4), 0),
-           .OffsetA = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, 8), 0),
-           .IntegerA = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HC), 0),
-           .OffsetB = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H10), 0),
-           .IntegerB = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H14), 0)}
-
+           .AnimationPartAIndex = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, 8), 0),
+           .AnimationPartALength = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HC), 0),
+           .AnimationPartBIndex = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H10), 0),
+           .AnimationPartBLength = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H14), 0)}
         If TestedByteArray.Length > &H18 Then
             ReturnedAnimationInfo.RemainingBytes = New Byte(&H18 - 1) {}
             Array.Copy(TestedByteArray, &H18, ReturnedAnimationInfo.RemainingBytes, 0, &H18)
-            ReturnedAnimationInfo.RemByteString = (BitConverter.ToString(ReturnedAnimationInfo.RemainingBytes).Replace("-", ""))
+            ReturnedAnimationInfo.RemByteString = (BitConverter.ToString(ReturnedAnimationInfo.RemainingBytes).Replace("-", " "))
         Else
             ReturnedAnimationInfo.RemainingBytes = New Byte() {}
             ReturnedAnimationInfo.RemByteString = ""
@@ -4732,32 +4814,230 @@ Public Class MainForm
         End If
         Return ReturnedAnimationInfo
     End Function
+    Sub FinishAnimationParse(ByRef PartialAnimationInformation As AnimationHeaderInformation)
+        PartialAnimationInformation.AnimationPartAString = BitConverter.ToString(PartialAnimationInformation.AnimationPartABytes).Replace("-", " ")
+        PartialAnimationInformation.AnimationPartAString = GeneralTools.TruncateString(PartialAnimationInformation.AnimationPartAString, 32000)
+        PartialAnimationInformation.AnimationPartBString = BitConverter.ToString(PartialAnimationInformation.AnimationPartBBytes).Replace("-", " ")
+        PartialAnimationInformation.AnimationPartBString = GeneralTools.TruncateString(PartialAnimationInformation.AnimationPartBString, 32000)
+        If PartialAnimationInformation.StartingID < 1000 Then
+            'A is the header to parse
+            'here is a check to parse the other byte header if frames = 0
+            'Check boxes X - Y - Z Transitional
+            If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 0) = 1 Then
+                PartialAnimationInformation.XTranslation = True
+            ElseIf BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 0) = &HFF00 Then
+                PartialAnimationInformation.XTranslation = False
+            Else
+                MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 0)))
+            End If
 
-    Private Sub AnimationShowHexToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AnimationShowHexToolStripMenuItem.Click
-        If AnimationShowHexToolStripMenuItem.Text.Contains("☑") Then
-            'We will hide the hex columns now and then un-check the box.
-            DataGridAnimationView.Columns(1).Visible = False
-            DataGridAnimationView.Columns(3).Visible = False
-            DataGridAnimationView.Columns(5).Visible = False
-            DataGridAnimationView.Columns(7).Visible = False
-            DataGridAnimationView.Columns(9).Visible = False
-            DataGridAnimationView.Columns(11).Visible = False
-            DataGridAnimationView.Columns(13).Visible = False
-            AnimationShowHexToolStripMenuItem.Text = "☐ Show Hex"
+            If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 2) = 1 Then
+                PartialAnimationInformation.YTranslation = True
+            ElseIf BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 2) = &HFF00 Then
+                PartialAnimationInformation.YTranslation = False
+            Else
+                MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 2)))
+            End If
+
+            If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 4) = 1 Then
+                PartialAnimationInformation.ZTranslation = True
+            ElseIf BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 4) = &HFF00 Then
+                PartialAnimationInformation.ZTranslation = False
+            Else
+                MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 4)))
+            End If
+
+            'Check boxes X - Y - Z Rotational
+            If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 8) = 1 Then
+                PartialAnimationInformation.XRotation = True
+            ElseIf BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 8) = &HFF00 Then
+                PartialAnimationInformation.XRotation = False
+            Else
+                MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 8)))
+            End If
+
+            If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 10) = 1 Then
+                PartialAnimationInformation.YRotation = True
+            ElseIf BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 10) = &HFF00 Then
+                PartialAnimationInformation.YRotation = False
+            Else
+                MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 10)))
+            End If
+
+            If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 12) = 1 Then
+                PartialAnimationInformation.ZRotation = True
+            ElseIf BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 12) = &HFF00 Then
+                PartialAnimationInformation.ZRotation = False
+            Else
+                MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 12)))
+            End If
+            PartialAnimationInformation.FrameCount = BitConverter.ToUInt16(GeneralTools.EndianReverse(PartialAnimationInformation.AnimationPartABytes, 14, 2), 0)
+            PartialAnimationInformation.FinalAnimationString = PartialAnimationInformation.AnimationPartBString
+            If PartialAnimationInformation.StartingID = 772 Then
+                'Dim TestSubFrames As Integer = 0
+                For i As Integer = 0 To PartialAnimationInformation.AnimationPartBLength Step 8
+                    'PartialAnimationInformation.FinalAnimationParsed += BitConverter.ToDouble(GeneralTools.EndianReverse(PartialAnimationInformation.AnimationPartBBytes, i, 8), 0).ToString() & ", "
+                    'TestSubFrames += PartialAnimationInformation.AnimationPartBBytes(i + 7)
+                    For j As Integer = 0 To 5
+                        If PartialAnimationInformation.AnimationPartBBytes(i + j) > 128 Then
+                            PartialAnimationInformation.FinalAnimationParsed += (-(&HFF - PartialAnimationInformation.AnimationPartBBytes(i + j))).ToString & ", "
+                        Else
+                            PartialAnimationInformation.FinalAnimationParsed += (PartialAnimationInformation.AnimationPartBBytes(i + j)).ToString & ", "
+                        End If
+                    Next
+                    PartialAnimationInformation.FinalAnimationParsed += vbNewLine
+                Next
+                'PartialAnimationInformation.FinalAnimationParsed = TestSubFrames
+            ElseIf PartialAnimationInformation.StartingID = 516 Then
+                Dim TestedFrames As Integer = 0
+                For i As Integer = 16 To PartialAnimationInformation.AnimationPartBLength Step 20
+                    TestedFrames += BitConverter.ToInt16(GeneralTools.EndianReverse(PartialAnimationInformation.AnimationPartBBytes, i + 4, 2), 0)
+                Next
+                PartialAnimationInformation.FinalAnimationParsed = TestedFrames
+            End If
         Else
-            '☐
-            DataGridAnimationView.Columns(1).Visible = True
-            DataGridAnimationView.Columns(3).Visible = True
-            DataGridAnimationView.Columns(5).Visible = True
-            DataGridAnimationView.Columns(7).Visible = True
-            DataGridAnimationView.Columns(9).Visible = True
-            DataGridAnimationView.Columns(11).Visible = True
-            DataGridAnimationView.Columns(13).Visible = True
-            AnimationShowHexToolStripMenuItem.Text = "☑ Show Hex"
+                'B is our header to parse
+                'Check boxes X - Y - Z Transitional
+                If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 0) = 1 Then
+                PartialAnimationInformation.XTranslation = True
+            ElseIf BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 0) = &HFF00 Then
+                PartialAnimationInformation.XTranslation = False
+            Else
+                MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 0)))
+            End If
+
+            If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 2) = 1 Then
+                PartialAnimationInformation.YTranslation = True
+            ElseIf BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 2) = &HFF00 Then
+                PartialAnimationInformation.YTranslation = False
+            Else
+                MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 2)))
+            End If
+
+            If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 4) = 1 Then
+                PartialAnimationInformation.ZTranslation = True
+            ElseIf BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 4) = &HFF00 Then
+                PartialAnimationInformation.ZTranslation = False
+            Else
+                MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 4)))
+            End If
+
+            'Check boxes X - Y - Z Rotational
+            If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 8) = 1 Then
+                PartialAnimationInformation.XRotation = True
+            ElseIf BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 8) = &HFF00 Then
+                PartialAnimationInformation.XRotation = False
+            Else
+                MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 8)))
+            End If
+
+            If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 10) = 1 Then
+                PartialAnimationInformation.YRotation = True
+            ElseIf BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 10) = &HFF00 Then
+                PartialAnimationInformation.YRotation = False
+            Else
+                MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 10)))
+            End If
+
+            If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 12) = 1 Then
+                PartialAnimationInformation.ZRotation = True
+            ElseIf BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 12) = &HFF00 Then
+                PartialAnimationInformation.ZRotation = False
+            Else
+                MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 12)))
+            End If
+            PartialAnimationInformation.FrameCount = BitConverter.ToUInt16(GeneralTools.EndianReverse(PartialAnimationInformation.AnimationPartBBytes, 14, 2), 0)
+            PartialAnimationInformation.FinalAnimationString = PartialAnimationInformation.AnimationPartAString
+            If PartialAnimationInformation.StartingID = 772 Then
+                'Dim TestSubFrames As Integer = 0
+                For i As Integer = 0 To PartialAnimationInformation.AnimationPartALength Step 8
+                    'PartialAnimationInformation.FinalAnimationParsed += BitConverter.ToDouble(GeneralTools.EndianReverse(PartialAnimationInformation.AnimationPartABytes, i, 8), 0).ToString() & ", "
+                    'TestSubFrames += PartialAnimationInformation.AnimationPartABytes(i + 7)
+                    For j As Integer = 0 To 5
+                        If PartialAnimationInformation.AnimationPartABytes(i + j) > 128 Then
+                            PartialAnimationInformation.FinalAnimationParsed += (-(&HFF - PartialAnimationInformation.AnimationPartABytes(i + j))).ToString & ", "
+                        Else
+                            PartialAnimationInformation.FinalAnimationParsed += (PartialAnimationInformation.AnimationPartABytes(i + j)).ToString & ", "
+                        End If
+                    Next
+                    PartialAnimationInformation.FinalAnimationParsed += vbNewLine
+                Next
+                'PartialAnimationInformation.FinalAnimationParsed = TestSubFrames
+            ElseIf PartialAnimationInformation.StartingID = 516 Then
+                Dim TestedFrames As Integer = 0
+                For i As Integer = 16 To PartialAnimationInformation.AnimationPartALength Step 20
+                    TestedFrames += BitConverter.ToInt16(GeneralTools.EndianReverse(PartialAnimationInformation.AnimationPartABytes, i + 4, 2), 0)
+                Next
+                PartialAnimationInformation.FinalAnimationParsed = TestedFrames
+            End If
         End If
+
+        '772 = 8 byte chunks
     End Sub
 
-#End Region
+    Sub GetDisplayedColumns()
+        For i As Integer = 0 To DataGridAnimationView.Columns.GetColumnCount(DataGridViewElementStates.None) - 1
+            DataGridAnimationView.Columns(i).Visible = True
+        Next
+        If AnimationShowDebugToolStripMenuItem.Text.Contains("☑") Then
+            If AnimationShowHexToolStripMenuItem.Text.Contains("☑") Then
+                'Show Hex Columns and Hide Decimal Columns
+            ElseIf AnimationShowHexToolStripMenuItem.Text.Contains("☑") Then
+                'Show Hex Columns and Also Show Decimal Columns
+            ElseIf AnimationShowHexToolStripMenuItem.Text.Contains("☒") Then
+                'Hide Hex Columns and Show Decimal Columns
+            End If
+        Else '☐
+            DataGridAnimationView.Columns(3).Visible = False
+            DataGridAnimationView.Columns(4).Visible = False
+            DataGridAnimationView.Columns(7).Visible = False
+            DataGridAnimationView.Columns(8).Visible = False
+            DataGridAnimationView.Columns(9).Visible = False
+            DataGridAnimationView.Columns(10).Visible = False
+            DataGridAnimationView.Columns(11).Visible = False
+            DataGridAnimationView.Columns(12).Visible = False
+            DataGridAnimationView.Columns(13).Visible = False
+            DataGridAnimationView.Columns(14).Visible = False
+            DataGridAnimationView.Columns(16).Visible = False
+            DataGridAnimationView.Columns(17).Visible = False
+            If AnimationShowHexToolStripMenuItem.Text.Contains("☑") Then
+                'Show Hex Columns and Hide Decimal Columns
+                DataGridAnimationView.Columns(1).Visible = False
+                DataGridAnimationView.Columns(24).Visible = False
+            ElseIf AnimationShowHexToolStripMenuItem.Text.Contains("☐") Then
+                'Show Hex Columns and Also Show Decimal Columns
+            ElseIf AnimationShowHexToolStripMenuItem.Text.Contains("☒") Then
+                'Hide Hex Columns and Show Decimal Columns
+                DataGridAnimationView.Columns(2).Visible = False
+                DataGridAnimationView.Columns(25).Visible = False
+            End If
+        End If
+    End Sub
+    Private Sub AnimationShowHexToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AnimationShowHexToolStripMenuItem.Click
+        If AnimationShowHexToolStripMenuItem.Text.Contains("☑") Then
+            AnimationShowHexToolStripMenuItem.Text = "☐ Show Hex"
+        ElseIf AnimationShowHexToolStripMenuItem.Text.Contains("☐") Then
+            '☐
+            AnimationShowHexToolStripMenuItem.Text = "☒ Show Hex"
+            '☒
+        ElseIf AnimationShowHexToolStripMenuItem.Text.Contains("☒") Then
+            AnimationShowHexToolStripMenuItem.Text = "☑ Show Hex"
+        End If
+        GetDisplayedColumns()
+    End Sub
 
+    Private Sub AnimationShowDebugToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AnimationShowDebugToolStripMenuItem.Click
+        If AnimationShowDebugToolStripMenuItem.Text.Contains("☑") Then
+            AnimationShowDebugToolStripMenuItem.Text = "☐ Show Debug"
+        ElseIf AnimationShowDebugToolStripMenuItem.Text.Contains("☐") Then
+            '☐
+            AnimationShowDebugToolStripMenuItem.Text = "☑ Show Debug"
+        End If
+        GetDisplayedColumns()
+    End Sub
+#End Region
+#End Region
     'There is the potential for better programming using data binding data grid views.
+    'Option to make buttons disabled
+    'disabling add - remove buttons https://docs.microsoft.com/en-us/dotnet/framework/winforms/controls/disable-buttons-in-a-button-column-in-the-datagrid
 End Class

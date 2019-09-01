@@ -151,6 +151,16 @@ Public Class GeneralTools
         Return Count
     End Function
 
+    Shared Function TruncateString(TestedString As String, MaximumStength As Integer) As String
+        ' If argument is too big, return the original string.
+        ' ... Otherwise take a substring from the string's start index.
+        If MaximumStength > TestedString.Length Then
+            Return TestedString
+        Else
+            Return TestedString.Substring(0, MaximumStength)
+        End If
+    End Function
+
 #End Region
 
 End Class

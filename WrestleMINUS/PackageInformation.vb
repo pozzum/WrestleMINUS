@@ -443,16 +443,19 @@ Public Class PackageInformation
 #Region "Secondary Container Types {PACH}"
 
             Case PackageType.SHDC
-                Dim TempHeaderCheck As Integer = BitConverter.ToUInt32(FileBytes, &H18)
-                Dim TempHeaderStart As Integer = BitConverter.ToUInt32(FileBytes, &H1C)
-                Dim TempHeaderLength As Integer = BitConverter.ToUInt32(FileBytes, &H20)
-                If TempHeaderStart < TempHeaderCheck Then
-                    TempHeaderStart = TempHeaderCheck + &H10 + &H40
-                    If TempHeaderStart Mod &H10 > 0 Then
-                        TempHeaderStart = TempHeaderStart + &H10 - (TempHeaderStart Mod &H10)
-                    End If
+                Dim HeaderTypeCheck As Integer = BitConverter.ToUInt32(FileBytes, &HC) '01 = no spacer - 10 = &h10 spacer 00 08 super large spacers
+                Dim FileInformationLength As Integer = BitConverter.ToUInt32(FileBytes, &H20)
+                Dim FileInformationIndex As Integer
+                If HeaderTypeCheck = 1 Then
+                    FileInformationIndex = BitConverter.ToUInt32(FileBytes, &H1C)
+                ElseIf HeaderTypeCheck = &H10 Then
+                    Dim TempNumber As Integer = BitConverter.ToUInt32(FileBytes, &H18)
+                    TempNumber += (TempNumber Mod &H10)
+                    FileInformationIndex = TempNumber + &H40 + &H10
+                ElseIf HeaderTypeCheck = &H800 Then
+                    FileInformationIndex = BitConverter.ToUInt32(FileBytes, &H1C) * &H800
                 End If
-                Dim PachPartsCount As Integer = (TempHeaderLength / &H10) '1 index
+                Dim PachPartsCount As Integer = (FileInformationLength / &H10) '1 index
                 If PachPartsCount > 0 Then
                     If IsNothing(ParentFileProperties.SubFiles) Then
                         ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
@@ -460,7 +463,7 @@ Public Class PackageInformation
                 End If
                 For i As Integer = 0 To PachPartsCount - 1
                     Try
-                        Dim PartName As String = Hex(BitConverter.ToUInt32(FileBytes, TempHeaderStart + (i * &H10)))
+                        Dim PartName As String = Hex(BitConverter.ToUInt32(FileBytes, FileInformationIndex + (i * &H10)))
                         'MessageBox.Show(PartName)
                         If PartName = "FFFFFFFF" Then
                             Continue For
@@ -469,8 +472,8 @@ Public Class PackageInformation
                         Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
                             .Name = PartName,
                             .FullFilePath = ParentFileProperties.FullFilePath,
-                            .Index = BitConverter.ToUInt32(FileBytes, TempHeaderStart + (i * &H10) + &H4) + ParentFileProperties.Index,
-                            .length = BitConverter.ToUInt64(FileBytes, TempHeaderStart + (i * &H10) + &H8),
+                            .Index = BitConverter.ToUInt32(FileBytes, FileInformationIndex + (i * &H10) + &H4) + ParentFileProperties.Index,
+                            .length = BitConverter.ToUInt64(FileBytes, FileInformationIndex + (i * &H10) + &H8),
                             .StoredData = ParentFileProperties.StoredData,
                             .FileType = PackageInformation.CheckHeaderType(.Index - ParentFileProperties.Index, FileBytes, ParentFileProperties.FullFilePath),
                             .Parent = ParentFileProperties}
@@ -478,7 +481,7 @@ Public Class PackageInformation
                     Catch ex As Exception
                         MessageBox.Show(ex.Message & vbNewLine &
                                         "Object Number: " & i & vbNewLine &
-                                        "Header Start {hex}: " & Hex(TempHeaderStart))
+                                        "Header Start {hex}: " & Hex(FileInformationIndex))
                     End Try
                 Next
             Case PackageType.PACH
@@ -695,7 +698,7 @@ Public Class PackageInformation
                     ParentFileProperties.SubFiles.Add(ContainedFileProperties)
                 Next
             Case PackageType.YANMPack
-                Dim HeaderLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes), 0) + &H20
+                Dim HeaderLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, &HC), 0)
                 Dim YANMLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, 4), 0)
                 Dim HeadIndex As Integer = 0
                 Dim partcount As Integer = 0
@@ -704,7 +707,7 @@ Public Class PackageInformation
                         ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
                     End If
                 End If
-                Do While HeadIndex < HeaderLength
+                Do While HeadIndex < (HeaderLength - &H20)
                     If HeadIndex = 0 Then
                         HeadIndex = &H70
                     End If
@@ -713,14 +716,10 @@ Public Class PackageInformation
                         .Name = Encoding.ASCII.GetString(FileBytes, HeadIndex + 4, 8),
                         .FullFilePath = ParentFileProperties.FullFilePath,
                         .Index = (BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, HeadIndex + &H24), 0)) + HeaderLength + ParentFileProperties.Index,
+                        .length = BitConverter.ToUInt16(GeneralTools.EndianReverse(FileBytes, HeadIndex + 2, 2), 0) * &H20,
                         .FileType = PackageType.YANM,
                         .StoredData = ParentFileProperties.StoredData,
                         .Parent = ParentFileProperties}
-                    If HeadIndex + &H20 + &H28 < HeaderLength Then
-                        ContainedFileProperties.length = (BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, HeadIndex + &H24 + &H28), 0)) + HeaderLength - ContainedFileProperties.Index
-                    Else
-                        ContainedFileProperties.length = YANMLength - ContainedFileProperties.Index + HeaderLength
-                    End If
                     ParentFileProperties.SubFiles.Add(ContainedFileProperties)
                     partcount = partcount + 1
                     HeadIndex = HeadIndex + &H28
