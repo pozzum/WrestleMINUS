@@ -72,6 +72,11 @@ Public Class SettingsHandlers
             My.Settings.DecimalNameMinLength = 8
             My.Settings.TruncateDecimalNames = False
         End If
+        If IsNothing(My.Settings.SkippedVersion) Then
+            My.Settings.SkippedVersion = My.Application.Info.Version
+        ElseIf My.Settings.SkippedVersion.ToString = "0.0" Then
+            My.Settings.SkippedVersion = My.Application.Info.Version
+        End If
         My.Settings.Save()
     End Sub
 

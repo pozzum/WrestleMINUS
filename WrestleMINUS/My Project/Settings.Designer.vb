@@ -425,6 +425,17 @@ Namespace My
                 Me("SavedFormSize") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+        Public Property SkippedVersion() As Global.system.version
+            Get
+                Return CType(Me("SkippedVersion"),Global.system.version)
+            End Get
+            Set
+                Me("SkippedVersion") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

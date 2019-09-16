@@ -79,6 +79,8 @@ Partial Class OptionsMenu
         Me.Label2 = New System.Windows.Forms.Label()
         Me.CheckRelocateMods = New System.Windows.Forms.CheckBox()
         Me.CheckDisableModPref = New System.Windows.Forms.CheckBox()
+        Me.ButtonCheckUpdate = New System.Windows.Forms.Button()
+        Me.LabelSkipVersion = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -212,7 +214,7 @@ Partial Class OptionsMenu
         'LabelZlib
         '
         Me.LabelZlib.AutoSize = True
-        Me.LabelZlib.Location = New System.Drawing.Point(8, 278)
+        Me.LabelZlib.Location = New System.Drawing.Point(8, 274)
         Me.LabelZlib.Name = "LabelZlib"
         Me.LabelZlib.Size = New System.Drawing.Size(114, 13)
         Me.LabelZlib.TabIndex = 14
@@ -221,7 +223,7 @@ Partial Class OptionsMenu
         'LabelOodle
         '
         Me.LabelOodle.AutoSize = True
-        Me.LabelOodle.Location = New System.Drawing.Point(8, 307)
+        Me.LabelOodle.Location = New System.Drawing.Point(8, 301)
         Me.LabelOodle.Name = "LabelOodle"
         Me.LabelOodle.Size = New System.Drawing.Size(125, 13)
         Me.LabelOodle.TabIndex = 15
@@ -229,7 +231,7 @@ Partial Class OptionsMenu
         '
         'ButtonSelectZlib
         '
-        Me.ButtonSelectZlib.Location = New System.Drawing.Point(143, 273)
+        Me.ButtonSelectZlib.Location = New System.Drawing.Point(143, 269)
         Me.ButtonSelectZlib.Name = "ButtonSelectZlib"
         Me.ButtonSelectZlib.Size = New System.Drawing.Size(125, 23)
         Me.ButtonSelectZlib.TabIndex = 16
@@ -239,7 +241,7 @@ Partial Class OptionsMenu
         '
         'ButtonOodleSelect
         '
-        Me.ButtonOodleSelect.Location = New System.Drawing.Point(143, 302)
+        Me.ButtonOodleSelect.Location = New System.Drawing.Point(143, 296)
         Me.ButtonOodleSelect.Name = "ButtonOodleSelect"
         Me.ButtonOodleSelect.Size = New System.Drawing.Size(125, 23)
         Me.ButtonOodleSelect.TabIndex = 17
@@ -390,7 +392,7 @@ Partial Class OptionsMenu
         'LabelFontAwesome
         '
         Me.LabelFontAwesome.AutoSize = True
-        Me.LabelFontAwesome.Location = New System.Drawing.Point(8, 249)
+        Me.LabelFontAwesome.Location = New System.Drawing.Point(8, 247)
         Me.LabelFontAwesome.Name = "LabelFontAwesome"
         Me.LabelFontAwesome.Size = New System.Drawing.Size(122, 13)
         Me.LabelFontAwesome.TabIndex = 43
@@ -398,7 +400,7 @@ Partial Class OptionsMenu
         '
         'ButtonSelectFontAwesome
         '
-        Me.ButtonSelectFontAwesome.Location = New System.Drawing.Point(143, 244)
+        Me.ButtonSelectFontAwesome.Location = New System.Drawing.Point(143, 242)
         Me.ButtonSelectFontAwesome.Name = "ButtonSelectFontAwesome"
         Me.ButtonSelectFontAwesome.Size = New System.Drawing.Size(125, 23)
         Me.ButtonSelectFontAwesome.TabIndex = 44
@@ -431,6 +433,8 @@ Partial Class OptionsMenu
         'TabPage1
         '
         Me.TabPage1.BackColor = System.Drawing.SystemColors.Control
+        Me.TabPage1.Controls.Add(Me.LabelSkipVersion)
+        Me.TabPage1.Controls.Add(Me.ButtonCheckUpdate)
         Me.TabPage1.Controls.Add(Me.Label1)
         Me.TabPage1.Controls.Add(Me.ButtonSelectFontAwesome)
         Me.TabPage1.Controls.Add(Me.TextBoxHome)
@@ -644,6 +648,25 @@ Partial Class OptionsMenu
         Me.CheckDisableModPref.Text = "Disable Mod Folder Preference"
         Me.CheckDisableModPref.UseVisualStyleBackColor = True
         '
+        'ButtonCheckUpdate
+        '
+        Me.ButtonCheckUpdate.Location = New System.Drawing.Point(143, 323)
+        Me.ButtonCheckUpdate.Margin = New System.Windows.Forms.Padding(0)
+        Me.ButtonCheckUpdate.Name = "ButtonCheckUpdate"
+        Me.ButtonCheckUpdate.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonCheckUpdate.TabIndex = 52
+        Me.ButtonCheckUpdate.Text = "Check For Update"
+        Me.ButtonCheckUpdate.UseVisualStyleBackColor = True
+        '
+        'LabelSkipVersion
+        '
+        Me.LabelSkipVersion.AutoSize = True
+        Me.LabelSkipVersion.Location = New System.Drawing.Point(8, 328)
+        Me.LabelSkipVersion.Name = "LabelSkipVersion"
+        Me.LabelSkipVersion.Size = New System.Drawing.Size(71, 13)
+        Me.LabelSkipVersion.TabIndex = 53
+        Me.LabelSkipVersion.Text = "Skipped Ver.:"
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -723,4 +746,6 @@ Partial Class OptionsMenu
     Friend WithEvents TrackBarDecimalNameLength As TrackBar
     Friend WithEvents CheckBoxShowSelectedNode As CheckBox
     Friend WithEvents ButtonResetFormSize As Button
+    Friend WithEvents LabelSkipVersion As Label
+    Friend WithEvents ButtonCheckUpdate As Button
 End Class

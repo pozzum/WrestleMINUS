@@ -23,8 +23,8 @@ Public Class MainForm
 
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = Me.Text & " Ver: " & My.Application.Info.Version.ToString
-        OnlineVersion.CheckUpdate()
         SettingsHandlers.SettingsCheck()
+        OnlineVersion.CheckUpdate()
         LoadFontAwesomeIcons()
         FillCompressionMenu()
         ApplyFormSettings()
@@ -3715,7 +3715,7 @@ Public Class MainForm
         Dim senderGrid = DirectCast(sender, DataGridView)
         If TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewButtonColumn AndAlso
            e.RowIndex >= 0 Then
-            If e.ColumnIndex = 18 Then 'add button
+            If e.ColumnIndex = 20 Then 'add button
                 'This function adds a duplicate row at index + 1, but index + 1 has to have true index updated as well
                 Dim Duplicaterow As DataGridViewRow = DataGridAssetView.Rows(e.RowIndex).Clone
                 For i As Integer = 0 To DataGridAssetView.Rows(e.RowIndex).Cells.Count - 1
@@ -3724,7 +3724,7 @@ Public Class MainForm
                 DataGridAssetView.Rows.Insert(e.RowIndex + 1, Duplicaterow)
                 SavePending = True
                 SaveChangesAssetViewMenuItem.Visible = True
-            ElseIf e.ColumnIndex = 19 Then 'Delete button
+            ElseIf e.ColumnIndex = 21 Then 'Delete button
                 DataGridAssetView.Rows.RemoveAt(e.RowIndex)
                 SavePending = True
                 SaveChangesAssetViewMenuItem.Visible = True

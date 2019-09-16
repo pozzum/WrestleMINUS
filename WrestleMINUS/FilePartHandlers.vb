@@ -1387,4 +1387,64 @@ Public Class FilePartHandlers
 
 #End Region
 
+#Region "Sorting Functions"
+
+    Shared Function SortFileContainer(ByRef FileRequested As ExtendedFileProperties) As Boolean
+        Dim ReturnedResult As Boolean = False
+        'Adding in a check if file is read only and if the file is missing
+        If Not GeneralTools.CheckFileWriteable(CType(FileRequested.FullFilePath, String)) Then
+            Return False
+        End If
+        'File Requested is the Parent Container and we need to sort the sub files
+        If Not PackageInformation.CheckInjectable(FileRequested.FileType) Then 'Hopefully this can expand to all
+            MessageBox.Show("Not Yet Supported")
+            Return False
+        End If
+        'Get File Bytes
+        Dim ContainerBytes As Byte() = FilePartHandlers.GetFilePartBytes(FileRequested)
+        Dim ParentNodeLocation As Integer = 0
+        If FileRequested.FileType = PackageType.PachDirectory_4 OrElse
+            FileRequested.FileType = PackageType.PachDirectory_8 Then
+            'here we grab the
+            ContainerBytes = FilePartHandlers.GetFilePartBytes(FileRequested)
+            ParentNodeLocation = FileRequested.Parent.SubFiles.IndexOf(FileRequested)
+        End If
+        'Written File Array will be the same length as the old file
+        Dim WrittenFileArray As Byte() = New Byte(ContainerBytes.Length - 1) {}
+        ' Write File Prior to new file
+        Array.Copy(ContainerBytes, 0, WrittenFileArray, 0, ContainerBytes.LongLength)
+        Dim ContainedParts As Integer = FileRequested.SubFiles.Count
+        If ContainedParts > 1 Then
+            MessageBox.Show("Tool cannot yet sort.  Continue?")
+            Return False
+        End If
+        Select Case FileRequested.FileType
+            Case PackageType.HSPC
+            Case PackageType.SHDC
+            Case PackageType.EPK8
+            Case PackageType.EPAC
+            Case PackageType.PachDirectory_8
+            Case PackageType.PachDirectory_4
+            Case PackageType.TextureLibrary
+            Case PackageType.YANMPack
+        End Select
+        'now we want to correct the parent so we can inject properly
+        'skipping pach directories
+        If FileRequested.Index = 0 AndAlso
+            FileRequested.StoredData.Length = 0 Then
+            'File to be Written
+            Dim WrittenFile As String = FileRequested.FullFilePath
+            If My.Settings.BackupInjections AndAlso GeneralTools.CheckFileWriteable(WrittenFile & ".bak", False) Then
+                File.Copy(WrittenFile, WrittenFile & ".bak", True)
+            End If
+            File.WriteAllBytes(WrittenFile, WrittenFileArray)
+            Return True
+        Else
+            'we must go higher
+            Return InjectBytesIntoFile(FileRequested, WrittenFileArray)
+        End If
+    End Function
+
+#End Region
+
 End Class

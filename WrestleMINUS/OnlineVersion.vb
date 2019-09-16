@@ -37,33 +37,82 @@ Public Class OnlineVersion
                 Dim LocalVersion As String = My.Application.Info.Version.ToString
                 Dim LocalVersionTemp() As String = Split(LocalVersion, ".")
                 Dim LocalVersionInt(3) As Integer
+                Dim SkippedVersion As String = My.Settings.SkippedVersion.ToString
+                Dim SkippedVersionTemp() As String = Split(SkippedVersion, ".")
+                Dim SkippedVersionInt(3) As Integer
                 For s As Integer = 0 To 3
                     CurrentVersionInt(s) = CInt(CurrentVersionTemp(s))
                     LocalVersionInt(s) = CInt(LocalVersionTemp(s))
+                    SkippedVersionInt(s) = CInt(SkippedVersionTemp(s))
                 Next
-                Dim ChangeType As String = ""
-                ChangeType = GetUpdateType(CurrentVersionInt, LocalVersionInt)
+                'First compare the Skipped version Local
+                Dim ChangeType As UpdateType = GetUpdateType(SkippedVersionInt, LocalVersionInt)
                 If Not ChangeType = UpdateType.None Then
-                    Dim result As Integer = MessageBox.Show("You have version " & LocalVersion &
+                    'Local Version is the same as skipped
+                    ChangeType = GetUpdateType(CurrentVersionInt, LocalVersionInt)
+                    If Not ChangeType = UpdateType.None Then
+                        Dim result As Integer = MessageBox.Show("You have version " & LocalVersion &
                                                             " and there is a new " & GetUpdateString(ChangeType) &
                                                             " version " & CurrentVersion &
                                                             vbNewLine & "Would you like to update?",
                                                             "Version Update",
                                                             MessageBoxButtons.YesNo)
-                    If result = DialogResult.Yes Then
-                        Dim Adresult As Integer = MessageBox.Show("Would you be willing to view an ad?", "ads help support development", MessageBoxButtons.YesNo)
-                        If Adresult = DialogResult.Yes Then
-                            Process.Start("http://metastead.com/12819869/wrestleminus")
+                        If result = DialogResult.Yes Then
+                            Dim Adresult As Integer = MessageBox.Show("Would you be willing to view an ad?", "ads help support development", MessageBoxButtons.YesNo)
+                            If Adresult = DialogResult.Yes Then
+                                Process.Start("http://metastead.com/12819869/wrestleminus")
+                            Else
+                                Process.Start(PageAddress)
+                            End If
                         Else
-                            Process.Start(PageAddress)
+                            'Ask if they want to skip this update
+                            Dim SkipResult As Integer = MessageBox.Show("Would you like to skip this update in future?",
+                                                            "Skip Version?",
+                                                            MessageBoxButtons.YesNo)
+                            If SkipResult = DialogResult.Yes Then
+                                Dim TempVersion As Version
+                                If Version.TryParse(CurrentVersion, TempVersion) Then
+                                    My.Settings.SkippedVersion = TempVersion
+                                End If
+                            End If
                         End If
                     Else
-                        'do nothing
+                        'No new update
                     End If
                 Else
-                    'do nothing
+                    'Skip is newer
+                    'We want to compare the skipped version to online version
+                    ChangeType = GetUpdateType(CurrentVersionInt, LocalVersionInt)
+                    If Not ChangeType = UpdateType.None Then
+                        Dim result As Integer = MessageBox.Show("You have skipped version " & SkippedVersion &
+                                                            " and there is a new " & GetUpdateString(ChangeType) &
+                                                            " version " & CurrentVersion &
+                                                            vbNewLine & "Would you like to update?",
+                                                            "Version Update",
+                                                            MessageBoxButtons.YesNo)
+                        If result = DialogResult.Yes Then
+                            Dim Adresult As Integer = MessageBox.Show("Would you be willing to view an ad?", "ads help support development", MessageBoxButtons.YesNo)
+                            If Adresult = DialogResult.Yes Then
+                                Process.Start("http://metastead.com/12819869/wrestleminus")
+                            Else
+                                Process.Start(PageAddress)
+                            End If
+                        Else
+                            'Ask if they want to skip this update
+                            Dim SkipResult As Integer = MessageBox.Show("Would you like to skip this update in future?",
+                                                            "Skip Version?",
+                                                            MessageBoxButtons.YesNo)
+                            If SkipResult = DialogResult.Yes Then
+                                Dim TempVersion As Version
+                                If Version.TryParse(CurrentVersion, TempVersion) Then
+                                    My.Settings.SkippedVersion = TempVersion
+                                End If
+                            End If
+                        End If
+                    Else
+                        'Update already Skipped
+                    End If
                 End If
-
             End If
         Catch ex As NullReferenceException
             'MessageBox.Show(ex.Message)

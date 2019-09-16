@@ -78,6 +78,7 @@ Public Class OptionsMenu
         Else
             LabelOodle.ForeColor = Color.Black
         End If
+        LabelSkipVersion.Text = "Skipped Ver.: " & My.Settings.SkippedVersion.ToString
     End Sub
 
     Private Sub ButtonSelectHome_Click(sender As Object, e As EventArgs) Handles ButtonSelectHome.Click
@@ -139,6 +140,12 @@ Public Class OptionsMenu
 
     Private Sub ButtonOodleSelect_Click(sender As Object, e As EventArgs) Handles ButtonOodleSelect.Click
         PackUnpack.CheckOodle(True)
+        LoadSettings()
+    End Sub
+
+    Private Sub ButtonCheckUpdate_Click(sender As Object, e As EventArgs)
+        My.Settings.SkippedVersion = My.Application.Info.Version
+        OnlineVersion.CheckUpdate()
         LoadSettings()
     End Sub
 
@@ -296,6 +303,7 @@ Public Class OptionsMenu
         MainForm.PacNumbers = New Integer(1024) {}
         MainForm.PacNumbers(0) = -1
     End Sub
+
 #End Region
 
 End Class

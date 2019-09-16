@@ -361,6 +361,8 @@ Public Class PackageInformation
                         .Parent = ParentFileProperties}
                     ParentFileProperties.SubFiles.Add(ContainedFileProperties)
                 Next
+                'Adding Coding to read the ending Zlib File
+
             Case PackageType.EPK8
                 Dim HeaderLength As Integer = BitConverter.ToUInt32(FileBytes, 4)
                 If HeaderLength > 0 Then
@@ -450,10 +452,13 @@ Public Class PackageInformation
                     FileInformationIndex = BitConverter.ToUInt32(FileBytes, &H1C)
                 ElseIf HeaderTypeCheck = &H10 Then
                     Dim TempNumber As Integer = BitConverter.ToUInt32(FileBytes, &H18)
-                    TempNumber += (TempNumber Mod &H10)
+                    If (TempNumber Mod &H10) > 0 Then
+                        TempNumber += &H10 - (TempNumber Mod &H10)
+                    End If
+                    'MessageBox.Show(Hex(TempNumber))
                     FileInformationIndex = TempNumber + &H40 + &H10
-                ElseIf HeaderTypeCheck = &H800 Then
-                    FileInformationIndex = BitConverter.ToUInt32(FileBytes, &H1C) * &H800
+                    ElseIf HeaderTypeCheck = &H800 Then
+                        FileInformationIndex = BitConverter.ToUInt32(FileBytes, &H1C) * &H800
                 End If
                 Dim PachPartsCount As Integer = (FileInformationLength / &H10) '1 index
                 If PachPartsCount > 0 Then
