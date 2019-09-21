@@ -149,7 +149,6 @@ Public Class PackUnpack
             MessageBox.Show(ex.Message)
             Return Nothing
         End Try
-        'BreakFunction(CompressedBuffer)
         Return CompressedBuffer
     End Function
 
@@ -243,7 +242,7 @@ Public Class PackUnpack
         Dim CompressedLength As UInt32 = BitConverter.ToUInt32(SentBytes, 8)
         Dim UncompressedLength As UInt32 = BitConverter.ToUInt32(SentBytes, 12)
         Dim input As Byte() = New Byte(CompressedLength - 1) {}
-        Array.Copy(SentBytes, 16, input, 0, CInt(SentBytes.Length - 16))
+        Array.Copy(SentBytes, 16, input, 0, CompressedLength)
         Dim output As Byte() = New Byte(UncompressedLength - 1) {}
         Try
             output = ZlibStream.UncompressBuffer(input)
@@ -272,7 +271,6 @@ Public Class PackUnpack
         Array.Copy(BitConverter.GetBytes(CUInt(CompressedBuffer.Length)), 0, ZlibFileBytes, &H8, 4)
         Array.Copy(BitConverter.GetBytes(CUInt(SentBytes.Length)), 0, ZlibFileBytes, &HC, 4)
         Array.Copy(CompressedBuffer, 0, ZlibFileBytes, &H10, CompressedBuffer.Length)
-        'BreakFunction(ZlibFileBytes)
         Return ZlibFileBytes
     End Function
 

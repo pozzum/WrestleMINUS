@@ -91,13 +91,17 @@ Public Class GeneralTools
 #Region "Hex or Byte Based General Tools"
 
     Shared Function EndianReverse(Source As Byte(), Optional Index As Integer = 0, Optional Length As Integer = 4) As Byte()
-        If Length > Source.Length Then
-            Length = Source.Length
+        If (Length + Index) > Source.Length Then
+            Length = (Source.Length - Index)
         End If
-        Dim ReturnedArray As Byte() = New Byte(Length - 1) {}
-        Array.Copy(Source, Index, ReturnedArray, 0, Length)
-        Array.Reverse(ReturnedArray)
-        Return ReturnedArray
+        If Length > 0 Then
+            Dim ReturnedArray As Byte() = New Byte(Length - 1) {}
+            Array.Copy(Source, Index, ReturnedArray, 0, Length)
+            Array.Reverse(ReturnedArray)
+            Return ReturnedArray
+        Else
+            Return Nothing
+        End If
     End Function
 
     Shared Function HexCheck(StringtoCheck As String) As Boolean
@@ -135,6 +139,11 @@ Public Class GeneralTools
             End If
         Next
         Return ReturnCount
+    End Function
+
+    Shared Function BreakFunction(Optional InspectedObject As Object = Nothing)
+        'This is an easy way to add breaks wherever needed
+        Return Nothing
     End Function
 
 #End Region

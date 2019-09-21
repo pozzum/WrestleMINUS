@@ -162,10 +162,6 @@ Public Class FilePartHandlers
             If injectopenfile.ShowDialog() = DialogResult.OK Then
                 If File.Exists(injectopenfile.FileName) Then
                     Dim FileBytes As Byte() = File.ReadAllBytes(injectopenfile.FileName)
-                    If FileRequested.FileType = PackageType.SHDC Then
-                        ReDim Preserve FileBytes(FileBytes.Length + (FileBytes.Length Mod &H100) - 1)
-                    End If
-
                     Select Case InjectionCompressionType
                         'The buttons are only shown if the program checks passed so we don't need to check them here
                         Case PackageType.BPE
@@ -190,12 +186,15 @@ Public Class FilePartHandlers
                             End If
                             FileBytes = CompressedBytes
                     End Select
+                    If FileRequested.Parent.FileType = PackageType.HSPC Then
+                        ReDim Preserve FileBytes(FileBytes.Length + (FileBytes.Length Mod &H100) - 1)
+                    End If
                     'Here we have a check that will make sure we don't double compress files and if it passes a parent if it matches the compression type
                     If FileRequested.Parent.FileType = InjectionCompressionType Then
                         FileRequested = FileRequested.Parent
                     End If
                     If InjectBytesIntoFile(FileRequested, FileBytes) Then
-                        MessageBox.Show("Injection Complete")
+                        'MessageBox.Show("Injection Complete")
                         Return True
                     Else
                         MessageBox.Show("Injection Failed")
@@ -222,7 +221,6 @@ Public Class FilePartHandlers
             MessageBox.Show("No File Sent, Injection Failed!")
             Return False
         End If
-        Dim SizeDifference As Long = SentBytes.Length - FileRequested.length 'negative for shorter
         'checking File Type match
         Dim TempCheck As PackageType = PackageInformation.CheckHeaderType(0, SentBytes, FileRequested.FullFilePath)
         If Not FileRequested.FileType = TempCheck Then
@@ -245,7 +243,6 @@ Public Class FilePartHandlers
          ParentFileInformation.FileType = PackageType.ZLIB OrElse
          ParentFileInformation.FileType = PackageType.BPE Then
             Dim CompressedByteArray As Byte()
-
             If ParentFileInformation.FileType = PackageType.OODL Then
                 CompressedByteArray = PackUnpack.GetCompressedOodleBytes(SentBytes)
             ElseIf ParentFileInformation.FileType = PackageType.ZLIB Then
@@ -286,10 +283,18 @@ Public Class FilePartHandlers
         If ParentFileInformation.FileType = PackageType.HSPC OrElse
                 ParentFileInformation.FileType = PackageType.EPK8 OrElse
                  ParentFileInformation.FileType = PackageType.EPAC Then
+            'this forces the old file to take the actual full &H800 byte block rather than truncating partially
+            FileRequested.length += (&H800 - FileRequested.length Mod &H800)
+        End If
+        Dim SizeDifference As Long = SentBytes.Length - FileRequested.length 'negative for shorter
+        'I've spent so many fucking hours trying to get this to be consistent... I really hope it is now...
+        If ParentFileInformation.FileType = PackageType.HSPC OrElse
+                ParentFileInformation.FileType = PackageType.EPK8 OrElse
+                 ParentFileInformation.FileType = PackageType.EPAC Then
             If SizeDifference > 0 Then 'size is rounded to &h800 bytes for these types
                 SizeDifference += (&H800 - SizeDifference Mod &H800)
             ElseIf SizeDifference < 0 Then ' if it is 0 it stays 0
-                SizeDifference -= (&H800 - Math.Abs(SizeDifference) Mod &H800)
+                SizeDifference -= (-&H800 - Math.Abs(SizeDifference) Mod &H800) + &H800
             End If
         End If
         'Create Byte Array of length
@@ -303,11 +308,10 @@ Public Class FilePartHandlers
             Buffer.BlockCopy(ParentBytes,
                                  (FileRequested.Index - ParentFileInformation.Index) + FileRequested.length,
                                 WrittenFileArray,
-                                 (FileRequested.Index - ParentFileInformation.Index) + FileRequested.length + SizeDifference,
+                                 ((FileRequested.Index - ParentFileInformation.Index) + FileRequested.length + SizeDifference),
                                  ParentBytes.Length - ((FileRequested.Index - ParentFileInformation.Index) + FileRequested.length))
         End If
         'Get Node Location
-        'TO DO Fix this for files that don't have a parent
         Dim SubFileLocation As Integer
         If Not IsNothing(FileRequested.Parent) Then
             SubFileLocation = FileRequested.Parent.SubFiles.IndexOf(FileRequested) '0 based
@@ -1400,26 +1404,32 @@ Public Class FilePartHandlers
             MessageBox.Show("Not Yet Supported")
             Return False
         End If
+        'Check if there are multiple sub files
+        Dim ContainedParts As Integer = FileRequested.SubFiles.Count
+        If ContainedParts <= 1 Then
+            MessageBox.Show("No parts to sort")
+            Return False
+        End If
         'Get File Bytes
-        Dim ContainerBytes As Byte() = FilePartHandlers.GetFilePartBytes(FileRequested)
+        Dim ContainerBytes As Byte()
         Dim ParentNodeLocation As Integer = 0
         If FileRequested.FileType = PackageType.PachDirectory_4 OrElse
             FileRequested.FileType = PackageType.PachDirectory_8 Then
-            'here we grab the
-            ContainerBytes = FilePartHandlers.GetFilePartBytes(FileRequested)
+            'here we grab the Pac container so we can properly sort it
+            ContainerBytes = FilePartHandlers.GetFilePartBytes(FileRequested.Parent)
             ParentNodeLocation = FileRequested.Parent.SubFiles.IndexOf(FileRequested)
+        Else
+            ContainerBytes = FilePartHandlers.GetFilePartBytes(FileRequested)
         End If
         'Written File Array will be the same length as the old file
         Dim WrittenFileArray As Byte() = New Byte(ContainerBytes.Length - 1) {}
-        ' Write File Prior to new file
-        Array.Copy(ContainerBytes, 0, WrittenFileArray, 0, ContainerBytes.LongLength)
-        Dim ContainedParts As Integer = FileRequested.SubFiles.Count
-        If ContainedParts > 1 Then
-            MessageBox.Show("Tool cannot yet sort.  Continue?")
-            Return False
-        End If
         Select Case FileRequested.FileType
             Case PackageType.HSPC
+                'First copy the Header
+                'sort the Sub containers by number
+                'copy over each file adjusting the header as we go along
+                'Copy the zlib footer
+                'TO DO ADD FOOTER FIXER
             Case PackageType.SHDC
             Case PackageType.EPK8
             Case PackageType.EPAC

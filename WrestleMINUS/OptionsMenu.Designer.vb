@@ -63,8 +63,11 @@ Partial Class OptionsMenu
         Me.CheckBoxRecycleDeletedFiles = New System.Windows.Forms.CheckBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.LabelSkipVersion = New System.Windows.Forms.Label()
+        Me.ButtonCheckUpdate = New System.Windows.Forms.Button()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.CheckBoxSuppresHSPCFooters = New System.Windows.Forms.CheckBox()
         Me.ButtonResetFormSize = New System.Windows.Forms.Button()
         Me.CheckBoxShowSelectedNode = New System.Windows.Forms.CheckBox()
         Me.ButtonResetPacs = New System.Windows.Forms.Button()
@@ -79,8 +82,6 @@ Partial Class OptionsMenu
         Me.Label2 = New System.Windows.Forms.Label()
         Me.CheckRelocateMods = New System.Windows.Forms.CheckBox()
         Me.CheckDisableModPref = New System.Windows.Forms.CheckBox()
-        Me.ButtonCheckUpdate = New System.Windows.Forms.Button()
-        Me.LabelSkipVersion = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -470,6 +471,25 @@ Partial Class OptionsMenu
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "File Select"
         '
+        'LabelSkipVersion
+        '
+        Me.LabelSkipVersion.AutoSize = True
+        Me.LabelSkipVersion.Location = New System.Drawing.Point(8, 328)
+        Me.LabelSkipVersion.Name = "LabelSkipVersion"
+        Me.LabelSkipVersion.Size = New System.Drawing.Size(71, 13)
+        Me.LabelSkipVersion.TabIndex = 53
+        Me.LabelSkipVersion.Text = "Skipped Ver.:"
+        '
+        'ButtonCheckUpdate
+        '
+        Me.ButtonCheckUpdate.Location = New System.Drawing.Point(143, 323)
+        Me.ButtonCheckUpdate.Margin = New System.Windows.Forms.Padding(0)
+        Me.ButtonCheckUpdate.Name = "ButtonCheckUpdate"
+        Me.ButtonCheckUpdate.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonCheckUpdate.TabIndex = 52
+        Me.ButtonCheckUpdate.Text = "Check For Update"
+        Me.ButtonCheckUpdate.UseVisualStyleBackColor = True
+        '
         'TabPage2
         '
         Me.TabPage2.BackColor = System.Drawing.SystemColors.Control
@@ -491,6 +511,7 @@ Partial Class OptionsMenu
         'TabPage3
         '
         Me.TabPage3.BackColor = System.Drawing.SystemColors.Control
+        Me.TabPage3.Controls.Add(Me.CheckBoxSuppresHSPCFooters)
         Me.TabPage3.Controls.Add(Me.ButtonResetFormSize)
         Me.TabPage3.Controls.Add(Me.CheckBoxShowSelectedNode)
         Me.TabPage3.Controls.Add(Me.ButtonResetPacs)
@@ -512,9 +533,19 @@ Partial Class OptionsMenu
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "Advanced"
         '
+        'CheckBoxSuppresHSPCFooters
+        '
+        Me.CheckBoxSuppresHSPCFooters.AutoSize = True
+        Me.CheckBoxSuppresHSPCFooters.Location = New System.Drawing.Point(6, 29)
+        Me.CheckBoxSuppresHSPCFooters.Name = "CheckBoxSuppresHSPCFooters"
+        Me.CheckBoxSuppresHSPCFooters.Size = New System.Drawing.Size(159, 17)
+        Me.CheckBoxSuppresHSPCFooters.TabIndex = 51
+        Me.CheckBoxSuppresHSPCFooters.Text = "Suppress HSPC Footer Files"
+        Me.CheckBoxSuppresHSPCFooters.UseVisualStyleBackColor = True
+        '
         'ButtonResetFormSize
         '
-        Me.ButtonResetFormSize.Location = New System.Drawing.Point(88, 253)
+        Me.ButtonResetFormSize.Location = New System.Drawing.Point(88, 276)
         Me.ButtonResetFormSize.Name = "ButtonResetFormSize"
         Me.ButtonResetFormSize.Size = New System.Drawing.Size(100, 23)
         Me.ButtonResetFormSize.TabIndex = 50
@@ -533,7 +564,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetPacs
         '
-        Me.ButtonResetPacs.Location = New System.Drawing.Point(190, 253)
+        Me.ButtonResetPacs.Location = New System.Drawing.Point(190, 276)
         Me.ButtonResetPacs.Name = "ButtonResetPacs"
         Me.ButtonResetPacs.Size = New System.Drawing.Size(80, 23)
         Me.ButtonResetPacs.TabIndex = 48
@@ -542,7 +573,7 @@ Partial Class OptionsMenu
         '
         'ButtonResetStrings
         '
-        Me.ButtonResetStrings.Location = New System.Drawing.Point(6, 253)
+        Me.ButtonResetStrings.Location = New System.Drawing.Point(6, 276)
         Me.ButtonResetStrings.Name = "ButtonResetStrings"
         Me.ButtonResetStrings.Size = New System.Drawing.Size(80, 23)
         Me.ButtonResetStrings.TabIndex = 47
@@ -552,7 +583,7 @@ Partial Class OptionsMenu
         'LabelDecimalNameLength
         '
         Me.LabelDecimalNameLength.AutoSize = True
-        Me.LabelDecimalNameLength.Location = New System.Drawing.Point(6, 138)
+        Me.LabelDecimalNameLength.Location = New System.Drawing.Point(6, 161)
         Me.LabelDecimalNameLength.Name = "LabelDecimalNameLength"
         Me.LabelDecimalNameLength.Size = New System.Drawing.Size(163, 13)
         Me.LabelDecimalNameLength.TabIndex = 46
@@ -561,7 +592,7 @@ Partial Class OptionsMenu
         'LabelHexLength
         '
         Me.LabelHexLength.AutoSize = True
-        Me.LabelHexLength.Location = New System.Drawing.Point(6, 197)
+        Me.LabelHexLength.Location = New System.Drawing.Point(6, 220)
         Me.LabelHexLength.Name = "LabelHexLength"
         Me.LabelHexLength.Size = New System.Drawing.Size(140, 13)
         Me.LabelHexLength.TabIndex = 44
@@ -570,7 +601,7 @@ Partial Class OptionsMenu
         'TrackBarHexLength
         '
         Me.TrackBarHexLength.LargeChange = 100
-        Me.TrackBarHexLength.Location = New System.Drawing.Point(6, 213)
+        Me.TrackBarHexLength.Location = New System.Drawing.Point(6, 236)
         Me.TrackBarHexLength.Maximum = 500
         Me.TrackBarHexLength.Minimum = 1
         Me.TrackBarHexLength.Name = "TrackBarHexLength"
@@ -583,7 +614,7 @@ Partial Class OptionsMenu
         'TrackBarDecimalNameLength
         '
         Me.TrackBarDecimalNameLength.LargeChange = 2
-        Me.TrackBarDecimalNameLength.Location = New System.Drawing.Point(6, 164)
+        Me.TrackBarDecimalNameLength.Location = New System.Drawing.Point(6, 187)
         Me.TrackBarDecimalNameLength.Maximum = 8
         Me.TrackBarDecimalNameLength.Name = "TrackBarDecimalNameLength"
         Me.TrackBarDecimalNameLength.Size = New System.Drawing.Size(260, 45)
@@ -593,7 +624,7 @@ Partial Class OptionsMenu
         'LabelOodleCompLevel
         '
         Me.LabelOodleCompLevel.AutoSize = True
-        Me.LabelOodleCompLevel.Location = New System.Drawing.Point(6, 113)
+        Me.LabelOodleCompLevel.Location = New System.Drawing.Point(6, 136)
         Me.LabelOodleCompLevel.Name = "LabelOodleCompLevel"
         Me.LabelOodleCompLevel.Size = New System.Drawing.Size(130, 13)
         Me.LabelOodleCompLevel.TabIndex = 36
@@ -604,7 +635,7 @@ Partial Class OptionsMenu
         Me.ComboBoxOodleCompressionLevel.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.ComboBoxOodleCompressionLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBoxOodleCompressionLevel.FormattingEnabled = True
-        Me.ComboBoxOodleCompressionLevel.Location = New System.Drawing.Point(141, 110)
+        Me.ComboBoxOodleCompressionLevel.Location = New System.Drawing.Point(141, 133)
         Me.ComboBoxOodleCompressionLevel.Name = "ComboBoxOodleCompressionLevel"
         Me.ComboBoxOodleCompressionLevel.Size = New System.Drawing.Size(125, 21)
         Me.ComboBoxOodleCompressionLevel.TabIndex = 35
@@ -612,7 +643,7 @@ Partial Class OptionsMenu
         'CheckBoxAppendDef
         '
         Me.CheckBoxAppendDef.AutoSize = True
-        Me.CheckBoxAppendDef.Location = New System.Drawing.Point(6, 41)
+        Me.CheckBoxAppendDef.Location = New System.Drawing.Point(6, 65)
         Me.CheckBoxAppendDef.Name = "CheckBoxAppendDef"
         Me.CheckBoxAppendDef.Size = New System.Drawing.Size(141, 17)
         Me.CheckBoxAppendDef.TabIndex = 4
@@ -622,7 +653,7 @@ Partial Class OptionsMenu
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(3, 25)
+        Me.Label2.Location = New System.Drawing.Point(3, 49)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(105, 13)
         Me.Label2.TabIndex = 3
@@ -631,7 +662,7 @@ Partial Class OptionsMenu
         'CheckRelocateMods
         '
         Me.CheckRelocateMods.AutoSize = True
-        Me.CheckRelocateMods.Location = New System.Drawing.Point(6, 87)
+        Me.CheckRelocateMods.Location = New System.Drawing.Point(6, 111)
         Me.CheckRelocateMods.Name = "CheckRelocateMods"
         Me.CheckRelocateMods.Size = New System.Drawing.Size(236, 17)
         Me.CheckRelocateMods.TabIndex = 2
@@ -641,31 +672,12 @@ Partial Class OptionsMenu
         'CheckDisableModPref
         '
         Me.CheckDisableModPref.AutoSize = True
-        Me.CheckDisableModPref.Location = New System.Drawing.Point(6, 64)
+        Me.CheckDisableModPref.Location = New System.Drawing.Point(6, 88)
         Me.CheckDisableModPref.Name = "CheckDisableModPref"
         Me.CheckDisableModPref.Size = New System.Drawing.Size(172, 17)
         Me.CheckDisableModPref.TabIndex = 1
         Me.CheckDisableModPref.Text = "Disable Mod Folder Preference"
         Me.CheckDisableModPref.UseVisualStyleBackColor = True
-        '
-        'ButtonCheckUpdate
-        '
-        Me.ButtonCheckUpdate.Location = New System.Drawing.Point(143, 323)
-        Me.ButtonCheckUpdate.Margin = New System.Windows.Forms.Padding(0)
-        Me.ButtonCheckUpdate.Name = "ButtonCheckUpdate"
-        Me.ButtonCheckUpdate.Size = New System.Drawing.Size(125, 23)
-        Me.ButtonCheckUpdate.TabIndex = 52
-        Me.ButtonCheckUpdate.Text = "Check For Update"
-        Me.ButtonCheckUpdate.UseVisualStyleBackColor = True
-        '
-        'LabelSkipVersion
-        '
-        Me.LabelSkipVersion.AutoSize = True
-        Me.LabelSkipVersion.Location = New System.Drawing.Point(8, 328)
-        Me.LabelSkipVersion.Name = "LabelSkipVersion"
-        Me.LabelSkipVersion.Size = New System.Drawing.Size(71, 13)
-        Me.LabelSkipVersion.TabIndex = 53
-        Me.LabelSkipVersion.Text = "Skipped Ver.:"
         '
         'OptionsMenu
         '
@@ -750,4 +762,5 @@ Partial Class OptionsMenu
     Friend WithEvents ButtonResetFormSize As Button
     Friend WithEvents LabelSkipVersion As Label
     Friend WithEvents ButtonCheckUpdate As Button
+    Friend WithEvents CheckBoxSuppresHSPCFooters As CheckBox
 End Class

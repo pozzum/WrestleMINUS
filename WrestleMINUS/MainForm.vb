@@ -92,9 +92,9 @@ Public Class MainForm
 
     Dim MuscleViewStartupRemoved As Boolean = False
 
-    Function HideTabs(ExcludedTab As TabPage) As DialogResult
-        If IsNothing(ExcludedTab) Then
-            ExcludedTab = New TabPage()
+    Function HideTabs(ExcludedTabs As List(Of TabPage)) As DialogResult
+        If IsNothing(ExcludedTabs) Then
+            ExcludedTabs = New List(Of TabPage)
         End If
         For Each TempTabPage As TabPage In TabControl1.TabPages
             Select Case TempTabPage.Name
@@ -108,18 +108,18 @@ Public Class MainForm
                         TabControl1.TabPages.Remove(TempTabPage)
                         MuscleViewStartupRemoved = True
                     End If
-                Case ExcludedTab.Name
+                Case ExcludedTabs.Contains(TempTabPage)
                     'MessageBox.Show(TabControl1.SelectedTab.Text)
                     'MessageBox.Show(ExcludedTab.Text)
                     'Excluded
-                    If TabControl1.SelectedTab.Text = ExcludedTab.Text Then
+                    If TabControl1.SelectedTab.Text = TempTabPage.Text Then
                         'MessageBox.Show("Rebuild Table")
                         'Here we should be able to reset the tab.
                         ReadNode = TreeView1.SelectedNode
                         If My.Settings.ShowSelectedNode Then
                             CurrentViewToolStripMenuItem.Text = CurrentViewText & vbNewLine & "Current Selected Node: " & ReadNode.Text
                         End If
-                        FillTabDataGrid(ExcludedTab)
+                        FillTabDataGrid(TempTabPage)
                     End If
                 Case Else
                     'Here we will add the save pending check and file injection
@@ -455,11 +455,14 @@ Public Class MainForm
 
     Sub UpdateNodeWithFileInformation(ExitingNode As TreeNode)
         If IsNothing(ExitingNode.Parent) Then
+            Dim StoredIndex As Integer = ExitingNode.Index
             TreeView1.Nodes.Insert(ExitingNode.Index + 1, GenerateNodeFromFile(ExitingNode.Tag))
+            ExitingNode.Remove()
+            TreeView1.SelectedNode = TreeView1.Nodes(StoredIndex)
         Else
             TreeView1.SelectedNode.Parent.Nodes.Insert(ExitingNode.Index + 1, GenerateNodeFromFile(ExitingNode.Tag))
+            ExitingNode.Remove()
         End If
-        ExitingNode.Remove()
     End Sub
 
     Function RebuildNodeFromUpdatedFiles(EditedFile As TreeNode, Optional NewExtendedFileProperties As ExtendedFileProperties = Nothing)
@@ -610,8 +613,8 @@ Public Class MainForm
                     UpdateNodeWithFileInformation(e.Node)
                 End If
             End If
-            Dim PageLoaded As TabPage = GetTabType(NodeFileProperties.FileType)
-            If HideTabs(PageLoaded) = DialogResult.OK Then
+            Dim PagesToLoad As List(Of TabPage) = GetTabTypes(NodeFileProperties.FileType)
+            If HideTabs(PagesToLoad) = DialogResult.OK Then
                 ReadNode = e.Node
                 If My.Settings.ShowSelectedNode Then
                     CurrentViewToolStripMenuItem.Text = CurrentViewText & vbNewLine & "Current Selected Node: " & ReadNode.Text
@@ -620,8 +623,8 @@ Public Class MainForm
                 AddHexText(TreeView1.SelectedNode)
                 TextViewFileName.Text = TreeView1.SelectedNode.Text
                 AddText(TreeView1.SelectedNode)
-                If Not PageLoaded Is Nothing Then
-                    LoadTab(PageLoaded)
+                If Not PagesToLoad Is Nothing Then
+                    LoadTabs(PagesToLoad)
                 End If
             Else
                 TreeView1.SelectedNode = ReadNode
@@ -673,56 +676,66 @@ Public Class MainForm
                 FillMenuItemView(ReadNode)
             Case AnimationView.Name
                 FillAnimationView(ReadNode)
+                FillPof0View(ReadNode)
+            Case Pof0View.Name
+                FillPof0View(ReadNode)
+                InformationLoaded = False
         End Select
     End Sub
 
-    Function GetTabType(SelectedType As PackageType) As TabPage
+    Function GetTabTypes(SelectedType As PackageType) As List(Of TabPage)
+        Dim ReturnedList As List(Of TabPage) = New List(Of TabPage)
         Select Case SelectedType
             Case PackageType.StringFile
-                Return StringView
+                ReturnedList.Add(StringView)
             Case PackageType.ArenaInfo
-                Return MiscView
+                ReturnedList.Add(MiscView)
             Case PackageType.ShowInfo
-                Return ShowView
+                ReturnedList.Add(ShowView)
             Case PackageType.NIBJ
-                Return NIBJView
+                ReturnedList.Add(NIBJView)
             Case PackageType.DDS
-                Return PictureView
+                ReturnedList.Add(PictureView)
             Case PackageType.YOBJ
-                Return ObjectView
+                ReturnedList.Add(ObjectView)
+                ReturnedList.Add(Pof0View)
             Case PackageType.CostumeFile
-                Return AttireView
+                ReturnedList.Add(AttireView)
             Case PackageType.MaskFile
-                Return MaskView
+                ReturnedList.Add(MaskView)
             Case PackageType.MuscleFile
-                Return MuscleView
+                ReturnedList.Add(MuscleView)
             Case PackageType.YOBJArray
-                Return ObjArrayView
+                ReturnedList.Add(ObjArrayView)
             Case PackageType.VMUM
-                Return AssetView
+                ReturnedList.Add(AssetView)
             Case PackageType.TitleFile
-                Return TitleView
+                ReturnedList.Add(TitleView)
             Case PackageType.SoundReference
-                Return SoundView
+                ReturnedList.Add(SoundView)
             Case PackageType.LSD
-                Return MenuItemView
+                ReturnedList.Add(MenuItemView)
             Case PackageType.YANM
-                Return AnimationView
+                ReturnedList.Add(AnimationView)
+                ReturnedList.Add(Pof0View)
             Case Else
-                Return Nothing
+                'Nothing
         End Select
+        Return ReturnedList
     End Function
 
-    Sub LoadTab(NewTab As TabPage)
-        If Not TabControl1.TabPages.Contains(NewTab) Then
-            TabControl1.TabPages.Add(NewTab)
-            InformationLoaded = False
-            If NewTab.Name = MuscleView.Name Then
+    Sub LoadTabs(NewTabList As List(Of TabPage))
+        For Each TempNewTab As TabPage In NewTabList
+            If Not TabControl1.TabPages.Contains(TempNewTab) Then
+                TabControl1.TabPages.Add(TempNewTab)
+                InformationLoaded = False
+                If TempNewTab.Name = MuscleView.Name Then
+                    FillMuscleView(ReadNode)
+                End If
+            ElseIf TempNewTab.Name = MuscleView.Name Then
                 FillMuscleView(ReadNode)
             End If
-        ElseIf NewTab.Name = MuscleView.Name Then
-            FillMuscleView(ReadNode)
-        End If
+        Next
     End Sub
 
 #End Region
@@ -1028,8 +1041,8 @@ Public Class MainForm
     End Sub
 
     Sub SaveFileNoLongerPending()
-        ReadNode = Nothing
-        CurrentViewToolStripMenuItem.Text = CurrentViewText
+        'Read node should auto reset if the menu gets regenerated..
+        'if this causes issues we will need to call a regen node somehow.
         SavePending = False
         SaveChangesStringMenuItem.Visible = False
         SaveChangesMiscMenuItem.Visible = False
@@ -1042,6 +1055,7 @@ Public Class MainForm
         SaveChangesTitleMenuItem.Visible = False
         SaveChangesSoundMenuItem.Visible = False
         SaveChangesCAEMenuItemMenuItem.Visible = False
+        RebuildNodeFromUpdatedFiles(TreeView1.SelectedNode)
         'TO DO Update this to include all save buttons
     End Sub
 
@@ -1277,25 +1291,27 @@ Public Class MainForm
                 SaveChangesStringMenuItem.Visible = True
             End If
         ElseIf e.ColumnIndex = 1 Then 'string text
-            If LengthTheSame Then
-                DataGridStringView.Rows(e.RowIndex).Cells(2).Value = MyCell.Value.length + 1
-            Else
-                If MessageBox.Show("String currently contains extra characters." & vbNewLine &
-                                  "Would you like to maintain the length", "Potential Super String Detected!",
-                                   MessageBoxButtons.YesNo) = DialogResult.No Then
+            If Not MyCell.Value = OldValue Then
+                If LengthTheSame Then
                     DataGridStringView.Rows(e.RowIndex).Cells(2).Value = MyCell.Value.length + 1
-                Else 'check if new string is too long
-                    If DataGridStringView.Rows(e.RowIndex).Cells(2).Value < MyCell.Value.length + 1 Then
-                        MessageBox.Show("String is too long, string will be truncated.")
-                        MyCell.Value = MyCell.Value.ToString.Substring(0, DataGridStringView.Rows(e.RowIndex).Cells(2).Value - 1)
+                Else
+                    If MessageBox.Show("String currently contains extra characters." & vbNewLine &
+                                      "Would you like to maintain the length", "Potential Super String Detected!",
+                                       MessageBoxButtons.YesNo) = DialogResult.No Then
+                        DataGridStringView.Rows(e.RowIndex).Cells(2).Value = MyCell.Value.length + 1
+                    Else 'check if new string is too long
+                        If DataGridStringView.Rows(e.RowIndex).Cells(2).Value < MyCell.Value.length + 1 Then
+                            MessageBox.Show("String is too long, string will be truncated.")
+                            MyCell.Value = MyCell.Value.ToString.Substring(0, DataGridStringView.Rows(e.RowIndex).Cells(2).Value - 1)
+                        End If
                     End If
                 End If
+                DataGridStringView.Rows(e.RowIndex).Tag = Encoding.Default.GetBytes(MyCell.Value + Chr(0)) 'Stores the new string as bytes in the tag
+                'this redim keeps the right length for a super string type string where there are several 0 chars at the end
+                ReDim Preserve DataGridStringView.Rows(e.RowIndex).Tag(DataGridStringView.Rows(e.RowIndex).Cells(2).Value - 1)
+                SavePending = True
+                SaveChangesStringMenuItem.Visible = True
             End If
-            DataGridStringView.Rows(e.RowIndex).Tag = Encoding.Default.GetBytes(MyCell.Value + Chr(0)) 'Stores the new string as bytes in the tag
-            'this redim keeps the right length for a super string type string where there are several 0 chars at the end
-            ReDim Preserve DataGridStringView.Rows(e.RowIndex).Tag(DataGridStringView.Rows(e.RowIndex).Cells(2).Value - 1)
-            SavePending = True
-            SaveChangesStringMenuItem.Visible = True
         ElseIf e.ColumnIndex = 2 Then 'Adjusting Length only
             If Not IsNumeric(MyCell.Value) OrElse
                MyCell.Value < 1 Then
@@ -1312,7 +1328,6 @@ Public Class MainForm
                 SavePending = True
                 SaveChangesStringMenuItem.Visible = True
             End If
-
         End If
     End Sub
 
@@ -4701,11 +4716,29 @@ Public Class MainForm
 #End Region
 
 #Region "Animation View"
+    Public Enum YANMBone As Integer
+        Unknown = 0
+        Main_Root = &HC5879E5
+        J_Hips = &HF91A7A26
+        Ch_rotation = &HDAECC2E
+        J_Spine = &H3D185308
+        J_Head = &HF9D973BE
+        J_Neck = &HF91972B1
+        J_Clavical_L = &HD153E363
+        J_Shoulder_L = &HA46A2F43
+        J_Elbow_L = &H6742F8AA
+        J_Wrist_L = &HD4C2705A
+        J_MiddleF0_L = &HB10CEB4C
+        J_MiddleF1_L = &HB10CAB4C
+        J_MiddleF2_L = &HB10C6B4C
+        J_MiddleF3_L = &HB10C2B4C
+    End Enum
 
     Public Class AnimationHeaderInformation
         Public StartingID As UInt16 = 0
         Public HeaderLength As UInt16 = 0
-        Public BoneType As UInt32 = 0
+        Public BoneType As Int32 = 0
+        Public BoneParsed As YANMBone = YANMBone.Unknown
         Public AnimationPartAIndex As UInt32 = 0
         Public AnimationPartALength As UInt32 = 0
         Public AnimationPartBIndex As UInt32 = 0
@@ -4753,7 +4786,11 @@ Public Class MainForm
             TempGridRow.Cells(2).Value = Hex(TempAnimationInformation.StartingID)
             TempGridRow.Cells(3).Value = TempAnimationInformation.HeaderLength
             TempGridRow.Cells(4).Value = Hex(TempAnimationInformation.HeaderLength)
-            TempGridRow.Cells(5).Value = TempAnimationInformation.BoneType
+            'Try
+            TempGridRow.Cells(5).Value = CType(TempAnimationInformation.BoneType, YANMBone).ToString
+            'Catch ex As Exception
+            'TempGridRow.Cells(5).Value = TempAnimationInformation.BoneType
+            'End Try
             TempGridRow.Cells(6).Value = Hex(TempAnimationInformation.BoneType).PadLeft(8, "0")
             TempGridRow.Cells(7).Value = TempAnimationInformation.AnimationPartAIndex
             TempGridRow.Cells(8).Value = Hex(TempAnimationInformation.AnimationPartAIndex)
@@ -4786,7 +4823,7 @@ Public Class MainForm
             WorkingCollection.Add(TempGridRow)
             ProgressBar1.Value = i
         Next
-        GetDisplayedColumns()
+        GetAnimationViewDisplayedColumns()
         DataGridAnimationView.Rows.AddRange(WorkingCollection.ToArray())
         For i As Integer = 0 To DataGridAnimationView.Rows.Count - 1
             DataGridAnimationView.Rows(i).HeaderCell.Value = i + 1
@@ -4798,7 +4835,7 @@ Public Class MainForm
         Dim ReturnedAnimationInfo As AnimationHeaderInformation = New AnimationHeaderInformation With {
            .StartingID = BitConverter.ToUInt16(GeneralTools.EndianReverse(TestedByteArray, 0, 2), 0),
            .HeaderLength = BitConverter.ToUInt16(GeneralTools.EndianReverse(TestedByteArray, 2, 2), 0),
-           .BoneType = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, 4), 0),
+           .BoneType = BitConverter.ToInt32(GeneralTools.EndianReverse(TestedByteArray, 4), 0),
            .AnimationPartAIndex = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, 8), 0),
            .AnimationPartALength = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HC), 0),
            .AnimationPartBIndex = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H10), 0),
@@ -4896,9 +4933,9 @@ Public Class MainForm
                 PartialAnimationInformation.FinalAnimationParsed = TestedFrames
             End If
         Else
-                'B is our header to parse
-                'Check boxes X - Y - Z Transitional
-                If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 0) = 1 Then
+            'B is our header to parse
+            'Check boxes X - Y - Z Transitional
+            If BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 0) = 1 Then
                 PartialAnimationInformation.XTranslation = True
             ElseIf BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 0) = &HFF00 Then
                 PartialAnimationInformation.XTranslation = False
@@ -4975,7 +5012,7 @@ Public Class MainForm
         '772 = 8 byte chunks
     End Sub
 
-    Sub GetDisplayedColumns()
+    Sub GetAnimationViewDisplayedColumns()
         For i As Integer = 0 To DataGridAnimationView.Columns.GetColumnCount(DataGridViewElementStates.None) - 1
             DataGridAnimationView.Columns(i).Visible = True
         Next
@@ -5023,7 +5060,7 @@ Public Class MainForm
         ElseIf AnimationShowHexToolStripMenuItem.Text.Contains("☒") Then
             AnimationShowHexToolStripMenuItem.Text = "☑ Show Hex"
         End If
-        GetDisplayedColumns()
+        GetAnimationViewDisplayedColumns()
     End Sub
 
     Private Sub AnimationShowDebugToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AnimationShowDebugToolStripMenuItem.Click
@@ -5033,7 +5070,81 @@ Public Class MainForm
             '☐
             AnimationShowDebugToolStripMenuItem.Text = "☑ Show Debug"
         End If
-        GetDisplayedColumns()
+        GetAnimationViewDisplayedColumns()
+    End Sub
+#End Region
+#Region "Pof0 View"
+
+    Sub FillPof0View(SelectedData As TreeNode)
+        Dim ParentFileBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
+        'After the Parent File we want the Pof0 array
+        Dim Pof0Index As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentFileBytes, 4, 4), 0) + 8
+        Dim Pof0Length As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentFileBytes, Pof0Index + 4, 4), 0)
+        Dim Pof0Bytes As Byte() = New Byte(Pof0Length - 1) {}
+        Array.Copy(ParentFileBytes, Pof0Index + 8, Pof0Bytes, 0, Pof0Length)
+        'getting a generic row so we can create one for the collection
+        Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridPof0View)
+        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = Pof0Length
+        ProgressBar1.Value = 0
+        Dim Pof0CurrentRead As UInt32 = 0
+        Dim ParentFileCurrentOffset As UInt32 = 8
+        Do While Pof0CurrentRead < Pof0Length
+            Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
+            'Parse if the current Pof0 Byte is a 1 byte or 2 byte reference.
+            TempGridRow.Cells(0).Value = Hex(Pof0CurrentRead)
+            If Pof0Bytes(Pof0CurrentRead) >= &HC0 Then
+                '4 Byte ref
+                TempGridRow.Cells(1).Value = Hex(BitConverter.ToUInt32(GeneralTools.EndianReverse(Pof0Bytes, Pof0CurrentRead, 4), 0))
+                Dim TranslatedLength As UInt32 = 0
+                TranslatedLength = (BitConverter.ToUInt32(GeneralTools.EndianReverse(Pof0Bytes, Pof0CurrentRead, 4), 0) - BitConverter.ToUInt32({0, 0, 0, &HC0}, 0)) * 4
+                TempGridRow.Cells(2).Value = TranslatedLength
+                TempGridRow.Cells(3).Value = Hex(TranslatedLength)
+                ParentFileCurrentOffset += TranslatedLength
+                TempGridRow.Cells(4).Value = ParentFileCurrentOffset
+                TempGridRow.Cells(5).Value = Hex(ParentFileCurrentOffset)
+                TempGridRow.Cells(6).Value = Hex(BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentFileBytes, ParentFileCurrentOffset, 4), 0))
+                Pof0CurrentRead += 3
+            ElseIf Pof0Bytes(Pof0CurrentRead) >= &H80 Then
+                '2 Byte ref
+                TempGridRow.Cells(1).Value = Hex(BitConverter.ToUInt16(GeneralTools.EndianReverse(Pof0Bytes, Pof0CurrentRead, 2), 0))
+                Dim TranslatedLength As UInt32 = 0
+                TranslatedLength = (BitConverter.ToUInt16(GeneralTools.EndianReverse(Pof0Bytes, Pof0CurrentRead, 2), 0) - &H8000) * 4
+                TempGridRow.Cells(2).Value = TranslatedLength
+                TempGridRow.Cells(3).Value = Hex(TranslatedLength)
+                ParentFileCurrentOffset += TranslatedLength
+                TempGridRow.Cells(4).Value = ParentFileCurrentOffset
+                TempGridRow.Cells(5).Value = Hex(ParentFileCurrentOffset)
+                TempGridRow.Cells(6).Value = Hex(BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentFileBytes, ParentFileCurrentOffset, 4), 0))
+                Pof0CurrentRead += 1
+            ElseIf Pof0Bytes(Pof0CurrentRead) >= &H40 Then
+                '1 byte ref
+                TempGridRow.Cells(1).Value = Hex(Pof0Bytes(Pof0CurrentRead))
+                Dim TranslatedLength As UInt16 = (Pof0Bytes(Pof0CurrentRead) - &H40) * 4
+                TempGridRow.Cells(2).Value = TranslatedLength
+                TempGridRow.Cells(3).Value = Hex(TranslatedLength)
+                ParentFileCurrentOffset += TranslatedLength
+                TempGridRow.Cells(4).Value = ParentFileCurrentOffset
+                TempGridRow.Cells(5).Value = Hex(ParentFileCurrentOffset)
+                TempGridRow.Cells(6).Value = Hex(BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentFileBytes, ParentFileCurrentOffset, 4), 0))
+            ElseIf Pof0Bytes(Pof0CurrentRead) = 0 Then
+                'there is no added offset so we shouldn't add a line
+                Pof0CurrentRead += 1
+                Continue Do
+            Else
+                'Shouldn't happen whut
+                TempGridRow.Cells(1).Value = Hex(Pof0Bytes(Pof0CurrentRead))
+                TempGridRow.Cells(2).Value = "ERROR"
+            End If
+            WorkingCollection.Add(TempGridRow)
+            ProgressBar1.Value = Pof0CurrentRead
+            Pof0CurrentRead += 1
+        Loop
+        ProgressBar1.Value = Pof0Length
+        DataGridPof0View.Rows.AddRange(WorkingCollection.ToArray())
+        For i As Integer = 0 To DataGridPof0View.Rows.Count - 1
+            DataGridPof0View.Rows(i).HeaderCell.Value = i + 1
+        Next
     End Sub
 #End Region
 #End Region

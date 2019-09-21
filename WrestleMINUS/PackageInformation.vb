@@ -359,10 +359,26 @@ Public Class PackageInformation
                         .StoredData = ParentFileProperties.StoredData,
                         .FileType = CheckHeaderType(.Index - ParentFileProperties.Index, FileBytes, ParentFileProperties.FullFilePath),
                         .Parent = ParentFileProperties}
-                    ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                    If ContainedFileProperties.Index > FileNameLength Then
+                        ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                    Else
+                        ContainedFileProperties.FileType = PackageType.bin
+                        ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                    End If
                 Next
                 'Adding Coding to read the ending Zlib File
-
+                If Not My.Settings.SuppressHSPCFooters Then
+                    Dim ZlibOffset As Integer = BitConverter.ToUInt32(FileBytes, &H3C) + &H2000
+                    Dim EndingZlibFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                            .Name = "FileNames",
+                            .FullFilePath = ParentFileProperties.FullFilePath,
+                            .Index = ZlibOffset,
+                            .length = &H800,
+                            .StoredData = ParentFileProperties.StoredData,
+                            .FileType = CheckHeaderType(.Index - ParentFileProperties.Index, FileBytes, ParentFileProperties.FullFilePath),
+                            .Parent = ParentFileProperties}
+                    ParentFileProperties.SubFiles.Add(EndingZlibFileProperties)
+                End If
             Case PackageType.EPK8
                 Dim HeaderLength As Integer = BitConverter.ToUInt32(FileBytes, 4)
                 If HeaderLength > 0 Then
@@ -703,7 +719,8 @@ Public Class PackageInformation
                     ParentFileProperties.SubFiles.Add(ContainedFileProperties)
                 Next
             Case PackageType.YANMPack
-                Dim HeaderLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, &HC), 0)
+                If FileBytes.Length > &H10 Then
+                    Dim HeaderLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, &HC), 0)
                 Dim YANMLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, 4), 0)
                 Dim HeadIndex As Integer = 0
                 Dim partcount As Integer = 0
@@ -712,23 +729,36 @@ Public Class PackageInformation
                         ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
                     End If
                 End If
-                Do While HeadIndex < (HeaderLength - &H20)
-                    If HeadIndex = 0 Then
-                        HeadIndex = &H70
+                    If YANMLength > 0 Then
+                        Do While HeadIndex < (HeaderLength - &H20)
+                            If HeadIndex = 0 Then
+                                HeadIndex = &H70
+                            End If
+                            'getting the part name
+                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                                .Name = Encoding.ASCII.GetString(FileBytes, HeadIndex + 4, 8),
+                                .FullFilePath = ParentFileProperties.FullFilePath,
+                                .Index = (BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, HeadIndex + &H24), 0)) + HeaderLength + ParentFileProperties.Index,
+                                .length = BitConverter.ToUInt16(GeneralTools.EndianReverse(FileBytes, HeadIndex + 2, 2), 0) * &H20,
+                                .FileType = PackageType.YANM,
+                                .StoredData = ParentFileProperties.StoredData,
+                                .Parent = ParentFileProperties}
+                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                            partcount = partcount + 1
+                            HeadIndex = HeadIndex + &H28
+                        Loop
+                    Else
+                        Dim DummyFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                                .Name = "DUMMY",
+                                .FullFilePath = ParentFileProperties.FullFilePath,
+                                .Index = 0,
+                                .length = 0,
+                                .FileType = PackageType.bin,
+                                .StoredData = ParentFileProperties.StoredData,
+                                .Parent = ParentFileProperties}
+                        ParentFileProperties.SubFiles.Add(DummyFileProperties)
                     End If
-                    'getting the part name
-                    Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
-                        .Name = Encoding.ASCII.GetString(FileBytes, HeadIndex + 4, 8),
-                        .FullFilePath = ParentFileProperties.FullFilePath,
-                        .Index = (BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, HeadIndex + &H24), 0)) + HeaderLength + ParentFileProperties.Index,
-                        .length = BitConverter.ToUInt16(GeneralTools.EndianReverse(FileBytes, HeadIndex + 2, 2), 0) * &H20,
-                        .FileType = PackageType.YANM,
-                        .StoredData = ParentFileProperties.StoredData,
-                        .Parent = ParentFileProperties}
-                    ParentFileProperties.SubFiles.Add(ContainedFileProperties)
-                    partcount = partcount + 1
-                    HeadIndex = HeadIndex + &H28
-                Loop
+                End If
 
 #Region "To be Built"
 

@@ -215,10 +215,11 @@ Public Class OptionsMenu
 #Region "Advanced Tab"
 
     Sub LoadAdvancedTab()
+        CheckBoxShowSelectedNode.Checked = My.Settings.ShowSelectedNode
+        CheckBoxSuppresHSPCFooters.Checked = My.Settings.SuppressHSPCFooters
         CheckBoxAppendDef.Checked = My.Settings.AppendDefFileRebuild
         CheckDisableModPref.Checked = My.Settings.DisableModPref
         CheckRelocateMods.Checked = My.Settings.RelocateModFolderMods
-        CheckBoxShowSelectedNode.Checked = My.Settings.ShowSelectedNode
         UpdateDefOptions()
         ComboBoxOodleCompressionLevel.Items.AddRange(System.Enum.GetNames(GetType(PackUnpack.OodleCompressionLevel)))
         ComboBoxOodleCompressionLevel.SelectedIndex = My.Settings.OODLCompressionLevel
@@ -227,6 +228,21 @@ Public Class OptionsMenu
         TrackBarHexLength.Value = My.Settings.HexViewLength
         TabControl1.SelectedIndex = My.Settings.OptionMenuSelectedTab
         UpdateViewLength()
+    End Sub
+
+    Private Sub CheckBoxShowSelectedNode_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxShowSelectedNode.CheckedChanged
+        My.Settings.ShowSelectedNode = CheckBoxShowSelectedNode.Checked
+        MainForm.ApplyCurrentViewOption()
+    End Sub
+
+    Private Sub CheckBoxSuppresHSPCFooters_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxSuppresHSPCFooters.CheckedChanged
+        If Not My.Settings.SuppressHSPCFooters = CheckBoxSuppresHSPCFooters.Checked Then
+            My.Settings.SuppressHSPCFooters = CheckBoxSuppresHSPCFooters.Checked
+            If MessageBox.Show("Would you like to reload the file list?", "Refresh Files?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                MainForm.LoadInitalFilesToTree()
+            End If
+        End If
+        My.Settings.SuppressHSPCFooters = CheckBoxSuppresHSPCFooters.Checked
     End Sub
 
     Private Sub CheckBoxAppendDef_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxAppendDef.CheckedChanged
@@ -242,11 +258,6 @@ Public Class OptionsMenu
     Private Sub CheckRelocateMods_CheckedChanged(sender As Object, e As EventArgs) Handles CheckRelocateMods.CheckedChanged
         My.Settings.RelocateModFolderMods = CheckRelocateMods.Checked
         UpdateDefOptions()
-    End Sub
-
-    Private Sub CheckBoxShowSelectedNode_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxShowSelectedNode.CheckedChanged
-        My.Settings.ShowSelectedNode = CheckBoxShowSelectedNode.Checked
-        MainForm.ApplyCurrentViewOption()
     End Sub
 
     Sub UpdateDefOptions()
@@ -303,6 +314,8 @@ Public Class OptionsMenu
         MainForm.PacNumbers = New Integer(1024) {}
         MainForm.PacNumbers(0) = -1
     End Sub
+
+
 
 #End Region
 

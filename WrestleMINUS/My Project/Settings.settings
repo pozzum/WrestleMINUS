@@ -98,5 +98,8 @@
     <Setting Name="SkippedVersion" Type="system.version" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="SuppressHSPCFooters" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

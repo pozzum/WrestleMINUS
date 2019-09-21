@@ -70,7 +70,7 @@ Public Class OnlineVersion
                                                             "Skip Version?",
                                                             MessageBoxButtons.YesNo)
                             If SkipResult = DialogResult.Yes Then
-                                Dim TempVersion As Version
+                                Dim TempVersion As Version = Nothing
                                 If Version.TryParse(CurrentVersion, TempVersion) Then
                                     My.Settings.SkippedVersion = TempVersion
                                 End If
@@ -103,7 +103,7 @@ Public Class OnlineVersion
                                                             "Skip Version?",
                                                             MessageBoxButtons.YesNo)
                             If SkipResult = DialogResult.Yes Then
-                                Dim TempVersion As Version
+                                Dim TempVersion As Version = Nothing
                                 If Version.TryParse(CurrentVersion, TempVersion) Then
                                     My.Settings.SkippedVersion = TempVersion
                                 End If
