@@ -24,10 +24,10 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStripMainForm = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -182,10 +182,74 @@ Partial Class MainForm
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.ObjectMainViewPage = New System.Windows.Forms.TabPage()
         Me.DataGridObjectView = New System.Windows.Forms.DataGridView()
+        Me.ObjectCountCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertexCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectRendered = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ObjectHeaderFiller = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectWeightNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUnknownIntA = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVerHeaderCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVerticeOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectWeightsOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUVOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectNormalsOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectInternalNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectHeaderShader = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UnknownC = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectMaterialIndex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectParameterCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectParameterOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectFaceOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUVCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUnknownD = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUnknownE = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUnknownF = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUnknownG = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUnknownH = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ObjectBoneViewPage = New System.Windows.Forms.TabPage()
         Me.DataGridObjectBoneView = New System.Windows.Forms.DataGridView()
+        Me.ObjectBoneCountCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneOrder = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownA = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownB = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownC = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownD = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownE = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownF = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownG = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownH = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownI = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownJ = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownK = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownL = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownN = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownO = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownP = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectTextureViewPage = New System.Windows.Forms.TabPage()
+        Me.ObjectTestureSplitContainer = New System.Windows.Forms.SplitContainer()
+        Me.DataGridObjectTextureView = New System.Windows.Forms.DataGridView()
+        Me.ObjectTextureCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectTextureCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridObjectShaderView = New System.Windows.Forms.DataGridView()
+        Me.ObjectShaderCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectShaderCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectShaderType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectShaderB = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertexViewPage = New System.Windows.Forms.TabPage()
+        Me.DataGridObjectVertexView = New System.Windows.Forms.DataGridView()
+        Me.ObjectVertCountCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertX = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertY = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertZ = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertRX = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertRY = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertRZ = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertUnknown = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripObjectView = New System.Windows.Forms.MenuStrip()
         Me.LoadedObjectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ObjectEmoteListComboBox = New System.Windows.Forms.ToolStripComboBox()
         Me.AttireView = New System.Windows.Forms.TabPage()
         Me.DataGridAttireView = New System.Windows.Forms.DataGridView()
         Me.Pach = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -496,59 +560,6 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectCountCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectVertexCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectRendered = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.ObjectHeaderFiller = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectWeightNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectUnknownIntA = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectVerHeaderCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectVerticeOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectWeightsOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectUVOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectNormalsOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectInternalNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectHeaderShader = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UnknownC = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectMaterialIndex = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectParameterCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectParameterOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectFaceOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectUVCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectUnknownD = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectUnknownE = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectUnknownF = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectUnknownG = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectUnknownH = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectTextureViewPage = New System.Windows.Forms.TabPage()
-        Me.ObjectTestureSplitContainer = New System.Windows.Forms.SplitContainer()
-        Me.DataGridObjectTextureView = New System.Windows.Forms.DataGridView()
-        Me.DataGridObjectShaderView = New System.Windows.Forms.DataGridView()
-        Me.ObjectTextureCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectTextureCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectShaderCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectShaderCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectShaderType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectShaderB = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneCountCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneOrder = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownA = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownB = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownC = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownD = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownE = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownF = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownG = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownH = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownI = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownJ = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownK = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownL = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownM = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownN = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownO = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectBoneUnknownP = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripMainForm.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -580,6 +591,15 @@ Partial Class MainForm
         CType(Me.DataGridObjectView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ObjectBoneViewPage.SuspendLayout()
         CType(Me.DataGridObjectBoneView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ObjectTextureViewPage.SuspendLayout()
+        CType(Me.ObjectTestureSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ObjectTestureSplitContainer.Panel1.SuspendLayout()
+        Me.ObjectTestureSplitContainer.Panel2.SuspendLayout()
+        Me.ObjectTestureSplitContainer.SuspendLayout()
+        CType(Me.DataGridObjectTextureView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridObjectShaderView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ObjectVertexViewPage.SuspendLayout()
+        CType(Me.DataGridObjectVertexView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripObjectView.SuspendLayout()
         Me.AttireView.SuspendLayout()
         CType(Me.DataGridAttireView, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -615,13 +635,6 @@ Partial Class MainForm
         Me.MenuStripWeapPos.SuspendLayout()
         Me.MenuStripPictureView.SuspendLayout()
         Me.TreeViewContext.SuspendLayout()
-        Me.ObjectTextureViewPage.SuspendLayout()
-        CType(Me.ObjectTestureSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ObjectTestureSplitContainer.Panel1.SuspendLayout()
-        Me.ObjectTestureSplitContainer.Panel2.SuspendLayout()
-        Me.ObjectTestureSplitContainer.SuspendLayout()
-        CType(Me.DataGridObjectTextureView, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridObjectShaderView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStripMainForm
@@ -1872,11 +1885,12 @@ Partial Class MainForm
         Me.TabControl2.Controls.Add(Me.ObjectMainViewPage)
         Me.TabControl2.Controls.Add(Me.ObjectBoneViewPage)
         Me.TabControl2.Controls.Add(Me.ObjectTextureViewPage)
+        Me.TabControl2.Controls.Add(Me.ObjectVertexViewPage)
         Me.TabControl2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TabControl2.Location = New System.Drawing.Point(3, 27)
+        Me.TabControl2.Location = New System.Drawing.Point(3, 30)
         Me.TabControl2.Name = "TabControl2"
         Me.TabControl2.SelectedIndex = 0
-        Me.TabControl2.Size = New System.Drawing.Size(1213, 381)
+        Me.TabControl2.Size = New System.Drawing.Size(1213, 378)
         Me.TabControl2.TabIndex = 2
         '
         'ObjectMainViewPage
@@ -1885,7 +1899,7 @@ Partial Class MainForm
         Me.ObjectMainViewPage.Location = New System.Drawing.Point(4, 22)
         Me.ObjectMainViewPage.Name = "ObjectMainViewPage"
         Me.ObjectMainViewPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.ObjectMainViewPage.Size = New System.Drawing.Size(1205, 355)
+        Me.ObjectMainViewPage.Size = New System.Drawing.Size(1205, 352)
         Me.ObjectMainViewPage.TabIndex = 0
         Me.ObjectMainViewPage.Text = "Main"
         Me.ObjectMainViewPage.UseVisualStyleBackColor = True
@@ -1901,8 +1915,180 @@ Partial Class MainForm
         Me.DataGridObjectView.Location = New System.Drawing.Point(3, 3)
         Me.DataGridObjectView.Name = "DataGridObjectView"
         Me.DataGridObjectView.RowHeadersVisible = False
-        Me.DataGridObjectView.Size = New System.Drawing.Size(1199, 349)
+        Me.DataGridObjectView.Size = New System.Drawing.Size(1199, 346)
         Me.DataGridObjectView.TabIndex = 1
+        '
+        'ObjectCountCol
+        '
+        Me.ObjectCountCol.FillWeight = 25.0!
+        Me.ObjectCountCol.HeaderText = "Count"
+        Me.ObjectCountCol.Name = "ObjectCountCol"
+        Me.ObjectCountCol.ReadOnly = True
+        Me.ObjectCountCol.Width = 60
+        '
+        'ObjectVertexCount
+        '
+        Me.ObjectVertexCount.FillWeight = 25.0!
+        Me.ObjectVertexCount.HeaderText = "Vert Count"
+        Me.ObjectVertexCount.Name = "ObjectVertexCount"
+        Me.ObjectVertexCount.Width = 76
+        '
+        'ObjectRendered
+        '
+        Me.ObjectRendered.FillWeight = 30.0!
+        Me.ObjectRendered.HeaderText = "Rendered"
+        Me.ObjectRendered.Name = "ObjectRendered"
+        Me.ObjectRendered.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ObjectRendered.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.ObjectRendered.Width = 79
+        '
+        'ObjectHeaderFiller
+        '
+        Me.ObjectHeaderFiller.FillWeight = 30.0!
+        Me.ObjectHeaderFiller.HeaderText = "Filler"
+        Me.ObjectHeaderFiller.Name = "ObjectHeaderFiller"
+        Me.ObjectHeaderFiller.Visible = False
+        Me.ObjectHeaderFiller.Width = 53
+        '
+        'ObjectWeightNumber
+        '
+        Me.ObjectWeightNumber.FillWeight = 30.0!
+        Me.ObjectWeightNumber.HeaderText = "Weights"
+        Me.ObjectWeightNumber.Name = "ObjectWeightNumber"
+        Me.ObjectWeightNumber.Width = 71
+        '
+        'ObjectUnknownIntA
+        '
+        Me.ObjectUnknownIntA.FillWeight = 30.0!
+        Me.ObjectUnknownIntA.HeaderText = "IntA"
+        Me.ObjectUnknownIntA.Name = "ObjectUnknownIntA"
+        Me.ObjectUnknownIntA.Width = 51
+        '
+        'ObjectVerHeaderCount
+        '
+        Me.ObjectVerHeaderCount.FillWeight = 30.0!
+        Me.ObjectVerHeaderCount.HeaderText = "Vert Head Count"
+        Me.ObjectVerHeaderCount.Name = "ObjectVerHeaderCount"
+        Me.ObjectVerHeaderCount.Width = 102
+        '
+        'ObjectVerticeOffset
+        '
+        Me.ObjectVerticeOffset.FillWeight = 50.0!
+        Me.ObjectVerticeOffset.HeaderText = "Vertice Offset"
+        Me.ObjectVerticeOffset.Name = "ObjectVerticeOffset"
+        Me.ObjectVerticeOffset.Width = 88
+        '
+        'ObjectWeightsOffset
+        '
+        Me.ObjectWeightsOffset.FillWeight = 50.0!
+        Me.ObjectWeightsOffset.HeaderText = "Weight Offset"
+        Me.ObjectWeightsOffset.Name = "ObjectWeightsOffset"
+        Me.ObjectWeightsOffset.Width = 89
+        '
+        'ObjectUVOffset
+        '
+        Me.ObjectUVOffset.FillWeight = 50.0!
+        Me.ObjectUVOffset.HeaderText = "UV Offset"
+        Me.ObjectUVOffset.Name = "ObjectUVOffset"
+        Me.ObjectUVOffset.Width = 72
+        '
+        'ObjectNormalsOffset
+        '
+        Me.ObjectNormalsOffset.FillWeight = 50.0!
+        Me.ObjectNormalsOffset.HeaderText = "Normals Offset"
+        Me.ObjectNormalsOffset.Name = "ObjectNormalsOffset"
+        Me.ObjectNormalsOffset.Width = 93
+        '
+        'ObjectInternalNum
+        '
+        Me.ObjectInternalNum.FillWeight = 25.0!
+        Me.ObjectInternalNum.HeaderText = "Number"
+        Me.ObjectInternalNum.Name = "ObjectInternalNum"
+        Me.ObjectInternalNum.Width = 69
+        '
+        'ObjectHeaderShader
+        '
+        Me.ObjectHeaderShader.FillWeight = 30.0!
+        Me.ObjectHeaderShader.HeaderText = "Shader"
+        Me.ObjectHeaderShader.Name = "ObjectHeaderShader"
+        Me.ObjectHeaderShader.Width = 66
+        '
+        'UnknownC
+        '
+        Me.UnknownC.FillWeight = 30.0!
+        Me.UnknownC.HeaderText = "IntC"
+        Me.UnknownC.Name = "UnknownC"
+        Me.UnknownC.Width = 51
+        '
+        'ObjectMaterialIndex
+        '
+        Me.ObjectMaterialIndex.FillWeight = 30.0!
+        Me.ObjectMaterialIndex.HeaderText = "Material"
+        Me.ObjectMaterialIndex.Name = "ObjectMaterialIndex"
+        Me.ObjectMaterialIndex.Width = 69
+        '
+        'ObjectParameterCount
+        '
+        Me.ObjectParameterCount.FillWeight = 30.0!
+        Me.ObjectParameterCount.HeaderText = "Param Count"
+        Me.ObjectParameterCount.Name = "ObjectParameterCount"
+        Me.ObjectParameterCount.Width = 86
+        '
+        'ObjectParameterOffset
+        '
+        Me.ObjectParameterOffset.FillWeight = 30.0!
+        Me.ObjectParameterOffset.HeaderText = "Param Offset"
+        Me.ObjectParameterOffset.Name = "ObjectParameterOffset"
+        Me.ObjectParameterOffset.Width = 86
+        '
+        'ObjectFaceOffset
+        '
+        Me.ObjectFaceOffset.FillWeight = 30.0!
+        Me.ObjectFaceOffset.HeaderText = "Faces Offset"
+        Me.ObjectFaceOffset.Name = "ObjectFaceOffset"
+        Me.ObjectFaceOffset.Width = 85
+        '
+        'ObjectUVCount
+        '
+        Me.ObjectUVCount.FillWeight = 30.0!
+        Me.ObjectUVCount.HeaderText = "UV Count"
+        Me.ObjectUVCount.Name = "ObjectUVCount"
+        Me.ObjectUVCount.Width = 72
+        '
+        'ObjectUnknownD
+        '
+        Me.ObjectUnknownD.FillWeight = 30.0!
+        Me.ObjectUnknownD.HeaderText = "Unknown D"
+        Me.ObjectUnknownD.Name = "ObjectUnknownD"
+        Me.ObjectUnknownD.Width = 82
+        '
+        'ObjectUnknownE
+        '
+        Me.ObjectUnknownE.FillWeight = 30.0!
+        Me.ObjectUnknownE.HeaderText = "Unknown E"
+        Me.ObjectUnknownE.Name = "ObjectUnknownE"
+        Me.ObjectUnknownE.Width = 81
+        '
+        'ObjectUnknownF
+        '
+        Me.ObjectUnknownF.FillWeight = 30.0!
+        Me.ObjectUnknownF.HeaderText = "Unknown F"
+        Me.ObjectUnknownF.Name = "ObjectUnknownF"
+        Me.ObjectUnknownF.Width = 80
+        '
+        'ObjectUnknownG
+        '
+        Me.ObjectUnknownG.FillWeight = 30.0!
+        Me.ObjectUnknownG.HeaderText = "Unknown G"
+        Me.ObjectUnknownG.Name = "ObjectUnknownG"
+        Me.ObjectUnknownG.Width = 82
+        '
+        'ObjectUnknownH
+        '
+        Me.ObjectUnknownH.FillWeight = 30.0!
+        Me.ObjectUnknownH.HeaderText = "Unknown H"
+        Me.ObjectUnknownH.Name = "ObjectUnknownH"
+        Me.ObjectUnknownH.Width = 82
         '
         'ObjectBoneViewPage
         '
@@ -1910,7 +2096,7 @@ Partial Class MainForm
         Me.ObjectBoneViewPage.Location = New System.Drawing.Point(4, 22)
         Me.ObjectBoneViewPage.Name = "ObjectBoneViewPage"
         Me.ObjectBoneViewPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.ObjectBoneViewPage.Size = New System.Drawing.Size(1205, 355)
+        Me.ObjectBoneViewPage.Size = New System.Drawing.Size(1205, 352)
         Me.ObjectBoneViewPage.TabIndex = 1
         Me.ObjectBoneViewPage.Text = "Bones"
         Me.ObjectBoneViewPage.UseVisualStyleBackColor = True
@@ -1927,23 +2113,282 @@ Partial Class MainForm
         Me.DataGridObjectBoneView.Location = New System.Drawing.Point(3, 3)
         Me.DataGridObjectBoneView.Name = "DataGridObjectBoneView"
         Me.DataGridObjectBoneView.RowHeadersVisible = False
-        Me.DataGridObjectBoneView.Size = New System.Drawing.Size(1199, 349)
+        Me.DataGridObjectBoneView.Size = New System.Drawing.Size(1199, 346)
         Me.DataGridObjectBoneView.TabIndex = 0
+        '
+        'ObjectBoneCountCol
+        '
+        Me.ObjectBoneCountCol.HeaderText = "Count"
+        Me.ObjectBoneCountCol.Name = "ObjectBoneCountCol"
+        Me.ObjectBoneCountCol.ReadOnly = True
+        '
+        'ObjectBoneOrder
+        '
+        Me.ObjectBoneOrder.HeaderText = "Order"
+        Me.ObjectBoneOrder.Name = "ObjectBoneOrder"
+        '
+        'ObjectBoneName
+        '
+        Me.ObjectBoneName.HeaderText = "Name"
+        Me.ObjectBoneName.Name = "ObjectBoneName"
+        '
+        'ObjectBoneUnknownA
+        '
+        Me.ObjectBoneUnknownA.HeaderText = "A"
+        Me.ObjectBoneUnknownA.Name = "ObjectBoneUnknownA"
+        '
+        'ObjectBoneUnknownB
+        '
+        Me.ObjectBoneUnknownB.HeaderText = "B"
+        Me.ObjectBoneUnknownB.Name = "ObjectBoneUnknownB"
+        '
+        'ObjectBoneUnknownC
+        '
+        Me.ObjectBoneUnknownC.HeaderText = "C"
+        Me.ObjectBoneUnknownC.Name = "ObjectBoneUnknownC"
+        '
+        'ObjectBoneUnknownD
+        '
+        Me.ObjectBoneUnknownD.HeaderText = "D"
+        Me.ObjectBoneUnknownD.Name = "ObjectBoneUnknownD"
+        '
+        'ObjectBoneUnknownE
+        '
+        Me.ObjectBoneUnknownE.HeaderText = "E"
+        Me.ObjectBoneUnknownE.Name = "ObjectBoneUnknownE"
+        '
+        'ObjectBoneUnknownF
+        '
+        Me.ObjectBoneUnknownF.HeaderText = "F"
+        Me.ObjectBoneUnknownF.Name = "ObjectBoneUnknownF"
+        '
+        'ObjectBoneUnknownG
+        '
+        Me.ObjectBoneUnknownG.HeaderText = "G"
+        Me.ObjectBoneUnknownG.Name = "ObjectBoneUnknownG"
+        '
+        'ObjectBoneUnknownH
+        '
+        Me.ObjectBoneUnknownH.HeaderText = "H"
+        Me.ObjectBoneUnknownH.Name = "ObjectBoneUnknownH"
+        '
+        'ObjectBoneUnknownI
+        '
+        Me.ObjectBoneUnknownI.HeaderText = "I"
+        Me.ObjectBoneUnknownI.Name = "ObjectBoneUnknownI"
+        '
+        'ObjectBoneUnknownJ
+        '
+        Me.ObjectBoneUnknownJ.HeaderText = "J"
+        Me.ObjectBoneUnknownJ.Name = "ObjectBoneUnknownJ"
+        '
+        'ObjectBoneUnknownK
+        '
+        Me.ObjectBoneUnknownK.HeaderText = "K"
+        Me.ObjectBoneUnknownK.Name = "ObjectBoneUnknownK"
+        '
+        'ObjectBoneUnknownL
+        '
+        Me.ObjectBoneUnknownL.HeaderText = "L"
+        Me.ObjectBoneUnknownL.Name = "ObjectBoneUnknownL"
+        '
+        'ObjectBoneUnknownM
+        '
+        Me.ObjectBoneUnknownM.HeaderText = "M"
+        Me.ObjectBoneUnknownM.Name = "ObjectBoneUnknownM"
+        '
+        'ObjectBoneUnknownN
+        '
+        Me.ObjectBoneUnknownN.HeaderText = "N"
+        Me.ObjectBoneUnknownN.Name = "ObjectBoneUnknownN"
+        '
+        'ObjectBoneUnknownO
+        '
+        Me.ObjectBoneUnknownO.HeaderText = "O"
+        Me.ObjectBoneUnknownO.Name = "ObjectBoneUnknownO"
+        '
+        'ObjectBoneUnknownP
+        '
+        Me.ObjectBoneUnknownP.HeaderText = "P"
+        Me.ObjectBoneUnknownP.Name = "ObjectBoneUnknownP"
+        '
+        'ObjectTextureViewPage
+        '
+        Me.ObjectTextureViewPage.Controls.Add(Me.ObjectTestureSplitContainer)
+        Me.ObjectTextureViewPage.Location = New System.Drawing.Point(4, 22)
+        Me.ObjectTextureViewPage.Name = "ObjectTextureViewPage"
+        Me.ObjectTextureViewPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.ObjectTextureViewPage.Size = New System.Drawing.Size(1205, 352)
+        Me.ObjectTextureViewPage.TabIndex = 2
+        Me.ObjectTextureViewPage.Text = "Textures"
+        Me.ObjectTextureViewPage.UseVisualStyleBackColor = True
+        '
+        'ObjectTestureSplitContainer
+        '
+        Me.ObjectTestureSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ObjectTestureSplitContainer.Location = New System.Drawing.Point(3, 3)
+        Me.ObjectTestureSplitContainer.Name = "ObjectTestureSplitContainer"
+        '
+        'ObjectTestureSplitContainer.Panel1
+        '
+        Me.ObjectTestureSplitContainer.Panel1.Controls.Add(Me.DataGridObjectTextureView)
+        '
+        'ObjectTestureSplitContainer.Panel2
+        '
+        Me.ObjectTestureSplitContainer.Panel2.Controls.Add(Me.DataGridObjectShaderView)
+        Me.ObjectTestureSplitContainer.Size = New System.Drawing.Size(1199, 346)
+        Me.ObjectTestureSplitContainer.SplitterDistance = 200
+        Me.ObjectTestureSplitContainer.TabIndex = 0
+        '
+        'DataGridObjectTextureView
+        '
+        Me.DataGridObjectTextureView.AllowUserToAddRows = False
+        Me.DataGridObjectTextureView.AllowUserToDeleteRows = False
+        Me.DataGridObjectTextureView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridObjectTextureView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridObjectTextureView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectTextureCount, Me.ObjectTextureCol})
+        Me.DataGridObjectTextureView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridObjectTextureView.Location = New System.Drawing.Point(0, 0)
+        Me.DataGridObjectTextureView.Name = "DataGridObjectTextureView"
+        Me.DataGridObjectTextureView.RowHeadersVisible = False
+        Me.DataGridObjectTextureView.Size = New System.Drawing.Size(200, 346)
+        Me.DataGridObjectTextureView.TabIndex = 0
+        '
+        'ObjectTextureCount
+        '
+        Me.ObjectTextureCount.FillWeight = 25.0!
+        Me.ObjectTextureCount.HeaderText = "Count"
+        Me.ObjectTextureCount.Name = "ObjectTextureCount"
+        Me.ObjectTextureCount.ReadOnly = True
+        '
+        'ObjectTextureCol
+        '
+        Me.ObjectTextureCol.HeaderText = "Textures"
+        Me.ObjectTextureCol.Name = "ObjectTextureCol"
+        '
+        'DataGridObjectShaderView
+        '
+        Me.DataGridObjectShaderView.AllowUserToAddRows = False
+        Me.DataGridObjectShaderView.AllowUserToDeleteRows = False
+        Me.DataGridObjectShaderView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridObjectShaderView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridObjectShaderView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectShaderCount, Me.ObjectShaderCol, Me.ObjectShaderType, Me.ObjectShaderB})
+        Me.DataGridObjectShaderView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridObjectShaderView.Location = New System.Drawing.Point(0, 0)
+        Me.DataGridObjectShaderView.Name = "DataGridObjectShaderView"
+        Me.DataGridObjectShaderView.RowHeadersVisible = False
+        Me.DataGridObjectShaderView.Size = New System.Drawing.Size(995, 346)
+        Me.DataGridObjectShaderView.TabIndex = 0
+        '
+        'ObjectShaderCount
+        '
+        Me.ObjectShaderCount.FillWeight = 25.0!
+        Me.ObjectShaderCount.HeaderText = "Count"
+        Me.ObjectShaderCount.Name = "ObjectShaderCount"
+        Me.ObjectShaderCount.ReadOnly = True
+        '
+        'ObjectShaderCol
+        '
+        Me.ObjectShaderCol.HeaderText = "Shader"
+        Me.ObjectShaderCol.Name = "ObjectShaderCol"
+        '
+        'ObjectShaderType
+        '
+        Me.ObjectShaderType.HeaderText = "Type"
+        Me.ObjectShaderType.Name = "ObjectShaderType"
+        '
+        'ObjectShaderB
+        '
+        Me.ObjectShaderB.HeaderText = "IntB"
+        Me.ObjectShaderB.Name = "ObjectShaderB"
+        '
+        'ObjectVertexViewPage
+        '
+        Me.ObjectVertexViewPage.Controls.Add(Me.DataGridObjectVertexView)
+        Me.ObjectVertexViewPage.Location = New System.Drawing.Point(4, 22)
+        Me.ObjectVertexViewPage.Name = "ObjectVertexViewPage"
+        Me.ObjectVertexViewPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.ObjectVertexViewPage.Size = New System.Drawing.Size(1205, 352)
+        Me.ObjectVertexViewPage.TabIndex = 3
+        Me.ObjectVertexViewPage.Text = "Vertices"
+        Me.ObjectVertexViewPage.UseVisualStyleBackColor = True
+        '
+        'DataGridObjectVertexView
+        '
+        Me.DataGridObjectVertexView.AllowUserToAddRows = False
+        Me.DataGridObjectVertexView.AllowUserToDeleteRows = False
+        Me.DataGridObjectVertexView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridObjectVertexView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridObjectVertexView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectVertCountCol, Me.ObjectVertX, Me.ObjectVertY, Me.ObjectVertZ, Me.ObjectVertRX, Me.ObjectVertRY, Me.ObjectVertRZ, Me.ObjectVertUnknown})
+        Me.DataGridObjectVertexView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridObjectVertexView.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridObjectVertexView.Name = "DataGridObjectVertexView"
+        Me.DataGridObjectVertexView.RowHeadersVisible = False
+        Me.DataGridObjectVertexView.Size = New System.Drawing.Size(1199, 346)
+        Me.DataGridObjectVertexView.TabIndex = 0
+        '
+        'ObjectVertCountCol
+        '
+        Me.ObjectVertCountCol.HeaderText = "Count"
+        Me.ObjectVertCountCol.Name = "ObjectVertCountCol"
+        Me.ObjectVertCountCol.ReadOnly = True
+        '
+        'ObjectVertX
+        '
+        Me.ObjectVertX.HeaderText = "X"
+        Me.ObjectVertX.Name = "ObjectVertX"
+        '
+        'ObjectVertY
+        '
+        Me.ObjectVertY.HeaderText = "Y"
+        Me.ObjectVertY.Name = "ObjectVertY"
+        '
+        'ObjectVertZ
+        '
+        Me.ObjectVertZ.HeaderText = "Z"
+        Me.ObjectVertZ.Name = "ObjectVertZ"
+        '
+        'ObjectVertRX
+        '
+        Me.ObjectVertRX.HeaderText = "RX?"
+        Me.ObjectVertRX.Name = "ObjectVertRX"
+        '
+        'ObjectVertRY
+        '
+        Me.ObjectVertRY.HeaderText = "RY?"
+        Me.ObjectVertRY.Name = "ObjectVertRY"
+        '
+        'ObjectVertRZ
+        '
+        Me.ObjectVertRZ.HeaderText = "RZ?"
+        Me.ObjectVertRZ.Name = "ObjectVertRZ"
+        '
+        'ObjectVertUnknown
+        '
+        Me.ObjectVertUnknown.HeaderText = "Unknown"
+        Me.ObjectVertUnknown.Name = "ObjectVertUnknown"
+        Me.ObjectVertUnknown.ReadOnly = True
         '
         'MenuStripObjectView
         '
-        Me.MenuStripObjectView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LoadedObjectToolStripMenuItem})
+        Me.MenuStripObjectView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LoadedObjectToolStripMenuItem, Me.ObjectEmoteListComboBox})
         Me.MenuStripObjectView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripObjectView.Name = "MenuStripObjectView"
-        Me.MenuStripObjectView.Size = New System.Drawing.Size(1213, 24)
+        Me.MenuStripObjectView.Size = New System.Drawing.Size(1213, 27)
         Me.MenuStripObjectView.TabIndex = 0
         Me.MenuStripObjectView.Text = "MenuStrip1"
         '
         'LoadedObjectToolStripMenuItem
         '
         Me.LoadedObjectToolStripMenuItem.Name = "LoadedObjectToolStripMenuItem"
-        Me.LoadedObjectToolStripMenuItem.Size = New System.Drawing.Size(102, 20)
+        Me.LoadedObjectToolStripMenuItem.Size = New System.Drawing.Size(102, 23)
         Me.LoadedObjectToolStripMenuItem.Text = "Loaded Object: "
+        '
+        'ObjectEmoteListComboBox
+        '
+        Me.ObjectEmoteListComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ObjectEmoteListComboBox.Name = "ObjectEmoteListComboBox"
+        Me.ObjectEmoteListComboBox.Size = New System.Drawing.Size(121, 23)
         '
         'AttireView
         '
@@ -2574,9 +3019,9 @@ Partial Class MainForm
         '
         'YobjArryIndex
         '
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle1
         Me.YobjArryIndex.HeaderText = "Index"
         Me.YobjArryIndex.Name = "YobjArryIndex"
         Me.YobjArryIndex.ReadOnly = True
@@ -2584,9 +3029,9 @@ Partial Class MainForm
         '
         'ObjArrayParent
         '
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle2
         Me.ObjArrayParent.HeaderText = "Parent"
         Me.ObjArrayParent.MinimumWidth = 100
         Me.ObjArrayParent.Name = "ObjArrayParent"
@@ -2657,9 +3102,9 @@ Partial Class MainForm
         '
         'ContainedYobjArray
         '
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle3
         Me.ContainedYobjArray.HeaderText = "Objects"
         Me.ContainedYobjArray.Name = "ContainedYobjArray"
         Me.ContainedYobjArray.ReadOnly = True
@@ -2667,9 +3112,9 @@ Partial Class MainForm
         '
         'StartIndexYobjArray
         '
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle4
         Me.StartIndexYobjArray.HeaderText = "Start Index"
         Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
         Me.StartIndexYobjArray.ReadOnly = True
@@ -4179,364 +4624,6 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn35.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn35.Width = 41
         '
-        'ObjectCountCol
-        '
-        Me.ObjectCountCol.FillWeight = 25.0!
-        Me.ObjectCountCol.HeaderText = "Count"
-        Me.ObjectCountCol.Name = "ObjectCountCol"
-        Me.ObjectCountCol.ReadOnly = True
-        Me.ObjectCountCol.Width = 60
-        '
-        'ObjectVertexCount
-        '
-        Me.ObjectVertexCount.FillWeight = 25.0!
-        Me.ObjectVertexCount.HeaderText = "Vert Count"
-        Me.ObjectVertexCount.Name = "ObjectVertexCount"
-        Me.ObjectVertexCount.Width = 82
-        '
-        'ObjectRendered
-        '
-        Me.ObjectRendered.FillWeight = 30.0!
-        Me.ObjectRendered.HeaderText = "Rendered"
-        Me.ObjectRendered.Name = "ObjectRendered"
-        Me.ObjectRendered.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.ObjectRendered.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.ObjectRendered.Width = 79
-        '
-        'ObjectHeaderFiller
-        '
-        Me.ObjectHeaderFiller.FillWeight = 30.0!
-        Me.ObjectHeaderFiller.HeaderText = "Filler"
-        Me.ObjectHeaderFiller.Name = "ObjectHeaderFiller"
-        Me.ObjectHeaderFiller.Visible = False
-        Me.ObjectHeaderFiller.Width = 53
-        '
-        'ObjectWeightNumber
-        '
-        Me.ObjectWeightNumber.FillWeight = 30.0!
-        Me.ObjectWeightNumber.HeaderText = "Weights"
-        Me.ObjectWeightNumber.Name = "ObjectWeightNumber"
-        Me.ObjectWeightNumber.Width = 71
-        '
-        'ObjectUnknownIntA
-        '
-        Me.ObjectUnknownIntA.FillWeight = 30.0!
-        Me.ObjectUnknownIntA.HeaderText = "IntA"
-        Me.ObjectUnknownIntA.Name = "ObjectUnknownIntA"
-        Me.ObjectUnknownIntA.Width = 51
-        '
-        'ObjectVerHeaderCount
-        '
-        Me.ObjectVerHeaderCount.FillWeight = 30.0!
-        Me.ObjectVerHeaderCount.HeaderText = "Vert Head Count"
-        Me.ObjectVerHeaderCount.Name = "ObjectVerHeaderCount"
-        Me.ObjectVerHeaderCount.Width = 102
-        '
-        'ObjectVerticeOffset
-        '
-        Me.ObjectVerticeOffset.FillWeight = 50.0!
-        Me.ObjectVerticeOffset.HeaderText = "Vertice Offset"
-        Me.ObjectVerticeOffset.Name = "ObjectVerticeOffset"
-        Me.ObjectVerticeOffset.Width = 88
-        '
-        'ObjectWeightsOffset
-        '
-        Me.ObjectWeightsOffset.FillWeight = 50.0!
-        Me.ObjectWeightsOffset.HeaderText = "Weight Offset"
-        Me.ObjectWeightsOffset.Name = "ObjectWeightsOffset"
-        Me.ObjectWeightsOffset.Width = 89
-        '
-        'ObjectUVOffset
-        '
-        Me.ObjectUVOffset.FillWeight = 50.0!
-        Me.ObjectUVOffset.HeaderText = "UV Offset"
-        Me.ObjectUVOffset.Name = "ObjectUVOffset"
-        Me.ObjectUVOffset.Width = 72
-        '
-        'ObjectNormalsOffset
-        '
-        Me.ObjectNormalsOffset.FillWeight = 50.0!
-        Me.ObjectNormalsOffset.HeaderText = "Normals Offset"
-        Me.ObjectNormalsOffset.Name = "ObjectNormalsOffset"
-        Me.ObjectNormalsOffset.Width = 93
-        '
-        'ObjectInternalNum
-        '
-        Me.ObjectInternalNum.FillWeight = 25.0!
-        Me.ObjectInternalNum.HeaderText = "Number"
-        Me.ObjectInternalNum.Name = "ObjectInternalNum"
-        Me.ObjectInternalNum.Width = 69
-        '
-        'ObjectHeaderShader
-        '
-        Me.ObjectHeaderShader.FillWeight = 30.0!
-        Me.ObjectHeaderShader.HeaderText = "Shader"
-        Me.ObjectHeaderShader.Name = "ObjectHeaderShader"
-        Me.ObjectHeaderShader.Width = 66
-        '
-        'UnknownC
-        '
-        Me.UnknownC.FillWeight = 30.0!
-        Me.UnknownC.HeaderText = "IntC"
-        Me.UnknownC.Name = "UnknownC"
-        Me.UnknownC.Width = 51
-        '
-        'ObjectMaterialIndex
-        '
-        Me.ObjectMaterialIndex.FillWeight = 30.0!
-        Me.ObjectMaterialIndex.HeaderText = "Material"
-        Me.ObjectMaterialIndex.Name = "ObjectMaterialIndex"
-        Me.ObjectMaterialIndex.Width = 69
-        '
-        'ObjectParameterCount
-        '
-        Me.ObjectParameterCount.FillWeight = 30.0!
-        Me.ObjectParameterCount.HeaderText = "Param Count"
-        Me.ObjectParameterCount.Name = "ObjectParameterCount"
-        Me.ObjectParameterCount.Width = 86
-        '
-        'ObjectParameterOffset
-        '
-        Me.ObjectParameterOffset.FillWeight = 30.0!
-        Me.ObjectParameterOffset.HeaderText = "Param Offset"
-        Me.ObjectParameterOffset.Name = "ObjectParameterOffset"
-        Me.ObjectParameterOffset.Width = 86
-        '
-        'ObjectFaceOffset
-        '
-        Me.ObjectFaceOffset.FillWeight = 30.0!
-        Me.ObjectFaceOffset.HeaderText = "Faces Offset"
-        Me.ObjectFaceOffset.Name = "ObjectFaceOffset"
-        Me.ObjectFaceOffset.Width = 85
-        '
-        'ObjectUVCount
-        '
-        Me.ObjectUVCount.FillWeight = 30.0!
-        Me.ObjectUVCount.HeaderText = "UV Count"
-        Me.ObjectUVCount.Name = "ObjectUVCount"
-        Me.ObjectUVCount.Width = 72
-        '
-        'ObjectUnknownD
-        '
-        Me.ObjectUnknownD.FillWeight = 30.0!
-        Me.ObjectUnknownD.HeaderText = "Unknown D"
-        Me.ObjectUnknownD.Name = "ObjectUnknownD"
-        Me.ObjectUnknownD.Width = 82
-        '
-        'ObjectUnknownE
-        '
-        Me.ObjectUnknownE.FillWeight = 30.0!
-        Me.ObjectUnknownE.HeaderText = "Unknown E"
-        Me.ObjectUnknownE.Name = "ObjectUnknownE"
-        Me.ObjectUnknownE.Width = 81
-        '
-        'ObjectUnknownF
-        '
-        Me.ObjectUnknownF.FillWeight = 30.0!
-        Me.ObjectUnknownF.HeaderText = "Unknown F"
-        Me.ObjectUnknownF.Name = "ObjectUnknownF"
-        Me.ObjectUnknownF.Width = 80
-        '
-        'ObjectUnknownG
-        '
-        Me.ObjectUnknownG.FillWeight = 30.0!
-        Me.ObjectUnknownG.HeaderText = "Unknown G"
-        Me.ObjectUnknownG.Name = "ObjectUnknownG"
-        Me.ObjectUnknownG.Width = 82
-        '
-        'ObjectUnknownH
-        '
-        Me.ObjectUnknownH.FillWeight = 30.0!
-        Me.ObjectUnknownH.HeaderText = "Unknown H"
-        Me.ObjectUnknownH.Name = "ObjectUnknownH"
-        Me.ObjectUnknownH.Width = 82
-        '
-        'ObjectTextureViewPage
-        '
-        Me.ObjectTextureViewPage.Controls.Add(Me.ObjectTestureSplitContainer)
-        Me.ObjectTextureViewPage.Location = New System.Drawing.Point(4, 22)
-        Me.ObjectTextureViewPage.Name = "ObjectTextureViewPage"
-        Me.ObjectTextureViewPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.ObjectTextureViewPage.Size = New System.Drawing.Size(1205, 355)
-        Me.ObjectTextureViewPage.TabIndex = 2
-        Me.ObjectTextureViewPage.Text = "Textures"
-        Me.ObjectTextureViewPage.UseVisualStyleBackColor = True
-        '
-        'ObjectTestureSplitContainer
-        '
-        Me.ObjectTestureSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ObjectTestureSplitContainer.Location = New System.Drawing.Point(3, 3)
-        Me.ObjectTestureSplitContainer.Name = "ObjectTestureSplitContainer"
-        '
-        'ObjectTestureSplitContainer.Panel1
-        '
-        Me.ObjectTestureSplitContainer.Panel1.Controls.Add(Me.DataGridObjectTextureView)
-        '
-        'ObjectTestureSplitContainer.Panel2
-        '
-        Me.ObjectTestureSplitContainer.Panel2.Controls.Add(Me.DataGridObjectShaderView)
-        Me.ObjectTestureSplitContainer.Size = New System.Drawing.Size(1199, 349)
-        Me.ObjectTestureSplitContainer.SplitterDistance = 200
-        Me.ObjectTestureSplitContainer.TabIndex = 0
-        '
-        'DataGridObjectTextureView
-        '
-        Me.DataGridObjectTextureView.AllowUserToAddRows = False
-        Me.DataGridObjectTextureView.AllowUserToDeleteRows = False
-        Me.DataGridObjectTextureView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.DataGridObjectTextureView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridObjectTextureView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectTextureCount, Me.ObjectTextureCol})
-        Me.DataGridObjectTextureView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridObjectTextureView.Location = New System.Drawing.Point(0, 0)
-        Me.DataGridObjectTextureView.Name = "DataGridObjectTextureView"
-        Me.DataGridObjectTextureView.RowHeadersVisible = False
-        Me.DataGridObjectTextureView.Size = New System.Drawing.Size(200, 349)
-        Me.DataGridObjectTextureView.TabIndex = 0
-        '
-        'DataGridObjectShaderView
-        '
-        Me.DataGridObjectShaderView.AllowUserToAddRows = False
-        Me.DataGridObjectShaderView.AllowUserToDeleteRows = False
-        Me.DataGridObjectShaderView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.DataGridObjectShaderView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridObjectShaderView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectShaderCount, Me.ObjectShaderCol, Me.ObjectShaderType, Me.ObjectShaderB})
-        Me.DataGridObjectShaderView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridObjectShaderView.Location = New System.Drawing.Point(0, 0)
-        Me.DataGridObjectShaderView.Name = "DataGridObjectShaderView"
-        Me.DataGridObjectShaderView.RowHeadersVisible = False
-        Me.DataGridObjectShaderView.Size = New System.Drawing.Size(995, 349)
-        Me.DataGridObjectShaderView.TabIndex = 0
-        '
-        'ObjectTextureCount
-        '
-        Me.ObjectTextureCount.FillWeight = 25.0!
-        Me.ObjectTextureCount.HeaderText = "Count"
-        Me.ObjectTextureCount.Name = "ObjectTextureCount"
-        Me.ObjectTextureCount.ReadOnly = True
-        '
-        'ObjectTextureCol
-        '
-        Me.ObjectTextureCol.HeaderText = "Textures"
-        Me.ObjectTextureCol.Name = "ObjectTextureCol"
-        '
-        'ObjectShaderCount
-        '
-        Me.ObjectShaderCount.FillWeight = 25.0!
-        Me.ObjectShaderCount.HeaderText = "Count"
-        Me.ObjectShaderCount.Name = "ObjectShaderCount"
-        Me.ObjectShaderCount.ReadOnly = True
-        '
-        'ObjectShaderCol
-        '
-        Me.ObjectShaderCol.HeaderText = "Shader"
-        Me.ObjectShaderCol.Name = "ObjectShaderCol"
-        '
-        'ObjectShaderType
-        '
-        Me.ObjectShaderType.HeaderText = "Type"
-        Me.ObjectShaderType.Name = "ObjectShaderType"
-        '
-        'ObjectShaderB
-        '
-        Me.ObjectShaderB.HeaderText = "IntB"
-        Me.ObjectShaderB.Name = "ObjectShaderB"
-        '
-        'ObjectBoneCountCol
-        '
-        Me.ObjectBoneCountCol.HeaderText = "Count"
-        Me.ObjectBoneCountCol.Name = "ObjectBoneCountCol"
-        Me.ObjectBoneCountCol.ReadOnly = True
-        '
-        'ObjectBoneOrder
-        '
-        Me.ObjectBoneOrder.HeaderText = "Order"
-        Me.ObjectBoneOrder.Name = "ObjectBoneOrder"
-        '
-        'ObjectBoneName
-        '
-        Me.ObjectBoneName.HeaderText = "Name"
-        Me.ObjectBoneName.Name = "ObjectBoneName"
-        '
-        'ObjectBoneUnknownA
-        '
-        Me.ObjectBoneUnknownA.HeaderText = "A"
-        Me.ObjectBoneUnknownA.Name = "ObjectBoneUnknownA"
-        '
-        'ObjectBoneUnknownB
-        '
-        Me.ObjectBoneUnknownB.HeaderText = "B"
-        Me.ObjectBoneUnknownB.Name = "ObjectBoneUnknownB"
-        '
-        'ObjectBoneUnknownC
-        '
-        Me.ObjectBoneUnknownC.HeaderText = "C"
-        Me.ObjectBoneUnknownC.Name = "ObjectBoneUnknownC"
-        '
-        'ObjectBoneUnknownD
-        '
-        Me.ObjectBoneUnknownD.HeaderText = "D"
-        Me.ObjectBoneUnknownD.Name = "ObjectBoneUnknownD"
-        '
-        'ObjectBoneUnknownE
-        '
-        Me.ObjectBoneUnknownE.HeaderText = "E"
-        Me.ObjectBoneUnknownE.Name = "ObjectBoneUnknownE"
-        '
-        'ObjectBoneUnknownF
-        '
-        Me.ObjectBoneUnknownF.HeaderText = "F"
-        Me.ObjectBoneUnknownF.Name = "ObjectBoneUnknownF"
-        '
-        'ObjectBoneUnknownG
-        '
-        Me.ObjectBoneUnknownG.HeaderText = "G"
-        Me.ObjectBoneUnknownG.Name = "ObjectBoneUnknownG"
-        '
-        'ObjectBoneUnknownH
-        '
-        Me.ObjectBoneUnknownH.HeaderText = "H"
-        Me.ObjectBoneUnknownH.Name = "ObjectBoneUnknownH"
-        '
-        'ObjectBoneUnknownI
-        '
-        Me.ObjectBoneUnknownI.HeaderText = "I"
-        Me.ObjectBoneUnknownI.Name = "ObjectBoneUnknownI"
-        '
-        'ObjectBoneUnknownJ
-        '
-        Me.ObjectBoneUnknownJ.HeaderText = "J"
-        Me.ObjectBoneUnknownJ.Name = "ObjectBoneUnknownJ"
-        '
-        'ObjectBoneUnknownK
-        '
-        Me.ObjectBoneUnknownK.HeaderText = "K"
-        Me.ObjectBoneUnknownK.Name = "ObjectBoneUnknownK"
-        '
-        'ObjectBoneUnknownL
-        '
-        Me.ObjectBoneUnknownL.HeaderText = "L"
-        Me.ObjectBoneUnknownL.Name = "ObjectBoneUnknownL"
-        '
-        'ObjectBoneUnknownM
-        '
-        Me.ObjectBoneUnknownM.HeaderText = "M"
-        Me.ObjectBoneUnknownM.Name = "ObjectBoneUnknownM"
-        '
-        'ObjectBoneUnknownN
-        '
-        Me.ObjectBoneUnknownN.HeaderText = "N"
-        Me.ObjectBoneUnknownN.Name = "ObjectBoneUnknownN"
-        '
-        'ObjectBoneUnknownO
-        '
-        Me.ObjectBoneUnknownO.HeaderText = "O"
-        Me.ObjectBoneUnknownO.Name = "ObjectBoneUnknownO"
-        '
-        'ObjectBoneUnknownP
-        '
-        Me.ObjectBoneUnknownP.HeaderText = "P"
-        Me.ObjectBoneUnknownP.Name = "ObjectBoneUnknownP"
-        '
         'MainForm
         '
         Me.AllowDrop = True
@@ -4596,6 +4683,15 @@ Partial Class MainForm
         CType(Me.DataGridObjectView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ObjectBoneViewPage.ResumeLayout(False)
         CType(Me.DataGridObjectBoneView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ObjectTextureViewPage.ResumeLayout(False)
+        Me.ObjectTestureSplitContainer.Panel1.ResumeLayout(False)
+        Me.ObjectTestureSplitContainer.Panel2.ResumeLayout(False)
+        CType(Me.ObjectTestureSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ObjectTestureSplitContainer.ResumeLayout(False)
+        CType(Me.DataGridObjectTextureView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridObjectShaderView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ObjectVertexViewPage.ResumeLayout(False)
+        CType(Me.DataGridObjectVertexView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStripObjectView.ResumeLayout(False)
         Me.MenuStripObjectView.PerformLayout()
         Me.AttireView.ResumeLayout(False)
@@ -4654,13 +4750,6 @@ Partial Class MainForm
         Me.MenuStripPictureView.ResumeLayout(False)
         Me.MenuStripPictureView.PerformLayout()
         Me.TreeViewContext.ResumeLayout(False)
-        Me.ObjectTextureViewPage.ResumeLayout(False)
-        Me.ObjectTestureSplitContainer.Panel1.ResumeLayout(False)
-        Me.ObjectTestureSplitContainer.Panel2.ResumeLayout(False)
-        CType(Me.ObjectTestureSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.ObjectTestureSplitContainer.ResumeLayout(False)
-        CType(Me.DataGridObjectTextureView, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridObjectShaderView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -5188,4 +5277,16 @@ Partial Class MainForm
     Friend WithEvents ObjectBoneUnknownN As DataGridViewTextBoxColumn
     Friend WithEvents ObjectBoneUnknownO As DataGridViewTextBoxColumn
     Friend WithEvents ObjectBoneUnknownP As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertexViewPage As TabPage
+    Friend WithEvents DataGridObjectVertexView As DataGridView
+    Friend WithEvents UnknownValue As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectEmoteListComboBox As ToolStripComboBox
+    Friend WithEvents ObjectVertCountCol As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertX As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertY As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertZ As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertRX As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertRY As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertRZ As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertUnknown As DataGridViewTextBoxColumn
 End Class

@@ -659,7 +659,7 @@ Public Class MainForm
             Case PictureView.Name
                 FillPictureView(ReadNode)
             Case ObjectView.Name
-                FillObjectView(ReadNode)
+                FillObjectViews(ReadNode)
             Case AttireView.Name
                 FillAttireView(ReadNode)
             Case MuscleView.Name
@@ -2352,6 +2352,22 @@ Public Class MainForm
 
 #Region "Object View"
 
+    Dim CompleteYobjBytes As Byte()
+    Dim SelectedObjHeader As ObjectHeaderInformation
+
+    Sub FillObjectViews(SelectedData As TreeNode)
+        CompleteYobjBytes = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
+        FillObjectHeaderView()
+        FillObjectBoneView()
+        FillObjectTextureView()
+        FillObjectShaderView()
+        FillObjectEmoteComboBox()
+        SelectedObjHeader = DataGridObjectView.Rows(0).Tag
+        FillSubObjectViews()
+    End Sub
+
+#Region "Header Read"
+
     Public Class ObjectHeaderInformation
         Public IndexCount As UInt32 = 0
         Public VertCount As UInt32 = 0
@@ -2383,49 +2399,12 @@ Public Class MainForm
         Public UnknownH As UInt32 = 0
     End Class
 
-    Public Class ObjectBoneInformation
-        Public IndexCount As UInt32 = 0
-        Public StructureOrder As UInt32 = 0
-        Public NameBytes As Byte() = New Byte() {}
-        Public Name As String = ""
-        Public UnknownA As UInt32 = 0
-        Public UnknownB As UInt32 = 0
-        Public UnknownC As UInt32 = 0
-        Public UnknownD As UInt32 = 0
-        Public UnknownE As UInt32 = 0
-        Public UnknownF As UInt32 = 0
-        Public UnknownG As UInt32 = 0
-        Public UnknownH As UInt32 = 0
-        Public UnknownI As UInt32 = 0
-        Public UnknownJ As UInt32 = 0
-        Public UnknownK As UInt32 = 0
-        Public UnknownL As UInt32 = 0
-        Public UnknownM As UInt32 = 0
-        Public UnknownN As Single = 0
-        Public UnknownO As Single = 0
-        Public UnknownP As Single = 0
-    End Class
-
     Dim DefaultFill As String = "00 00 00 00 FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF"
 
-    Sub FillObjectView(SelectedData As TreeNode)
-        Dim CompleteYobjBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
+    Sub FillObjectHeaderView()
         'We need to show what type of position file it is
         Dim SubItemCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H18, 4), 0)
         Dim HeaderStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H1C, 4), 0) + 8
-        'AdditionalOffsets
-        Dim BoneCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H20, 4), 0)
-        Dim BonesStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H28, 4), 0) + 8
-        Dim TextureCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H24, 4), 0)
-        Dim TextureStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H2C, 4), 0) + 8
-        Dim ShaderCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H34, 4), 0)
-        Dim ShaderStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H30, 4), 0) + 8
-        Dim EmoteNameCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H48, 4), 0)
-        Dim EmoteNameStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H4C, 4), 0) + 8
-        Dim BoneStructureCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H50, 4), 0)
-        Dim BoneStructureStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H54, 4), 0) + 8
-        'getting a generic row so we can create one for the collection
-        'Object verts / faces
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridObjectView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
         ProgressBar1.Maximum = SubItemCount - 1
@@ -2468,95 +2447,7 @@ Public Class MainForm
             WorkingCollection.Add(TempGridRow)
             ProgressBar1.Value = i
         Next
-        FillSubObjectViews(WorkingCollection(0).Tag)
         DataGridObjectView.Rows.AddRange(WorkingCollection.ToArray())
-        'Bones List
-        Dim ClonedBoneRow As DataGridViewRow = ClearandGetClone(DataGridObjectBoneView)
-        Dim WorkingBoneCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
-        ProgressBar1.Maximum = BoneCount - 1
-        ProgressBar1.Value = 0
-        For i As Integer = 0 To BoneCount - 1
-            Dim TempObjectBoneBytes As Byte() = New Byte(&H50 - 1) {}
-            Array.Copy(CompleteYobjBytes, BonesStartOffset + i * &H50, TempObjectBoneBytes, 0, &H50)
-            Dim TempObjectBoneInformation As ObjectBoneInformation = ParseBytestoObjectBoneInformation(TempObjectBoneBytes)
-            TempObjectBoneInformation.IndexCount = i
-            Dim TempBoneGridRow As DataGridViewRow = ClonedBoneRow.Clone()
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneCountCol)).Value = i
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneCountCol)).Style = ReadOnlyCellStyle
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneName)).Value = TempObjectBoneInformation.Name
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownA)).Value = TempObjectBoneInformation.UnknownA
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownB)).Value = TempObjectBoneInformation.UnknownB
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownC)).Value = TempObjectBoneInformation.UnknownC
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownD)).Value = TempObjectBoneInformation.UnknownD
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownE)).Value = TempObjectBoneInformation.UnknownE
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownF)).Value = TempObjectBoneInformation.UnknownF
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownG)).Value = TempObjectBoneInformation.UnknownG
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownH)).Value = TempObjectBoneInformation.UnknownH
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownI)).Value = TempObjectBoneInformation.UnknownI
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownJ)).Value = TempObjectBoneInformation.UnknownJ
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownK)).Value = TempObjectBoneInformation.UnknownK
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownL)).Value = TempObjectBoneInformation.UnknownL
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownM)).Value = TempObjectBoneInformation.UnknownM
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownN)).Value = TempObjectBoneInformation.UnknownN
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownO)).Value = TempObjectBoneInformation.UnknownO
-            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownP)).Value = TempObjectBoneInformation.UnknownP
-            TempBoneGridRow.Tag = TempObjectBoneInformation
-            WorkingBoneCollection.Add(TempBoneGridRow)
-            ProgressBar1.Value = i
-        Next
-        DataGridObjectBoneView.Rows.AddRange(WorkingBoneCollection.ToArray())
-        'GeneralTools.BreakFunction()
-        'Texture List
-        Dim ClonedTextureRow As DataGridViewRow = ClearandGetClone(DataGridObjectTextureView)
-        Dim WorkingTextureCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
-        ProgressBar1.Maximum = TextureCount - 1
-        ProgressBar1.Value = 0
-        For i As Integer = 0 To TextureCount - 1
-            Dim TempObjectTextureBytes As Byte() = New Byte(&H10 - 1) {}
-            Array.Copy(CompleteYobjBytes, TextureStartOffset + i * &H10, TempObjectTextureBytes, 0, &H10)
-            Dim TempTextureGridRow As DataGridViewRow = ClonedTextureRow.Clone()
-            TempTextureGridRow.Cells(DataGridObjectTextureView.Columns.IndexOf(ObjectTextureCount)).Value = i
-            TempTextureGridRow.Cells(DataGridObjectTextureView.Columns.IndexOf(ObjectTextureCount)).Style = ReadOnlyCellStyle
-            TempTextureGridRow.Cells(DataGridObjectTextureView.Columns.IndexOf(ObjectTextureCol)).Value = Encoding.Default.GetString(TempObjectTextureBytes).TrimEnd(Chr(0))
-            WorkingTextureCollection.Add(TempTextureGridRow)
-            ProgressBar1.Value = i
-        Next
-        DataGridObjectTextureView.Rows.AddRange(WorkingTextureCollection.ToArray())
-        'Shader List
-        Dim ClonedShaderRow As DataGridViewRow = ClearandGetClone(DataGridObjectShaderView)
-        Dim WorkingShaderCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
-        ProgressBar1.Maximum = ShaderCount - 1
-        ProgressBar1.Value = 0
-        For i As Integer = 0 To ShaderCount - 1
-            Dim TempObjectShaderBytes As Byte() = New Byte(&H20 - 1) {}
-            Array.Copy(CompleteYobjBytes, ShaderStartOffset + i * &H20, TempObjectShaderBytes, 0, &H20)
-            Dim TempShaderGridRow As DataGridViewRow = ClonedShaderRow.Clone()
-            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderCount)).Value = i
-            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderCount)).Style = ReadOnlyCellStyle
-            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderCol)).Value = Encoding.Default.GetString(TempObjectShaderBytes, 0, &H10).TrimEnd(Chr(0))
-            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderType)).Value = BitConverter.ToUInt32(GeneralTools.EndianReverse(TempObjectShaderBytes, &H10, 4), 0)
-            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderB)).Value = BitConverter.ToUInt32(GeneralTools.EndianReverse(TempObjectShaderBytes, &H18, 4), 0)
-            WorkingShaderCollection.Add(TempShaderGridRow)
-            ProgressBar1.Value = i
-        Next
-        DataGridObjectShaderView.Rows.AddRange(WorkingShaderCollection.ToArray())
-        'Bone int List
-        Dim RevisedBoneStructureCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, BoneStructureStartOffset, 4), 0)
-        ProgressBar1.Maximum = RevisedBoneStructureCount - 1
-        ProgressBar1.Value = 0
-        For i As Integer = 0 To RevisedBoneStructureCount - 1
-            Dim TemporaryBoneNumber As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, BoneStructureStartOffset + 8 + i * 4, 4), 0)
-            DataGridObjectBoneView.Rows(TemporaryBoneNumber).Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneOrder)).Value = i + 1
-            DataGridObjectBoneView.Rows(TemporaryBoneNumber).Tag.StructureOrder = i + 1
-        Next
-    End Sub
-
-    Sub FillSubObjectViews(SelectedObjHeader As ObjectHeaderInformation)
-        'ReadNode
-        'Vertex 'weights # per vert
-        '16 byte per UV?
-        LoadedObjectToolStripMenuItem.Text = "Loaded Object: " & SelectedObjHeader.IndexCount
-
     End Sub
 
     Function ParseBytesToObjectHeaderInformation(TestedByteArray As Byte()) As ObjectHeaderInformation
@@ -2594,6 +2485,82 @@ Public Class MainForm
         Return ReturnedObjecInfo
     End Function
 
+#Region "Bone Information"
+
+    Public Class ObjectBoneInformation
+        Public IndexCount As UInt32 = 0
+        Public StructureOrder As UInt32 = 0
+        Public NameBytes As Byte() = New Byte() {}
+        Public Name As String = ""
+        Public UnknownA As UInt32 = 0
+        Public UnknownB As UInt32 = 0
+        Public UnknownC As UInt32 = 0
+        Public UnknownD As UInt32 = 0
+        Public UnknownE As UInt32 = 0
+        Public UnknownF As UInt32 = 0
+        Public UnknownG As UInt32 = 0
+        Public UnknownH As UInt32 = 0
+        Public UnknownI As UInt32 = 0
+        Public UnknownJ As UInt32 = 0
+        Public UnknownK As UInt32 = 0
+        Public UnknownL As UInt32 = 0
+        Public UnknownM As UInt32 = 0
+        Public UnknownN As Single = 0
+        Public UnknownO As Single = 0
+        Public UnknownP As Single = 0
+    End Class
+
+    Sub FillObjectBoneView()
+        Dim BoneCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H20, 4), 0)
+        Dim BonesStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H28, 4), 0) + 8
+        'Bones List
+        Dim ClonedBoneRow As DataGridViewRow = ClearandGetClone(DataGridObjectBoneView)
+        Dim WorkingBoneCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = BoneCount - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To BoneCount - 1
+            Dim TempObjectBoneBytes As Byte() = New Byte(&H50 - 1) {}
+            Array.Copy(CompleteYobjBytes, BonesStartOffset + i * &H50, TempObjectBoneBytes, 0, &H50)
+            Dim TempObjectBoneInformation As ObjectBoneInformation = ParseBytestoObjectBoneInformation(TempObjectBoneBytes)
+            TempObjectBoneInformation.IndexCount = i
+            Dim TempBoneGridRow As DataGridViewRow = ClonedBoneRow.Clone()
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneCountCol)).Value = i
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneCountCol)).Style = ReadOnlyCellStyle
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneName)).Value = TempObjectBoneInformation.Name
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownA)).Value = TempObjectBoneInformation.UnknownA
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownB)).Value = TempObjectBoneInformation.UnknownB
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownC)).Value = TempObjectBoneInformation.UnknownC
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownD)).Value = TempObjectBoneInformation.UnknownD
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownE)).Value = TempObjectBoneInformation.UnknownE
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownF)).Value = TempObjectBoneInformation.UnknownF
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownG)).Value = TempObjectBoneInformation.UnknownG
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownH)).Value = TempObjectBoneInformation.UnknownH
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownI)).Value = TempObjectBoneInformation.UnknownI
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownJ)).Value = TempObjectBoneInformation.UnknownJ
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownK)).Value = TempObjectBoneInformation.UnknownK
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownL)).Value = TempObjectBoneInformation.UnknownL
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownM)).Value = TempObjectBoneInformation.UnknownM
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownN)).Value = TempObjectBoneInformation.UnknownN
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownO)).Value = TempObjectBoneInformation.UnknownO
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownP)).Value = TempObjectBoneInformation.UnknownP
+            TempBoneGridRow.Tag = TempObjectBoneInformation
+            WorkingBoneCollection.Add(TempBoneGridRow)
+            ProgressBar1.Value = i
+        Next
+        DataGridObjectBoneView.Rows.AddRange(WorkingBoneCollection.ToArray())
+        Dim BoneStructureCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H50, 4), 0)
+        Dim BoneStructureStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H54, 4), 0) + 8
+        'Bone int List
+        Dim RevisedBoneStructureCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, BoneStructureStartOffset, 4), 0)
+        ProgressBar1.Maximum = RevisedBoneStructureCount - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To RevisedBoneStructureCount - 1
+            Dim TemporaryBoneNumber As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, BoneStructureStartOffset + 8 + i * 4, 4), 0)
+            DataGridObjectBoneView.Rows(TemporaryBoneNumber).Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneOrder)).Value = i + 1
+            DataGridObjectBoneView.Rows(TemporaryBoneNumber).Tag.StructureOrder = i + 1
+        Next
+    End Sub
+
     Function ParseBytestoObjectBoneInformation(TestedByteArray As Byte()) As ObjectBoneInformation
         Dim TempBoneName As Byte() = New Byte(&H10 - 1) {}
         Array.Copy(TestedByteArray, 0, TempBoneName, 0, &H10)
@@ -2618,6 +2585,155 @@ Public Class MainForm
             .UnknownP = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, &H4C, 4), 0)}
         Return ReturnedBoneInfo
     End Function
+
+#End Region
+
+#Region "Texture & Shader Info"
+
+    Sub FillObjectTextureView()
+        Dim TextureCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H24, 4), 0)
+        Dim TextureStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H2C, 4), 0) + 8
+        'Texture List
+        Dim ClonedTextureRow As DataGridViewRow = ClearandGetClone(DataGridObjectTextureView)
+        Dim WorkingTextureCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = TextureCount - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To TextureCount - 1
+            Dim TempObjectTextureBytes As Byte() = New Byte(&H10 - 1) {}
+            Array.Copy(CompleteYobjBytes, TextureStartOffset + i * &H10, TempObjectTextureBytes, 0, &H10)
+            Dim TempTextureGridRow As DataGridViewRow = ClonedTextureRow.Clone()
+            TempTextureGridRow.Cells(DataGridObjectTextureView.Columns.IndexOf(ObjectTextureCount)).Value = i
+            TempTextureGridRow.Cells(DataGridObjectTextureView.Columns.IndexOf(ObjectTextureCount)).Style = ReadOnlyCellStyle
+            TempTextureGridRow.Cells(DataGridObjectTextureView.Columns.IndexOf(ObjectTextureCol)).Value = Encoding.Default.GetString(TempObjectTextureBytes).TrimEnd(Chr(0))
+            WorkingTextureCollection.Add(TempTextureGridRow)
+            ProgressBar1.Value = i
+        Next
+        DataGridObjectTextureView.Rows.AddRange(WorkingTextureCollection.ToArray())
+    End Sub
+
+    Sub FillObjectShaderView()
+        Dim ShaderCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H34, 4), 0)
+        Dim ShaderStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H30, 4), 0) + 8
+        'Shader List
+        Dim ClonedShaderRow As DataGridViewRow = ClearandGetClone(DataGridObjectShaderView)
+        Dim WorkingShaderCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = ShaderCount - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To ShaderCount - 1
+            Dim TempObjectShaderBytes As Byte() = New Byte(&H20 - 1) {}
+            Array.Copy(CompleteYobjBytes, ShaderStartOffset + i * &H20, TempObjectShaderBytes, 0, &H20)
+            Dim TempShaderGridRow As DataGridViewRow = ClonedShaderRow.Clone()
+            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderCount)).Value = i
+            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderCount)).Style = ReadOnlyCellStyle
+            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderCol)).Value = Encoding.Default.GetString(TempObjectShaderBytes, 0, &H10).TrimEnd(Chr(0))
+            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderType)).Value = BitConverter.ToUInt32(GeneralTools.EndianReverse(TempObjectShaderBytes, &H10, 4), 0)
+            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderB)).Value = BitConverter.ToUInt32(GeneralTools.EndianReverse(TempObjectShaderBytes, &H18, 4), 0)
+            WorkingShaderCollection.Add(TempShaderGridRow)
+            ProgressBar1.Value = i
+        Next
+        DataGridObjectShaderView.Rows.AddRange(WorkingShaderCollection.ToArray())
+    End Sub
+
+#End Region
+
+#Region "Emote Selector"
+    Sub FillObjectEmoteComboBox()
+        Dim EmoteNameCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H48, 4), 0)
+        Dim EmoteNameStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H4C, 4), 0) + 8
+        Dim EmoteList As List(Of String) = New List(Of String)
+        EmoteList.Add("Neutral")
+        ProgressBar1.Maximum = EmoteNameCount - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To EmoteNameCount - 1
+            EmoteList.Add(Encoding.Default.GetString(CompleteYobjBytes, EmoteNameStartOffset + i * &H10, &H10).TrimEnd(Chr(0)))
+        Next
+        ObjectEmoteListComboBox.Items.Clear()
+        ObjectEmoteListComboBox.Items.AddRange(EmoteList.ToArray())
+        ObjectEmoteListComboBox.SelectedIndex = 0
+    End Sub
+
+    Private Sub ObjectEmoteListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ObjectEmoteListComboBox.SelectedIndexChanged
+        If Not IsNothing(SelectedObjHeader) Then
+            If Not SelectedObjHeader.VertHeaderCount = 1 Then
+                FillVertexView()
+            End If
+        End If
+    End Sub
+#End Region
+
+#End Region
+
+#Region "Individual Object"
+
+    Sub FillSubObjectViews()
+        'Vertex 'weights # per vert
+        '16 byte per UV?
+        LoadedObjectToolStripMenuItem.Text = "Loaded Object: " & SelectedObjHeader.IndexCount
+        FillVertexView()
+    End Sub
+#End Region
+
+#Region "Vertex Info"
+    Sub FillVertexView()
+        'Vertices
+        Dim ClonedVertexRow As DataGridViewRow = ClearandGetClone(DataGridObjectVertexView)
+        Dim WorkingVertexCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = SelectedObjHeader.VertCount - 1
+        ProgressBar1.Value = 0
+        Dim FirstObjectIndex As UInt32 = 0
+        If SelectedObjHeader.VertHeaderCount = 1 Then
+            FirstObjectIndex = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, SelectedObjHeader.OffsetVertex + 8, 4), 0) + 8
+        Else
+            FirstObjectIndex = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, SelectedObjHeader.OffsetVertex + 8 + ObjectEmoteListComboBox.SelectedIndex * 4, 4), 0) + 8
+        End If
+        For i As Integer = 0 To SelectedObjHeader.VertCount - 1
+            Dim TempObjectVertexBytes As Byte() = New Byte(&H1C - 1) {}
+            Array.Copy(CompleteYobjBytes, FirstObjectIndex + i * &H1C, TempObjectVertexBytes, 0, &H1C)
+            Dim TempObjectVertex As ObjectVertex = ParseBytestoObjectObjectVertex(TempObjectVertexBytes)
+            TempObjectVertex.IndexCount = i
+            Dim TempVertexGridRow As DataGridViewRow = ClonedVertexRow.Clone()
+            TempVertexGridRow.Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertCountCol)).Value = TempObjectVertex.IndexCount
+            TempVertexGridRow.Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertCountCol)).Style = ReadOnlyCellStyle
+            TempVertexGridRow.Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertX)).Value = TempObjectVertex.X
+            TempVertexGridRow.Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertY)).Value = TempObjectVertex.Y
+            TempVertexGridRow.Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertZ)).Value = TempObjectVertex.Z
+            TempVertexGridRow.Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertRX)).Value = TempObjectVertex.RX
+            TempVertexGridRow.Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertRY)).Value = TempObjectVertex.RY
+            TempVertexGridRow.Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertRZ)).Value = TempObjectVertex.RZ
+            TempVertexGridRow.Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertUnknown)).Value = TempObjectVertex.UnknownFooter
+            TempVertexGridRow.Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertUnknown)).Style = ReadOnlyCellStyle
+            TempVertexGridRow.Tag = TempObjectVertex
+            WorkingVertexCollection.Add(TempVertexGridRow)
+            ProgressBar1.Value = i
+        Next
+        DataGridObjectVertexView.Rows.AddRange(WorkingVertexCollection.ToArray())
+    End Sub
+
+
+    Public Class ObjectVertex
+        Public IndexCount As UInt32 = 0
+        Public X As Single = 0
+        Public Y As Single = 0
+        Public Z As Single = 0
+        Public RX As Single = 0
+        Public RY As Single = 0
+        Public RZ As Single = 0
+        Public UnknownFooter As Single = 0
+    End Class
+
+    Function ParseBytestoObjectObjectVertex(TestedByteArray As Byte()) As ObjectVertex
+        Dim ReturnedVertexInfo As ObjectVertex = New ObjectVertex With {
+            .X = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, 0, 4), 0),
+            .Z = -BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, 4, 4), 0),
+            .Y = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, 8, 4), 0),
+            .RX = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, &HC, 4), 0),
+            .RZ = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, &H10, 4), 0),
+            .RY = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, &H14, 4), 0),
+            .UnknownFooter = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, &H18, 4), 0)}
+        Return ReturnedVertexInfo
+    End Function
+
+#End Region
 
 #End Region
 
