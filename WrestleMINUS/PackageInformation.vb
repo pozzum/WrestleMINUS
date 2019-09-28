@@ -40,6 +40,8 @@ Public Class PackageInformation
         Select Case SentType
             Case PackageType.Folder
                 Return 1
+            Case PackageType.FileRefBin
+                Return 1
             Case PackageType.HSPC
                 Return 2
             Case PackageType.EPK8
@@ -111,6 +113,8 @@ Public Class PackageInformation
             Case PackageType.VMUM
                 Return 22
             Case PackageType.TitleFile
+                Return 23
+            Case PackageType.WeaponPosition
                 Return 23
             Case PackageType.TextureReference
                 Return 24
@@ -232,8 +236,16 @@ Public Class PackageInformation
                         Return PackageType.TPL
                     Case FirstFour.Substring(0, 1).Contains("g")
                         Return PackageType.SoundReference
+                    Case FirstFour.Contains("WP") AndAlso
+                        (FirstFour.Contains("AR") OrElse
+                        FirstFour.Contains("BS") OrElse
+                        FirstFour.Contains("RU") OrElse
+                        FirstFour.Contains("ST") OrElse
+                        FirstFour.Contains("EA"))
+                        Return PackageType.WeaponPosition
                     Case Else
                         'if we do not have a header text to guide us we have some additional text checks that are consistent.
+                        'THIS IS PRODUCING ERRORS WITH SOME PROJECT FILES
                         If ByteArray.Length > &H20 Then
                             Dim ShortNumberCheck As UInt32 = BitConverter.ToUInt16(ByteArray, Index + 0)
                             If ShortNumberCheck > 0 Then
@@ -249,6 +261,8 @@ Public Class PackageInformation
                             'some of these checks don't 100% require this many bytes, but none should functionally have that little byte length
                             If ByteArray.Length > &H30 Then
                             Select Case True
+                                Case (Encoding.Default.GetChars(ByteArray, Index + 8, 1) = "/" AndAlso Encoding.Default.GetChars(ByteArray, Index + &HC, 2).Contains("/"))
+                                    Return PackageType.FileRefBin
                                 Case Encoding.Default.GetChars(ByteArray, Index + &H10, 4) = "aren"
                                     Return PackageType.ArenaInfo
                                 Case Encoding.Default.GetChars(ByteArray, Index + &H14, 6) = "M_Head"

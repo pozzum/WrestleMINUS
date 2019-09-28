@@ -253,11 +253,10 @@ Public Class MainForm
         'End If
     End Sub
 
-
-
 #End Region
 
 #Region "Menu Strip"
+
 #Region "File Sub Menu"
 
     Private Sub LoadHomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoadHomeToolStripMenuItem.Click
@@ -648,6 +647,7 @@ Public Class MainForm
             End If
         End If
     End Sub
+
     Private Sub FillTabDataGrid(SelectedTab As TabPage)
         Select Case SelectedTab.Name
             Case MiscView.Name
@@ -658,6 +658,8 @@ Public Class MainForm
                 FillNIBJView(ReadNode)
             Case PictureView.Name
                 FillPictureView(ReadNode)
+            Case ObjectView.Name
+                FillObjectView(ReadNode)
             Case AttireView.Name
                 FillAttireView(ReadNode)
             Case MuscleView.Name
@@ -680,6 +682,8 @@ Public Class MainForm
             Case Pof0View.Name
                 FillPof0View(ReadNode)
                 InformationLoaded = False
+            Case WeaponPositionView.Name
+                FillWeaponPositionView(ReadNode)
         End Select
     End Sub
 
@@ -718,6 +722,8 @@ Public Class MainForm
             Case PackageType.YANM
                 ReturnedList.Add(AnimationView)
                 ReturnedList.Add(Pof0View)
+            Case PackageType.WeaponPosition
+                ReturnedList.Add(WeaponPositionView)
             Case Else
                 'Nothing
         End Select
@@ -1015,6 +1021,7 @@ Public Class MainForm
             Process.Start("explorer.exe", "/select," & WorkingFilePartProperties.FullFilePath)
         End If
     End Sub
+
 #End Region
 
 #Region "View Controls"
@@ -2099,7 +2106,6 @@ Public Class MainForm
         End Select
     End Sub
 
-
     Private Sub DataGridShowView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridShowView.CellContentClick
         Dim senderGrid = DirectCast(sender, DataGridView)
         If e.RowIndex >= 0 AndAlso
@@ -2341,6 +2347,277 @@ Public Class MainForm
         Next
         CreatedImages.Clear()
     End Sub
+
+#End Region
+
+#Region "Object View"
+
+    Public Class ObjectHeaderInformation
+        Public IndexCount As UInt32 = 0
+        Public VertCount As UInt32 = 0
+        Public Rendered As Boolean = False
+        Public FillerBytes As Byte() = New Byte() {}
+        Public FillerString As String = ""
+        Public WeightCount As UInt32 = 0
+        Public UnknownA As UInt32 = 0
+        Public VertHeaderCount As UInt32 = 0
+        Public OffsetVertex As UInt32 = 0
+        Public OffsetWeight As UInt32 = 0
+        Public OffsetUV As UInt32 = 0
+        Public OffsetNormals As UInt32 = 0
+        Public UnknownB As UInt32 = 0
+        Public ShaderBytes As Byte() = New Byte() {}
+        Public ShaderString As String = ""
+        Public RemainingBytes As Byte() = New Byte() {}
+        Public RemainingString As String = ""
+        Public UnknownC As UInt32 = 0
+        Public MaterialIndex As UInt32 = 0
+        Public CountParameter As UInt32 = 0
+        Public OffsetParameter As UInt32 = 0
+        Public OffsetDraw As UInt32 = 0
+        Public CountUV As UInt32 = 0
+        Public UnknownD As UInt32 = 0
+        Public UnknownE As UInt32 = 0
+        Public UnknownF As UInt32 = 0
+        Public UnknownG As UInt32 = 0
+        Public UnknownH As UInt32 = 0
+    End Class
+
+    Public Class ObjectBoneInformation
+        Public IndexCount As UInt32 = 0
+        Public StructureOrder As UInt32 = 0
+        Public NameBytes As Byte() = New Byte() {}
+        Public Name As String = ""
+        Public UnknownA As UInt32 = 0
+        Public UnknownB As UInt32 = 0
+        Public UnknownC As UInt32 = 0
+        Public UnknownD As UInt32 = 0
+        Public UnknownE As UInt32 = 0
+        Public UnknownF As UInt32 = 0
+        Public UnknownG As UInt32 = 0
+        Public UnknownH As UInt32 = 0
+        Public UnknownI As UInt32 = 0
+        Public UnknownJ As UInt32 = 0
+        Public UnknownK As UInt32 = 0
+        Public UnknownL As UInt32 = 0
+        Public UnknownM As UInt32 = 0
+        Public UnknownN As Single = 0
+        Public UnknownO As Single = 0
+        Public UnknownP As Single = 0
+    End Class
+
+    Dim DefaultFill As String = "00 00 00 00 FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF"
+
+    Sub FillObjectView(SelectedData As TreeNode)
+        Dim CompleteYobjBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
+        'We need to show what type of position file it is
+        Dim SubItemCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H18, 4), 0)
+        Dim HeaderStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H1C, 4), 0) + 8
+        'AdditionalOffsets
+        Dim BoneCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H20, 4), 0)
+        Dim BonesStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H28, 4), 0) + 8
+        Dim TextureCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H24, 4), 0)
+        Dim TextureStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H2C, 4), 0) + 8
+        Dim ShaderCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H34, 4), 0)
+        Dim ShaderStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H30, 4), 0) + 8
+        Dim EmoteNameCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H48, 4), 0)
+        Dim EmoteNameStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H4C, 4), 0) + 8
+        Dim BoneStructureCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H50, 4), 0)
+        Dim BoneStructureStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H54, 4), 0) + 8
+        'getting a generic row so we can create one for the collection
+        'Object verts / faces
+        Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridObjectView)
+        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = SubItemCount - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To SubItemCount - 1
+            Dim TempObjectBytes As Byte() = New Byte(&HB8 - 1) {}
+            Array.Copy(CompleteYobjBytes, HeaderStartOffset + i * &HB8, TempObjectBytes, 0, &HB8)
+            Dim TempObjectHeaderInformation As ObjectHeaderInformation = ParseBytesToObjectHeaderInformation(TempObjectBytes)
+            TempObjectHeaderInformation.IndexCount = i
+            Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
+            TempGridRow.Cells(DataGridObjectView.Columns.IndexOf(ObjectCountCol)).Value = i
+            TempGridRow.Cells(DataGridObjectView.Columns.IndexOf(ObjectCountCol)).Style = ReadOnlyCellStyle
+            TempGridRow.Cells(1).Value = TempObjectHeaderInformation.VertCount
+            TempGridRow.Cells(2).Value = TempObjectHeaderInformation.Rendered
+            TempGridRow.Cells(3).Value = TempObjectHeaderInformation.FillerString
+            If TempObjectHeaderInformation.FillerString = DefaultFill Then
+                TempGridRow.Cells(3).Style = ReadOnlyCellStyle
+            End If
+            TempGridRow.Cells(4).Value = TempObjectHeaderInformation.WeightCount
+            TempGridRow.Cells(5).Value = TempObjectHeaderInformation.UnknownA
+            TempGridRow.Cells(6).Value = TempObjectHeaderInformation.VertHeaderCount
+            TempGridRow.Cells(7).Value = Hex(TempObjectHeaderInformation.OffsetVertex)
+            TempGridRow.Cells(8).Value = Hex(TempObjectHeaderInformation.OffsetWeight)
+            TempGridRow.Cells(9).Value = Hex(TempObjectHeaderInformation.OffsetUV)
+            TempGridRow.Cells(10).Value = Hex(TempObjectHeaderInformation.OffsetNormals)
+            TempGridRow.Cells(11).Value = TempObjectHeaderInformation.UnknownB
+            TempGridRow.Cells(12).Value = TempObjectHeaderInformation.ShaderString
+            TempGridRow.Cells(13).Value = TempObjectHeaderInformation.UnknownC
+            TempGridRow.Cells(14).Value = TempObjectHeaderInformation.MaterialIndex
+            TempGridRow.Cells(15).Value = TempObjectHeaderInformation.CountParameter
+            TempGridRow.Cells(16).Value = Hex(TempObjectHeaderInformation.OffsetParameter)
+            TempGridRow.Cells(17).Value = Hex(TempObjectHeaderInformation.OffsetDraw)
+            TempGridRow.Cells(18).Value = TempObjectHeaderInformation.CountUV
+            TempGridRow.Cells(19).Value = TempObjectHeaderInformation.UnknownD
+            TempGridRow.Cells(20).Value = TempObjectHeaderInformation.UnknownE
+            TempGridRow.Cells(21).Value = Hex(TempObjectHeaderInformation.UnknownF)
+            TempGridRow.Cells(22).Value = Hex(TempObjectHeaderInformation.UnknownG)
+            TempGridRow.Cells(23).Value = Hex(TempObjectHeaderInformation.UnknownH)
+            TempGridRow.Tag = TempObjectHeaderInformation
+            WorkingCollection.Add(TempGridRow)
+            ProgressBar1.Value = i
+        Next
+        FillSubObjectViews(WorkingCollection(0).Tag)
+        DataGridObjectView.Rows.AddRange(WorkingCollection.ToArray())
+        'Bones List
+        Dim ClonedBoneRow As DataGridViewRow = ClearandGetClone(DataGridObjectBoneView)
+        Dim WorkingBoneCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = BoneCount - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To BoneCount - 1
+            Dim TempObjectBoneBytes As Byte() = New Byte(&H50 - 1) {}
+            Array.Copy(CompleteYobjBytes, BonesStartOffset + i * &H50, TempObjectBoneBytes, 0, &H50)
+            Dim TempObjectBoneInformation As ObjectBoneInformation = ParseBytestoObjectBoneInformation(TempObjectBoneBytes)
+            TempObjectBoneInformation.IndexCount = i
+            Dim TempBoneGridRow As DataGridViewRow = ClonedBoneRow.Clone()
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneCountCol)).Value = i
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneCountCol)).Style = ReadOnlyCellStyle
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneName)).Value = TempObjectBoneInformation.Name
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownA)).Value = TempObjectBoneInformation.UnknownA
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownB)).Value = TempObjectBoneInformation.UnknownB
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownC)).Value = TempObjectBoneInformation.UnknownC
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownD)).Value = TempObjectBoneInformation.UnknownD
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownE)).Value = TempObjectBoneInformation.UnknownE
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownF)).Value = TempObjectBoneInformation.UnknownF
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownG)).Value = TempObjectBoneInformation.UnknownG
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownH)).Value = TempObjectBoneInformation.UnknownH
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownI)).Value = TempObjectBoneInformation.UnknownI
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownJ)).Value = TempObjectBoneInformation.UnknownJ
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownK)).Value = TempObjectBoneInformation.UnknownK
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownL)).Value = TempObjectBoneInformation.UnknownL
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownM)).Value = TempObjectBoneInformation.UnknownM
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownN)).Value = TempObjectBoneInformation.UnknownN
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownO)).Value = TempObjectBoneInformation.UnknownO
+            TempBoneGridRow.Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneUnknownP)).Value = TempObjectBoneInformation.UnknownP
+            TempBoneGridRow.Tag = TempObjectBoneInformation
+            WorkingBoneCollection.Add(TempBoneGridRow)
+            ProgressBar1.Value = i
+        Next
+        DataGridObjectBoneView.Rows.AddRange(WorkingBoneCollection.ToArray())
+        'GeneralTools.BreakFunction()
+        'Texture List
+        Dim ClonedTextureRow As DataGridViewRow = ClearandGetClone(DataGridObjectTextureView)
+        Dim WorkingTextureCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = TextureCount - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To TextureCount - 1
+            Dim TempObjectTextureBytes As Byte() = New Byte(&H10 - 1) {}
+            Array.Copy(CompleteYobjBytes, TextureStartOffset + i * &H10, TempObjectTextureBytes, 0, &H10)
+            Dim TempTextureGridRow As DataGridViewRow = ClonedTextureRow.Clone()
+            TempTextureGridRow.Cells(DataGridObjectTextureView.Columns.IndexOf(ObjectTextureCount)).Value = i
+            TempTextureGridRow.Cells(DataGridObjectTextureView.Columns.IndexOf(ObjectTextureCount)).Style = ReadOnlyCellStyle
+            TempTextureGridRow.Cells(DataGridObjectTextureView.Columns.IndexOf(ObjectTextureCol)).Value = Encoding.Default.GetString(TempObjectTextureBytes).TrimEnd(Chr(0))
+            WorkingTextureCollection.Add(TempTextureGridRow)
+            ProgressBar1.Value = i
+        Next
+        DataGridObjectTextureView.Rows.AddRange(WorkingTextureCollection.ToArray())
+        'Shader List
+        Dim ClonedShaderRow As DataGridViewRow = ClearandGetClone(DataGridObjectShaderView)
+        Dim WorkingShaderCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = ShaderCount - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To ShaderCount - 1
+            Dim TempObjectShaderBytes As Byte() = New Byte(&H20 - 1) {}
+            Array.Copy(CompleteYobjBytes, ShaderStartOffset + i * &H20, TempObjectShaderBytes, 0, &H20)
+            Dim TempShaderGridRow As DataGridViewRow = ClonedShaderRow.Clone()
+            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderCount)).Value = i
+            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderCount)).Style = ReadOnlyCellStyle
+            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderCol)).Value = Encoding.Default.GetString(TempObjectShaderBytes, 0, &H10).TrimEnd(Chr(0))
+            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderType)).Value = BitConverter.ToUInt32(GeneralTools.EndianReverse(TempObjectShaderBytes, &H10, 4), 0)
+            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderB)).Value = BitConverter.ToUInt32(GeneralTools.EndianReverse(TempObjectShaderBytes, &H18, 4), 0)
+            WorkingShaderCollection.Add(TempShaderGridRow)
+            ProgressBar1.Value = i
+        Next
+        DataGridObjectShaderView.Rows.AddRange(WorkingShaderCollection.ToArray())
+        'Bone int List
+        Dim RevisedBoneStructureCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, BoneStructureStartOffset, 4), 0)
+        ProgressBar1.Maximum = RevisedBoneStructureCount - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To RevisedBoneStructureCount - 1
+            Dim TemporaryBoneNumber As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, BoneStructureStartOffset + 8 + i * 4, 4), 0)
+            DataGridObjectBoneView.Rows(TemporaryBoneNumber).Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneOrder)).Value = i + 1
+            DataGridObjectBoneView.Rows(TemporaryBoneNumber).Tag.StructureOrder = i + 1
+        Next
+    End Sub
+
+    Sub FillSubObjectViews(SelectedObjHeader As ObjectHeaderInformation)
+        'ReadNode
+        'Vertex 'weights # per vert
+        '16 byte per UV?
+        LoadedObjectToolStripMenuItem.Text = "Loaded Object: " & SelectedObjHeader.IndexCount
+
+    End Sub
+
+    Function ParseBytesToObjectHeaderInformation(TestedByteArray As Byte()) As ObjectHeaderInformation
+        Dim TempFillerBytes As Byte() = New Byte(&H54 - 1) {}
+        Array.Copy(TestedByteArray, 8, TempFillerBytes, 0, &H54)
+        Dim TempShaderBytes As Byte() = New Byte(&H10 - 1) {}
+        Array.Copy(TestedByteArray, &H7C, TempShaderBytes, 0, &H10)
+        Dim ReturnedObjecInfo As ObjectHeaderInformation = New ObjectHeaderInformation With {
+           .VertCount = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, 0, 4), 0),
+           .Rendered = BitConverter.ToBoolean(TestedByteArray, 4 + 3),
+           .FillerBytes = TempFillerBytes,
+           .FillerString = BitConverter.ToString(TempFillerBytes, 0).Replace("-", " "),
+           .WeightCount = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H5C, 4), 0),
+           .UnknownA = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H60, 4), 0),
+           .VertHeaderCount = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H64, 4), 0),
+           .OffsetVertex = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H68, 4), 0),
+           .OffsetWeight = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H6C, 4), 0),
+           .OffsetUV = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H70, 4), 0),
+           .OffsetNormals = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H74, 4), 0),
+           .UnknownB = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H78, 4), 0),
+           .ShaderBytes = TempShaderBytes,
+           .ShaderString = Encoding.Default.GetString(TempShaderBytes).TrimEnd(Chr(0)),
+           .UnknownC = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H8C, 4), 0),
+           .MaterialIndex = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H90, 4), 0),
+           .CountParameter = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H94, 4), 0),
+           .OffsetParameter = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H98, 4), 0),
+           .OffsetDraw = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H9C, 4), 0),
+           .CountUV = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HA0, 4), 0),
+           .UnknownD = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HA4, 4), 0),
+           .UnknownE = BitConverter.ToUInt32(TestedByteArray, &HA8),
+           .UnknownF = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HAC, 4), 0),
+           .UnknownG = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HB0, 4), 0),
+           .UnknownH = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HB4, 4), 0)
+           }
+        Return ReturnedObjecInfo
+    End Function
+
+    Function ParseBytestoObjectBoneInformation(TestedByteArray As Byte()) As ObjectBoneInformation
+        Dim TempBoneName As Byte() = New Byte(&H10 - 1) {}
+        Array.Copy(TestedByteArray, 0, TempBoneName, 0, &H10)
+        Dim ReturnedBoneInfo As ObjectBoneInformation = New ObjectBoneInformation With {
+            .NameBytes = TempBoneName,
+            .Name = Encoding.Default.GetString(TempBoneName).TrimEnd(Chr(0)),
+            .UnknownA = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H10, 4), 0),
+            .UnknownB = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H14, 4), 0),
+            .UnknownC = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H18, 4), 0),
+            .UnknownD = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H1C, 4), 0),
+            .UnknownE = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H20, 4), 0),
+            .UnknownF = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H24, 4), 0),
+            .UnknownG = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H28, 4), 0),
+            .UnknownH = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H2C, 4), 0),
+            .UnknownI = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H30, 4), 0),
+            .UnknownJ = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H34, 4), 0),
+            .UnknownK = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H38, 4), 0),
+            .UnknownL = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H3C, 4), 0),
+            .UnknownM = BitConverter.ToUInt32(TestedByteArray, &H40),
+            .UnknownN = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, &H44, 4), 0),
+            .UnknownO = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, &H48, 4), 0),
+            .UnknownP = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, &H4C, 4), 0)}
+        Return ReturnedBoneInfo
+    End Function
 
 #End Region
 
@@ -4351,6 +4628,7 @@ Public Class MainForm
 #End Region
 
 #Region "CAE Menu Item View"
+
     Public Class CreateEntranceInformation
         Public EventID As UInt32 = 0
         Public PacNumber1 As UInt16 = 0
@@ -4572,7 +4850,7 @@ Public Class MainForm
                 If Not IsNumeric(MyCell.Value) Then
                     MyCell.Value = OldValue
                 ElseIf CLng(MyCell.Value) < 0 OrElse
-                CLng(MyCell.Value) > uInt32.MaxValue Then
+                CLng(MyCell.Value) > UInt32.MaxValue Then
                     MyCell.Value = OldValue
                 Else MyCell.Value = CInt(MyCell.Value)
                 End If
@@ -4716,15 +4994,16 @@ Public Class MainForm
 #End Region
 
 #Region "Animation View"
+
     Public Enum YANMBone As Integer
         Unknown = 0
-        Main_Root = &HC5879E5
+        vector = &HC5879E5
         J_Hips = &HF91A7A26
         Ch_rotation = &HDAECC2E
-        J_Spine = &H3D185308
+        J_Spine1 = &H3D185308
         J_Head = &HF9D973BE
         J_Neck = &HF91972B1
-        J_Clavical_L = &HD153E363
+        J_Clavicle_L = &HD153E363
         J_Shoulder_L = &HA46A2F43
         J_Elbow_L = &H6742F8AA
         J_Wrist_L = &HD4C2705A
@@ -4732,6 +5011,81 @@ Public Class MainForm
         J_MiddleF1_L = &HB10CAB4C
         J_MiddleF2_L = &HB10C6B4C
         J_MiddleF3_L = &HB10C2B4C
+        J_Spine2
+        J_Chest
+        J_Jaw
+        J_Tongue1
+        J_Tongue2
+        J_Tongue3
+        J_Tongue4
+        J_Eye_L
+        J_Eye_R
+        H_Neck_tw
+        J_IndexF0_L
+        J_IndexF1_L
+        J_IndexF2_L
+        J_IndexF3_L
+        J_PinkyF0_L
+        J_PinkyF1_L
+        J_PinkyF2_L
+        J_PinkyF3_L
+        J_RingF0_L
+        J_RingF1_L
+        J_RingF2_L
+        J_RingF3_L
+        J_ThumbF1_L
+        J_ThumbF2_L
+        J_ThumbF3_L
+        H_Elbow_L_tw01
+        H_Elbow_L_tw02
+        H_Delt_L_OS01
+        H_Ebw_In_L
+        H_Ebw_Out_L
+        H_TrapBase_L
+        J_Clavicle_R
+        J_Shoulder_R
+        J_Elbow_R
+        J_Wrist_R
+        J_MiddleF0_R
+        J_MiddleF1_R
+        J_MiddleF2_R
+        J_MiddleF3_R
+        J_IndexF0_R
+        J_IndexF1_R
+        J_IndexF2_R
+        J_IndexF3_R
+        J_PinkyF0_R
+        J_PinkyF1_R
+        J_PinkyF2_R
+        J_PinkyF3_R
+        J_RingF0_R
+        J_RingF1_R
+        J_RingF2_R
+        J_RingF3_R
+        J_ThumbF1_R
+        J_ThumbF2_R
+        J_ThumbF3_R
+        H_Elbow_R_tw01
+        H_Elbow_R_tw02
+        H_Ebw_In_R
+        H_Ebw_Out_R
+        H_Delt_R_OS01
+        H_TrapBase_R
+        J_Leg_L
+        J_Knee_L
+        J_Foot_L
+        J_Toe_L
+        H_Hip_L_OS1
+        H_Kn_L_OS02
+        H_Kn_L_OS01
+        J_Leg_R
+        J_Knee_R
+        J_Foot_R
+        J_Toe_R
+        H_Kn_R_OS02
+        H_Kn_R_OS01
+        H_Hip_R_OS1
+        H_Leg_Vol_C_R
     End Enum
 
     Public Class AnimationHeaderInformation
@@ -4851,6 +5205,7 @@ Public Class MainForm
         End If
         Return ReturnedAnimationInfo
     End Function
+
     Sub FinishAnimationParse(ByRef PartialAnimationInformation As AnimationHeaderInformation)
         PartialAnimationInformation.AnimationPartAString = BitConverter.ToString(PartialAnimationInformation.AnimationPartABytes).Replace("-", " ")
         PartialAnimationInformation.AnimationPartAString = GeneralTools.TruncateString(PartialAnimationInformation.AnimationPartAString, 32000)
@@ -5050,6 +5405,7 @@ Public Class MainForm
             End If
         End If
     End Sub
+
     Private Sub AnimationShowHexToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AnimationShowHexToolStripMenuItem.Click
         If AnimationShowHexToolStripMenuItem.Text.Contains("☑") Then
             AnimationShowHexToolStripMenuItem.Text = "☐ Show Hex"
@@ -5072,7 +5428,9 @@ Public Class MainForm
         End If
         GetAnimationViewDisplayedColumns()
     End Sub
+
 #End Region
+
 #Region "Pof0 View"
 
     Sub FillPof0View(SelectedData As TreeNode)
@@ -5093,6 +5451,7 @@ Public Class MainForm
             Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
             'Parse if the current Pof0 Byte is a 1 byte or 2 byte reference.
             TempGridRow.Cells(0).Value = Hex(Pof0CurrentRead)
+            TempGridRow.Cells(0).Style = ReadOnlyCellStyle
             If Pof0Bytes(Pof0CurrentRead) >= &HC0 Then
                 '4 Byte ref
                 TempGridRow.Cells(1).Value = Hex(BitConverter.ToUInt32(GeneralTools.EndianReverse(Pof0Bytes, Pof0CurrentRead, 4), 0))
@@ -5104,6 +5463,7 @@ Public Class MainForm
                 TempGridRow.Cells(4).Value = ParentFileCurrentOffset
                 TempGridRow.Cells(5).Value = Hex(ParentFileCurrentOffset)
                 TempGridRow.Cells(6).Value = Hex(BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentFileBytes, ParentFileCurrentOffset, 4), 0))
+                TempGridRow.Cells(6).Style = ReadOnlyCellStyle
                 Pof0CurrentRead += 3
             ElseIf Pof0Bytes(Pof0CurrentRead) >= &H80 Then
                 '2 Byte ref
@@ -5116,6 +5476,7 @@ Public Class MainForm
                 TempGridRow.Cells(4).Value = ParentFileCurrentOffset
                 TempGridRow.Cells(5).Value = Hex(ParentFileCurrentOffset)
                 TempGridRow.Cells(6).Value = Hex(BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentFileBytes, ParentFileCurrentOffset, 4), 0))
+                TempGridRow.Cells(6).Style = ReadOnlyCellStyle
                 Pof0CurrentRead += 1
             ElseIf Pof0Bytes(Pof0CurrentRead) >= &H40 Then
                 '1 byte ref
@@ -5127,6 +5488,7 @@ Public Class MainForm
                 TempGridRow.Cells(4).Value = ParentFileCurrentOffset
                 TempGridRow.Cells(5).Value = Hex(ParentFileCurrentOffset)
                 TempGridRow.Cells(6).Value = Hex(BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentFileBytes, ParentFileCurrentOffset, 4), 0))
+                TempGridRow.Cells(6).Style = ReadOnlyCellStyle
             ElseIf Pof0Bytes(Pof0CurrentRead) = 0 Then
                 'there is no added offset so we shouldn't add a line
                 Pof0CurrentRead += 1
@@ -5146,8 +5508,62 @@ Public Class MainForm
             DataGridPof0View.Rows(i).HeaderCell.Value = i + 1
         Next
     End Sub
+
 #End Region
+
+#Region "Initial Position File"
+
+    Sub FillWeaponPositionView(SelectedData As TreeNode)
+        Dim WeaponPositionBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
+        'We need to show what type of position file it is
+        Dim PartialWeaponHeaderString As String = New String(Encoding.Default.GetChars(WeaponPositionBytes, 2, 2))
+        If PartialWeaponHeaderString = "AR" Then
+            WeaponPositionTypeToolStripMenuItem.Text = "Position Type: " & "Arena"
+        ElseIf PartialWeaponHeaderString = "BS" Then
+            WeaponPositionTypeToolStripMenuItem.Text = "Position Type: " & "Base"
+        ElseIf PartialWeaponHeaderString = "RU" Then
+            WeaponPositionTypeToolStripMenuItem.Text = "Position Type: " & "Rule"
+        ElseIf PartialWeaponHeaderString = "ST" Then
+            WeaponPositionTypeToolStripMenuItem.Text = "Position Type: " & "Setting Table"
+        ElseIf PartialWeaponHeaderString = "EA" Then
+            WeaponPositionTypeToolStripMenuItem.Text = "Position Type: " & "Equipment Area"
+        End If
+        Dim WeaponCount As UInt32 = BitConverter.ToUInt32(WeaponPositionBytes, 8)
+        Dim WeaponPotisionLEngth As UInt32 = BitConverter.ToUInt32(WeaponPositionBytes, 12)
+        Dim WeaponLineLength As UInt32 = WeaponPotisionLEngth / WeaponCount
+        'getting a generic row so we can create one for the collection
+        Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridWeaponPositionView)
+        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = WeaponCount - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To WeaponCount - 1
+            Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
+            TempGridRow.Cells(0).Value = i
+            TempGridRow.Cells(0).Style = ReadOnlyCellStyle
+            TempGridRow.Cells(1).Value = (BitConverter.ToString(WeaponPositionBytes, &H10 + i * WeaponLineLength, WeaponLineLength).Replace("-", " "))
+            WorkingCollection.Add(TempGridRow)
+            ProgressBar1.Value = i
+        Next
+        DataGridWeaponPositionView.Rows.AddRange(WorkingCollection.ToArray())
+    End Sub
+
+
 #End Region
+
+#Region "File Ref Notes"
+
+    'Each File reference is &H190
+    'The first File gives you the folder name of the parent HSPC file
+    'Next you have individual files inside the SHDC
+    'Then you have the Actual SHDC = Folder Information
+    'File Name true names are at offset &H88
+    'File Number Reference is at offset 8
+    'like 30 in text is the 1E file
+
+#End Region
+
+#End Region
+
     'There is the potential for better programming using data binding data grid views.
     'Option to make buttons disabled
     'disabling add - remove buttons https://docs.microsoft.com/en-us/dotnet/framework/winforms/controls/disable-buttons-in-a-button-column-in-the-datagrid

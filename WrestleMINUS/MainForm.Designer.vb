@@ -24,10 +24,10 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStripMainForm = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -179,7 +179,13 @@ Partial Class MainForm
         Me.PictureView = New System.Windows.Forms.TabPage()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.ObjectView = New System.Windows.Forms.TabPage()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.TabControl2 = New System.Windows.Forms.TabControl()
+        Me.ObjectMainViewPage = New System.Windows.Forms.TabPage()
+        Me.DataGridObjectView = New System.Windows.Forms.DataGridView()
+        Me.ObjectBoneViewPage = New System.Windows.Forms.TabPage()
+        Me.DataGridObjectBoneView = New System.Windows.Forms.DataGridView()
+        Me.MenuStripObjectView = New System.Windows.Forms.MenuStrip()
+        Me.LoadedObjectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AttireView = New System.Windows.Forms.TabPage()
         Me.DataGridAttireView = New System.Windows.Forms.DataGridView()
         Me.Pach = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -415,6 +421,25 @@ Partial Class MainForm
         Me.AnimationShowHexToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AnimationShowDebugToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SaveChangesAnimationMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Pof0View = New System.Windows.Forms.TabPage()
+        Me.DataGridPof0View = New System.Windows.Forms.DataGridView()
+        Me.Pof0ByteCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Pof0RawHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Pof0TranslateDec = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Pof0TranslateHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Pof0ActiveOffsetDec = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Pof0ActiveOffsetHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Pof0ReferenceData = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MenuStripPof0View = New System.Windows.Forms.MenuStrip()
+        Me.WeaponPositionView = New System.Windows.Forms.TabPage()
+        Me.DataGridWeaponPositionView = New System.Windows.Forms.DataGridView()
+        Me.WeaponPositionCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionByteArray = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionAdd = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.WeaponPoitionDelete = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.MenuStripWeapPos = New System.Windows.Forms.MenuStrip()
+        Me.WeaponPositionTypeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SaveChangesWeaponPositionsMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripPictureView = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -471,16 +496,59 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Pof0View = New System.Windows.Forms.TabPage()
-        Me.MenuStripPof0View = New System.Windows.Forms.MenuStrip()
-        Me.DataGridPof0View = New System.Windows.Forms.DataGridView()
-        Me.Pof0ByteCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Pof0RawHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Pof0TranslateDec = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Pof0TranslateHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Pof0ActiveOffsetDec = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Pof0ActiveOffsetHex = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Pof0ReferenceData = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectCountCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertexCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectRendered = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ObjectHeaderFiller = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectWeightNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUnknownIntA = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVerHeaderCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVerticeOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectWeightsOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUVOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectNormalsOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectInternalNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectHeaderShader = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UnknownC = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectMaterialIndex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectParameterCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectParameterOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectFaceOffset = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUVCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUnknownD = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUnknownE = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUnknownF = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUnknownG = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUnknownH = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectTextureViewPage = New System.Windows.Forms.TabPage()
+        Me.ObjectTestureSplitContainer = New System.Windows.Forms.SplitContainer()
+        Me.DataGridObjectTextureView = New System.Windows.Forms.DataGridView()
+        Me.DataGridObjectShaderView = New System.Windows.Forms.DataGridView()
+        Me.ObjectTextureCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectTextureCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectShaderCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectShaderCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectShaderType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectShaderB = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneCountCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneOrder = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownA = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownB = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownC = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownD = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownE = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownF = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownG = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownH = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownI = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownJ = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownK = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownL = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownN = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownO = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectBoneUnknownP = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripMainForm.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -507,6 +575,12 @@ Partial Class MainForm
         Me.PictureView.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ObjectView.SuspendLayout()
+        Me.TabControl2.SuspendLayout()
+        Me.ObjectMainViewPage.SuspendLayout()
+        CType(Me.DataGridObjectView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ObjectBoneViewPage.SuspendLayout()
+        CType(Me.DataGridObjectBoneView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MenuStripObjectView.SuspendLayout()
         Me.AttireView.SuspendLayout()
         CType(Me.DataGridAttireView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripAttireView.SuspendLayout()
@@ -534,10 +608,20 @@ Partial Class MainForm
         Me.AnimationView.SuspendLayout()
         CType(Me.DataGridAnimationView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripAnimationView.SuspendLayout()
-        Me.MenuStripPictureView.SuspendLayout()
-        Me.TreeViewContext.SuspendLayout()
         Me.Pof0View.SuspendLayout()
         CType(Me.DataGridPof0View, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.WeaponPositionView.SuspendLayout()
+        CType(Me.DataGridWeaponPositionView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MenuStripWeapPos.SuspendLayout()
+        Me.MenuStripPictureView.SuspendLayout()
+        Me.TreeViewContext.SuspendLayout()
+        Me.ObjectTextureViewPage.SuspendLayout()
+        CType(Me.ObjectTestureSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ObjectTestureSplitContainer.Panel1.SuspendLayout()
+        Me.ObjectTestureSplitContainer.Panel2.SuspendLayout()
+        Me.ObjectTestureSplitContainer.SuspendLayout()
+        CType(Me.DataGridObjectTextureView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridObjectShaderView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStripMainForm
@@ -811,6 +895,7 @@ Partial Class MainForm
         Me.TabControl1.Controls.Add(Me.MenuItemView)
         Me.TabControl1.Controls.Add(Me.AnimationView)
         Me.TabControl1.Controls.Add(Me.Pof0View)
+        Me.TabControl1.Controls.Add(Me.WeaponPositionView)
         Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
@@ -1772,7 +1857,8 @@ Partial Class MainForm
         '
         'ObjectView
         '
-        Me.ObjectView.Controls.Add(Me.Label1)
+        Me.ObjectView.Controls.Add(Me.TabControl2)
+        Me.ObjectView.Controls.Add(Me.MenuStripObjectView)
         Me.ObjectView.Location = New System.Drawing.Point(4, 22)
         Me.ObjectView.Name = "ObjectView"
         Me.ObjectView.Padding = New System.Windows.Forms.Padding(3)
@@ -1781,15 +1867,83 @@ Partial Class MainForm
         Me.ObjectView.Text = "Object View"
         Me.ObjectView.UseVisualStyleBackColor = True
         '
-        'Label1
+        'TabControl2
         '
-        Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label1.Location = New System.Drawing.Point(3, 3)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(1213, 405)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "To Be Added :("
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.TabControl2.Controls.Add(Me.ObjectMainViewPage)
+        Me.TabControl2.Controls.Add(Me.ObjectBoneViewPage)
+        Me.TabControl2.Controls.Add(Me.ObjectTextureViewPage)
+        Me.TabControl2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl2.Location = New System.Drawing.Point(3, 27)
+        Me.TabControl2.Name = "TabControl2"
+        Me.TabControl2.SelectedIndex = 0
+        Me.TabControl2.Size = New System.Drawing.Size(1213, 381)
+        Me.TabControl2.TabIndex = 2
+        '
+        'ObjectMainViewPage
+        '
+        Me.ObjectMainViewPage.Controls.Add(Me.DataGridObjectView)
+        Me.ObjectMainViewPage.Location = New System.Drawing.Point(4, 22)
+        Me.ObjectMainViewPage.Name = "ObjectMainViewPage"
+        Me.ObjectMainViewPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.ObjectMainViewPage.Size = New System.Drawing.Size(1205, 355)
+        Me.ObjectMainViewPage.TabIndex = 0
+        Me.ObjectMainViewPage.Text = "Main"
+        Me.ObjectMainViewPage.UseVisualStyleBackColor = True
+        '
+        'DataGridObjectView
+        '
+        Me.DataGridObjectView.AllowUserToAddRows = False
+        Me.DataGridObjectView.AllowUserToDeleteRows = False
+        Me.DataGridObjectView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
+        Me.DataGridObjectView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridObjectView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectCountCol, Me.ObjectVertexCount, Me.ObjectRendered, Me.ObjectHeaderFiller, Me.ObjectWeightNumber, Me.ObjectUnknownIntA, Me.ObjectVerHeaderCount, Me.ObjectVerticeOffset, Me.ObjectWeightsOffset, Me.ObjectUVOffset, Me.ObjectNormalsOffset, Me.ObjectInternalNum, Me.ObjectHeaderShader, Me.UnknownC, Me.ObjectMaterialIndex, Me.ObjectParameterCount, Me.ObjectParameterOffset, Me.ObjectFaceOffset, Me.ObjectUVCount, Me.ObjectUnknownD, Me.ObjectUnknownE, Me.ObjectUnknownF, Me.ObjectUnknownG, Me.ObjectUnknownH})
+        Me.DataGridObjectView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridObjectView.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridObjectView.Name = "DataGridObjectView"
+        Me.DataGridObjectView.RowHeadersVisible = False
+        Me.DataGridObjectView.Size = New System.Drawing.Size(1199, 349)
+        Me.DataGridObjectView.TabIndex = 1
+        '
+        'ObjectBoneViewPage
+        '
+        Me.ObjectBoneViewPage.Controls.Add(Me.DataGridObjectBoneView)
+        Me.ObjectBoneViewPage.Location = New System.Drawing.Point(4, 22)
+        Me.ObjectBoneViewPage.Name = "ObjectBoneViewPage"
+        Me.ObjectBoneViewPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.ObjectBoneViewPage.Size = New System.Drawing.Size(1205, 355)
+        Me.ObjectBoneViewPage.TabIndex = 1
+        Me.ObjectBoneViewPage.Text = "Bones"
+        Me.ObjectBoneViewPage.UseVisualStyleBackColor = True
+        '
+        'DataGridObjectBoneView
+        '
+        Me.DataGridObjectBoneView.AllowUserToAddRows = False
+        Me.DataGridObjectBoneView.AllowUserToDeleteRows = False
+        Me.DataGridObjectBoneView.AllowUserToOrderColumns = True
+        Me.DataGridObjectBoneView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridObjectBoneView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridObjectBoneView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectBoneCountCol, Me.ObjectBoneOrder, Me.ObjectBoneName, Me.ObjectBoneUnknownA, Me.ObjectBoneUnknownB, Me.ObjectBoneUnknownC, Me.ObjectBoneUnknownD, Me.ObjectBoneUnknownE, Me.ObjectBoneUnknownF, Me.ObjectBoneUnknownG, Me.ObjectBoneUnknownH, Me.ObjectBoneUnknownI, Me.ObjectBoneUnknownJ, Me.ObjectBoneUnknownK, Me.ObjectBoneUnknownL, Me.ObjectBoneUnknownM, Me.ObjectBoneUnknownN, Me.ObjectBoneUnknownO, Me.ObjectBoneUnknownP})
+        Me.DataGridObjectBoneView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridObjectBoneView.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridObjectBoneView.Name = "DataGridObjectBoneView"
+        Me.DataGridObjectBoneView.RowHeadersVisible = False
+        Me.DataGridObjectBoneView.Size = New System.Drawing.Size(1199, 349)
+        Me.DataGridObjectBoneView.TabIndex = 0
+        '
+        'MenuStripObjectView
+        '
+        Me.MenuStripObjectView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LoadedObjectToolStripMenuItem})
+        Me.MenuStripObjectView.Location = New System.Drawing.Point(3, 3)
+        Me.MenuStripObjectView.Name = "MenuStripObjectView"
+        Me.MenuStripObjectView.Size = New System.Drawing.Size(1213, 24)
+        Me.MenuStripObjectView.TabIndex = 0
+        Me.MenuStripObjectView.Text = "MenuStrip1"
+        '
+        'LoadedObjectToolStripMenuItem
+        '
+        Me.LoadedObjectToolStripMenuItem.Name = "LoadedObjectToolStripMenuItem"
+        Me.LoadedObjectToolStripMenuItem.Size = New System.Drawing.Size(102, 20)
+        Me.LoadedObjectToolStripMenuItem.Text = "Loaded Object: "
         '
         'AttireView
         '
@@ -2420,9 +2574,9 @@ Partial Class MainForm
         '
         'YobjArryIndex
         '
-        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle21
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle5
         Me.YobjArryIndex.HeaderText = "Index"
         Me.YobjArryIndex.Name = "YobjArryIndex"
         Me.YobjArryIndex.ReadOnly = True
@@ -2430,9 +2584,9 @@ Partial Class MainForm
         '
         'ObjArrayParent
         '
-        DataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle22
+        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle6
         Me.ObjArrayParent.HeaderText = "Parent"
         Me.ObjArrayParent.MinimumWidth = 100
         Me.ObjArrayParent.Name = "ObjArrayParent"
@@ -2503,9 +2657,9 @@ Partial Class MainForm
         '
         'ContainedYobjArray
         '
-        DataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle23
+        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle7
         Me.ContainedYobjArray.HeaderText = "Objects"
         Me.ContainedYobjArray.Name = "ContainedYobjArray"
         Me.ContainedYobjArray.ReadOnly = True
@@ -2513,9 +2667,9 @@ Partial Class MainForm
         '
         'StartIndexYobjArray
         '
-        DataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle24
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle8
         Me.StartIndexYobjArray.HeaderText = "Start Index"
         Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
         Me.StartIndexYobjArray.ReadOnly = True
@@ -3532,6 +3686,154 @@ Partial Class MainForm
         Me.SaveChangesAnimationMenuItem.Text = "Save Changes"
         Me.SaveChangesAnimationMenuItem.Visible = False
         '
+        'Pof0View
+        '
+        Me.Pof0View.Controls.Add(Me.DataGridPof0View)
+        Me.Pof0View.Controls.Add(Me.MenuStripPof0View)
+        Me.Pof0View.Location = New System.Drawing.Point(4, 22)
+        Me.Pof0View.Name = "Pof0View"
+        Me.Pof0View.Padding = New System.Windows.Forms.Padding(3)
+        Me.Pof0View.Size = New System.Drawing.Size(1219, 411)
+        Me.Pof0View.TabIndex = 18
+        Me.Pof0View.Text = "Pof0 View"
+        Me.Pof0View.UseVisualStyleBackColor = True
+        '
+        'DataGridPof0View
+        '
+        Me.DataGridPof0View.AllowUserToAddRows = False
+        Me.DataGridPof0View.AllowUserToDeleteRows = False
+        Me.DataGridPof0View.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridPof0View.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridPof0View.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Pof0ByteCount, Me.Pof0RawHex, Me.Pof0TranslateDec, Me.Pof0TranslateHex, Me.Pof0ActiveOffsetDec, Me.Pof0ActiveOffsetHex, Me.Pof0ReferenceData})
+        Me.DataGridPof0View.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridPof0View.Location = New System.Drawing.Point(3, 27)
+        Me.DataGridPof0View.Name = "DataGridPof0View"
+        Me.DataGridPof0View.RowHeadersVisible = False
+        Me.DataGridPof0View.Size = New System.Drawing.Size(1213, 381)
+        Me.DataGridPof0View.TabIndex = 1
+        '
+        'Pof0ByteCount
+        '
+        Me.Pof0ByteCount.HeaderText = "Count"
+        Me.Pof0ByteCount.Name = "Pof0ByteCount"
+        Me.Pof0ByteCount.ReadOnly = True
+        '
+        'Pof0RawHex
+        '
+        Me.Pof0RawHex.HeaderText = "Raw Hex"
+        Me.Pof0RawHex.Name = "Pof0RawHex"
+        '
+        'Pof0TranslateDec
+        '
+        Me.Pof0TranslateDec.HeaderText = "Dec Value"
+        Me.Pof0TranslateDec.Name = "Pof0TranslateDec"
+        '
+        'Pof0TranslateHex
+        '
+        Me.Pof0TranslateHex.HeaderText = "Hex Value"
+        Me.Pof0TranslateHex.Name = "Pof0TranslateHex"
+        '
+        'Pof0ActiveOffsetDec
+        '
+        Me.Pof0ActiveOffsetDec.HeaderText = "Offset Dec"
+        Me.Pof0ActiveOffsetDec.Name = "Pof0ActiveOffsetDec"
+        '
+        'Pof0ActiveOffsetHex
+        '
+        Me.Pof0ActiveOffsetHex.HeaderText = "Offset Hex"
+        Me.Pof0ActiveOffsetHex.Name = "Pof0ActiveOffsetHex"
+        '
+        'Pof0ReferenceData
+        '
+        Me.Pof0ReferenceData.FillWeight = 200.0!
+        Me.Pof0ReferenceData.HeaderText = "Reference Data"
+        Me.Pof0ReferenceData.Name = "Pof0ReferenceData"
+        Me.Pof0ReferenceData.ReadOnly = True
+        '
+        'MenuStripPof0View
+        '
+        Me.MenuStripPof0View.Location = New System.Drawing.Point(3, 3)
+        Me.MenuStripPof0View.Name = "MenuStripPof0View"
+        Me.MenuStripPof0View.Size = New System.Drawing.Size(1213, 24)
+        Me.MenuStripPof0View.TabIndex = 0
+        Me.MenuStripPof0View.Text = "MenuStrip1"
+        '
+        'WeaponPositionView
+        '
+        Me.WeaponPositionView.Controls.Add(Me.DataGridWeaponPositionView)
+        Me.WeaponPositionView.Controls.Add(Me.MenuStripWeapPos)
+        Me.WeaponPositionView.Location = New System.Drawing.Point(4, 22)
+        Me.WeaponPositionView.Name = "WeaponPositionView"
+        Me.WeaponPositionView.Padding = New System.Windows.Forms.Padding(3)
+        Me.WeaponPositionView.Size = New System.Drawing.Size(1219, 411)
+        Me.WeaponPositionView.TabIndex = 19
+        Me.WeaponPositionView.Text = "Weap Pos View"
+        Me.WeaponPositionView.UseVisualStyleBackColor = True
+        '
+        'DataGridWeaponPositionView
+        '
+        Me.DataGridWeaponPositionView.AllowUserToAddRows = False
+        Me.DataGridWeaponPositionView.AllowUserToDeleteRows = False
+        Me.DataGridWeaponPositionView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridWeaponPositionView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridWeaponPositionView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.WeaponPositionCount, Me.WeaponPositionByteArray, Me.WeaponPositionAdd, Me.WeaponPoitionDelete})
+        Me.DataGridWeaponPositionView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridWeaponPositionView.Location = New System.Drawing.Point(3, 27)
+        Me.DataGridWeaponPositionView.Name = "DataGridWeaponPositionView"
+        Me.DataGridWeaponPositionView.RowHeadersVisible = False
+        Me.DataGridWeaponPositionView.Size = New System.Drawing.Size(1213, 381)
+        Me.DataGridWeaponPositionView.TabIndex = 1
+        '
+        'WeaponPositionCount
+        '
+        Me.WeaponPositionCount.FillWeight = 10.0!
+        Me.WeaponPositionCount.HeaderText = "Count"
+        Me.WeaponPositionCount.Name = "WeaponPositionCount"
+        Me.WeaponPositionCount.ReadOnly = True
+        '
+        'WeaponPositionByteArray
+        '
+        Me.WeaponPositionByteArray.HeaderText = "Byte Array"
+        Me.WeaponPositionByteArray.Name = "WeaponPositionByteArray"
+        '
+        'WeaponPositionAdd
+        '
+        Me.WeaponPositionAdd.FillWeight = 10.0!
+        Me.WeaponPositionAdd.HeaderText = "Add"
+        Me.WeaponPositionAdd.Name = "WeaponPositionAdd"
+        Me.WeaponPositionAdd.Text = "Add"
+        Me.WeaponPositionAdd.UseColumnTextForButtonValue = True
+        '
+        'WeaponPoitionDelete
+        '
+        Me.WeaponPoitionDelete.FillWeight = 10.0!
+        Me.WeaponPoitionDelete.HeaderText = "Delete"
+        Me.WeaponPoitionDelete.Name = "WeaponPoitionDelete"
+        Me.WeaponPoitionDelete.Text = "Delete"
+        Me.WeaponPoitionDelete.UseColumnTextForButtonValue = True
+        '
+        'MenuStripWeapPos
+        '
+        Me.MenuStripWeapPos.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.WeaponPositionTypeToolStripMenuItem, Me.SaveChangesWeaponPositionsMenuItem})
+        Me.MenuStripWeapPos.Location = New System.Drawing.Point(3, 3)
+        Me.MenuStripWeapPos.Name = "MenuStripWeapPos"
+        Me.MenuStripWeapPos.Size = New System.Drawing.Size(1213, 24)
+        Me.MenuStripWeapPos.TabIndex = 0
+        Me.MenuStripWeapPos.Text = "MenuStrip1"
+        '
+        'WeaponPositionTypeToolStripMenuItem
+        '
+        Me.WeaponPositionTypeToolStripMenuItem.Name = "WeaponPositionTypeToolStripMenuItem"
+        Me.WeaponPositionTypeToolStripMenuItem.Size = New System.Drawing.Size(95, 20)
+        Me.WeaponPositionTypeToolStripMenuItem.Text = "Position Type: "
+        '
+        'SaveChangesWeaponPositionsMenuItem
+        '
+        Me.SaveChangesWeaponPositionsMenuItem.Name = "SaveChangesWeaponPositionsMenuItem"
+        Me.SaveChangesWeaponPositionsMenuItem.Size = New System.Drawing.Size(92, 20)
+        Me.SaveChangesWeaponPositionsMenuItem.Text = "Save Changes"
+        Me.SaveChangesWeaponPositionsMenuItem.Visible = False
+        '
         'MenuStripPictureView
         '
         Me.MenuStripPictureView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
@@ -3551,7 +3853,7 @@ Partial Class MainForm
         '
         Me.TreeViewContext.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenRADVideoToolStripMenuItem, Me.OpenImageWithToolStripMenuItem, Me.ExtractToolStripMenuItem, Me.InjectToolStripMenuItem, Me.CrawlToolStripMenuItem, Me.DeleteFileToolStripMenuItem, Me.DeletePartToolStripMenuItem, Me.RenameFileToolStripMenuItem, Me.RenamePartToolStripMenuItem, Me.OpenFileLocationToolStripMenuItem})
         Me.TreeViewContext.Name = "TreeViewContext"
-        Me.TreeViewContext.Size = New System.Drawing.Size(181, 246)
+        Me.TreeViewContext.Size = New System.Drawing.Size(169, 224)
         '
         'OpenRADVideoToolStripMenuItem
         '
@@ -3877,76 +4179,363 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn35.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn35.Width = 41
         '
-        'Pof0View
+        'ObjectCountCol
         '
-        Me.Pof0View.Controls.Add(Me.DataGridPof0View)
-        Me.Pof0View.Controls.Add(Me.MenuStripPof0View)
-        Me.Pof0View.Location = New System.Drawing.Point(4, 22)
-        Me.Pof0View.Name = "Pof0View"
-        Me.Pof0View.Padding = New System.Windows.Forms.Padding(3)
-        Me.Pof0View.Size = New System.Drawing.Size(1219, 411)
-        Me.Pof0View.TabIndex = 18
-        Me.Pof0View.Text = "Pof0 View"
-        Me.Pof0View.UseVisualStyleBackColor = True
+        Me.ObjectCountCol.FillWeight = 25.0!
+        Me.ObjectCountCol.HeaderText = "Count"
+        Me.ObjectCountCol.Name = "ObjectCountCol"
+        Me.ObjectCountCol.ReadOnly = True
+        Me.ObjectCountCol.Width = 60
         '
-        'MenuStripPof0View
+        'ObjectVertexCount
         '
-        Me.MenuStripPof0View.Location = New System.Drawing.Point(3, 3)
-        Me.MenuStripPof0View.Name = "MenuStripPof0View"
-        Me.MenuStripPof0View.Size = New System.Drawing.Size(1213, 24)
-        Me.MenuStripPof0View.TabIndex = 0
-        Me.MenuStripPof0View.Text = "MenuStrip1"
+        Me.ObjectVertexCount.FillWeight = 25.0!
+        Me.ObjectVertexCount.HeaderText = "Vert Count"
+        Me.ObjectVertexCount.Name = "ObjectVertexCount"
+        Me.ObjectVertexCount.Width = 82
         '
-        'DataGridPof0View
+        'ObjectRendered
         '
-        Me.DataGridPof0View.AllowUserToAddRows = False
-        Me.DataGridPof0View.AllowUserToDeleteRows = False
-        Me.DataGridPof0View.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.DataGridPof0View.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridPof0View.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Pof0ByteCount, Me.Pof0RawHex, Me.Pof0TranslateDec, Me.Pof0TranslateHex, Me.Pof0ActiveOffsetDec, Me.Pof0ActiveOffsetHex, Me.Pof0ReferenceData})
-        Me.DataGridPof0View.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridPof0View.Location = New System.Drawing.Point(3, 27)
-        Me.DataGridPof0View.Name = "DataGridPof0View"
-        Me.DataGridPof0View.RowHeadersVisible = False
-        Me.DataGridPof0View.Size = New System.Drawing.Size(1213, 381)
-        Me.DataGridPof0View.TabIndex = 1
+        Me.ObjectRendered.FillWeight = 30.0!
+        Me.ObjectRendered.HeaderText = "Rendered"
+        Me.ObjectRendered.Name = "ObjectRendered"
+        Me.ObjectRendered.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ObjectRendered.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.ObjectRendered.Width = 79
         '
-        'Pof0ByteCount
+        'ObjectHeaderFiller
         '
-        Me.Pof0ByteCount.HeaderText = "Count"
-        Me.Pof0ByteCount.Name = "Pof0ByteCount"
+        Me.ObjectHeaderFiller.FillWeight = 30.0!
+        Me.ObjectHeaderFiller.HeaderText = "Filler"
+        Me.ObjectHeaderFiller.Name = "ObjectHeaderFiller"
+        Me.ObjectHeaderFiller.Visible = False
+        Me.ObjectHeaderFiller.Width = 53
         '
-        'Pof0RawHex
+        'ObjectWeightNumber
         '
-        Me.Pof0RawHex.HeaderText = "Raw Hex"
-        Me.Pof0RawHex.Name = "Pof0RawHex"
+        Me.ObjectWeightNumber.FillWeight = 30.0!
+        Me.ObjectWeightNumber.HeaderText = "Weights"
+        Me.ObjectWeightNumber.Name = "ObjectWeightNumber"
+        Me.ObjectWeightNumber.Width = 71
         '
-        'Pof0TranslateDec
+        'ObjectUnknownIntA
         '
-        Me.Pof0TranslateDec.HeaderText = "Dec Value"
-        Me.Pof0TranslateDec.Name = "Pof0TranslateDec"
+        Me.ObjectUnknownIntA.FillWeight = 30.0!
+        Me.ObjectUnknownIntA.HeaderText = "IntA"
+        Me.ObjectUnknownIntA.Name = "ObjectUnknownIntA"
+        Me.ObjectUnknownIntA.Width = 51
         '
-        'Pof0TranslateHex
+        'ObjectVerHeaderCount
         '
-        Me.Pof0TranslateHex.HeaderText = "Hex Value"
-        Me.Pof0TranslateHex.Name = "Pof0TranslateHex"
+        Me.ObjectVerHeaderCount.FillWeight = 30.0!
+        Me.ObjectVerHeaderCount.HeaderText = "Vert Head Count"
+        Me.ObjectVerHeaderCount.Name = "ObjectVerHeaderCount"
+        Me.ObjectVerHeaderCount.Width = 102
         '
-        'Pof0ActiveOffsetDec
+        'ObjectVerticeOffset
         '
-        Me.Pof0ActiveOffsetDec.HeaderText = "Offset Dec"
-        Me.Pof0ActiveOffsetDec.Name = "Pof0ActiveOffsetDec"
+        Me.ObjectVerticeOffset.FillWeight = 50.0!
+        Me.ObjectVerticeOffset.HeaderText = "Vertice Offset"
+        Me.ObjectVerticeOffset.Name = "ObjectVerticeOffset"
+        Me.ObjectVerticeOffset.Width = 88
         '
-        'Pof0ActiveOffsetHex
+        'ObjectWeightsOffset
         '
-        Me.Pof0ActiveOffsetHex.HeaderText = "Offset Hex"
-        Me.Pof0ActiveOffsetHex.Name = "Pof0ActiveOffsetHex"
+        Me.ObjectWeightsOffset.FillWeight = 50.0!
+        Me.ObjectWeightsOffset.HeaderText = "Weight Offset"
+        Me.ObjectWeightsOffset.Name = "ObjectWeightsOffset"
+        Me.ObjectWeightsOffset.Width = 89
         '
-        'Pof0ReferenceData
+        'ObjectUVOffset
         '
-        Me.Pof0ReferenceData.FillWeight = 200.0!
-        Me.Pof0ReferenceData.HeaderText = "Reference Data"
-        Me.Pof0ReferenceData.Name = "Pof0ReferenceData"
-        Me.Pof0ReferenceData.ReadOnly = True
+        Me.ObjectUVOffset.FillWeight = 50.0!
+        Me.ObjectUVOffset.HeaderText = "UV Offset"
+        Me.ObjectUVOffset.Name = "ObjectUVOffset"
+        Me.ObjectUVOffset.Width = 72
+        '
+        'ObjectNormalsOffset
+        '
+        Me.ObjectNormalsOffset.FillWeight = 50.0!
+        Me.ObjectNormalsOffset.HeaderText = "Normals Offset"
+        Me.ObjectNormalsOffset.Name = "ObjectNormalsOffset"
+        Me.ObjectNormalsOffset.Width = 93
+        '
+        'ObjectInternalNum
+        '
+        Me.ObjectInternalNum.FillWeight = 25.0!
+        Me.ObjectInternalNum.HeaderText = "Number"
+        Me.ObjectInternalNum.Name = "ObjectInternalNum"
+        Me.ObjectInternalNum.Width = 69
+        '
+        'ObjectHeaderShader
+        '
+        Me.ObjectHeaderShader.FillWeight = 30.0!
+        Me.ObjectHeaderShader.HeaderText = "Shader"
+        Me.ObjectHeaderShader.Name = "ObjectHeaderShader"
+        Me.ObjectHeaderShader.Width = 66
+        '
+        'UnknownC
+        '
+        Me.UnknownC.FillWeight = 30.0!
+        Me.UnknownC.HeaderText = "IntC"
+        Me.UnknownC.Name = "UnknownC"
+        Me.UnknownC.Width = 51
+        '
+        'ObjectMaterialIndex
+        '
+        Me.ObjectMaterialIndex.FillWeight = 30.0!
+        Me.ObjectMaterialIndex.HeaderText = "Material"
+        Me.ObjectMaterialIndex.Name = "ObjectMaterialIndex"
+        Me.ObjectMaterialIndex.Width = 69
+        '
+        'ObjectParameterCount
+        '
+        Me.ObjectParameterCount.FillWeight = 30.0!
+        Me.ObjectParameterCount.HeaderText = "Param Count"
+        Me.ObjectParameterCount.Name = "ObjectParameterCount"
+        Me.ObjectParameterCount.Width = 86
+        '
+        'ObjectParameterOffset
+        '
+        Me.ObjectParameterOffset.FillWeight = 30.0!
+        Me.ObjectParameterOffset.HeaderText = "Param Offset"
+        Me.ObjectParameterOffset.Name = "ObjectParameterOffset"
+        Me.ObjectParameterOffset.Width = 86
+        '
+        'ObjectFaceOffset
+        '
+        Me.ObjectFaceOffset.FillWeight = 30.0!
+        Me.ObjectFaceOffset.HeaderText = "Faces Offset"
+        Me.ObjectFaceOffset.Name = "ObjectFaceOffset"
+        Me.ObjectFaceOffset.Width = 85
+        '
+        'ObjectUVCount
+        '
+        Me.ObjectUVCount.FillWeight = 30.0!
+        Me.ObjectUVCount.HeaderText = "UV Count"
+        Me.ObjectUVCount.Name = "ObjectUVCount"
+        Me.ObjectUVCount.Width = 72
+        '
+        'ObjectUnknownD
+        '
+        Me.ObjectUnknownD.FillWeight = 30.0!
+        Me.ObjectUnknownD.HeaderText = "Unknown D"
+        Me.ObjectUnknownD.Name = "ObjectUnknownD"
+        Me.ObjectUnknownD.Width = 82
+        '
+        'ObjectUnknownE
+        '
+        Me.ObjectUnknownE.FillWeight = 30.0!
+        Me.ObjectUnknownE.HeaderText = "Unknown E"
+        Me.ObjectUnknownE.Name = "ObjectUnknownE"
+        Me.ObjectUnknownE.Width = 81
+        '
+        'ObjectUnknownF
+        '
+        Me.ObjectUnknownF.FillWeight = 30.0!
+        Me.ObjectUnknownF.HeaderText = "Unknown F"
+        Me.ObjectUnknownF.Name = "ObjectUnknownF"
+        Me.ObjectUnknownF.Width = 80
+        '
+        'ObjectUnknownG
+        '
+        Me.ObjectUnknownG.FillWeight = 30.0!
+        Me.ObjectUnknownG.HeaderText = "Unknown G"
+        Me.ObjectUnknownG.Name = "ObjectUnknownG"
+        Me.ObjectUnknownG.Width = 82
+        '
+        'ObjectUnknownH
+        '
+        Me.ObjectUnknownH.FillWeight = 30.0!
+        Me.ObjectUnknownH.HeaderText = "Unknown H"
+        Me.ObjectUnknownH.Name = "ObjectUnknownH"
+        Me.ObjectUnknownH.Width = 82
+        '
+        'ObjectTextureViewPage
+        '
+        Me.ObjectTextureViewPage.Controls.Add(Me.ObjectTestureSplitContainer)
+        Me.ObjectTextureViewPage.Location = New System.Drawing.Point(4, 22)
+        Me.ObjectTextureViewPage.Name = "ObjectTextureViewPage"
+        Me.ObjectTextureViewPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.ObjectTextureViewPage.Size = New System.Drawing.Size(1205, 355)
+        Me.ObjectTextureViewPage.TabIndex = 2
+        Me.ObjectTextureViewPage.Text = "Textures"
+        Me.ObjectTextureViewPage.UseVisualStyleBackColor = True
+        '
+        'ObjectTestureSplitContainer
+        '
+        Me.ObjectTestureSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ObjectTestureSplitContainer.Location = New System.Drawing.Point(3, 3)
+        Me.ObjectTestureSplitContainer.Name = "ObjectTestureSplitContainer"
+        '
+        'ObjectTestureSplitContainer.Panel1
+        '
+        Me.ObjectTestureSplitContainer.Panel1.Controls.Add(Me.DataGridObjectTextureView)
+        '
+        'ObjectTestureSplitContainer.Panel2
+        '
+        Me.ObjectTestureSplitContainer.Panel2.Controls.Add(Me.DataGridObjectShaderView)
+        Me.ObjectTestureSplitContainer.Size = New System.Drawing.Size(1199, 349)
+        Me.ObjectTestureSplitContainer.SplitterDistance = 200
+        Me.ObjectTestureSplitContainer.TabIndex = 0
+        '
+        'DataGridObjectTextureView
+        '
+        Me.DataGridObjectTextureView.AllowUserToAddRows = False
+        Me.DataGridObjectTextureView.AllowUserToDeleteRows = False
+        Me.DataGridObjectTextureView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridObjectTextureView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridObjectTextureView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectTextureCount, Me.ObjectTextureCol})
+        Me.DataGridObjectTextureView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridObjectTextureView.Location = New System.Drawing.Point(0, 0)
+        Me.DataGridObjectTextureView.Name = "DataGridObjectTextureView"
+        Me.DataGridObjectTextureView.RowHeadersVisible = False
+        Me.DataGridObjectTextureView.Size = New System.Drawing.Size(200, 349)
+        Me.DataGridObjectTextureView.TabIndex = 0
+        '
+        'DataGridObjectShaderView
+        '
+        Me.DataGridObjectShaderView.AllowUserToAddRows = False
+        Me.DataGridObjectShaderView.AllowUserToDeleteRows = False
+        Me.DataGridObjectShaderView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridObjectShaderView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridObjectShaderView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectShaderCount, Me.ObjectShaderCol, Me.ObjectShaderType, Me.ObjectShaderB})
+        Me.DataGridObjectShaderView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridObjectShaderView.Location = New System.Drawing.Point(0, 0)
+        Me.DataGridObjectShaderView.Name = "DataGridObjectShaderView"
+        Me.DataGridObjectShaderView.RowHeadersVisible = False
+        Me.DataGridObjectShaderView.Size = New System.Drawing.Size(995, 349)
+        Me.DataGridObjectShaderView.TabIndex = 0
+        '
+        'ObjectTextureCount
+        '
+        Me.ObjectTextureCount.FillWeight = 25.0!
+        Me.ObjectTextureCount.HeaderText = "Count"
+        Me.ObjectTextureCount.Name = "ObjectTextureCount"
+        Me.ObjectTextureCount.ReadOnly = True
+        '
+        'ObjectTextureCol
+        '
+        Me.ObjectTextureCol.HeaderText = "Textures"
+        Me.ObjectTextureCol.Name = "ObjectTextureCol"
+        '
+        'ObjectShaderCount
+        '
+        Me.ObjectShaderCount.FillWeight = 25.0!
+        Me.ObjectShaderCount.HeaderText = "Count"
+        Me.ObjectShaderCount.Name = "ObjectShaderCount"
+        Me.ObjectShaderCount.ReadOnly = True
+        '
+        'ObjectShaderCol
+        '
+        Me.ObjectShaderCol.HeaderText = "Shader"
+        Me.ObjectShaderCol.Name = "ObjectShaderCol"
+        '
+        'ObjectShaderType
+        '
+        Me.ObjectShaderType.HeaderText = "Type"
+        Me.ObjectShaderType.Name = "ObjectShaderType"
+        '
+        'ObjectShaderB
+        '
+        Me.ObjectShaderB.HeaderText = "IntB"
+        Me.ObjectShaderB.Name = "ObjectShaderB"
+        '
+        'ObjectBoneCountCol
+        '
+        Me.ObjectBoneCountCol.HeaderText = "Count"
+        Me.ObjectBoneCountCol.Name = "ObjectBoneCountCol"
+        Me.ObjectBoneCountCol.ReadOnly = True
+        '
+        'ObjectBoneOrder
+        '
+        Me.ObjectBoneOrder.HeaderText = "Order"
+        Me.ObjectBoneOrder.Name = "ObjectBoneOrder"
+        '
+        'ObjectBoneName
+        '
+        Me.ObjectBoneName.HeaderText = "Name"
+        Me.ObjectBoneName.Name = "ObjectBoneName"
+        '
+        'ObjectBoneUnknownA
+        '
+        Me.ObjectBoneUnknownA.HeaderText = "A"
+        Me.ObjectBoneUnknownA.Name = "ObjectBoneUnknownA"
+        '
+        'ObjectBoneUnknownB
+        '
+        Me.ObjectBoneUnknownB.HeaderText = "B"
+        Me.ObjectBoneUnknownB.Name = "ObjectBoneUnknownB"
+        '
+        'ObjectBoneUnknownC
+        '
+        Me.ObjectBoneUnknownC.HeaderText = "C"
+        Me.ObjectBoneUnknownC.Name = "ObjectBoneUnknownC"
+        '
+        'ObjectBoneUnknownD
+        '
+        Me.ObjectBoneUnknownD.HeaderText = "D"
+        Me.ObjectBoneUnknownD.Name = "ObjectBoneUnknownD"
+        '
+        'ObjectBoneUnknownE
+        '
+        Me.ObjectBoneUnknownE.HeaderText = "E"
+        Me.ObjectBoneUnknownE.Name = "ObjectBoneUnknownE"
+        '
+        'ObjectBoneUnknownF
+        '
+        Me.ObjectBoneUnknownF.HeaderText = "F"
+        Me.ObjectBoneUnknownF.Name = "ObjectBoneUnknownF"
+        '
+        'ObjectBoneUnknownG
+        '
+        Me.ObjectBoneUnknownG.HeaderText = "G"
+        Me.ObjectBoneUnknownG.Name = "ObjectBoneUnknownG"
+        '
+        'ObjectBoneUnknownH
+        '
+        Me.ObjectBoneUnknownH.HeaderText = "H"
+        Me.ObjectBoneUnknownH.Name = "ObjectBoneUnknownH"
+        '
+        'ObjectBoneUnknownI
+        '
+        Me.ObjectBoneUnknownI.HeaderText = "I"
+        Me.ObjectBoneUnknownI.Name = "ObjectBoneUnknownI"
+        '
+        'ObjectBoneUnknownJ
+        '
+        Me.ObjectBoneUnknownJ.HeaderText = "J"
+        Me.ObjectBoneUnknownJ.Name = "ObjectBoneUnknownJ"
+        '
+        'ObjectBoneUnknownK
+        '
+        Me.ObjectBoneUnknownK.HeaderText = "K"
+        Me.ObjectBoneUnknownK.Name = "ObjectBoneUnknownK"
+        '
+        'ObjectBoneUnknownL
+        '
+        Me.ObjectBoneUnknownL.HeaderText = "L"
+        Me.ObjectBoneUnknownL.Name = "ObjectBoneUnknownL"
+        '
+        'ObjectBoneUnknownM
+        '
+        Me.ObjectBoneUnknownM.HeaderText = "M"
+        Me.ObjectBoneUnknownM.Name = "ObjectBoneUnknownM"
+        '
+        'ObjectBoneUnknownN
+        '
+        Me.ObjectBoneUnknownN.HeaderText = "N"
+        Me.ObjectBoneUnknownN.Name = "ObjectBoneUnknownN"
+        '
+        'ObjectBoneUnknownO
+        '
+        Me.ObjectBoneUnknownO.HeaderText = "O"
+        Me.ObjectBoneUnknownO.Name = "ObjectBoneUnknownO"
+        '
+        'ObjectBoneUnknownP
+        '
+        Me.ObjectBoneUnknownP.HeaderText = "P"
+        Me.ObjectBoneUnknownP.Name = "ObjectBoneUnknownP"
         '
         'MainForm
         '
@@ -4001,6 +4590,14 @@ Partial Class MainForm
         Me.PictureView.ResumeLayout(False)
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ObjectView.ResumeLayout(False)
+        Me.ObjectView.PerformLayout()
+        Me.TabControl2.ResumeLayout(False)
+        Me.ObjectMainViewPage.ResumeLayout(False)
+        CType(Me.DataGridObjectView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ObjectBoneViewPage.ResumeLayout(False)
+        CType(Me.DataGridObjectBoneView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MenuStripObjectView.ResumeLayout(False)
+        Me.MenuStripObjectView.PerformLayout()
         Me.AttireView.ResumeLayout(False)
         Me.AttireView.PerformLayout()
         CType(Me.DataGridAttireView, System.ComponentModel.ISupportInitialize).EndInit()
@@ -4046,12 +4643,24 @@ Partial Class MainForm
         CType(Me.DataGridAnimationView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStripAnimationView.ResumeLayout(False)
         Me.MenuStripAnimationView.PerformLayout()
-        Me.MenuStripPictureView.ResumeLayout(False)
-        Me.MenuStripPictureView.PerformLayout()
-        Me.TreeViewContext.ResumeLayout(False)
         Me.Pof0View.ResumeLayout(False)
         Me.Pof0View.PerformLayout()
         CType(Me.DataGridPof0View, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.WeaponPositionView.ResumeLayout(False)
+        Me.WeaponPositionView.PerformLayout()
+        CType(Me.DataGridWeaponPositionView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MenuStripWeapPos.ResumeLayout(False)
+        Me.MenuStripWeapPos.PerformLayout()
+        Me.MenuStripPictureView.ResumeLayout(False)
+        Me.MenuStripPictureView.PerformLayout()
+        Me.TreeViewContext.ResumeLayout(False)
+        Me.ObjectTextureViewPage.ResumeLayout(False)
+        Me.ObjectTestureSplitContainer.Panel1.ResumeLayout(False)
+        Me.ObjectTestureSplitContainer.Panel2.ResumeLayout(False)
+        CType(Me.ObjectTestureSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ObjectTestureSplitContainer.ResumeLayout(False)
+        CType(Me.DataGridObjectTextureView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridObjectShaderView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -4102,7 +4711,6 @@ Partial Class MainForm
     Friend WithEvents OpenRADVideoToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ObjectView As TabPage
     Friend WithEvents PictureView As TabPage
-    Friend WithEvents Label1 As Label
     Friend WithEvents PictureBox2 As PictureBox
     Friend WithEvents AttireView As TabPage
     Friend WithEvents DataGridAttireView As DataGridView
@@ -4504,6 +5112,17 @@ Partial Class MainForm
     Friend WithEvents Pof0View As TabPage
     Friend WithEvents DataGridPof0View As DataGridView
     Friend WithEvents MenuStripPof0View As MenuStrip
+    Friend WithEvents WeaponPositionView As TabPage
+    Friend WithEvents DataGridWeaponPositionView As DataGridView
+    Friend WithEvents MenuStripWeapPos As MenuStrip
+    Friend WithEvents WeaponPositionCount As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionByteArray As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionAdd As DataGridViewButtonColumn
+    Friend WithEvents WeaponPoitionDelete As DataGridViewButtonColumn
+    Friend WithEvents WeaponPositionTypeToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SaveChangesWeaponPositionsMenuItem As ToolStripMenuItem
+    Friend WithEvents DataGridObjectView As DataGridView
+    Friend WithEvents MenuStripObjectView As MenuStrip
     Friend WithEvents Pof0ByteCount As DataGridViewTextBoxColumn
     Friend WithEvents Pof0RawHex As DataGridViewTextBoxColumn
     Friend WithEvents Pof0TranslateDec As DataGridViewTextBoxColumn
@@ -4511,4 +5130,62 @@ Partial Class MainForm
     Friend WithEvents Pof0ActiveOffsetDec As DataGridViewTextBoxColumn
     Friend WithEvents Pof0ActiveOffsetHex As DataGridViewTextBoxColumn
     Friend WithEvents Pof0ReferenceData As DataGridViewTextBoxColumn
+    Friend WithEvents TabControl2 As TabControl
+    Friend WithEvents ObjectMainViewPage As TabPage
+    Friend WithEvents ObjectBoneViewPage As TabPage
+    Friend WithEvents LoadedObjectToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DataGridObjectBoneView As DataGridView
+    Friend WithEvents ObjectCountCol As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertexCount As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectRendered As DataGridViewCheckBoxColumn
+    Friend WithEvents ObjectHeaderFiller As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectWeightNumber As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectUnknownIntA As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVerHeaderCount As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVerticeOffset As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectWeightsOffset As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectUVOffset As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectNormalsOffset As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectInternalNum As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectHeaderShader As DataGridViewTextBoxColumn
+    Friend WithEvents UnknownC As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectMaterialIndex As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectParameterCount As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectParameterOffset As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectFaceOffset As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectUVCount As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectUnknownD As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectUnknownE As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectUnknownF As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectUnknownG As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectUnknownH As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectTextureViewPage As TabPage
+    Friend WithEvents ObjectTestureSplitContainer As SplitContainer
+    Friend WithEvents DataGridObjectTextureView As DataGridView
+    Friend WithEvents DataGridObjectShaderView As DataGridView
+    Friend WithEvents ObjectTextureCount As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectTextureCol As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectShaderCount As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectShaderCol As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectShaderType As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectShaderB As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneCountCol As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneOrder As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneName As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownA As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownB As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownC As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownD As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownE As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownF As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownG As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownH As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownI As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownJ As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownK As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownL As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownM As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownN As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownO As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectBoneUnknownP As DataGridViewTextBoxColumn
 End Class

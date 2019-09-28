@@ -20,6 +20,7 @@
     DDS
     ArenaInfo
     ShowInfo
+    FileRefBin
     NIBJ
     bk2
     CostumeFile
@@ -31,6 +32,7 @@
     VMUM
     TitleFile
     SoundReference
+    WeaponPosition
     LSD
     LSD_BIN
 
