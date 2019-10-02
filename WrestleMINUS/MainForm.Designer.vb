@@ -24,10 +24,10 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStripMainForm = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -52,7 +52,7 @@ Partial Class MainForm
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SupportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GitHubIssuesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.SplitFileMenuContainer = New System.Windows.Forms.SplitContainer()
         Me.TreeView1 = New System.Windows.Forms.TreeView()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
@@ -247,6 +247,23 @@ Partial Class MainForm
         Me.ObjectVertRY = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ObjectVertRZ = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ObjectVertUnknown = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertNormal1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertNormal2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertNormal3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MenuStripObjectVertexView = New System.Windows.Forms.MenuStrip()
+        Me.ShowNormalsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowWeightsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ObjectUVsViewPage = New System.Windows.Forms.TabPage()
+        Me.SplitObjectUVsContainer = New System.Windows.Forms.SplitContainer()
+        Me.DataGridObjectUVView = New System.Windows.Forms.DataGridView()
+        Me.ObjectUVCurrentCountCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUVColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectUVColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridObjectFacesView = New System.Windows.Forms.DataGridView()
+        Me.ObjectFaceCurrentCountCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectFaceVertex1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectFaceVertex2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectFaceVertex3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripObjectView = New System.Windows.Forms.MenuStrip()
         Me.LoadedObjectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ObjectEmoteListComboBox = New System.Windows.Forms.ToolStripComboBox()
@@ -560,11 +577,18 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectParamViewPage = New System.Windows.Forms.TabPage()
+        Me.DataGridObjectParamView = New System.Windows.Forms.DataGridView()
+        Me.ObjectParamCountCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectParamName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectParamInt1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectParamInt2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectParamSingle = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripMainForm.SuspendLayout()
-        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SplitContainer1.Panel1.SuspendLayout()
-        Me.SplitContainer1.Panel2.SuspendLayout()
-        Me.SplitContainer1.SuspendLayout()
+        CType(Me.SplitFileMenuContainer, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitFileMenuContainer.Panel1.SuspendLayout()
+        Me.SplitFileMenuContainer.Panel2.SuspendLayout()
+        Me.SplitFileMenuContainer.SuspendLayout()
         Me.MenuStripTreeView.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.HexView.SuspendLayout()
@@ -600,6 +624,14 @@ Partial Class MainForm
         CType(Me.DataGridObjectShaderView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ObjectVertexViewPage.SuspendLayout()
         CType(Me.DataGridObjectVertexView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MenuStripObjectVertexView.SuspendLayout()
+        Me.ObjectUVsViewPage.SuspendLayout()
+        CType(Me.SplitObjectUVsContainer, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitObjectUVsContainer.Panel1.SuspendLayout()
+        Me.SplitObjectUVsContainer.Panel2.SuspendLayout()
+        Me.SplitObjectUVsContainer.SuspendLayout()
+        CType(Me.DataGridObjectUVView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridObjectFacesView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripObjectView.SuspendLayout()
         Me.AttireView.SuspendLayout()
         CType(Me.DataGridAttireView, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -635,6 +667,8 @@ Partial Class MainForm
         Me.MenuStripWeapPos.SuspendLayout()
         Me.MenuStripPictureView.SuspendLayout()
         Me.TreeViewContext.SuspendLayout()
+        Me.ObjectParamViewPage.SuspendLayout()
+        CType(Me.DataGridObjectParamView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStripMainForm
@@ -800,24 +834,24 @@ Partial Class MainForm
         Me.GitHubIssuesToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
         Me.GitHubIssuesToolStripMenuItem.Text = "GitHub Issues"
         '
-        'SplitContainer1
+        'SplitFileMenuContainer
         '
-        Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 24)
-        Me.SplitContainer1.Name = "SplitContainer1"
+        Me.SplitFileMenuContainer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitFileMenuContainer.Location = New System.Drawing.Point(0, 24)
+        Me.SplitFileMenuContainer.Name = "SplitFileMenuContainer"
         '
-        'SplitContainer1.Panel1
+        'SplitFileMenuContainer.Panel1
         '
-        Me.SplitContainer1.Panel1.Controls.Add(Me.TreeView1)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.ProgressBar1)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.MenuStripTreeView)
+        Me.SplitFileMenuContainer.Panel1.Controls.Add(Me.TreeView1)
+        Me.SplitFileMenuContainer.Panel1.Controls.Add(Me.ProgressBar1)
+        Me.SplitFileMenuContainer.Panel1.Controls.Add(Me.MenuStripTreeView)
         '
-        'SplitContainer1.Panel2
+        'SplitFileMenuContainer.Panel2
         '
-        Me.SplitContainer1.Panel2.Controls.Add(Me.TabControl1)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1484, 437)
-        Me.SplitContainer1.SplitterDistance = 253
-        Me.SplitContainer1.TabIndex = 1
+        Me.SplitFileMenuContainer.Panel2.Controls.Add(Me.TabControl1)
+        Me.SplitFileMenuContainer.Size = New System.Drawing.Size(1484, 437)
+        Me.SplitFileMenuContainer.SplitterDistance = 253
+        Me.SplitFileMenuContainer.TabIndex = 1
         '
         'TreeView1
         '
@@ -1886,6 +1920,8 @@ Partial Class MainForm
         Me.TabControl2.Controls.Add(Me.ObjectBoneViewPage)
         Me.TabControl2.Controls.Add(Me.ObjectTextureViewPage)
         Me.TabControl2.Controls.Add(Me.ObjectVertexViewPage)
+        Me.TabControl2.Controls.Add(Me.ObjectUVsViewPage)
+        Me.TabControl2.Controls.Add(Me.ObjectParamViewPage)
         Me.TabControl2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl2.Location = New System.Drawing.Point(3, 30)
         Me.TabControl2.Name = "TabControl2"
@@ -2305,6 +2341,7 @@ Partial Class MainForm
         'ObjectVertexViewPage
         '
         Me.ObjectVertexViewPage.Controls.Add(Me.DataGridObjectVertexView)
+        Me.ObjectVertexViewPage.Controls.Add(Me.MenuStripObjectVertexView)
         Me.ObjectVertexViewPage.Location = New System.Drawing.Point(4, 22)
         Me.ObjectVertexViewPage.Name = "ObjectVertexViewPage"
         Me.ObjectVertexViewPage.Padding = New System.Windows.Forms.Padding(3)
@@ -2319,12 +2356,12 @@ Partial Class MainForm
         Me.DataGridObjectVertexView.AllowUserToDeleteRows = False
         Me.DataGridObjectVertexView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.DataGridObjectVertexView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridObjectVertexView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectVertCountCol, Me.ObjectVertX, Me.ObjectVertY, Me.ObjectVertZ, Me.ObjectVertRX, Me.ObjectVertRY, Me.ObjectVertRZ, Me.ObjectVertUnknown})
+        Me.DataGridObjectVertexView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectVertCountCol, Me.ObjectVertX, Me.ObjectVertY, Me.ObjectVertZ, Me.ObjectVertRX, Me.ObjectVertRY, Me.ObjectVertRZ, Me.ObjectVertUnknown, Me.ObjectVertNormal1, Me.ObjectVertNormal2, Me.ObjectVertNormal3})
         Me.DataGridObjectVertexView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridObjectVertexView.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridObjectVertexView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridObjectVertexView.Name = "DataGridObjectVertexView"
         Me.DataGridObjectVertexView.RowHeadersVisible = False
-        Me.DataGridObjectVertexView.Size = New System.Drawing.Size(1199, 346)
+        Me.DataGridObjectVertexView.Size = New System.Drawing.Size(1199, 322)
         Me.DataGridObjectVertexView.TabIndex = 0
         '
         'ObjectVertCountCol
@@ -2368,6 +2405,140 @@ Partial Class MainForm
         Me.ObjectVertUnknown.HeaderText = "Unknown"
         Me.ObjectVertUnknown.Name = "ObjectVertUnknown"
         Me.ObjectVertUnknown.ReadOnly = True
+        '
+        'ObjectVertNormal1
+        '
+        Me.ObjectVertNormal1.HeaderText = "Normal 1"
+        Me.ObjectVertNormal1.Name = "ObjectVertNormal1"
+        '
+        'ObjectVertNormal2
+        '
+        Me.ObjectVertNormal2.HeaderText = "Normal 2"
+        Me.ObjectVertNormal2.Name = "ObjectVertNormal2"
+        '
+        'ObjectVertNormal3
+        '
+        Me.ObjectVertNormal3.HeaderText = "Normal 3"
+        Me.ObjectVertNormal3.Name = "ObjectVertNormal3"
+        '
+        'MenuStripObjectVertexView
+        '
+        Me.MenuStripObjectVertexView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ShowNormalsToolStripMenuItem, Me.ShowWeightsToolStripMenuItem})
+        Me.MenuStripObjectVertexView.Location = New System.Drawing.Point(3, 3)
+        Me.MenuStripObjectVertexView.Name = "MenuStripObjectVertexView"
+        Me.MenuStripObjectVertexView.Size = New System.Drawing.Size(1199, 24)
+        Me.MenuStripObjectVertexView.TabIndex = 1
+        Me.MenuStripObjectVertexView.Text = "MenuStrip1"
+        '
+        'ShowNormalsToolStripMenuItem
+        '
+        Me.ShowNormalsToolStripMenuItem.Name = "ShowNormalsToolStripMenuItem"
+        Me.ShowNormalsToolStripMenuItem.Size = New System.Drawing.Size(111, 20)
+        Me.ShowNormalsToolStripMenuItem.Text = "☑ Show Normals"
+        '
+        'ShowWeightsToolStripMenuItem
+        '
+        Me.ShowWeightsToolStripMenuItem.Name = "ShowWeightsToolStripMenuItem"
+        Me.ShowWeightsToolStripMenuItem.Size = New System.Drawing.Size(109, 20)
+        Me.ShowWeightsToolStripMenuItem.Text = "☑ Show Weights"
+        '
+        'ObjectUVsViewPage
+        '
+        Me.ObjectUVsViewPage.Controls.Add(Me.SplitObjectUVsContainer)
+        Me.ObjectUVsViewPage.Location = New System.Drawing.Point(4, 22)
+        Me.ObjectUVsViewPage.Name = "ObjectUVsViewPage"
+        Me.ObjectUVsViewPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.ObjectUVsViewPage.Size = New System.Drawing.Size(1205, 352)
+        Me.ObjectUVsViewPage.TabIndex = 4
+        Me.ObjectUVsViewPage.Text = "UVs & Faces"
+        Me.ObjectUVsViewPage.UseVisualStyleBackColor = True
+        '
+        'SplitObjectUVsContainer
+        '
+        Me.SplitObjectUVsContainer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitObjectUVsContainer.Location = New System.Drawing.Point(3, 3)
+        Me.SplitObjectUVsContainer.Name = "SplitObjectUVsContainer"
+        '
+        'SplitObjectUVsContainer.Panel1
+        '
+        Me.SplitObjectUVsContainer.Panel1.Controls.Add(Me.DataGridObjectUVView)
+        '
+        'SplitObjectUVsContainer.Panel2
+        '
+        Me.SplitObjectUVsContainer.Panel2.Controls.Add(Me.DataGridObjectFacesView)
+        Me.SplitObjectUVsContainer.Size = New System.Drawing.Size(1199, 346)
+        Me.SplitObjectUVsContainer.SplitterDistance = 399
+        Me.SplitObjectUVsContainer.TabIndex = 1
+        '
+        'DataGridObjectUVView
+        '
+        Me.DataGridObjectUVView.AllowUserToAddRows = False
+        Me.DataGridObjectUVView.AllowUserToDeleteRows = False
+        Me.DataGridObjectUVView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridObjectUVView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridObjectUVView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectUVCurrentCountCol, Me.ObjectUVColumn1, Me.ObjectUVColumn2})
+        Me.DataGridObjectUVView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridObjectUVView.Location = New System.Drawing.Point(0, 0)
+        Me.DataGridObjectUVView.Name = "DataGridObjectUVView"
+        Me.DataGridObjectUVView.RowHeadersVisible = False
+        Me.DataGridObjectUVView.Size = New System.Drawing.Size(399, 346)
+        Me.DataGridObjectUVView.TabIndex = 0
+        '
+        'ObjectUVCurrentCountCol
+        '
+        Me.ObjectUVCurrentCountCol.FillWeight = 50.0!
+        Me.ObjectUVCurrentCountCol.HeaderText = "UV #"
+        Me.ObjectUVCurrentCountCol.Name = "ObjectUVCurrentCountCol"
+        Me.ObjectUVCurrentCountCol.ReadOnly = True
+        '
+        'ObjectUVColumn1
+        '
+        Me.ObjectUVColumn1.HeaderText = "Num 1"
+        Me.ObjectUVColumn1.Name = "ObjectUVColumn1"
+        '
+        'ObjectUVColumn2
+        '
+        Me.ObjectUVColumn2.HeaderText = "Num 2"
+        Me.ObjectUVColumn2.Name = "ObjectUVColumn2"
+        '
+        'DataGridObjectFacesView
+        '
+        Me.DataGridObjectFacesView.AllowUserToAddRows = False
+        Me.DataGridObjectFacesView.AllowUserToDeleteRows = False
+        Me.DataGridObjectFacesView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridObjectFacesView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridObjectFacesView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectFaceCurrentCountCol, Me.ObjectFaceVertex1, Me.ObjectFaceVertex2, Me.ObjectFaceVertex3})
+        Me.DataGridObjectFacesView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridObjectFacesView.Location = New System.Drawing.Point(0, 0)
+        Me.DataGridObjectFacesView.Name = "DataGridObjectFacesView"
+        Me.DataGridObjectFacesView.RowHeadersVisible = False
+        Me.DataGridObjectFacesView.Size = New System.Drawing.Size(796, 346)
+        Me.DataGridObjectFacesView.TabIndex = 0
+        '
+        'ObjectFaceCurrentCountCol
+        '
+        Me.ObjectFaceCurrentCountCol.FillWeight = 50.0!
+        Me.ObjectFaceCurrentCountCol.HeaderText = "Face #"
+        Me.ObjectFaceCurrentCountCol.Name = "ObjectFaceCurrentCountCol"
+        Me.ObjectFaceCurrentCountCol.ReadOnly = True
+        '
+        'ObjectFaceVertex1
+        '
+        Me.ObjectFaceVertex1.HeaderText = "Vert 1"
+        Me.ObjectFaceVertex1.Name = "ObjectFaceVertex1"
+        Me.ObjectFaceVertex1.ReadOnly = True
+        '
+        'ObjectFaceVertex2
+        '
+        Me.ObjectFaceVertex2.HeaderText = "Vert 2"
+        Me.ObjectFaceVertex2.Name = "ObjectFaceVertex2"
+        Me.ObjectFaceVertex2.ReadOnly = True
+        '
+        'ObjectFaceVertex3
+        '
+        Me.ObjectFaceVertex3.HeaderText = "Vert 3"
+        Me.ObjectFaceVertex3.Name = "ObjectFaceVertex3"
+        Me.ObjectFaceVertex3.ReadOnly = True
         '
         'MenuStripObjectView
         '
@@ -3019,9 +3190,9 @@ Partial Class MainForm
         '
         'YobjArryIndex
         '
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle9
         Me.YobjArryIndex.HeaderText = "Index"
         Me.YobjArryIndex.Name = "YobjArryIndex"
         Me.YobjArryIndex.ReadOnly = True
@@ -3029,9 +3200,9 @@ Partial Class MainForm
         '
         'ObjArrayParent
         '
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle10
         Me.ObjArrayParent.HeaderText = "Parent"
         Me.ObjArrayParent.MinimumWidth = 100
         Me.ObjArrayParent.Name = "ObjArrayParent"
@@ -3102,9 +3273,9 @@ Partial Class MainForm
         '
         'ContainedYobjArray
         '
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle11
         Me.ContainedYobjArray.HeaderText = "Objects"
         Me.ContainedYobjArray.Name = "ContainedYobjArray"
         Me.ContainedYobjArray.ReadOnly = True
@@ -3112,9 +3283,9 @@ Partial Class MainForm
         '
         'StartIndexYobjArray
         '
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle12
         Me.StartIndexYobjArray.HeaderText = "Start Index"
         Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
         Me.StartIndexYobjArray.ReadOnly = True
@@ -4624,13 +4795,64 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn35.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn35.Width = 41
         '
+        'ObjectParamViewPage
+        '
+        Me.ObjectParamViewPage.Controls.Add(Me.DataGridObjectParamView)
+        Me.ObjectParamViewPage.Location = New System.Drawing.Point(4, 22)
+        Me.ObjectParamViewPage.Name = "ObjectParamViewPage"
+        Me.ObjectParamViewPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.ObjectParamViewPage.Size = New System.Drawing.Size(1205, 352)
+        Me.ObjectParamViewPage.TabIndex = 5
+        Me.ObjectParamViewPage.Text = "Parameters"
+        Me.ObjectParamViewPage.UseVisualStyleBackColor = True
+        '
+        'DataGridObjectParamView
+        '
+        Me.DataGridObjectParamView.AllowUserToAddRows = False
+        Me.DataGridObjectParamView.AllowUserToDeleteRows = False
+        Me.DataGridObjectParamView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridObjectParamView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridObjectParamView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectParamCountCol, Me.ObjectParamName, Me.ObjectParamInt1, Me.ObjectParamInt2, Me.ObjectParamSingle})
+        Me.DataGridObjectParamView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridObjectParamView.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridObjectParamView.Name = "DataGridObjectParamView"
+        Me.DataGridObjectParamView.RowHeadersVisible = False
+        Me.DataGridObjectParamView.Size = New System.Drawing.Size(1199, 346)
+        Me.DataGridObjectParamView.TabIndex = 0
+        '
+        'ObjectParamCountCol
+        '
+        Me.ObjectParamCountCol.HeaderText = "Param #"
+        Me.ObjectParamCountCol.Name = "ObjectParamCountCol"
+        Me.ObjectParamCountCol.ReadOnly = True
+        '
+        'ObjectParamName
+        '
+        Me.ObjectParamName.HeaderText = "Name"
+        Me.ObjectParamName.Name = "ObjectParamName"
+        '
+        'ObjectParamInt1
+        '
+        Me.ObjectParamInt1.HeaderText = "Int 1"
+        Me.ObjectParamInt1.Name = "ObjectParamInt1"
+        '
+        'ObjectParamInt2
+        '
+        Me.ObjectParamInt2.HeaderText = "Int 2"
+        Me.ObjectParamInt2.Name = "ObjectParamInt2"
+        '
+        'ObjectParamSingle
+        '
+        Me.ObjectParamSingle.HeaderText = "Percent?"
+        Me.ObjectParamSingle.Name = "ObjectParamSingle"
+        '
         'MainForm
         '
         Me.AllowDrop = True
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1484, 461)
-        Me.Controls.Add(Me.SplitContainer1)
+        Me.Controls.Add(Me.SplitFileMenuContainer)
         Me.Controls.Add(Me.MenuStripMainForm)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStripMainForm
@@ -4638,11 +4860,11 @@ Partial Class MainForm
         Me.Text = "WrestleMINUS"
         Me.MenuStripMainForm.ResumeLayout(False)
         Me.MenuStripMainForm.PerformLayout()
-        Me.SplitContainer1.Panel1.ResumeLayout(False)
-        Me.SplitContainer1.Panel1.PerformLayout()
-        Me.SplitContainer1.Panel2.ResumeLayout(False)
-        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.SplitContainer1.ResumeLayout(False)
+        Me.SplitFileMenuContainer.Panel1.ResumeLayout(False)
+        Me.SplitFileMenuContainer.Panel1.PerformLayout()
+        Me.SplitFileMenuContainer.Panel2.ResumeLayout(False)
+        CType(Me.SplitFileMenuContainer, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitFileMenuContainer.ResumeLayout(False)
         Me.MenuStripTreeView.ResumeLayout(False)
         Me.MenuStripTreeView.PerformLayout()
         Me.TabControl1.ResumeLayout(False)
@@ -4691,7 +4913,17 @@ Partial Class MainForm
         CType(Me.DataGridObjectTextureView, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DataGridObjectShaderView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ObjectVertexViewPage.ResumeLayout(False)
+        Me.ObjectVertexViewPage.PerformLayout()
         CType(Me.DataGridObjectVertexView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MenuStripObjectVertexView.ResumeLayout(False)
+        Me.MenuStripObjectVertexView.PerformLayout()
+        Me.ObjectUVsViewPage.ResumeLayout(False)
+        Me.SplitObjectUVsContainer.Panel1.ResumeLayout(False)
+        Me.SplitObjectUVsContainer.Panel2.ResumeLayout(False)
+        CType(Me.SplitObjectUVsContainer, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitObjectUVsContainer.ResumeLayout(False)
+        CType(Me.DataGridObjectUVView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridObjectFacesView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStripObjectView.ResumeLayout(False)
         Me.MenuStripObjectView.PerformLayout()
         Me.AttireView.ResumeLayout(False)
@@ -4750,6 +4982,8 @@ Partial Class MainForm
         Me.MenuStripPictureView.ResumeLayout(False)
         Me.MenuStripPictureView.PerformLayout()
         Me.TreeViewContext.ResumeLayout(False)
+        Me.ObjectParamViewPage.ResumeLayout(False)
+        CType(Me.DataGridObjectParamView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -4762,7 +4996,7 @@ Partial Class MainForm
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AboutToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents SplitContainer1 As SplitContainer
+    Friend WithEvents SplitFileMenuContainer As SplitContainer
     Friend WithEvents TreeView1 As TreeView
     Friend WithEvents MenuStripTreeView As MenuStrip
     Friend WithEvents TabControl1 As TabControl
@@ -5281,6 +5515,19 @@ Partial Class MainForm
     Friend WithEvents DataGridObjectVertexView As DataGridView
     Friend WithEvents UnknownValue As DataGridViewTextBoxColumn
     Friend WithEvents ObjectEmoteListComboBox As ToolStripComboBox
+    Friend WithEvents MenuStripObjectVertexView As MenuStrip
+    Friend WithEvents ShowWeightsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ObjectUVsViewPage As TabPage
+    Friend WithEvents DataGridObjectUVView As DataGridView
+    Friend WithEvents SplitObjectUVsContainer As SplitContainer
+    Friend WithEvents DataGridObjectFacesView As DataGridView
+    Friend WithEvents ObjectUVCurrentCountCol As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectUVColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectUVColumn2 As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectFaceCurrentCountCol As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectFaceVertex1 As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectFaceVertex2 As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectFaceVertex3 As DataGridViewTextBoxColumn
     Friend WithEvents ObjectVertCountCol As DataGridViewTextBoxColumn
     Friend WithEvents ObjectVertX As DataGridViewTextBoxColumn
     Friend WithEvents ObjectVertY As DataGridViewTextBoxColumn
@@ -5289,4 +5536,15 @@ Partial Class MainForm
     Friend WithEvents ObjectVertRY As DataGridViewTextBoxColumn
     Friend WithEvents ObjectVertRZ As DataGridViewTextBoxColumn
     Friend WithEvents ObjectVertUnknown As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertNormal1 As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertNormal2 As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertNormal3 As DataGridViewTextBoxColumn
+    Friend WithEvents ShowNormalsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ObjectParamViewPage As TabPage
+    Friend WithEvents DataGridObjectParamView As DataGridView
+    Friend WithEvents ObjectParamCountCol As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectParamName As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectParamInt1 As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectParamInt2 As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectParamSingle As DataGridViewTextBoxColumn
 End Class

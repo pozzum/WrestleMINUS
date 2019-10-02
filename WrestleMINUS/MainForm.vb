@@ -204,7 +204,7 @@ Public Class MainForm
 
     Sub ApplyFormSettings()
         MyBase.Size = My.Settings.SavedFormSize
-        SplitContainer1.SplitterDistance = My.Settings.SavedSplitterDistance
+        SplitFileMenuContainer.SplitterDistance = My.Settings.SavedSplitterDistance
         HexViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         TextViewBitWidth.SelectedIndex = My.Settings.BitWidthIndex
         MiscViewType.SelectedIndex = My.Settings.MiscModeIndex
@@ -238,10 +238,10 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub SplitContainer1_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles SplitContainer1.SplitterMoved
-        CurrentViewToolStripMenuItem.Width = SplitContainer1.SplitterDistance - 10
-        If Not SplitContainer1.SplitterDistance = 253 Then
-            My.Settings.SavedSplitterDistance = SplitContainer1.SplitterDistance
+    Private Sub SplitContainer1_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles SplitFileMenuContainer.SplitterMoved
+        CurrentViewToolStripMenuItem.Width = SplitFileMenuContainer.SplitterDistance - 10
+        If Not SplitFileMenuContainer.SplitterDistance = 253 Then
+            My.Settings.SavedSplitterDistance = SplitFileMenuContainer.SplitterDistance
         End If
     End Sub
 
@@ -2362,9 +2362,31 @@ Public Class MainForm
         FillObjectTextureView()
         FillObjectShaderView()
         FillObjectEmoteComboBox()
-        SelectedObjHeader = DataGridObjectView.Rows(0).Tag
-        FillSubObjectViews()
+        FillSubObjectViews(DataGridObjectView.Rows(0).Tag)
     End Sub
+    'CompleteYobjBytes Header
+    '0x0 JBOY / YOBJ
+    '0x4 Offset to Pof0 (Yobj Size)
+    '0x8 &H10
+    '0xC Length of Yobj Size
+    '0x10 Note 07 or 03?
+    '0x14 Filler?
+    '0x18 SubItemCount
+    '0x1C HeaderStartOffset
+    '0x20 BoneCount
+    '0x24 TextureCount
+    '0x28 BonesStartOffset
+    '0x2C TextureStartOffset
+    '0x30 ShaderStartOffset
+    '0x34 ShaderCount
+    '0x38 Filler? 00
+    '0x3C Filler? 00
+    '0x40 Filler? 00
+    '0x44 Filler? 00
+    '0x48 EmoteNameCount
+    '0x4C EmoteNameStartOffset
+    '0x50 BoneStructureCount
+    '0x54 BoneStructureStartOffset
 
 #Region "Header Read"
 
@@ -2390,7 +2412,7 @@ Public Class MainForm
         Public MaterialIndex As UInt32 = 0
         Public CountParameter As UInt32 = 0
         Public OffsetParameter As UInt32 = 0
-        Public OffsetDraw As UInt32 = 0
+        Public OffsetFaces As UInt32 = 0
         Public CountUV As UInt32 = 0
         Public UnknownD As UInt32 = 0
         Public UnknownE As UInt32 = 0
@@ -2436,7 +2458,7 @@ Public Class MainForm
             TempGridRow.Cells(14).Value = TempObjectHeaderInformation.MaterialIndex
             TempGridRow.Cells(15).Value = TempObjectHeaderInformation.CountParameter
             TempGridRow.Cells(16).Value = Hex(TempObjectHeaderInformation.OffsetParameter)
-            TempGridRow.Cells(17).Value = Hex(TempObjectHeaderInformation.OffsetDraw)
+            TempGridRow.Cells(17).Value = Hex(TempObjectHeaderInformation.OffsetFaces)
             TempGridRow.Cells(18).Value = TempObjectHeaderInformation.CountUV
             TempGridRow.Cells(19).Value = TempObjectHeaderInformation.UnknownD
             TempGridRow.Cells(20).Value = TempObjectHeaderInformation.UnknownE
@@ -2474,7 +2496,7 @@ Public Class MainForm
            .MaterialIndex = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H90, 4), 0),
            .CountParameter = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H94, 4), 0),
            .OffsetParameter = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H98, 4), 0),
-           .OffsetDraw = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H9C, 4), 0),
+           .OffsetFaces = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H9C, 4), 0),
            .CountUV = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HA0, 4), 0),
            .UnknownD = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HA4, 4), 0),
            .UnknownE = BitConverter.ToUInt32(TestedByteArray, &HA8),
@@ -2640,16 +2662,18 @@ Public Class MainForm
     Sub FillObjectEmoteComboBox()
         Dim EmoteNameCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H48, 4), 0)
         Dim EmoteNameStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H4C, 4), 0) + 8
-        Dim EmoteList As List(Of String) = New List(Of String)
-        EmoteList.Add("Neutral")
-        ProgressBar1.Maximum = EmoteNameCount - 1
-        ProgressBar1.Value = 0
-        For i As Integer = 0 To EmoteNameCount - 1
-            EmoteList.Add(Encoding.Default.GetString(CompleteYobjBytes, EmoteNameStartOffset + i * &H10, &H10).TrimEnd(Chr(0)))
-        Next
         ObjectEmoteListComboBox.Items.Clear()
-        ObjectEmoteListComboBox.Items.AddRange(EmoteList.ToArray())
-        ObjectEmoteListComboBox.SelectedIndex = 0
+        If EmoteNameCount > 0 Then
+            Dim EmoteList As List(Of String) = New List(Of String)
+            EmoteList.Add("Neutral")
+            ProgressBar1.Maximum = EmoteNameCount - 1
+            ProgressBar1.Value = 0
+            For i As Integer = 0 To EmoteNameCount - 1
+                EmoteList.Add(Encoding.Default.GetString(CompleteYobjBytes, EmoteNameStartOffset + i * &H10, &H10).TrimEnd(Chr(0)))
+            Next
+            ObjectEmoteListComboBox.Items.AddRange(EmoteList.ToArray())
+            ObjectEmoteListComboBox.SelectedIndex = 0
+        End If
     End Sub
 
     Private Sub ObjectEmoteListComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ObjectEmoteListComboBox.SelectedIndexChanged
@@ -2665,15 +2689,32 @@ Public Class MainForm
 
 #Region "Individual Object"
 
-    Sub FillSubObjectViews()
-        'Vertex 'weights # per vert
-        '16 byte per UV?
+    Sub FillSubObjectViews(SelectedObject As ObjectHeaderInformation)
+        SelectedObjHeader = SelectedObject
         LoadedObjectToolStripMenuItem.Text = "Loaded Object: " & SelectedObjHeader.IndexCount
         FillVertexView()
+        FillWeightsColumns()
+        FillNormalColumns()
+        GetVertexViewDisplayedColumns()
+        FillUVsView()
+        FillFacesView()
+        FillParamsView()
     End Sub
 #End Region
 
-#Region "Vertex Info"
+#Region "Vertex View Info"
+#Region "Main Vertex Data"
+    Public Class ObjectVertex
+        Public IndexCount As UInt32 = 0
+        Public X As Single = 0
+        Public Y As Single = 0
+        Public Z As Single = 0
+        Public RX As Single = 0
+        Public RY As Single = 0
+        Public RZ As Single = 0
+        Public UnknownFooter As Single = 0
+    End Class
+
     Sub FillVertexView()
         'Vertices
         Dim ClonedVertexRow As DataGridViewRow = ClearandGetClone(DataGridObjectVertexView)
@@ -2690,7 +2731,7 @@ Public Class MainForm
             Dim TempObjectVertexBytes As Byte() = New Byte(&H1C - 1) {}
             Array.Copy(CompleteYobjBytes, FirstObjectIndex + i * &H1C, TempObjectVertexBytes, 0, &H1C)
             Dim TempObjectVertex As ObjectVertex = ParseBytestoObjectObjectVertex(TempObjectVertexBytes)
-            TempObjectVertex.IndexCount = i
+            TempObjectVertex.IndexCount = i + 1
             Dim TempVertexGridRow As DataGridViewRow = ClonedVertexRow.Clone()
             TempVertexGridRow.Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertCountCol)).Value = TempObjectVertex.IndexCount
             TempVertexGridRow.Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertCountCol)).Style = ReadOnlyCellStyle
@@ -2709,18 +2750,6 @@ Public Class MainForm
         DataGridObjectVertexView.Rows.AddRange(WorkingVertexCollection.ToArray())
     End Sub
 
-
-    Public Class ObjectVertex
-        Public IndexCount As UInt32 = 0
-        Public X As Single = 0
-        Public Y As Single = 0
-        Public Z As Single = 0
-        Public RX As Single = 0
-        Public RY As Single = 0
-        Public RZ As Single = 0
-        Public UnknownFooter As Single = 0
-    End Class
-
     Function ParseBytestoObjectObjectVertex(TestedByteArray As Byte()) As ObjectVertex
         Dim ReturnedVertexInfo As ObjectVertex = New ObjectVertex With {
             .X = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, 0, 4), 0),
@@ -2733,6 +2762,162 @@ Public Class MainForm
         Return ReturnedVertexInfo
     End Function
 
+#End Region
+
+#Region "Weights Info"
+
+    Sub FillWeightsColumns()
+        'For the weights I want to try adding columns at the end of the vertex data grid
+        For i As Integer = 0 To SelectedObjHeader.WeightCount - 1
+            DataGridObjectVertexView.Columns.Add("VertWeightNum" & i, "Weight Num " & i)
+            DataGridObjectVertexView.Columns.Add("VertWeightSingle" & i, "Weight Single " & i)
+        Next
+
+        ProgressBar1.Maximum = SelectedObjHeader.VertCount - 1
+        ProgressBar1.Value = 0
+        Dim StartingColumnNumber As Integer = DataGridObjectVertexView.Columns.IndexOf(ObjectVertNormal3)
+        For iCurrentVert As Integer = 0 To SelectedObjHeader.VertCount - 1
+            For jCurrentWeight As Integer = 0 To SelectedObjHeader.WeightCount - 1
+                Dim StartingOffset As UInt32 = SelectedObjHeader.OffsetWeight + 8 + (iCurrentVert * 8 * SelectedObjHeader.WeightCount) + (jCurrentWeight * 8)
+                DataGridObjectVertexView.Rows(iCurrentVert).Cells(StartingColumnNumber + 1 + jCurrentWeight * 2).Value =
+                    BitConverter.ToUInt32(CompleteYobjBytes, StartingOffset)
+                DataGridObjectVertexView.Rows(iCurrentVert).Cells(StartingColumnNumber + 2 + jCurrentWeight * 2).Value =
+                    BitConverter.ToSingle(GeneralTools.EndianReverse(CompleteYobjBytes, StartingOffset + 4, 4), 0)
+            Next
+            ProgressBar1.Value = iCurrentVert
+        Next
+
+        '8 weights # per vert
+
+    End Sub
+
+
+
+    Private Sub ShowWeightsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowWeightsToolStripMenuItem.Click
+        If ShowWeightsToolStripMenuItem.Text.Contains("☑") Then
+            ShowWeightsToolStripMenuItem.Text = "☐ Show Weights"
+        ElseIf ShowWeightsToolStripMenuItem.Text.Contains("☐") Then
+            '☐
+            ShowWeightsToolStripMenuItem.Text = "☑ Show Weights"
+        End If
+        GetVertexViewDisplayedColumns()
+    End Sub
+
+#End Region
+
+#Region "Normals Columns"
+
+    Private Sub FillNormalColumns()
+        ProgressBar1.Maximum = SelectedObjHeader.VertCount - 1
+        ProgressBar1.Value = 0
+        For iCurrentVert As Integer = 0 To SelectedObjHeader.VertCount - 1
+            DataGridObjectVertexView.Rows(iCurrentVert).Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertNormal1)).Value =
+                    BitConverter.ToSingle(GeneralTools.EndianReverse(CompleteYobjBytes, SelectedObjHeader.OffsetNormals + 8 + iCurrentVert * &HC, 4), 0)
+            DataGridObjectVertexView.Rows(iCurrentVert).Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertNormal2)).Value =
+                    BitConverter.ToSingle(GeneralTools.EndianReverse(CompleteYobjBytes, SelectedObjHeader.OffsetNormals + 8 + iCurrentVert * &HC + 4, 4), 0)
+            DataGridObjectVertexView.Rows(iCurrentVert).Cells(DataGridObjectVertexView.Columns.IndexOf(ObjectVertNormal3)).Value =
+                    BitConverter.ToSingle(GeneralTools.EndianReverse(CompleteYobjBytes, SelectedObjHeader.OffsetNormals + 8 + iCurrentVert * &HC + 8, 4), 0)
+            ProgressBar1.Value = iCurrentVert
+        Next
+    End Sub
+
+    Private Sub ShowNormalsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowNormalsToolStripMenuItem.Click
+        If ShowNormalsToolStripMenuItem.Text.Contains("☑") Then
+            ShowNormalsToolStripMenuItem.Text = "☐ Show Normals"
+        ElseIf ShowNormalsToolStripMenuItem.Text.Contains("☐") Then
+            '☐
+            ShowNormalsToolStripMenuItem.Text = "☑ Show Normals"
+        End If
+        GetVertexViewDisplayedColumns()
+    End Sub
+#End Region
+
+    Sub GetVertexViewDisplayedColumns()
+        For i As Integer = 0 To DataGridObjectVertexView.Columns.GetColumnCount(DataGridViewElementStates.None) - 1
+            DataGridObjectVertexView.Columns(i).Visible = True
+        Next
+        If ShowWeightsToolStripMenuItem.Text.Contains("☑") Then
+        Else
+            For i As Integer = DataGridObjectVertexView.Columns.IndexOf(ObjectVertNormal3) + 1 To DataGridObjectVertexView.Columns.Count - 1
+                DataGridObjectVertexView.Columns(i).Visible = False
+            Next
+        End If
+        If ShowNormalsToolStripMenuItem.Text.Contains("☑") Then
+        Else
+            ObjectVertNormal1.Visible = False
+            ObjectVertNormal2.Visible = False
+            ObjectVertNormal3.Visible = False
+        End If
+    End Sub
+#End Region
+
+#Region "UV View"
+
+    Sub FillUVsView()
+        Dim ClonedRow As DataGridViewRow = ClearandGetClone(DataGridObjectUVView)
+        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = SelectedObjHeader.CountUV - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To SelectedObjHeader.CountUV - 1
+            Dim TempGridRow As DataGridViewRow = ClonedRow.Clone()
+            TempGridRow.Cells(DataGridObjectUVView.Columns.IndexOf(ObjectUVCurrentCountCol)).Value = i
+            TempGridRow.Cells(DataGridObjectUVView.Columns.IndexOf(ObjectUVCurrentCountCol)).Style = ReadOnlyCellStyle
+            TempGridRow.Cells(DataGridObjectUVView.Columns.IndexOf(ObjectUVColumn1)).Value = BitConverter.ToSingle(GeneralTools.EndianReverse(CompleteYobjBytes, SelectedObjHeader.OffsetUV + 8 + i * 8, 4), 0)
+            TempGridRow.Cells(DataGridObjectUVView.Columns.IndexOf(ObjectUVColumn2)).Value = BitConverter.ToSingle(GeneralTools.EndianReverse(CompleteYobjBytes, SelectedObjHeader.OffsetUV + 8 + 4 + i * 8, 4), 0)
+            WorkingCollection.Add(TempGridRow)
+            ProgressBar1.Value = i
+        Next
+        DataGridObjectUVView.Rows.AddRange(WorkingCollection.ToArray())
+    End Sub
+
+#End Region
+
+#Region "Faces View"
+
+    Sub FillFacesView()
+        'DataGridObjectFacesView
+        Dim ClonedRow As DataGridViewRow = ClearandGetClone(DataGridObjectFacesView)
+        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        Dim PossibleFaceCount As Int32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, SelectedObjHeader.OffsetFaces + 8 + 4, 4), 0)
+        ' MessageBox.Show(Hex(PossibleFaceCount))
+        ProgressBar1.Maximum = PossibleFaceCount - 3
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To PossibleFaceCount - 3
+            Dim TempGridRow As DataGridViewRow = ClonedRow.Clone()
+            TempGridRow.Cells(DataGridObjectFacesView.Columns.IndexOf(ObjectFaceCurrentCountCol)).Value = i
+            TempGridRow.Cells(DataGridObjectFacesView.Columns.IndexOf(ObjectFaceCurrentCountCol)).Style = ReadOnlyCellStyle
+            TempGridRow.Cells(DataGridObjectFacesView.Columns.IndexOf(ObjectFaceVertex1)).Value = BitConverter.ToUInt16(GeneralTools.EndianReverse(CompleteYobjBytes, SelectedObjHeader.OffsetFaces + 8 + 12 + i * 2, 2), 0) + 1
+            TempGridRow.Cells(DataGridObjectFacesView.Columns.IndexOf(ObjectFaceVertex2)).Value = BitConverter.ToUInt16(GeneralTools.EndianReverse(CompleteYobjBytes, SelectedObjHeader.OffsetFaces + 8 + 12 + i * 2 + 2, 2), 0) + 1
+            TempGridRow.Cells(DataGridObjectFacesView.Columns.IndexOf(ObjectFaceVertex3)).Value = BitConverter.ToUInt16(GeneralTools.EndianReverse(CompleteYobjBytes, SelectedObjHeader.OffsetFaces + 8 + 12 + i * 2 + 4, 2), 0) + 1
+            WorkingCollection.Add(TempGridRow)
+            ProgressBar1.Value = i
+        Next
+        DataGridObjectFacesView.Rows.AddRange(WorkingCollection.ToArray())
+    End Sub
+
+#End Region
+#Region "Parameters View"
+
+    Sub FillParamsView()
+        'DataGridObjectFacesView
+        Dim ClonedRow As DataGridViewRow = ClearandGetClone(DataGridObjectParamView)
+        Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
+        ProgressBar1.Maximum = SelectedObjHeader.CountParameter - 1
+        ProgressBar1.Value = 0
+        For i As Integer = 0 To SelectedObjHeader.CountParameter - 1
+            Dim CurrentParamOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, SelectedObjHeader.OffsetParameter + 8 + i * 4, 4), 0)
+            Dim TempGridRow As DataGridViewRow = ClonedRow.Clone()
+            TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamCountCol)).Value = i
+            TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamCountCol)).Style = ReadOnlyCellStyle
+            TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamName)).Value = Encoding.Default.GetString(CompleteYobjBytes, CurrentParamOffset + 8, &H10)
+            TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamInt1)).Value = BitConverter.ToUInt16(GeneralTools.EndianReverse(CompleteYobjBytes, CurrentParamOffset + 8 + &H10, 2), 0)
+            TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamInt2)).Value = BitConverter.ToUInt16(GeneralTools.EndianReverse(CompleteYobjBytes, CurrentParamOffset + 8 + &H12, 2), 0)
+            TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamSingle)).Value = BitConverter.ToSingle(GeneralTools.EndianReverse(CompleteYobjBytes, CurrentParamOffset + 8 + &H14, 4), 0)
+            WorkingCollection.Add(TempGridRow)
+            ProgressBar1.Value = i
+        Next
+        DataGridObjectParamView.Rows.AddRange(WorkingCollection.ToArray())
+    End Sub
 #End Region
 
 #End Region
@@ -5662,7 +5847,6 @@ Public Class MainForm
         Next
         DataGridWeaponPositionView.Rows.AddRange(WorkingCollection.ToArray())
     End Sub
-
 
 #End Region
 
