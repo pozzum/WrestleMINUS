@@ -71,11 +71,11 @@ Partial Class MainForm
         Me.TextViewFileName = New System.Windows.Forms.ToolStripMenuItem()
         Me.StringView = New System.Windows.Forms.TabPage()
         Me.DataGridStringView = New System.Windows.Forms.DataGridView()
-        Me.HexRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StringText = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Length = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AddString = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.DeleteString = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.StringHexRefColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StringTextColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StringLengthColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AddStringButton = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.DeleteStringButton = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStripStringView = New System.Windows.Forms.MenuStrip()
         Me.StringCountToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripTextBoxSearch = New System.Windows.Forms.ToolStripTextBox()
@@ -183,6 +183,8 @@ Partial Class MainForm
         Me.ObjectMainViewPage = New System.Windows.Forms.TabPage()
         Me.DataGridObjectView = New System.Windows.Forms.DataGridView()
         Me.ObjectCountCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectHeaderLoad = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.ObjectExportToObj = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.ObjectVertexCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ObjectRendered = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.ObjectHeaderFiller = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -246,19 +248,21 @@ Partial Class MainForm
         Me.ObjectVertRX = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ObjectVertRY = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ObjectVertRZ = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectVertUnknown = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertWeight = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertU = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectVertV = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ObjectVertNormal1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ObjectVertNormal2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ObjectVertNormal3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripObjectVertexView = New System.Windows.Forms.MenuStrip()
         Me.ShowNormalsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowWeightsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ObjectUVsViewPage = New System.Windows.Forms.TabPage()
-        Me.SplitObjectUVsContainer = New System.Windows.Forms.SplitContainer()
-        Me.DataGridObjectUVView = New System.Windows.Forms.DataGridView()
-        Me.ObjectUVCurrentCountCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectUVColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ObjectUVColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectFacesViewPage = New System.Windows.Forms.TabPage()
+        Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.DataGridObjectTriStripsView = New System.Windows.Forms.DataGridView()
+        Me.ObjectTriStripNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectTriStripVerts = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ObjectTriStripVertCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridObjectFacesView = New System.Windows.Forms.DataGridView()
         Me.ObjectFaceCurrentCountCol = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ObjectFaceVertex1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -521,9 +525,33 @@ Partial Class MainForm
         Me.MenuStripPof0View = New System.Windows.Forms.MenuStrip()
         Me.WeaponPositionView = New System.Windows.Forms.TabPage()
         Me.DataGridWeaponPositionView = New System.Windows.Forms.DataGridView()
+        Me.WeaponPositionCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionSettingNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionSettingObjStart = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionByteArray = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionInt1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionInt2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionInt3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionInt4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionSingle1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionSingle2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionSingle3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionSingle4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionSingle5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionSingle6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionShort1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionShort2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionShort3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionShort4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionIntSet = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WeaponPositionAdd = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.WeaponPositionDelete = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.MenuStripWeapPos = New System.Windows.Forms.MenuStrip()
         Me.WeaponPositionTypeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SaveChangesWeaponPositionsMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ArcView = New System.Windows.Forms.TabPage()
+        Me.DataGridArcView = New System.Windows.Forms.DataGridView()
+        Me.MenuStripArcView = New System.Windows.Forms.MenuStrip()
         Me.MenuStripPictureView = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -580,27 +608,7 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionSettingNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionSettingObjStart = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionByteArray = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionInt1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionInt2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionInt3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionInt4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionSingle1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionSingle2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionSingle3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionSingle4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionSingle5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionSingle6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionShort1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionShort2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionShort3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionShort4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionIntSet = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WeaponPositionAdd = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.WeaponPositionDelete = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.ExportStringArrayToCSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripMainForm.SuspendLayout()
         CType(Me.SplitFileMenuContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitFileMenuContainer.Panel1.SuspendLayout()
@@ -642,12 +650,12 @@ Partial Class MainForm
         Me.ObjectVertexViewPage.SuspendLayout()
         CType(Me.DataGridObjectVertexView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripObjectVertexView.SuspendLayout()
-        Me.ObjectUVsViewPage.SuspendLayout()
-        CType(Me.SplitObjectUVsContainer, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SplitObjectUVsContainer.Panel1.SuspendLayout()
-        Me.SplitObjectUVsContainer.Panel2.SuspendLayout()
-        Me.SplitObjectUVsContainer.SuspendLayout()
-        CType(Me.DataGridObjectUVView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ObjectFacesViewPage.SuspendLayout()
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer1.Panel1.SuspendLayout()
+        Me.SplitContainer1.Panel2.SuspendLayout()
+        Me.SplitContainer1.SuspendLayout()
+        CType(Me.DataGridObjectTriStripsView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DataGridObjectFacesView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ObjectParamViewPage.SuspendLayout()
         CType(Me.DataGridObjectParamView, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -684,6 +692,8 @@ Partial Class MainForm
         Me.WeaponPositionView.SuspendLayout()
         CType(Me.DataGridWeaponPositionView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripWeapPos.SuspendLayout()
+        Me.ArcView.SuspendLayout()
+        CType(Me.DataGridArcView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripPictureView.SuspendLayout()
         Me.TreeViewContext.SuspendLayout()
         Me.SuspendLayout()
@@ -960,6 +970,7 @@ Partial Class MainForm
         Me.TabControl1.Controls.Add(Me.AnimationView)
         Me.TabControl1.Controls.Add(Me.Pof0View)
         Me.TabControl1.Controls.Add(Me.WeaponPositionView)
+        Me.TabControl1.Controls.Add(Me.ArcView)
         Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
@@ -1076,7 +1087,7 @@ Partial Class MainForm
         Me.DataGridStringView.AllowUserToResizeRows = False
         Me.DataGridStringView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.DataGridStringView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridStringView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.HexRef, Me.StringText, Me.Length, Me.AddString, Me.DeleteString})
+        Me.DataGridStringView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.StringHexRefColumn, Me.StringTextColumn, Me.StringLengthColumn, Me.AddStringButton, Me.DeleteStringButton})
         Me.DataGridStringView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridStringView.Location = New System.Drawing.Point(3, 30)
         Me.DataGridStringView.MultiSelect = False
@@ -1085,46 +1096,50 @@ Partial Class MainForm
         Me.DataGridStringView.Size = New System.Drawing.Size(1213, 378)
         Me.DataGridStringView.TabIndex = 2
         '
-        'HexRef
+        'StringHexRefColumn
         '
-        Me.HexRef.FillWeight = 25.0!
-        Me.HexRef.HeaderText = "HexRef"
-        Me.HexRef.MaxInputLength = 8
-        Me.HexRef.Name = "HexRef"
-        Me.HexRef.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.StringHexRefColumn.FillWeight = 25.0!
+        Me.StringHexRefColumn.HeaderText = "HexRef"
+        Me.StringHexRefColumn.MaxInputLength = 8
+        Me.StringHexRefColumn.Name = "StringHexRefColumn"
+        Me.StringHexRefColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'StringText
+        'StringTextColumn
         '
-        Me.StringText.HeaderText = "String Text"
-        Me.StringText.MaxInputLength = 31
-        Me.StringText.Name = "StringText"
-        Me.StringText.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.StringTextColumn.HeaderText = "String Text"
+        Me.StringTextColumn.MaxInputLength = 31
+        Me.StringTextColumn.Name = "StringTextColumn"
+        Me.StringTextColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'Length
+        'StringLengthColumn
         '
-        Me.Length.FillWeight = 25.0!
-        Me.Length.HeaderText = "Length"
-        Me.Length.MaxInputLength = 10
-        Me.Length.Name = "Length"
-        Me.Length.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.StringLengthColumn.FillWeight = 25.0!
+        Me.StringLengthColumn.HeaderText = "Length"
+        Me.StringLengthColumn.MaxInputLength = 10
+        Me.StringLengthColumn.Name = "StringLengthColumn"
+        Me.StringLengthColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'AddString
+        'AddStringButton
         '
-        Me.AddString.FillWeight = 10.0!
-        Me.AddString.HeaderText = "Add"
-        Me.AddString.Name = "AddString"
+        Me.AddStringButton.FillWeight = 10.0!
+        Me.AddStringButton.HeaderText = "Add"
+        Me.AddStringButton.Name = "AddStringButton"
+        Me.AddStringButton.Text = "Add"
+        Me.AddStringButton.UseColumnTextForButtonValue = True
         '
-        'DeleteString
+        'DeleteStringButton
         '
-        Me.DeleteString.FillWeight = 10.0!
-        Me.DeleteString.HeaderText = "Delete"
-        Me.DeleteString.Name = "DeleteString"
-        Me.DeleteString.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DeleteString.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.DeleteStringButton.FillWeight = 10.0!
+        Me.DeleteStringButton.HeaderText = "Delete"
+        Me.DeleteStringButton.Name = "DeleteStringButton"
+        Me.DeleteStringButton.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DeleteStringButton.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.DeleteStringButton.Text = "Delete"
+        Me.DeleteStringButton.UseColumnTextForButtonValue = True
         '
         'MenuStripStringView
         '
-        Me.MenuStripStringView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringCountToolStripMenuItem, Me.ToolStripTextBoxSearch, Me.SaveChangesStringMenuItem, Me.SortStringsToolStripMenuItem})
+        Me.MenuStripStringView.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StringCountToolStripMenuItem, Me.ToolStripTextBoxSearch, Me.SaveChangesStringMenuItem, Me.SortStringsToolStripMenuItem, Me.ExportStringArrayToCSVToolStripMenuItem})
         Me.MenuStripStringView.Location = New System.Drawing.Point(3, 3)
         Me.MenuStripStringView.Name = "MenuStripStringView"
         Me.MenuStripStringView.Size = New System.Drawing.Size(1213, 27)
@@ -1937,7 +1952,7 @@ Partial Class MainForm
         Me.TabControl2.Controls.Add(Me.ObjectBoneViewPage)
         Me.TabControl2.Controls.Add(Me.ObjectTextureViewPage)
         Me.TabControl2.Controls.Add(Me.ObjectVertexViewPage)
-        Me.TabControl2.Controls.Add(Me.ObjectUVsViewPage)
+        Me.TabControl2.Controls.Add(Me.ObjectFacesViewPage)
         Me.TabControl2.Controls.Add(Me.ObjectParamViewPage)
         Me.TabControl2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl2.Location = New System.Drawing.Point(3, 30)
@@ -1963,7 +1978,7 @@ Partial Class MainForm
         Me.DataGridObjectView.AllowUserToDeleteRows = False
         Me.DataGridObjectView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells
         Me.DataGridObjectView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridObjectView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectCountCol, Me.ObjectVertexCount, Me.ObjectRendered, Me.ObjectHeaderFiller, Me.ObjectWeightNumber, Me.ObjectUnknownIntA, Me.ObjectVerHeaderCount, Me.ObjectVerticeOffset, Me.ObjectWeightsOffset, Me.ObjectUVOffset, Me.ObjectNormalsOffset, Me.ObjectInternalNum, Me.ObjectHeaderShader, Me.ObjecHeaderUnknownC, Me.ObjectMaterialIndex, Me.ObjectParameterCount, Me.ObjectParameterOffset, Me.ObjectFaceOffset, Me.ObjectUVCount, Me.ObjectUnknownD, Me.ObjectUnknownE, Me.ObjectUnknownF, Me.ObjectUnknownG, Me.ObjectUnknownH})
+        Me.DataGridObjectView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectCountCol, Me.ObjectHeaderLoad, Me.ObjectExportToObj, Me.ObjectVertexCount, Me.ObjectRendered, Me.ObjectHeaderFiller, Me.ObjectWeightNumber, Me.ObjectUnknownIntA, Me.ObjectVerHeaderCount, Me.ObjectVerticeOffset, Me.ObjectWeightsOffset, Me.ObjectUVOffset, Me.ObjectNormalsOffset, Me.ObjectInternalNum, Me.ObjectHeaderShader, Me.ObjecHeaderUnknownC, Me.ObjectMaterialIndex, Me.ObjectParameterCount, Me.ObjectParameterOffset, Me.ObjectFaceOffset, Me.ObjectUVCount, Me.ObjectUnknownD, Me.ObjectUnknownE, Me.ObjectUnknownF, Me.ObjectUnknownG, Me.ObjectUnknownH})
         Me.DataGridObjectView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridObjectView.Location = New System.Drawing.Point(3, 3)
         Me.DataGridObjectView.Name = "DataGridObjectView"
@@ -1978,6 +1993,25 @@ Partial Class MainForm
         Me.ObjectCountCol.Name = "ObjectCountCol"
         Me.ObjectCountCol.ReadOnly = True
         Me.ObjectCountCol.Width = 60
+        '
+        'ObjectHeaderLoad
+        '
+        Me.ObjectHeaderLoad.FillWeight = 25.0!
+        Me.ObjectHeaderLoad.HeaderText = "Load"
+        Me.ObjectHeaderLoad.Name = "ObjectHeaderLoad"
+        Me.ObjectHeaderLoad.Text = "Load"
+        Me.ObjectHeaderLoad.UseColumnTextForButtonValue = True
+        Me.ObjectHeaderLoad.Width = 37
+        '
+        'ObjectExportToObj
+        '
+        Me.ObjectExportToObj.HeaderText = "Export Obj."
+        Me.ObjectExportToObj.Name = "ObjectExportToObj"
+        Me.ObjectExportToObj.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ObjectExportToObj.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.ObjectExportToObj.Text = "Export"
+        Me.ObjectExportToObj.UseColumnTextForButtonValue = True
+        Me.ObjectExportToObj.Width = 78
         '
         'ObjectVertexCount
         '
@@ -2373,7 +2407,7 @@ Partial Class MainForm
         Me.DataGridObjectVertexView.AllowUserToDeleteRows = False
         Me.DataGridObjectVertexView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.DataGridObjectVertexView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridObjectVertexView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectVertCountCol, Me.ObjectVertX, Me.ObjectVertY, Me.ObjectVertZ, Me.ObjectVertRX, Me.ObjectVertRY, Me.ObjectVertRZ, Me.ObjectVertUnknown, Me.ObjectVertNormal1, Me.ObjectVertNormal2, Me.ObjectVertNormal3})
+        Me.DataGridObjectVertexView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectVertCountCol, Me.ObjectVertX, Me.ObjectVertY, Me.ObjectVertZ, Me.ObjectVertRX, Me.ObjectVertRY, Me.ObjectVertRZ, Me.ObjectVertWeight, Me.ObjectVertU, Me.ObjectVertV, Me.ObjectVertNormal1, Me.ObjectVertNormal2, Me.ObjectVertNormal3})
         Me.DataGridObjectVertexView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridObjectVertexView.Location = New System.Drawing.Point(3, 27)
         Me.DataGridObjectVertexView.Name = "DataGridObjectVertexView"
@@ -2417,11 +2451,21 @@ Partial Class MainForm
         Me.ObjectVertRZ.HeaderText = "RZ?"
         Me.ObjectVertRZ.Name = "ObjectVertRZ"
         '
-        'ObjectVertUnknown
+        'ObjectVertWeight
         '
-        Me.ObjectVertUnknown.HeaderText = "Unknown"
-        Me.ObjectVertUnknown.Name = "ObjectVertUnknown"
-        Me.ObjectVertUnknown.ReadOnly = True
+        Me.ObjectVertWeight.HeaderText = "Weight"
+        Me.ObjectVertWeight.Name = "ObjectVertWeight"
+        Me.ObjectVertWeight.ReadOnly = True
+        '
+        'ObjectVertU
+        '
+        Me.ObjectVertU.HeaderText = "U"
+        Me.ObjectVertU.Name = "ObjectVertU"
+        '
+        'ObjectVertV
+        '
+        Me.ObjectVertV.HeaderText = "V"
+        Me.ObjectVertV.Name = "ObjectVertV"
         '
         'ObjectVertNormal1
         '
@@ -2459,64 +2503,63 @@ Partial Class MainForm
         Me.ShowWeightsToolStripMenuItem.Size = New System.Drawing.Size(109, 20)
         Me.ShowWeightsToolStripMenuItem.Text = "☑ Show Weights"
         '
-        'ObjectUVsViewPage
+        'ObjectFacesViewPage
         '
-        Me.ObjectUVsViewPage.Controls.Add(Me.SplitObjectUVsContainer)
-        Me.ObjectUVsViewPage.Location = New System.Drawing.Point(4, 22)
-        Me.ObjectUVsViewPage.Name = "ObjectUVsViewPage"
-        Me.ObjectUVsViewPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.ObjectUVsViewPage.Size = New System.Drawing.Size(1205, 352)
-        Me.ObjectUVsViewPage.TabIndex = 4
-        Me.ObjectUVsViewPage.Text = "UVs & Faces"
-        Me.ObjectUVsViewPage.UseVisualStyleBackColor = True
+        Me.ObjectFacesViewPage.Controls.Add(Me.SplitContainer1)
+        Me.ObjectFacesViewPage.Location = New System.Drawing.Point(4, 22)
+        Me.ObjectFacesViewPage.Name = "ObjectFacesViewPage"
+        Me.ObjectFacesViewPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.ObjectFacesViewPage.Size = New System.Drawing.Size(1205, 352)
+        Me.ObjectFacesViewPage.TabIndex = 4
+        Me.ObjectFacesViewPage.Text = "Faces"
+        Me.ObjectFacesViewPage.UseVisualStyleBackColor = True
         '
-        'SplitObjectUVsContainer
+        'SplitContainer1
         '
-        Me.SplitObjectUVsContainer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitObjectUVsContainer.Location = New System.Drawing.Point(3, 3)
-        Me.SplitObjectUVsContainer.Name = "SplitObjectUVsContainer"
+        Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer1.Location = New System.Drawing.Point(3, 3)
+        Me.SplitContainer1.Name = "SplitContainer1"
         '
-        'SplitObjectUVsContainer.Panel1
+        'SplitContainer1.Panel1
         '
-        Me.SplitObjectUVsContainer.Panel1.Controls.Add(Me.DataGridObjectUVView)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.DataGridObjectTriStripsView)
         '
-        'SplitObjectUVsContainer.Panel2
+        'SplitContainer1.Panel2
         '
-        Me.SplitObjectUVsContainer.Panel2.Controls.Add(Me.DataGridObjectFacesView)
-        Me.SplitObjectUVsContainer.Size = New System.Drawing.Size(1199, 346)
-        Me.SplitObjectUVsContainer.SplitterDistance = 399
-        Me.SplitObjectUVsContainer.TabIndex = 1
+        Me.SplitContainer1.Panel2.Controls.Add(Me.DataGridObjectFacesView)
+        Me.SplitContainer1.Size = New System.Drawing.Size(1199, 346)
+        Me.SplitContainer1.SplitterDistance = 399
+        Me.SplitContainer1.TabIndex = 1
         '
-        'DataGridObjectUVView
+        'DataGridObjectTriStripsView
         '
-        Me.DataGridObjectUVView.AllowUserToAddRows = False
-        Me.DataGridObjectUVView.AllowUserToDeleteRows = False
-        Me.DataGridObjectUVView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.DataGridObjectUVView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridObjectUVView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectUVCurrentCountCol, Me.ObjectUVColumn1, Me.ObjectUVColumn2})
-        Me.DataGridObjectUVView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridObjectUVView.Location = New System.Drawing.Point(0, 0)
-        Me.DataGridObjectUVView.Name = "DataGridObjectUVView"
-        Me.DataGridObjectUVView.RowHeadersVisible = False
-        Me.DataGridObjectUVView.Size = New System.Drawing.Size(399, 346)
-        Me.DataGridObjectUVView.TabIndex = 0
+        Me.DataGridObjectTriStripsView.AllowUserToAddRows = False
+        Me.DataGridObjectTriStripsView.AllowUserToDeleteRows = False
+        Me.DataGridObjectTriStripsView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridObjectTriStripsView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridObjectTriStripsView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ObjectTriStripNum, Me.ObjectTriStripVerts, Me.ObjectTriStripVertCount})
+        Me.DataGridObjectTriStripsView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridObjectTriStripsView.Location = New System.Drawing.Point(0, 0)
+        Me.DataGridObjectTriStripsView.Name = "DataGridObjectTriStripsView"
+        Me.DataGridObjectTriStripsView.RowHeadersVisible = False
+        Me.DataGridObjectTriStripsView.Size = New System.Drawing.Size(399, 346)
+        Me.DataGridObjectTriStripsView.TabIndex = 1
         '
-        'ObjectUVCurrentCountCol
+        'ObjectTriStripNum
         '
-        Me.ObjectUVCurrentCountCol.FillWeight = 50.0!
-        Me.ObjectUVCurrentCountCol.HeaderText = "UV #"
-        Me.ObjectUVCurrentCountCol.Name = "ObjectUVCurrentCountCol"
-        Me.ObjectUVCurrentCountCol.ReadOnly = True
+        Me.ObjectTriStripNum.FillWeight = 50.0!
+        Me.ObjectTriStripNum.HeaderText = "Strip#"
+        Me.ObjectTriStripNum.Name = "ObjectTriStripNum"
         '
-        'ObjectUVColumn1
+        'ObjectTriStripVerts
         '
-        Me.ObjectUVColumn1.HeaderText = "Num 1"
-        Me.ObjectUVColumn1.Name = "ObjectUVColumn1"
+        Me.ObjectTriStripVerts.HeaderText = "Verts"
+        Me.ObjectTriStripVerts.Name = "ObjectTriStripVerts"
         '
-        'ObjectUVColumn2
+        'ObjectTriStripVertCount
         '
-        Me.ObjectUVColumn2.HeaderText = "Num 2"
-        Me.ObjectUVColumn2.Name = "ObjectUVColumn2"
+        Me.ObjectTriStripVertCount.HeaderText = "Count"
+        Me.ObjectTriStripVertCount.Name = "ObjectTriStripVertCount"
         '
         'DataGridObjectFacesView
         '
@@ -4468,6 +4511,155 @@ Partial Class MainForm
         Me.DataGridWeaponPositionView.Size = New System.Drawing.Size(1213, 381)
         Me.DataGridWeaponPositionView.TabIndex = 1
         '
+        'WeaponPositionCount
+        '
+        Me.WeaponPositionCount.FillWeight = 20.0!
+        Me.WeaponPositionCount.HeaderText = "Count"
+        Me.WeaponPositionCount.MaxInputLength = 10
+        Me.WeaponPositionCount.Name = "WeaponPositionCount"
+        Me.WeaponPositionCount.ReadOnly = True
+        '
+        'WeaponPositionSettingNum
+        '
+        Me.WeaponPositionSettingNum.FillWeight = 20.0!
+        Me.WeaponPositionSettingNum.HeaderText = "Setting Num"
+        Me.WeaponPositionSettingNum.MaxInputLength = 10
+        Me.WeaponPositionSettingNum.Name = "WeaponPositionSettingNum"
+        '
+        'WeaponPositionSettingObjStart
+        '
+        Me.WeaponPositionSettingObjStart.FillWeight = 20.0!
+        Me.WeaponPositionSettingObjStart.HeaderText = "Object Num"
+        Me.WeaponPositionSettingObjStart.MaxInputLength = 10
+        Me.WeaponPositionSettingObjStart.Name = "WeaponPositionSettingObjStart"
+        '
+        'WeaponPositionByteArray
+        '
+        Me.WeaponPositionByteArray.HeaderText = "Byte Array"
+        Me.WeaponPositionByteArray.Name = "WeaponPositionByteArray"
+        Me.WeaponPositionByteArray.ReadOnly = True
+        '
+        'WeaponPositionInt1
+        '
+        Me.WeaponPositionInt1.FillWeight = 20.0!
+        Me.WeaponPositionInt1.HeaderText = "Int1"
+        Me.WeaponPositionInt1.MaxInputLength = 10
+        Me.WeaponPositionInt1.Name = "WeaponPositionInt1"
+        '
+        'WeaponPositionInt2
+        '
+        Me.WeaponPositionInt2.FillWeight = 20.0!
+        Me.WeaponPositionInt2.HeaderText = "Int2"
+        Me.WeaponPositionInt2.MaxInputLength = 10
+        Me.WeaponPositionInt2.Name = "WeaponPositionInt2"
+        '
+        'WeaponPositionInt3
+        '
+        Me.WeaponPositionInt3.FillWeight = 20.0!
+        Me.WeaponPositionInt3.HeaderText = "Int3"
+        Me.WeaponPositionInt3.MaxInputLength = 10
+        Me.WeaponPositionInt3.Name = "WeaponPositionInt3"
+        '
+        'WeaponPositionInt4
+        '
+        Me.WeaponPositionInt4.FillWeight = 20.0!
+        Me.WeaponPositionInt4.HeaderText = "Int4"
+        Me.WeaponPositionInt4.MaxInputLength = 10
+        Me.WeaponPositionInt4.Name = "WeaponPositionInt4"
+        '
+        'WeaponPositionSingle1
+        '
+        Me.WeaponPositionSingle1.FillWeight = 20.0!
+        Me.WeaponPositionSingle1.HeaderText = "Float 1"
+        Me.WeaponPositionSingle1.MaxInputLength = 12
+        Me.WeaponPositionSingle1.Name = "WeaponPositionSingle1"
+        '
+        'WeaponPositionSingle2
+        '
+        Me.WeaponPositionSingle2.FillWeight = 20.0!
+        Me.WeaponPositionSingle2.HeaderText = "Float 2"
+        Me.WeaponPositionSingle2.MaxInputLength = 12
+        Me.WeaponPositionSingle2.Name = "WeaponPositionSingle2"
+        '
+        'WeaponPositionSingle3
+        '
+        Me.WeaponPositionSingle3.FillWeight = 20.0!
+        Me.WeaponPositionSingle3.HeaderText = "Float 3"
+        Me.WeaponPositionSingle3.MaxInputLength = 12
+        Me.WeaponPositionSingle3.Name = "WeaponPositionSingle3"
+        '
+        'WeaponPositionSingle4
+        '
+        Me.WeaponPositionSingle4.FillWeight = 20.0!
+        Me.WeaponPositionSingle4.HeaderText = "Float 4"
+        Me.WeaponPositionSingle4.MaxInputLength = 12
+        Me.WeaponPositionSingle4.Name = "WeaponPositionSingle4"
+        '
+        'WeaponPositionSingle5
+        '
+        Me.WeaponPositionSingle5.FillWeight = 20.0!
+        Me.WeaponPositionSingle5.HeaderText = "Float 5"
+        Me.WeaponPositionSingle5.MaxInputLength = 12
+        Me.WeaponPositionSingle5.Name = "WeaponPositionSingle5"
+        '
+        'WeaponPositionSingle6
+        '
+        Me.WeaponPositionSingle6.FillWeight = 20.0!
+        Me.WeaponPositionSingle6.HeaderText = "Float 6"
+        Me.WeaponPositionSingle6.MaxInputLength = 12
+        Me.WeaponPositionSingle6.Name = "WeaponPositionSingle6"
+        '
+        'WeaponPositionShort1
+        '
+        Me.WeaponPositionShort1.FillWeight = 20.0!
+        Me.WeaponPositionShort1.HeaderText = "Short 1"
+        Me.WeaponPositionShort1.MaxInputLength = 5
+        Me.WeaponPositionShort1.Name = "WeaponPositionShort1"
+        '
+        'WeaponPositionShort2
+        '
+        Me.WeaponPositionShort2.FillWeight = 20.0!
+        Me.WeaponPositionShort2.HeaderText = "Short 2"
+        Me.WeaponPositionShort2.MaxInputLength = 5
+        Me.WeaponPositionShort2.Name = "WeaponPositionShort2"
+        '
+        'WeaponPositionShort3
+        '
+        Me.WeaponPositionShort3.FillWeight = 20.0!
+        Me.WeaponPositionShort3.HeaderText = "Short 3"
+        Me.WeaponPositionShort3.MaxInputLength = 5
+        Me.WeaponPositionShort3.Name = "WeaponPositionShort3"
+        '
+        'WeaponPositionShort4
+        '
+        Me.WeaponPositionShort4.FillWeight = 20.0!
+        Me.WeaponPositionShort4.HeaderText = "Short 4"
+        Me.WeaponPositionShort4.MaxInputLength = 5
+        Me.WeaponPositionShort4.Name = "WeaponPositionShort4"
+        '
+        'WeaponPositionIntSet
+        '
+        Me.WeaponPositionIntSet.FillWeight = 20.0!
+        Me.WeaponPositionIntSet.HeaderText = "Int"
+        Me.WeaponPositionIntSet.MaxInputLength = 10
+        Me.WeaponPositionIntSet.Name = "WeaponPositionIntSet"
+        '
+        'WeaponPositionAdd
+        '
+        Me.WeaponPositionAdd.FillWeight = 20.0!
+        Me.WeaponPositionAdd.HeaderText = "Add"
+        Me.WeaponPositionAdd.Name = "WeaponPositionAdd"
+        Me.WeaponPositionAdd.Text = "Add"
+        Me.WeaponPositionAdd.UseColumnTextForButtonValue = True
+        '
+        'WeaponPositionDelete
+        '
+        Me.WeaponPositionDelete.FillWeight = 20.0!
+        Me.WeaponPositionDelete.HeaderText = "Delete"
+        Me.WeaponPositionDelete.Name = "WeaponPositionDelete"
+        Me.WeaponPositionDelete.Text = "Delete"
+        Me.WeaponPositionDelete.UseColumnTextForButtonValue = True
+        '
         'MenuStripWeapPos
         '
         Me.MenuStripWeapPos.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.WeaponPositionTypeToolStripMenuItem, Me.SaveChangesWeaponPositionsMenuItem})
@@ -4489,6 +4681,35 @@ Partial Class MainForm
         Me.SaveChangesWeaponPositionsMenuItem.Size = New System.Drawing.Size(92, 20)
         Me.SaveChangesWeaponPositionsMenuItem.Text = "Save Changes"
         Me.SaveChangesWeaponPositionsMenuItem.Visible = False
+        '
+        'ArcView
+        '
+        Me.ArcView.Controls.Add(Me.DataGridArcView)
+        Me.ArcView.Controls.Add(Me.MenuStripArcView)
+        Me.ArcView.Location = New System.Drawing.Point(4, 22)
+        Me.ArcView.Name = "ArcView"
+        Me.ArcView.Padding = New System.Windows.Forms.Padding(3)
+        Me.ArcView.Size = New System.Drawing.Size(1219, 411)
+        Me.ArcView.TabIndex = 20
+        Me.ArcView.Text = "Arc"
+        Me.ArcView.UseVisualStyleBackColor = True
+        '
+        'DataGridArcView
+        '
+        Me.DataGridArcView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridArcView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridArcView.Location = New System.Drawing.Point(3, 27)
+        Me.DataGridArcView.Name = "DataGridArcView"
+        Me.DataGridArcView.Size = New System.Drawing.Size(1213, 381)
+        Me.DataGridArcView.TabIndex = 1
+        '
+        'MenuStripArcView
+        '
+        Me.MenuStripArcView.Location = New System.Drawing.Point(3, 3)
+        Me.MenuStripArcView.Name = "MenuStripArcView"
+        Me.MenuStripArcView.Size = New System.Drawing.Size(1213, 24)
+        Me.MenuStripArcView.TabIndex = 0
+        Me.MenuStripArcView.Text = "MenuStrip1"
         '
         'MenuStripPictureView
         '
@@ -4835,154 +5056,11 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn35.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn35.Width = 41
         '
-        'WeaponPositionCount
+        'ExportStringArrayToCSVToolStripMenuItem
         '
-        Me.WeaponPositionCount.FillWeight = 20.0!
-        Me.WeaponPositionCount.HeaderText = "Count"
-        Me.WeaponPositionCount.MaxInputLength = 10
-        Me.WeaponPositionCount.Name = "WeaponPositionCount"
-        Me.WeaponPositionCount.ReadOnly = True
-        '
-        'WeaponPositionSettingNum
-        '
-        Me.WeaponPositionSettingNum.FillWeight = 20.0!
-        Me.WeaponPositionSettingNum.HeaderText = "Setting Num"
-        Me.WeaponPositionSettingNum.MaxInputLength = 10
-        Me.WeaponPositionSettingNum.Name = "WeaponPositionSettingNum"
-        '
-        'WeaponPositionSettingObjStart
-        '
-        Me.WeaponPositionSettingObjStart.FillWeight = 20.0!
-        Me.WeaponPositionSettingObjStart.HeaderText = "Object Num"
-        Me.WeaponPositionSettingObjStart.MaxInputLength = 10
-        Me.WeaponPositionSettingObjStart.Name = "WeaponPositionSettingObjStart"
-        '
-        'WeaponPositionByteArray
-        '
-        Me.WeaponPositionByteArray.HeaderText = "Byte Array"
-        Me.WeaponPositionByteArray.Name = "WeaponPositionByteArray"
-        Me.WeaponPositionByteArray.ReadOnly = True
-        '
-        'WeaponPositionInt1
-        '
-        Me.WeaponPositionInt1.FillWeight = 20.0!
-        Me.WeaponPositionInt1.HeaderText = "Int1"
-        Me.WeaponPositionInt1.MaxInputLength = 10
-        Me.WeaponPositionInt1.Name = "WeaponPositionInt1"
-        '
-        'WeaponPositionInt2
-        '
-        Me.WeaponPositionInt2.FillWeight = 20.0!
-        Me.WeaponPositionInt2.HeaderText = "Int2"
-        Me.WeaponPositionInt2.MaxInputLength = 10
-        Me.WeaponPositionInt2.Name = "WeaponPositionInt2"
-        '
-        'WeaponPositionInt3
-        '
-        Me.WeaponPositionInt3.FillWeight = 20.0!
-        Me.WeaponPositionInt3.HeaderText = "Int3"
-        Me.WeaponPositionInt3.MaxInputLength = 10
-        Me.WeaponPositionInt3.Name = "WeaponPositionInt3"
-        '
-        'WeaponPositionInt4
-        '
-        Me.WeaponPositionInt4.FillWeight = 20.0!
-        Me.WeaponPositionInt4.HeaderText = "Int4"
-        Me.WeaponPositionInt4.MaxInputLength = 10
-        Me.WeaponPositionInt4.Name = "WeaponPositionInt4"
-        '
-        'WeaponPositionSingle1
-        '
-        Me.WeaponPositionSingle1.FillWeight = 20.0!
-        Me.WeaponPositionSingle1.HeaderText = "Float 1"
-        Me.WeaponPositionSingle1.MaxInputLength = 12
-        Me.WeaponPositionSingle1.Name = "WeaponPositionSingle1"
-        '
-        'WeaponPositionSingle2
-        '
-        Me.WeaponPositionSingle2.FillWeight = 20.0!
-        Me.WeaponPositionSingle2.HeaderText = "Float 2"
-        Me.WeaponPositionSingle2.MaxInputLength = 12
-        Me.WeaponPositionSingle2.Name = "WeaponPositionSingle2"
-        '
-        'WeaponPositionSingle3
-        '
-        Me.WeaponPositionSingle3.FillWeight = 20.0!
-        Me.WeaponPositionSingle3.HeaderText = "Float 3"
-        Me.WeaponPositionSingle3.MaxInputLength = 12
-        Me.WeaponPositionSingle3.Name = "WeaponPositionSingle3"
-        '
-        'WeaponPositionSingle4
-        '
-        Me.WeaponPositionSingle4.FillWeight = 20.0!
-        Me.WeaponPositionSingle4.HeaderText = "Float 4"
-        Me.WeaponPositionSingle4.MaxInputLength = 12
-        Me.WeaponPositionSingle4.Name = "WeaponPositionSingle4"
-        '
-        'WeaponPositionSingle5
-        '
-        Me.WeaponPositionSingle5.FillWeight = 20.0!
-        Me.WeaponPositionSingle5.HeaderText = "Float 5"
-        Me.WeaponPositionSingle5.MaxInputLength = 12
-        Me.WeaponPositionSingle5.Name = "WeaponPositionSingle5"
-        '
-        'WeaponPositionSingle6
-        '
-        Me.WeaponPositionSingle6.FillWeight = 20.0!
-        Me.WeaponPositionSingle6.HeaderText = "Float 6"
-        Me.WeaponPositionSingle6.MaxInputLength = 12
-        Me.WeaponPositionSingle6.Name = "WeaponPositionSingle6"
-        '
-        'WeaponPositionShort1
-        '
-        Me.WeaponPositionShort1.FillWeight = 20.0!
-        Me.WeaponPositionShort1.HeaderText = "Short 1"
-        Me.WeaponPositionShort1.MaxInputLength = 5
-        Me.WeaponPositionShort1.Name = "WeaponPositionShort1"
-        '
-        'WeaponPositionShort2
-        '
-        Me.WeaponPositionShort2.FillWeight = 20.0!
-        Me.WeaponPositionShort2.HeaderText = "Short 2"
-        Me.WeaponPositionShort2.MaxInputLength = 5
-        Me.WeaponPositionShort2.Name = "WeaponPositionShort2"
-        '
-        'WeaponPositionShort3
-        '
-        Me.WeaponPositionShort3.FillWeight = 20.0!
-        Me.WeaponPositionShort3.HeaderText = "Short 3"
-        Me.WeaponPositionShort3.MaxInputLength = 5
-        Me.WeaponPositionShort3.Name = "WeaponPositionShort3"
-        '
-        'WeaponPositionShort4
-        '
-        Me.WeaponPositionShort4.FillWeight = 20.0!
-        Me.WeaponPositionShort4.HeaderText = "Short 4"
-        Me.WeaponPositionShort4.MaxInputLength = 5
-        Me.WeaponPositionShort4.Name = "WeaponPositionShort4"
-        '
-        'WeaponPositionIntSet
-        '
-        Me.WeaponPositionIntSet.FillWeight = 20.0!
-        Me.WeaponPositionIntSet.HeaderText = "Int"
-        Me.WeaponPositionIntSet.MaxInputLength = 10
-        Me.WeaponPositionIntSet.Name = "WeaponPositionIntSet"
-        '
-        'WeaponPositionAdd
-        '
-        Me.WeaponPositionAdd.FillWeight = 20.0!
-        Me.WeaponPositionAdd.HeaderText = "Add"
-        Me.WeaponPositionAdd.Name = "WeaponPositionAdd"
-        Me.WeaponPositionAdd.Text = "Add"
-        Me.WeaponPositionAdd.UseColumnTextForButtonValue = True
-        '
-        'WeaponPositionDelete
-        '
-        Me.WeaponPositionDelete.FillWeight = 20.0!
-        Me.WeaponPositionDelete.HeaderText = "Delete"
-        Me.WeaponPositionDelete.Name = "WeaponPositionDelete"
-        Me.WeaponPositionDelete.Text = "Delete"
-        Me.WeaponPositionDelete.UseColumnTextForButtonValue = True
+        Me.ExportStringArrayToCSVToolStripMenuItem.Name = "ExportStringArrayToCSVToolStripMenuItem"
+        Me.ExportStringArrayToCSVToolStripMenuItem.Size = New System.Drawing.Size(91, 23)
+        Me.ExportStringArrayToCSVToolStripMenuItem.Text = "Export to CSV"
         '
         'MainForm
         '
@@ -5055,12 +5133,12 @@ Partial Class MainForm
         CType(Me.DataGridObjectVertexView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStripObjectVertexView.ResumeLayout(False)
         Me.MenuStripObjectVertexView.PerformLayout()
-        Me.ObjectUVsViewPage.ResumeLayout(False)
-        Me.SplitObjectUVsContainer.Panel1.ResumeLayout(False)
-        Me.SplitObjectUVsContainer.Panel2.ResumeLayout(False)
-        CType(Me.SplitObjectUVsContainer, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.SplitObjectUVsContainer.ResumeLayout(False)
-        CType(Me.DataGridObjectUVView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ObjectFacesViewPage.ResumeLayout(False)
+        Me.SplitContainer1.Panel1.ResumeLayout(False)
+        Me.SplitContainer1.Panel2.ResumeLayout(False)
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer1.ResumeLayout(False)
+        CType(Me.DataGridObjectTriStripsView, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DataGridObjectFacesView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ObjectParamViewPage.ResumeLayout(False)
         CType(Me.DataGridObjectParamView, System.ComponentModel.ISupportInitialize).EndInit()
@@ -5119,6 +5197,9 @@ Partial Class MainForm
         CType(Me.DataGridWeaponPositionView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStripWeapPos.ResumeLayout(False)
         Me.MenuStripWeapPos.PerformLayout()
+        Me.ArcView.ResumeLayout(False)
+        Me.ArcView.PerformLayout()
+        CType(Me.DataGridArcView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStripPictureView.ResumeLayout(False)
         Me.MenuStripPictureView.PerformLayout()
         Me.TreeViewContext.ResumeLayout(False)
@@ -5297,11 +5378,6 @@ Partial Class MainForm
     Friend WithEvents Hex_Selected As RichTextBox
     Friend WithEvents Text_Selected As RichTextBox
     Friend WithEvents SortStringsToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents HexRef As DataGridViewTextBoxColumn
-    Friend WithEvents StringText As DataGridViewTextBoxColumn
-    Friend WithEvents Length As DataGridViewTextBoxColumn
-    Friend WithEvents AddString As DataGridViewButtonColumn
-    Friend WithEvents DeleteString As DataGridViewButtonColumn
     Friend WithEvents StringLoadedShowMenuItem As ToolStripMenuItem
     Friend WithEvents SaveChangesShowMenuItem As ToolStripMenuItem
     Friend WithEvents SaveChangesNIBJMenuItem As ToolStripMenuItem
@@ -5627,28 +5703,12 @@ Partial Class MainForm
     Friend WithEvents ObjectEmoteListComboBox As ToolStripComboBox
     Friend WithEvents MenuStripObjectVertexView As MenuStrip
     Friend WithEvents ShowWeightsToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ObjectUVsViewPage As TabPage
-    Friend WithEvents DataGridObjectUVView As DataGridView
-    Friend WithEvents SplitObjectUVsContainer As SplitContainer
+    Friend WithEvents ObjectFacesViewPage As TabPage
     Friend WithEvents DataGridObjectFacesView As DataGridView
-    Friend WithEvents ObjectUVCurrentCountCol As DataGridViewTextBoxColumn
-    Friend WithEvents ObjectUVColumn1 As DataGridViewTextBoxColumn
-    Friend WithEvents ObjectUVColumn2 As DataGridViewTextBoxColumn
     Friend WithEvents ObjectFaceCurrentCountCol As DataGridViewTextBoxColumn
     Friend WithEvents ObjectFaceVertex1 As DataGridViewTextBoxColumn
     Friend WithEvents ObjectFaceVertex2 As DataGridViewTextBoxColumn
     Friend WithEvents ObjectFaceVertex3 As DataGridViewTextBoxColumn
-    Friend WithEvents ObjectVertCountCol As DataGridViewTextBoxColumn
-    Friend WithEvents ObjectVertX As DataGridViewTextBoxColumn
-    Friend WithEvents ObjectVertY As DataGridViewTextBoxColumn
-    Friend WithEvents ObjectVertZ As DataGridViewTextBoxColumn
-    Friend WithEvents ObjectVertRX As DataGridViewTextBoxColumn
-    Friend WithEvents ObjectVertRY As DataGridViewTextBoxColumn
-    Friend WithEvents ObjectVertRZ As DataGridViewTextBoxColumn
-    Friend WithEvents ObjectVertUnknown As DataGridViewTextBoxColumn
-    Friend WithEvents ObjectVertNormal1 As DataGridViewTextBoxColumn
-    Friend WithEvents ObjectVertNormal2 As DataGridViewTextBoxColumn
-    Friend WithEvents ObjectVertNormal3 As DataGridViewTextBoxColumn
     Friend WithEvents ShowNormalsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ObjectParamViewPage As TabPage
     Friend WithEvents DataGridObjectParamView As DataGridView
@@ -5657,7 +5717,35 @@ Partial Class MainForm
     Friend WithEvents ObjectParamInt1 As DataGridViewTextBoxColumn
     Friend WithEvents ObjectParamInt2 As DataGridViewTextBoxColumn
     Friend WithEvents ObjectParamSingle As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionCount As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionSettingNum As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionSettingObjStart As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionByteArray As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionInt1 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionInt2 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionInt3 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionInt4 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionSingle1 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionSingle2 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionSingle3 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionSingle4 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionSingle5 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionSingle6 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionShort1 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionShort2 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionShort3 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionShort4 As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionIntSet As DataGridViewTextBoxColumn
+    Friend WithEvents WeaponPositionAdd As DataGridViewButtonColumn
+    Friend WithEvents WeaponPositionDelete As DataGridViewButtonColumn
+    Friend WithEvents StringHexRefColumn As DataGridViewTextBoxColumn
+    Friend WithEvents StringTextColumn As DataGridViewTextBoxColumn
+    Friend WithEvents StringLengthColumn As DataGridViewTextBoxColumn
+    Friend WithEvents AddStringButton As DataGridViewButtonColumn
+    Friend WithEvents DeleteStringButton As DataGridViewButtonColumn
     Friend WithEvents ObjectCountCol As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectHeaderLoad As DataGridViewButtonColumn
+    Friend WithEvents ObjectExportToObj As DataGridViewButtonColumn
     Friend WithEvents ObjectVertexCount As DataGridViewTextBoxColumn
     Friend WithEvents ObjectRendered As DataGridViewCheckBoxColumn
     Friend WithEvents ObjectHeaderFiller As DataGridViewTextBoxColumn
@@ -5681,25 +5769,26 @@ Partial Class MainForm
     Friend WithEvents ObjectUnknownF As DataGridViewTextBoxColumn
     Friend WithEvents ObjectUnknownG As DataGridViewTextBoxColumn
     Friend WithEvents ObjectUnknownH As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionCount As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionSettingNum As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionSettingObjStart As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionByteArray As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionInt1 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionInt2 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionInt3 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionInt4 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionSingle1 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionSingle2 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionSingle3 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionSingle4 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionSingle5 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionSingle6 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionShort1 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionShort2 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionShort3 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionShort4 As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionIntSet As DataGridViewTextBoxColumn
-    Friend WithEvents WeaponPositionAdd As DataGridViewButtonColumn
-    Friend WithEvents WeaponPositionDelete As DataGridViewButtonColumn
+    Friend WithEvents ObjectVertCountCol As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertX As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertY As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertZ As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertRX As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertRY As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertRZ As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertWeight As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertU As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertV As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertNormal1 As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertNormal2 As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectVertNormal3 As DataGridViewTextBoxColumn
+    Friend WithEvents ArcView As TabPage
+    Friend WithEvents DataGridArcView As DataGridView
+    Friend WithEvents MenuStripArcView As MenuStrip
+    Friend WithEvents SplitContainer1 As SplitContainer
+    Friend WithEvents DataGridObjectTriStripsView As DataGridView
+    Friend WithEvents ObjectTriStripNum As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectTriStripVerts As DataGridViewTextBoxColumn
+    Friend WithEvents ObjectTriStripVertCount As DataGridViewTextBoxColumn
+    Friend WithEvents ExportStringArrayToCSVToolStripMenuItem As ToolStripMenuItem
 End Class

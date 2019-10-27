@@ -39,9 +39,9 @@ Partial Class OptionsMenu
         Me.ButtonDownloadUnrrbpe = New System.Windows.Forms.Button()
         Me.ButtonDownloadRadVideo = New System.Windows.Forms.Button()
         Me.LabelZlib = New System.Windows.Forms.Label()
-        Me.LabelOodle = New System.Windows.Forms.Label()
+        Me.LabelOodle_6 = New System.Windows.Forms.Label()
         Me.ButtonSelectZlib = New System.Windows.Forms.Button()
-        Me.ButtonOodleSelect = New System.Windows.Forms.Button()
+        Me.ButtonOodle6Select = New System.Windows.Forms.Button()
         Me.CheckBoxLoadHome = New System.Windows.Forms.CheckBox()
         Me.CheckBoxBackup = New System.Windows.Forms.CheckBox()
         Me.CheckBoxDeleteTempBMP = New System.Windows.Forms.CheckBox()
@@ -82,6 +82,10 @@ Partial Class OptionsMenu
         Me.Label2 = New System.Windows.Forms.Label()
         Me.CheckRelocateMods = New System.Windows.Forms.CheckBox()
         Me.CheckDisableModPref = New System.Windows.Forms.CheckBox()
+        Me.CheckBoxCreateCAkDef = New System.Windows.Forms.CheckBox()
+        Me.CheckBoxAutoDecompressCakFiles = New System.Windows.Forms.CheckBox()
+        Me.ButtonOodle7Select = New System.Windows.Forms.Button()
+        Me.LabelOodle_7 = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -221,14 +225,14 @@ Partial Class OptionsMenu
         Me.LabelZlib.TabIndex = 14
         Me.LabelZlib.Text = "Zlib DLL Loaded: True"
         '
-        'LabelOodle
+        'LabelOodle_6
         '
-        Me.LabelOodle.AutoSize = True
-        Me.LabelOodle.Location = New System.Drawing.Point(8, 301)
-        Me.LabelOodle.Name = "LabelOodle"
-        Me.LabelOodle.Size = New System.Drawing.Size(125, 13)
-        Me.LabelOodle.TabIndex = 15
-        Me.LabelOodle.Text = "Oodle DLL Loaded: True"
+        Me.LabelOodle_6.AutoSize = True
+        Me.LabelOodle_6.Location = New System.Drawing.Point(8, 301)
+        Me.LabelOodle_6.Name = "LabelOodle_6"
+        Me.LabelOodle_6.Size = New System.Drawing.Size(111, 13)
+        Me.LabelOodle_6.TabIndex = 15
+        Me.LabelOodle_6.Text = "Oodle 6 Loaded: True"
         '
         'ButtonSelectZlib
         '
@@ -240,15 +244,15 @@ Partial Class OptionsMenu
         Me.ButtonSelectZlib.UseVisualStyleBackColor = True
         Me.ButtonSelectZlib.Visible = False
         '
-        'ButtonOodleSelect
+        'ButtonOodle6Select
         '
-        Me.ButtonOodleSelect.Location = New System.Drawing.Point(143, 296)
-        Me.ButtonOodleSelect.Name = "ButtonOodleSelect"
-        Me.ButtonOodleSelect.Size = New System.Drawing.Size(125, 23)
-        Me.ButtonOodleSelect.TabIndex = 17
-        Me.ButtonOodleSelect.Text = "Locate oo2core"
-        Me.ButtonOodleSelect.UseVisualStyleBackColor = True
-        Me.ButtonOodleSelect.Visible = False
+        Me.ButtonOodle6Select.Location = New System.Drawing.Point(143, 296)
+        Me.ButtonOodle6Select.Name = "ButtonOodle6Select"
+        Me.ButtonOodle6Select.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonOodle6Select.TabIndex = 17
+        Me.ButtonOodle6Select.Text = "Locate oo2core_6"
+        Me.ButtonOodle6Select.UseVisualStyleBackColor = True
+        Me.ButtonOodle6Select.Visible = False
         '
         'CheckBoxLoadHome
         '
@@ -428,12 +432,14 @@ Partial Class OptionsMenu
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(284, 386)
+        Me.TabControl1.Size = New System.Drawing.Size(284, 461)
         Me.TabControl1.TabIndex = 46
         '
         'TabPage1
         '
         Me.TabPage1.BackColor = System.Drawing.SystemColors.Control
+        Me.TabPage1.Controls.Add(Me.ButtonOodle7Select)
+        Me.TabPage1.Controls.Add(Me.LabelOodle_7)
         Me.TabPage1.Controls.Add(Me.LabelSkipVersion)
         Me.TabPage1.Controls.Add(Me.ButtonCheckUpdate)
         Me.TabPage1.Controls.Add(Me.Label1)
@@ -445,11 +451,11 @@ Partial Class OptionsMenu
         Me.TabPage1.Controls.Add(Me.TextBoxTexConv)
         Me.TabPage1.Controls.Add(Me.ButtonSelectTexConv)
         Me.TabPage1.Controls.Add(Me.ButtonDownloadBPEExe)
-        Me.TabPage1.Controls.Add(Me.ButtonOodleSelect)
+        Me.TabPage1.Controls.Add(Me.ButtonOodle6Select)
         Me.TabPage1.Controls.Add(Me.LabelRadVideo)
         Me.TabPage1.Controls.Add(Me.ButtonSelectZlib)
         Me.TabPage1.Controls.Add(Me.ButtonSelectBPEExe)
-        Me.TabPage1.Controls.Add(Me.LabelOodle)
+        Me.TabPage1.Controls.Add(Me.LabelOodle_6)
         Me.TabPage1.Controls.Add(Me.TextBoxRadVideo)
         Me.TabPage1.Controls.Add(Me.LabelZlib)
         Me.TabPage1.Controls.Add(Me.TextBoxBPEExe)
@@ -467,14 +473,14 @@ Partial Class OptionsMenu
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(276, 360)
+        Me.TabPage1.Size = New System.Drawing.Size(276, 435)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "File Select"
         '
         'LabelSkipVersion
         '
         Me.LabelSkipVersion.AutoSize = True
-        Me.LabelSkipVersion.Location = New System.Drawing.Point(8, 328)
+        Me.LabelSkipVersion.Location = New System.Drawing.Point(8, 355)
         Me.LabelSkipVersion.Name = "LabelSkipVersion"
         Me.LabelSkipVersion.Size = New System.Drawing.Size(71, 13)
         Me.LabelSkipVersion.TabIndex = 53
@@ -482,7 +488,7 @@ Partial Class OptionsMenu
         '
         'ButtonCheckUpdate
         '
-        Me.ButtonCheckUpdate.Location = New System.Drawing.Point(143, 323)
+        Me.ButtonCheckUpdate.Location = New System.Drawing.Point(143, 350)
         Me.ButtonCheckUpdate.Margin = New System.Windows.Forms.Padding(0)
         Me.ButtonCheckUpdate.Name = "ButtonCheckUpdate"
         Me.ButtonCheckUpdate.Size = New System.Drawing.Size(125, 23)
@@ -511,6 +517,8 @@ Partial Class OptionsMenu
         'TabPage3
         '
         Me.TabPage3.BackColor = System.Drawing.SystemColors.Control
+        Me.TabPage3.Controls.Add(Me.CheckBoxAutoDecompressCakFiles)
+        Me.TabPage3.Controls.Add(Me.CheckBoxCreateCAkDef)
         Me.TabPage3.Controls.Add(Me.CheckBoxSuppresHSPCFooters)
         Me.TabPage3.Controls.Add(Me.ButtonResetFormSize)
         Me.TabPage3.Controls.Add(Me.CheckBoxShowSelectedNode)
@@ -545,9 +553,9 @@ Partial Class OptionsMenu
         '
         'ButtonResetFormSize
         '
-        Me.ButtonResetFormSize.Location = New System.Drawing.Point(88, 276)
+        Me.ButtonResetFormSize.Location = New System.Drawing.Point(88, 322)
         Me.ButtonResetFormSize.Name = "ButtonResetFormSize"
-        Me.ButtonResetFormSize.Size = New System.Drawing.Size(100, 23)
+        Me.ButtonResetFormSize.Size = New System.Drawing.Size(100, 24)
         Me.ButtonResetFormSize.TabIndex = 50
         Me.ButtonResetFormSize.Text = "Reset Form Size"
         Me.ButtonResetFormSize.UseVisualStyleBackColor = True
@@ -564,18 +572,18 @@ Partial Class OptionsMenu
         '
         'ButtonResetPacs
         '
-        Me.ButtonResetPacs.Location = New System.Drawing.Point(190, 276)
+        Me.ButtonResetPacs.Location = New System.Drawing.Point(190, 322)
         Me.ButtonResetPacs.Name = "ButtonResetPacs"
-        Me.ButtonResetPacs.Size = New System.Drawing.Size(80, 23)
+        Me.ButtonResetPacs.Size = New System.Drawing.Size(80, 24)
         Me.ButtonResetPacs.TabIndex = 48
         Me.ButtonResetPacs.Text = "Reset Pacs"
         Me.ButtonResetPacs.UseVisualStyleBackColor = True
         '
         'ButtonResetStrings
         '
-        Me.ButtonResetStrings.Location = New System.Drawing.Point(6, 276)
+        Me.ButtonResetStrings.Location = New System.Drawing.Point(6, 322)
         Me.ButtonResetStrings.Name = "ButtonResetStrings"
-        Me.ButtonResetStrings.Size = New System.Drawing.Size(80, 23)
+        Me.ButtonResetStrings.Size = New System.Drawing.Size(80, 24)
         Me.ButtonResetStrings.TabIndex = 47
         Me.ButtonResetStrings.Text = "Reset Strings"
         Me.ButtonResetStrings.UseVisualStyleBackColor = True
@@ -583,7 +591,7 @@ Partial Class OptionsMenu
         'LabelDecimalNameLength
         '
         Me.LabelDecimalNameLength.AutoSize = True
-        Me.LabelDecimalNameLength.Location = New System.Drawing.Point(6, 161)
+        Me.LabelDecimalNameLength.Location = New System.Drawing.Point(6, 207)
         Me.LabelDecimalNameLength.Name = "LabelDecimalNameLength"
         Me.LabelDecimalNameLength.Size = New System.Drawing.Size(163, 13)
         Me.LabelDecimalNameLength.TabIndex = 46
@@ -592,7 +600,7 @@ Partial Class OptionsMenu
         'LabelHexLength
         '
         Me.LabelHexLength.AutoSize = True
-        Me.LabelHexLength.Location = New System.Drawing.Point(6, 220)
+        Me.LabelHexLength.Location = New System.Drawing.Point(6, 266)
         Me.LabelHexLength.Name = "LabelHexLength"
         Me.LabelHexLength.Size = New System.Drawing.Size(140, 13)
         Me.LabelHexLength.TabIndex = 44
@@ -601,7 +609,7 @@ Partial Class OptionsMenu
         'TrackBarHexLength
         '
         Me.TrackBarHexLength.LargeChange = 100
-        Me.TrackBarHexLength.Location = New System.Drawing.Point(6, 236)
+        Me.TrackBarHexLength.Location = New System.Drawing.Point(6, 282)
         Me.TrackBarHexLength.Maximum = 500
         Me.TrackBarHexLength.Minimum = 1
         Me.TrackBarHexLength.Name = "TrackBarHexLength"
@@ -614,7 +622,7 @@ Partial Class OptionsMenu
         'TrackBarDecimalNameLength
         '
         Me.TrackBarDecimalNameLength.LargeChange = 2
-        Me.TrackBarDecimalNameLength.Location = New System.Drawing.Point(6, 187)
+        Me.TrackBarDecimalNameLength.Location = New System.Drawing.Point(6, 233)
         Me.TrackBarDecimalNameLength.Maximum = 8
         Me.TrackBarDecimalNameLength.Name = "TrackBarDecimalNameLength"
         Me.TrackBarDecimalNameLength.Size = New System.Drawing.Size(260, 45)
@@ -624,7 +632,7 @@ Partial Class OptionsMenu
         'LabelOodleCompLevel
         '
         Me.LabelOodleCompLevel.AutoSize = True
-        Me.LabelOodleCompLevel.Location = New System.Drawing.Point(6, 136)
+        Me.LabelOodleCompLevel.Location = New System.Drawing.Point(6, 182)
         Me.LabelOodleCompLevel.Name = "LabelOodleCompLevel"
         Me.LabelOodleCompLevel.Size = New System.Drawing.Size(130, 13)
         Me.LabelOodleCompLevel.TabIndex = 36
@@ -635,7 +643,7 @@ Partial Class OptionsMenu
         Me.ComboBoxOodleCompressionLevel.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.ComboBoxOodleCompressionLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBoxOodleCompressionLevel.FormattingEnabled = True
-        Me.ComboBoxOodleCompressionLevel.Location = New System.Drawing.Point(141, 133)
+        Me.ComboBoxOodleCompressionLevel.Location = New System.Drawing.Point(141, 179)
         Me.ComboBoxOodleCompressionLevel.Name = "ComboBoxOodleCompressionLevel"
         Me.ComboBoxOodleCompressionLevel.Size = New System.Drawing.Size(125, 21)
         Me.ComboBoxOodleCompressionLevel.TabIndex = 35
@@ -643,7 +651,7 @@ Partial Class OptionsMenu
         'CheckBoxAppendDef
         '
         Me.CheckBoxAppendDef.AutoSize = True
-        Me.CheckBoxAppendDef.Location = New System.Drawing.Point(6, 65)
+        Me.CheckBoxAppendDef.Location = New System.Drawing.Point(6, 111)
         Me.CheckBoxAppendDef.Name = "CheckBoxAppendDef"
         Me.CheckBoxAppendDef.Size = New System.Drawing.Size(141, 17)
         Me.CheckBoxAppendDef.TabIndex = 4
@@ -653,7 +661,7 @@ Partial Class OptionsMenu
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(3, 49)
+        Me.Label2.Location = New System.Drawing.Point(3, 95)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(105, 13)
         Me.Label2.TabIndex = 3
@@ -662,7 +670,7 @@ Partial Class OptionsMenu
         'CheckRelocateMods
         '
         Me.CheckRelocateMods.AutoSize = True
-        Me.CheckRelocateMods.Location = New System.Drawing.Point(6, 111)
+        Me.CheckRelocateMods.Location = New System.Drawing.Point(6, 157)
         Me.CheckRelocateMods.Name = "CheckRelocateMods"
         Me.CheckRelocateMods.Size = New System.Drawing.Size(236, 17)
         Me.CheckRelocateMods.TabIndex = 2
@@ -672,19 +680,58 @@ Partial Class OptionsMenu
         'CheckDisableModPref
         '
         Me.CheckDisableModPref.AutoSize = True
-        Me.CheckDisableModPref.Location = New System.Drawing.Point(6, 88)
+        Me.CheckDisableModPref.Location = New System.Drawing.Point(6, 134)
         Me.CheckDisableModPref.Name = "CheckDisableModPref"
         Me.CheckDisableModPref.Size = New System.Drawing.Size(172, 17)
         Me.CheckDisableModPref.TabIndex = 1
         Me.CheckDisableModPref.Text = "Disable Mod Folder Preference"
         Me.CheckDisableModPref.UseVisualStyleBackColor = True
         '
+        'CheckBoxCreateCAkDef
+        '
+        Me.CheckBoxCreateCAkDef.AutoSize = True
+        Me.CheckBoxCreateCAkDef.Location = New System.Drawing.Point(6, 52)
+        Me.CheckBoxCreateCAkDef.Name = "CheckBoxCreateCAkDef"
+        Me.CheckBoxCreateCAkDef.Size = New System.Drawing.Size(164, 17)
+        Me.CheckBoxCreateCAkDef.TabIndex = 52
+        Me.CheckBoxCreateCAkDef.Text = "Create CAk def Files on read."
+        Me.CheckBoxCreateCAkDef.UseVisualStyleBackColor = True
+        '
+        'CheckBoxAutoDecompressCakFiles
+        '
+        Me.CheckBoxAutoDecompressCakFiles.AutoSize = True
+        Me.CheckBoxAutoDecompressCakFiles.Location = New System.Drawing.Point(6, 75)
+        Me.CheckBoxAutoDecompressCakFiles.Name = "CheckBoxAutoDecompressCakFiles"
+        Me.CheckBoxAutoDecompressCakFiles.Size = New System.Drawing.Size(154, 17)
+        Me.CheckBoxAutoDecompressCakFiles.TabIndex = 53
+        Me.CheckBoxAutoDecompressCakFiles.Text = "AutoDecompress CAk Files"
+        Me.CheckBoxAutoDecompressCakFiles.UseVisualStyleBackColor = True
+        '
+        'ButtonOodle7Select
+        '
+        Me.ButtonOodle7Select.Location = New System.Drawing.Point(143, 323)
+        Me.ButtonOodle7Select.Name = "ButtonOodle7Select"
+        Me.ButtonOodle7Select.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonOodle7Select.TabIndex = 55
+        Me.ButtonOodle7Select.Text = "Locate oo2core_7"
+        Me.ButtonOodle7Select.UseVisualStyleBackColor = True
+        Me.ButtonOodle7Select.Visible = False
+        '
+        'LabelOodle_7
+        '
+        Me.LabelOodle_7.AutoSize = True
+        Me.LabelOodle_7.Location = New System.Drawing.Point(8, 328)
+        Me.LabelOodle_7.Name = "LabelOodle_7"
+        Me.LabelOodle_7.Size = New System.Drawing.Size(111, 13)
+        Me.LabelOodle_7.TabIndex = 54
+        Me.LabelOodle_7.Text = "Oodle 7 Loaded: True"
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
-        Me.ClientSize = New System.Drawing.Size(284, 386)
+        Me.ClientSize = New System.Drawing.Size(284, 461)
         Me.Controls.Add(Me.TabControl1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -720,9 +767,9 @@ Partial Class OptionsMenu
     Friend WithEvents ButtonDownloadUnrrbpe As Button
     Friend WithEvents ButtonDownloadRadVideo As Button
     Friend WithEvents LabelZlib As Label
-    Friend WithEvents LabelOodle As Label
+    Friend WithEvents LabelOodle_6 As Label
     Friend WithEvents ButtonSelectZlib As Button
-    Friend WithEvents ButtonOodleSelect As Button
+    Friend WithEvents ButtonOodle6Select As Button
     Friend WithEvents CheckBoxLoadHome As CheckBox
     Friend WithEvents CheckBoxBackup As CheckBox
     Friend WithEvents CheckBoxDeleteTempBMP As CheckBox
@@ -763,4 +810,8 @@ Partial Class OptionsMenu
     Friend WithEvents LabelSkipVersion As Label
     Friend WithEvents ButtonCheckUpdate As Button
     Friend WithEvents CheckBoxSuppresHSPCFooters As CheckBox
+    Friend WithEvents CheckBoxCreateCAkDef As CheckBox
+    Friend WithEvents CheckBoxAutoDecompressCakFiles As CheckBox
+    Friend WithEvents ButtonOodle7Select As Button
+    Friend WithEvents LabelOodle_7 As Label
 End Class

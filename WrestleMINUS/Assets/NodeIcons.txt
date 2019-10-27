@@ -28,6 +28,7 @@
 18	2	-BK2
 		-BIK
 19	C	-CostumeFile
+		-CAk
 20	U	-MuscleFile
 		-UFC Files
 21	K	-MaskFile

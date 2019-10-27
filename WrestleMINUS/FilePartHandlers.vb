@@ -4,6 +4,7 @@ Imports System.Text 'Text Encoding
 Public Class ExtendedFileProperties
     Public Name As String = ""
     Public FullFilePath As String = ""
+    Public VirtualFilePath As String = ""
     Public FileType As PackageType = PackageType.Unchecked
     Public Index As UInt64 = 0
     Public length As UInt64
@@ -14,18 +15,29 @@ End Class
 
 Public Class FilePartHandlers
 
-    Shared Function GetFilePartBytes(ByRef RequestedFileProperties As ExtendedFileProperties) As Byte()
+    Shared Function GetFilePartBytes(ByRef RequestedFileProperties As ExtendedFileProperties, Optional MaxLength As Int32 = -1) As Byte()
+        If RequestedFileProperties.FileType = PackageType.CakBaked OrElse RequestedFileProperties.FileType = PackageType.CAkUnBaked Then
+            If RequestedFileProperties.StoredData.Length < 1 Then
+                RequestedFileProperties.StoredData = PackUnpack.GetUnCompressedCakBytes(RequestedFileProperties.FullFilePath, RequestedFileProperties.VirtualFilePath)
+            End If
+            Return RequestedFileProperties.StoredData
+        End If
         'blocking error if length = 0
         If Not RequestedFileProperties.length > 0 Then
             Return New Byte() {}
         End If
-        Dim FileBytes As Byte()
-        If RequestedFileProperties.length > Int32.MaxValue Then
-            MessageBox.Show("File too long, cannot be processed at this time.")
-            Return New Byte() {}
+        Dim ExtractedLength As UInt64 = RequestedFileProperties.length
+        If MaxLength > 0 Then
+            If RequestedFileProperties.length > MaxLength Then
+                ExtractedLength = MaxLength
+            End If
         Else
-            FileBytes = New Byte(RequestedFileProperties.length - 1) {}
+            If RequestedFileProperties.length > Int32.MaxValue Then
+                MessageBox.Show("File too long, Chunk of length " & (Int32.MaxValue / 2) & " bytes returned")
+                ExtractedLength = Int32.MaxValue / 2
+            End If
         End If
+        Dim FileBytes As Byte() = New Byte(ExtractedLength - 1) {}
         If RequestedFileProperties.StoredData.Length > 0 Then
             Array.Copy(RequestedFileProperties.StoredData, CInt(RequestedFileProperties.Index), FileBytes, 0, CInt(FileBytes.Length))
         Else
@@ -36,7 +48,7 @@ Public Class FilePartHandlers
             Try
                 Dim ActiveReader As BinaryReader = New BinaryReader(File.Open(RequestedFileProperties.FullFilePath, FileMode.Open, FileAccess.Read))
                 ActiveReader.BaseStream.Seek(RequestedFileProperties.Index, SeekOrigin.Begin)
-                FileBytes = ActiveReader.ReadBytes(RequestedFileProperties.length)
+                FileBytes = ActiveReader.ReadBytes(ExtractedLength)
                 ActiveReader.Dispose()
             Catch ex As Exception
                 MessageBox.Show(ex.Message)
@@ -71,13 +83,23 @@ Public Class FilePartHandlers
 
     Shared Function ExtractFilePartTo(RequestedFile As ExtendedFileProperties) As Boolean
         Dim FileExtention As String = ".bin"
-        If My.Settings.UseDetailedFileNames Then
+        If RequestedFile.FileType = PackageType.CakBaked Then
+            If RequestedFile.Name.Contains(".") Then
+                FileExtention = ""
+            Else
+                FileExtention = ".bin"
+            End If
+            'CakBaked File names normally have an extension already.
+        ElseIf My.Settings.UseDetailedFileNames Then
             FileExtention = "." & RequestedFile.FileType.ToString
         End If
         Dim ExtractSaveFileDialog As SaveFileDialog = New SaveFileDialog With {
             .InitialDirectory = Path.GetDirectoryName(RequestedFile.FullFilePath),
             .FileName = RequestedFile.Name & FileExtention
         }
+        If RequestedFile.Name.Contains("/") Then
+            ExtractSaveFileDialog.FileName = RequestedFile.Name.Substring(RequestedFile.Name.LastIndexOf("/") + 1)
+        End If
         If ExtractSaveFileDialog.ShowDialog() = DialogResult.OK Then
             Return ExtractFilePart(RequestedFile, ExtractSaveFileDialog.FileName)
         Else
@@ -106,15 +128,28 @@ Public Class FilePartHandlers
             If Not TemporarySubItem.FileType = PackageType.Folder Then
                 'if it's a file we don't want to copy it.
                 If Not Path.GetFileName(TemporarySubItem.FullFilePath) = TemporarySubItem.Name Then
-                    'Here we Extract the current Temporary Item prior to parsing sub items.
-                    Dim FileExtention As String = ".bin"
-                    If My.Settings.UseDetailedFileNames Then
-                        FileExtention = "." & TemporarySubItem.FileType.ToString
-                    End If
-                    If Not ExtractFilePart(TemporarySubItem, BaseFolder & AdditonalFolders &
-                                   TemporarySubItem.Name & FileExtention) Then
-                        'we've had a failure somewhere in the chain
-                        Result = False
+                    If Not TemporarySubItem.FileType = PackageType.CakFolder Then
+                        'Here we Extract the current Temporary Item prior to parsing sub items.
+                        Dim FileExtention As String = ".bin"
+                        If TemporarySubItem.Name.Contains(".") Then
+                            FileExtention = ""
+                            'CakBaked File names normally have an extension already.
+                        ElseIf My.Settings.UseDetailedFileNames Then
+                            FileExtention = "." & TemporarySubItem.FileType.ToString
+                        End If
+                        If Not TemporarySubItem.Name.Contains("/") Then
+                            If Not ExtractFilePart(TemporarySubItem, BaseFolder & AdditonalFolders &
+                                           TemporarySubItem.Name & FileExtention) Then
+                                'we've had a failure somewhere in the chain
+                                Result = False
+                            End If
+                        Else
+                            Dim FinalFilePath As String = GeneralTools.GenerateFoldersFromVirtualPath(BaseFolder & AdditonalFolders & TemporarySubItem.Name & FileExtention)
+                            If Not ExtractFilePart(TemporarySubItem, FinalFilePath) Then
+                                'we've had a failure somewhere in the chain
+                                Result = False
+                            End If
+                        End If
                     End If
                 End If
             End If
@@ -124,6 +159,7 @@ Public Class FilePartHandlers
                     Dim Folder As String = ""
                     'Here we want to check if it is an uncompress container for the settings options..
                     If TemporarySubItem.FileType = PackageType.OODL OrElse
+                        TemporarySubItem.FileType = PackageType.OODL7 OrElse
                         TemporarySubItem.FileType = PackageType.ZLIB OrElse
                         TemporarySubItem.FileType = PackageType.BPE Then
                         If My.Settings.DecompresstoFolder Then
@@ -179,7 +215,7 @@ Public Class FilePartHandlers
                             End If
                             FileBytes = CompressedBytes
                         Case PackageType.OODL
-                            Dim CompressedBytes As Byte() = PackUnpack.GetCompressedOodleBytes(FileBytes)
+                            Dim CompressedBytes As Byte() = PackUnpack.GetCompressedOodle_6Bytes(FileBytes)
                             If IsNothing(CompressedBytes) Then
                                 MessageBox.Show("Failure to get Compressed Bytes")
                                 Return False
@@ -244,7 +280,7 @@ Public Class FilePartHandlers
          ParentFileInformation.FileType = PackageType.BPE Then
             Dim CompressedByteArray As Byte()
             If ParentFileInformation.FileType = PackageType.OODL Then
-                CompressedByteArray = PackUnpack.GetCompressedOodleBytes(SentBytes)
+                CompressedByteArray = PackUnpack.GetCompressedOodle_6Bytes(SentBytes)
             ElseIf ParentFileInformation.FileType = PackageType.ZLIB Then
                 CompressedByteArray = PackUnpack.GetCompressedZlibBytes(SentBytes)
             ElseIf ParentFileInformation.FileType = PackageType.BPE Then

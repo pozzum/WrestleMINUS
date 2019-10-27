@@ -11,6 +11,12 @@ Public Class GeneralTools
         End If
     End Sub
 
+    Shared Function GenerateFoldersFromVirtualPath(VirtualFileNamePath As String)
+        Dim ReturnedFilepath As String = VirtualFileNamePath.Replace("/", "\")
+        FolderCheck(Path.GetDirectoryName(ReturnedFilepath))
+        Return ReturnedFilepath
+    End Function
+
     Shared Sub MoveAllItems(ByVal fromPath As String, ByVal toPath As String)
         My.Computer.FileSystem.CopyDirectory(fromPath, toPath, True)
         'Here we want to not recycle the files since the files are moved
@@ -49,7 +55,7 @@ Public Class GeneralTools
         Return True
     End Function
 
-    Public Shared Function CheckFileWriteable(FilePath As String, Optional FileMustExist As Boolean = True)
+    Public Shared Function CheckFileWriteable(FilePath As String, Optional FileMustExist As Boolean = True) As Boolean
         If Not File.Exists(FilePath) Then
             If FileMustExist Then
                 MessageBox.Show(FilePath & vbNewLine & "Not Found")

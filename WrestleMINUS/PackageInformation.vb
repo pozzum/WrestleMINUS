@@ -18,19 +18,22 @@ Public Class PackageInformation
 
     Shared Function CheckExpandable(TestType As PackageType) As Boolean
         If TestType = PackageType.Unchecked OrElse
-           TestType = PackageType.Folder OrElse
-           TestType = PackageType.HSPC OrElse
-           TestType = PackageType.EPK8 OrElse
-           TestType = PackageType.EPAC OrElse
-           TestType = PackageType.SHDC OrElse
-           TestType = PackageType.PACH OrElse
+            TestType = PackageType.CakBaked OrElse
+            TestType = PackageType.Folder OrElse
+            TestType = PackageType.HSPC OrElse
+            TestType = PackageType.EPK8 OrElse
+            TestType = PackageType.EPAC OrElse
+            TestType = PackageType.SHDC OrElse
+            TestType = PackageType.PACH OrElse
             TestType = PackageType.BPE OrElse
-           TestType = PackageType.ZLIB OrElse
-           TestType = PackageType.OODL OrElse
-           TestType = PackageType.PachDirectory_4 OrElse
-           TestType = PackageType.PachDirectory_8 OrElse
-           TestType = PackageType.TextureLibrary OrElse
-           TestType = PackageType.YANMPack Then
+            TestType = PackageType.ZLIB OrElse
+            TestType = PackageType.OODL OrElse
+            TestType = PackageType.PachDirectory_4 OrElse
+            TestType = PackageType.PachDirectory_8 OrElse
+            TestType = PackageType.TextureLibrary OrElse
+            TestType = PackageType.YANMPack OrElse
+            TestType = PackageType.big OrElse
+            TestType = PackageType.Cak Then
             Return True
         End If
         Return False
@@ -39,6 +42,8 @@ Public Class PackageInformation
     Shared Function GetImageIndex(SentType As PackageType) As UInt32
         Select Case SentType
             Case PackageType.Folder
+                Return 1
+            Case PackageType.CakFolder
                 Return 1
             Case PackageType.FileRefBin
                 Return 1
@@ -60,14 +65,20 @@ Public Class PackageInformation
                 Return 6
             Case PackageType.BPE
                 Return 7
+            Case PackageType.big
+                Return 7
             Case PackageType.ZLIB
                 Return 8
             Case PackageType.OODL
+                Return 9
+            Case PackageType.OODL7
                 Return 9
             Case PackageType.TextureLibrary
                 Return 10
             Case PackageType.TPL
                 Return 10
+            Case PackageType.Arc
+                Return 11
             Case PackageType.YANMPack
                 Return 11
             Case PackageType.YANM
@@ -78,9 +89,15 @@ Public Class PackageInformation
                 Return 12
             Case PackageType.YOBJArray
                 Return 12
+            Case PackageType.mdl
+                Return 12
             Case PackageType.StringFile
                 Return 13
+            Case PackageType.sdb
+                Return 13
             Case PackageType.DDS
+                Return 14
+            Case PackageType.tex
                 Return 14
             Case PackageType.DUMY
                 Return 14
@@ -93,6 +110,8 @@ Public Class PackageInformation
             Case PackageType.bk2
                 Return 18
             Case PackageType.CostumeFile
+                Return 19
+            Case PackageType.Cak
                 Return 19
             Case PackageType.MuscleFile
                 Return 20
@@ -122,6 +141,10 @@ Public Class PackageInformation
                 Return 25
             Case PackageType.LSD_BIN
                 Return 25
+            Case PackageType.CakBaked
+                Return 0
+            Case PackageType.Unchecked
+                Return 0
             Case Else
                 Return 0
         End Select
@@ -217,6 +240,18 @@ Public Class PackageInformation
                 Return PackageType.DUMY
             Case "OneT"
                 Return PackageType.TextureReference
+            Case "ARCH"
+                Return PackageType.Arc
+            Case "FDIR"
+                Return PackageType.Cak
+            Case "TEX!"
+                Return PackageType.tex
+            Case "MDL!"
+                Return PackageType.mdl
+            Case "MTLs"
+                Return PackageType.mtls
+            Case "MSKI"
+                Return PackageType.mskinfo
             Case Else
                 'if we don't have a perfect 4 match we go to check the 3 character matches
                 Select Case True
@@ -243,10 +278,21 @@ Public Class PackageInformation
                         FirstFour.Contains("ST") OrElse
                         FirstFour.Contains("EA"))
                         Return PackageType.WeaponPosition
+                    Case FirstFour.Contains("EB")
+                        Return PackageType.big
                     Case Else
                         'if we do not have a header text to guide us we have some additional text checks that are consistent.
+                        'We want to Check for 2K20 Files that have the Header Type at byte 8
+                        'First we want to check for oodl 7 at byte &H10
+
+
                         'THIS IS PRODUCING ERRORS WITH SOME PROJECT FILES
-                        If ByteArray.Length > &H20 Then
+                        If ByteArray.Length > &H20 + Index Then
+                            Dim OODL7Check As String = Encoding.Default.GetChars(ByteArray, Index + &H10, 4)
+                            If OODL7Check = "OODL" Then
+                                Return PackageType.OODL7
+                            End If
+
                             Dim ShortNumberCheck As UInt32 = BitConverter.ToUInt16(ByteArray, Index + 0)
                             If ShortNumberCheck > 0 Then
                                 If New String(Encoding.Default.GetChars(ByteArray, Index + 4, &HC)) = "¾ï¾ï¾ï¾ï¾ï¾ï" Then
@@ -258,8 +304,8 @@ Public Class PackageInformation
                                 End If
                             End If
                         End If
-                            'some of these checks don't 100% require this many bytes, but none should functionally have that little byte length
-                            If ByteArray.Length > &H30 Then
+                        'some of these checks don't 100% require this many bytes, but none should functionally have that little byte length
+                        If ByteArray.Length > &H30 + Index Then
                             Select Case True
                                 Case (Encoding.Default.GetChars(ByteArray, Index + 8, 1) = "/" AndAlso Encoding.Default.GetChars(ByteArray, Index + &HC, 2).Contains("/"))
                                     Return PackageType.FileRefBin
@@ -284,6 +330,13 @@ Public Class PackageInformation
                                     Else
                                         Return PackageType.bin
                                     End If
+                                Case FileNamePath.ToLower.Contains(".sdb")
+                                    Dim NumberCheck As UInt32 = BitConverter.ToUInt32(ByteArray, Index + 0)
+                                    If NumberCheck = 0 Then
+                                        Return PackageType.sdb
+                                    Else
+                                        Return PackageType.bin
+                                    End If
                                 Case Else
                                     Return PackageType.bin
                             End Select
@@ -291,6 +344,7 @@ Public Class PackageInformation
                             Return PackageType.bin
                         End If
                 End Select
+                Return PackageType.bin
         End Select
     End Function
 
@@ -299,7 +353,8 @@ Public Class PackageInformation
                             Optional Crawl As Boolean = False,
                             Optional TriggerProgress As Boolean = False)
         'Here we are using the ref of parent file so we can edit the sub files.
-        Dim FileBytes As Byte() = FilePartHandlers.GetFilePartBytes(ParentFileProperties)
+        Dim FileBytes As Byte() = FilePartHandlers.GetFilePartBytes(ParentFileProperties, CInt((Int32.MaxValue / 32)))
+        'marking space limit explicitly to suppress the error message
         Select Case ParentFileProperties.FileType
             Case PackageType.Folder
                 'TO DO Add in a progress trigger back to the MainForm.
@@ -350,9 +405,61 @@ Public Class PackageInformation
                 ParentFileProperties.StoredData = New Byte() {}
                 GetFileParts(ParentFileProperties, Crawl)
                 Exit Sub 'Skips the crawler at the bottom and duping the host node update
-
+            Case PackageType.CakBaked
+                If CheckHeaderType(0, FileBytes, ParentFileProperties.FullFilePath) = PackageType.OODL7 Then
+                    ParentFileProperties.FileType = PackageType.OODL7
+                    If IsNothing(ParentFileProperties.SubFiles) Then
+                        ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                    End If
+                    Dim UncompressedBytes As Byte() = Nothing
+                    If PackUnpack.CheckOodle7() Then
+                        UncompressedBytes = PackUnpack.GetUncompressedOodle_7Bytes(FileBytes)
+                    End If
+                    If IsNothing(UncompressedBytes) Then
+                        Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                            .Name = ParentFileProperties.Name & " UNCOMPRESS",
+                            .FullFilePath = ParentFileProperties.FullFilePath,
+                            .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                            .Index = 0,
+                            .length = 0,
+                            .StoredData = UncompressedBytes,
+                            .FileType = PackageType.bin,
+                            .Parent = ParentFileProperties}
+                        ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                        Exit Sub
+                    Else
+                        Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                            .Name = ParentFileProperties.Name & " UNCOMPRESS",
+                            .FullFilePath = ParentFileProperties.FullFilePath,
+                            .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                            .Index = 0,
+                            .length = UncompressedBytes.Length,
+                            .StoredData = UncompressedBytes,
+                            .FileType = CheckHeaderType(.Index, UncompressedBytes, ParentFileProperties.VirtualFilePath),
+                            .Parent = ParentFileProperties}
+                        ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                    End If
+                Else
+                    If IsNothing(ParentFileProperties.SubFiles) Then
+                        ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                    End If
+                    ParentFileProperties.FileType = PackageType.CAkUnBaked
+                    Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                           .Name = ParentFileProperties.Name & " EXTRACT",
+                           .FullFilePath = ParentFileProperties.FullFilePath,
+                            .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                           .Index = &H18,
+                           .length = FileBytes.Length - &H18,
+                           .StoredData = FileBytes,
+                           .FileType = CheckHeaderType(.Index, .StoredData, ParentFileProperties.VirtualFilePath),
+                           .Parent = ParentFileProperties}
+                    ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                End If
+                'ParentFileProperties.FileType = CheckHeaderType(0, FileBytes, ParentFileProperties.FullFilePath)
+                'ParentFileProperties.StoredData = FileBytes
+                'GetFileParts(ParentFileProperties, Crawl)
+                Exit Sub 'Skips the crawler at the bottom and duping the host node update
 #Region "Primary Container Types {PAC}"
-
             Case PackageType.HSPC
                 Dim FileCount As Integer = BitConverter.ToUInt32(FileBytes, &H38)
                 Dim FileNameLength As Integer = BitConverter.ToUInt32(FileBytes, &H18)
@@ -487,8 +594,8 @@ Public Class PackageInformation
                     End If
                     'MessageBox.Show(Hex(TempNumber))
                     FileInformationIndex = TempNumber + &H40 + &H10
-                    ElseIf HeaderTypeCheck = &H800 Then
-                        FileInformationIndex = BitConverter.ToUInt32(FileBytes, &H1C) * &H800
+                ElseIf HeaderTypeCheck = &H800 Then
+                    FileInformationIndex = BitConverter.ToUInt32(FileBytes, &H1C) * &H800
                 End If
                 Dim PachPartsCount As Integer = (FileInformationLength / &H10) '1 index
                 If PachPartsCount > 0 Then
@@ -639,8 +746,8 @@ Public Class PackageInformation
                     ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
                 End If
                 Dim UncompressedBytes As Byte() = Nothing
-                If PackUnpack.CheckOodle() Then
-                    UncompressedBytes = PackUnpack.GetUncompressedOodleBytes(FileBytes)
+                If PackUnpack.CheckOodle6() Then
+                    UncompressedBytes = PackUnpack.GetUncompressedOodle_6Bytes(FileBytes)
                 End If
                 If IsNothing(UncompressedBytes) Then
                     Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
@@ -664,7 +771,39 @@ Public Class PackageInformation
                         .Parent = ParentFileProperties}
                     ParentFileProperties.SubFiles.Add(ContainedFileProperties)
                 End If
-
+            Case PackageType.OODL7
+                If Not IsNothing(ParentFileProperties.SubFiles) Then
+                    'MessageBox.Show(ParentFileProperties.Name & " Already Decompressed")
+                    Exit Select
+                Else
+                    ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                End If
+                Dim UncompressedBytes As Byte() = Nothing
+                If PackUnpack.CheckOodle7() Then
+                    UncompressedBytes = PackUnpack.GetUncompressedOodle_7Bytes(FileBytes)
+                End If
+                If IsNothing(UncompressedBytes) Then
+                    Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                        .Name = ParentFileProperties.Name & " UNCOMPRESS",
+                        .FullFilePath = ParentFileProperties.FullFilePath,
+                        .Index = 0,
+                        .length = 0,
+                        .StoredData = UncompressedBytes,
+                        .FileType = PackageType.bin,
+                        .Parent = ParentFileProperties}
+                    ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                    Exit Sub
+                Else
+                    Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                        .Name = ParentFileProperties.Name & " UNCOMPRESS",
+                        .FullFilePath = ParentFileProperties.FullFilePath,
+                        .Index = 0,
+                        .length = UncompressedBytes.Length,
+                        .StoredData = UncompressedBytes,
+                        .FileType = CheckHeaderType(.Index, UncompressedBytes, ParentFileProperties.FullFilePath),
+                        .Parent = ParentFileProperties}
+                    ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                End If
 #End Region
 
 #Region "Library Types"
@@ -735,14 +874,14 @@ Public Class PackageInformation
             Case PackageType.YANMPack
                 If FileBytes.Length > &H10 Then
                     Dim HeaderLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, &HC), 0)
-                Dim YANMLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, 4), 0)
-                Dim HeadIndex As Integer = 0
-                Dim partcount As Integer = 0
-                If HeaderLength > 0 Then
-                    If IsNothing(ParentFileProperties.SubFiles) Then
-                        ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                    Dim YANMLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, 4), 0)
+                    Dim HeadIndex As Integer = 0
+                    Dim partcount As Integer = 0
+                    If HeaderLength > 0 Then
+                        If IsNothing(ParentFileProperties.SubFiles) Then
+                            ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                        End If
                     End If
-                End If
                     If YANMLength > 0 Then
                         Do While HeadIndex < (HeaderLength - &H20)
                             If HeadIndex = 0 Then
@@ -775,34 +914,52 @@ Public Class PackageInformation
                 End If
 
 #Region "To be Built"
-
             Case PackageType.YOBJ
 
+            Case PackageType.big
+                Dim FileCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, 4, 4), 0)
+                Dim OffsetHeaderLength As UInt64 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, &HC, 4), 0)
+                MessageBox.Show(OffsetHeaderLength.ToString)
+                If FileCount > 0 Then
+                    If IsNothing(ParentFileProperties.SubFiles) Then
+                        ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                    End If
+                End If
+                For i As Integer = 0 To FileCount - 1
+                    Dim CurrentItemIndex As UInt64 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, i * &H10 + &H30, 4), 0) * &H10
+                    Dim CurrentItemLength As UInt64 = BitConverter.ToUInt64(GeneralTools.EndianReverse(FileBytes, i * &H10 + &H30 + 4, 8), 0)
+                    Dim ImageNameLength As UInt16 = FileBytes(&H14)
+                    Dim ImageName As String = Encoding.Default.GetChars(FileBytes, OffsetHeaderLength + i * ImageNameLength + 2, ImageNameLength)
+                    ImageName = ImageName.TrimEnd(Chr(0))
+                    'Here we need to get the File length and index in case the bytes are reversed
+                    Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                        .Name = ImageName,
+                        .FullFilePath = ParentFileProperties.FullFilePath,
+                        .length = CurrentItemLength,
+                        .Index = CurrentItemIndex,
+                        .StoredData = ParentFileProperties.StoredData,
+                        .FileType = PackageType.bin,
+                        .Parent = ParentFileProperties}
+                    ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                Next
+#End Region
+
+#Region "2K20 Cak Files"
+            Case PackageType.Cak
+                Dim ListOfFiles As List(Of String) = PackUnpack.GetBakedCakFileList(ParentFileProperties.FullFilePath)
+                If ListOfFiles.Count > 0 Then
+                    If IsNothing(ParentFileProperties.SubFiles) Then
+                        ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                    End If
+                End If
+                For i As Integer = 0 To ListOfFiles.Count - 1
+                    ParentFileProperties = BuildCakSubNodes(ParentFileProperties, ListOfFiles(i))
+                Next
 #End Region
 
 #End Region
-
-#Region "Stand Alone Files"
-
-                'Case PackageType.StringFile
-                'Case PackageType.bin
-                'Case PackageType.DDS
-                'Case PackageType.YANM
-                'Case PackageType.ArenaInfo
-                'Case PackageType.ShowInfo
-                'Case PackageType.NIBJ
-                'Case PackageType.bk2
-                'Case PackageType.CostumeFile
-                'Case PackageType.MuscleFile
-                'Case PackageType.MaskFile
-                'Case PackageType.YOBJArray
-                'Case PackageType.OFOP
-                'Case PackageType.YANM
-                'Case PackageType.VMUM
-
-#End Region
-
         End Select
+
         If Crawl Then
             If Not IsNothing(ParentFileProperties.SubFiles) Then
                 For Each ContainedFileProperties As ExtendedFileProperties In ParentFileProperties.SubFiles
@@ -816,6 +973,51 @@ Public Class PackageInformation
         End If
     End Sub
 
+    Shared Function BuildCakSubNodes(ParentFile As ExtendedFileProperties, FullVirtualPath As String, Optional RemainingPath As String = "") As ExtendedFileProperties
+        If RemainingPath = "" Then
+            RemainingPath = FullVirtualPath
+        End If
+        'MessageBox.Show(RemainingPath)
+        If IsNothing(ParentFile.SubFiles) Then
+            ParentFile.SubFiles = New List(Of ExtendedFileProperties)
+        End If
+        If RemainingPath.Contains("/") Then
+            Dim ActiveFolder As String = RemainingPath.Substring(0, RemainingPath.IndexOf("/"))
+            If Not ParentFile.SubFiles.Count = 0 Then
+                For i As Integer = 0 To ParentFile.SubFiles.Count - 1
+                    If ParentFile.SubFiles(i).Name = ActiveFolder Then
+                        ParentFile.SubFiles(i) = BuildCakSubNodes(ParentFile.SubFiles(i), FullVirtualPath, RemainingPath.Substring(RemainingPath.IndexOf("/") + 1))
+                        Return ParentFile
+                    End If
+                Next
+            End If
+            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                .Name = ActiveFolder,
+                .FullFilePath = ParentFile.FullFilePath,
+                .VirtualFilePath = FullVirtualPath,'Here we need to Retain the Full Path so it can be extracted with the tool
+                .length = 0,
+                .Index = 0,
+                .StoredData = ParentFile.StoredData,
+                .FileType = PackageType.CakFolder,
+                .Parent = ParentFile}
+            'MessageBox.Show(ContainedFileProperties.Name)
+            ContainedFileProperties = BuildCakSubNodes(ContainedFileProperties, FullVirtualPath, RemainingPath.Substring(RemainingPath.IndexOf("/") + 1))
+            ParentFile.SubFiles.Add(ContainedFileProperties)
+            Return ParentFile
+        Else
+            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                .Name = RemainingPath,
+                .FullFilePath = ParentFile.FullFilePath,
+                .VirtualFilePath = FullVirtualPath,'Here we need to Retain the Full Path so it can be extracted with the tool
+                .length = 100,
+                .Index = 100,
+                .StoredData = ParentFile.StoredData,
+                .FileType = PackageType.CakBaked,
+                .Parent = ParentFile}
+            ParentFile.SubFiles.Add(ContainedFileProperties)
+            Return ParentFile
+        End If
+    End Function
 #End Region
 
 End Class

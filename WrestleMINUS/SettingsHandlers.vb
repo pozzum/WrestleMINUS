@@ -25,24 +25,40 @@ Public Class SettingsHandlers
         If My.Settings.StringObject = "" Then
             Dim AppDataStringLocation As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS\Strings.bin"
             If File.Exists(AppDataStringLocation) Then
-                Dim fs As Stream = New FileStream(AppDataStringLocation, FileMode.Open)
-                Dim bf As BinaryFormatter = New BinaryFormatter()
-                MainForm.StringReferences = CType(bf.Deserialize(fs), String())
-                fs.Close()
+                Try
+                    Dim fs As Stream = New FileStream(AppDataStringLocation, FileMode.Open)
+                    Dim bf As BinaryFormatter = New BinaryFormatter()
+                    MainForm.StringReferences = CType(bf.Deserialize(fs), Dictionary(Of UInt32, String))
+                    fs.Close()
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message)
+                    MainForm.StringReferences = New Dictionary(Of UInt32, String) From {
+                        {0, "String Not Read"}
+                    }
+                End Try
             Else
-                MainForm.StringReferences = New String(&HFFFFF) {}
-                MainForm.StringReferences(0) = "String Not Read"
+                MainForm.StringReferences = New Dictionary(Of UInt32, String) From {
+                        {0, "String Not Read"}
+                    }
             End If
             My.Settings.StringObject = AppDataStringLocation
         Else
             If File.Exists(My.Settings.StringObject) Then
-                Dim fs As Stream = New FileStream(My.Settings.StringObject, FileMode.Open)
-                Dim bf As BinaryFormatter = New BinaryFormatter()
-                MainForm.StringReferences = CType(bf.Deserialize(fs), String())
-                fs.Close()
+                Try
+                    Dim fs As Stream = New FileStream(My.Settings.StringObject, FileMode.Open)
+                    Dim bf As BinaryFormatter = New BinaryFormatter()
+                    MainForm.StringReferences = CType(bf.Deserialize(fs), Dictionary(Of UInt32, String))
+                    fs.Close()
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message)
+                    MainForm.StringReferences = New Dictionary(Of UInt32, String) From {
+                        {0, "String Not Read"}
+                    }
+                End Try
             Else
-                MainForm.StringReferences = New String(&HFFFFF) {}
-                MainForm.StringReferences(0) = "String Not Read"
+                MainForm.StringReferences = New Dictionary(Of UInt32, String) From {
+                        {0, "String Not Read"}
+                    }
             End If
         End If
         If My.Settings.PacNumObject = "" Then

@@ -70,13 +70,21 @@ Public Class OptionsMenu
         Else
             LabelZlib.ForeColor = Color.Black
         End If
-        If Not PackUnpack.CheckOodle() Then
-            LabelOodle.Text = "Oodle DLL Loaded: False"
-            LabelOodle.ForeColor = Color.Red
-            ButtonOodleSelect.Visible = True
+        If Not PackUnpack.CheckOodle6() Then
+            LabelOodle_6.Text = "Oodle DLL Loaded: False"
+            LabelOodle_6.ForeColor = Color.Red
+            ButtonOodle6Select.Visible = True
             ComboBoxOodleCompressionLevel.Enabled = False
         Else
-            LabelOodle.ForeColor = Color.Black
+            LabelOodle_6.ForeColor = Color.Black
+        End If
+        If Not PackUnpack.CheckOodle7() Then
+            LabelOodle_7.Text = "Oodle DLL Loaded: False"
+            LabelOodle_7.ForeColor = Color.Red
+            ButtonOodle7Select.Visible = True
+            ComboBoxOodleCompressionLevel.Enabled = False
+        Else
+            LabelOodle_7.ForeColor = Color.Black
         End If
         LabelSkipVersion.Text = "Skipped Ver.: " & My.Settings.SkippedVersion.ToString
     End Sub
@@ -138,8 +146,13 @@ Public Class OptionsMenu
         LoadSettings()
     End Sub
 
-    Private Sub ButtonOodleSelect_Click(sender As Object, e As EventArgs) Handles ButtonOodleSelect.Click
-        PackUnpack.CheckOodle(True)
+    Private Sub ButtonOodleSelect_Click(sender As Object, e As EventArgs) Handles ButtonOodle6Select.Click
+        PackUnpack.CheckOodle6(True)
+        LoadSettings()
+    End Sub
+
+    Private Sub ButtonOodle7Select_Click(sender As Object, e As EventArgs) Handles ButtonOodle7Select.Click
+        PackUnpack.CheckOodle7(True)
         LoadSettings()
     End Sub
 
@@ -217,6 +230,8 @@ Public Class OptionsMenu
     Sub LoadAdvancedTab()
         CheckBoxShowSelectedNode.Checked = My.Settings.ShowSelectedNode
         CheckBoxSuppresHSPCFooters.Checked = My.Settings.SuppressHSPCFooters
+        CheckBoxCreateCAkDef.Checked = My.Settings.CreateCAkDefFiles
+        CheckBoxAutoDecompressCakFiles.Checked = My.Settings.AutoDecompressCakUnbakes
         CheckBoxAppendDef.Checked = My.Settings.AppendDefFileRebuild
         CheckDisableModPref.Checked = My.Settings.DisableModPref
         CheckRelocateMods.Checked = My.Settings.RelocateModFolderMods
@@ -243,6 +258,14 @@ Public Class OptionsMenu
             End If
         End If
         My.Settings.SuppressHSPCFooters = CheckBoxSuppresHSPCFooters.Checked
+    End Sub
+
+    Private Sub CheckBoxCreateCAkDef_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxCreateCAkDef.CheckedChanged
+        My.Settings.CreateCAkDefFiles = CheckBoxCreateCAkDef.Checked
+    End Sub
+
+    Private Sub CheckBoxAutoDecompressCakFiles_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxAutoDecompressCakFiles.CheckedChanged
+        My.Settings.AutoDecompressCakUnbakes = CheckBoxAutoDecompressCakFiles.Checked
     End Sub
 
     Private Sub CheckBoxAppendDef_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxAppendDef.CheckedChanged
@@ -300,8 +323,9 @@ Public Class OptionsMenu
     End Sub
 
     Private Sub ButtonResetStrings_Click(sender As Object, e As EventArgs) Handles ButtonResetStrings.Click
-        MainForm.StringReferences = New String(&HFFFFF) {}
-        MainForm.StringReferences(0) = "String Not Read"
+        MainForm.StringReferences = New Dictionary(Of UInt32, String) From {
+            {0, "String Not Read"}
+        }
     End Sub
 
     Private Sub ButtonResetFormSize_Click(sender As Object, e As EventArgs) Handles ButtonResetFormSize.Click
@@ -314,9 +338,6 @@ Public Class OptionsMenu
         MainForm.PacNumbers = New Integer(1024) {}
         MainForm.PacNumbers(0) = -1
     End Sub
-
-
-
 #End Region
 
 End Class

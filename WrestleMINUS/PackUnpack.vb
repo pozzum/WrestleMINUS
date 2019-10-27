@@ -2,6 +2,7 @@
 Imports System.Environment 'appdata
 Imports System.IO   'Files
 Imports Ionic.Zlib  'zlib decompress
+Imports Frosty.Yukes
 
 Public Class PackUnpack
 
@@ -164,7 +165,7 @@ Public Class PackUnpack
                     Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as OODL" & vbNewLine & "Decompress before compression?",
                                                                  "File Already Compressed", MessageBoxButtons.YesNoCancel)
                     If Result = DialogResult.Yes Then
-                        BytesToCompress = GetUncompressedOodleBytes(FileBytes)
+                        BytesToCompress = GetUncompressedOodle_6Bytes(FileBytes)
                     ElseIf Result = DialogResult.No Then
                         BytesToCompress = FileBytes
                     ElseIf Result = DialogResult.Cancel Then
@@ -252,7 +253,7 @@ Public Class PackUnpack
         Return output
     End Function
 
-    Shared Function GetCompressedZlibBytes(SentBytes As Byte()) 
+    Shared Function GetCompressedZlibBytes(SentBytes As Byte())
         Dim CompressedBuffer As Byte() = New Byte(SentBytes.LongLength - 1) {}
         Try
             Using MemStream As MemoryStream = New MemoryStream
@@ -286,7 +287,7 @@ Public Class PackUnpack
                     Dim Result As DialogResult = MessageBox.Show(Path.GetFileName(FiletoRead) & " is already compressed as OODL" & vbNewLine & "Decompress before compression?",
                                                                  "File Already Compressed", MessageBoxButtons.YesNoCancel)
                     If Result = DialogResult.Yes Then
-                        BytesToCompress = GetUncompressedOodleBytes(FileBytes)
+                        BytesToCompress = GetUncompressedOodle_6Bytes(FileBytes)
                     ElseIf Result = DialogResult.No Then
                         BytesToCompress = FileBytes
                     ElseIf Result = DialogResult.Cancel Then
@@ -334,7 +335,7 @@ Public Class PackUnpack
 
 #End Region
 
-#Region "Oodle Compression"
+#Region "Oodle 6 Compression"
 
     Public Enum OodleFormat As UInt32
         LZH
@@ -364,12 +365,14 @@ Public Class PackUnpack
         Optimal4
         Optimal5
     End Enum
-
-    Public Declare Function OodleLZ_Decompress Lib "oo2core_6_win64" (InputBuffer As Byte(), bufferSize As Long, OutputBuffer As Byte(), outputBufferSize As Long,
+    Public Class OODL6
+        Public Declare Function OodleLZ_Decompress Lib "oo2core_6_win64" (InputBuffer As Byte(), bufferSize As Long, OutputBuffer As Byte(), outputBufferSize As Long,
             a As UInt32, b As UInt32, c As ULong, d As UInt32, e As UInt32, f As UInt32, g As UInt32, h As UInt32, i As UInt32, threadModule As UInt32) As Integer
-    Public Declare Function OodleLZ_Compress Lib "oo2core_6_win64" (format As OodleFormat, buffer As Byte(), bufferSize As Long, outputBuffer As Byte(), level As OodleCompressionLevel, a As UInt32, b As UInt32, b As UInt32, d As ULong, threadModule As UInt32) As Integer
+        Public Declare Function OodleLZ_Compress Lib "oo2core_6_win64" (format As OodleFormat, buffer As Byte(), bufferSize As Long, outputBuffer As Byte(), level As OodleCompressionLevel, a As UInt32, b As UInt32, b As UInt32, d As ULong, threadModule As UInt32) As Integer
+    End Class
 
-    Shared Function CheckOodle(Optional FromOptions As Boolean = False) As Boolean
+
+    Shared Function CheckOodle6(Optional FromOptions As Boolean = False) As Boolean
         If Not File.Exists(Application.StartupPath & Path.DirectorySeparatorChar & "oo2core_6_win64.dll") Then
             Dim TestLocation As String = Path.GetDirectoryName(My.Settings.ExeLocation) & Path.DirectorySeparatorChar & "oo2core_6_win64.dll"
             If File.Exists(TestLocation) Then
@@ -378,7 +381,7 @@ Public Class PackUnpack
                 Return True
             Else
                 If Not FromOptions Then
-                    MessageBox.Show("Oodle Dll Not loaded")
+                    MessageBox.Show("Oodle 6 Dll Not loaded")
                     Return False
                 Else
                     Dim OodleOpenDialog As New OpenFileDialog With {.FileName = "oo2core_6_win64.dll", .Title = "oo2core_6_win64.dll"}
@@ -402,7 +405,7 @@ Public Class PackUnpack
     End Function
 
     'U32 compsize = (U32)OodleLZ_Compress(g_compressor, rawbufbase+dataoffset, bytesread, compbuf, (OodleLZ_CompressionLevel)g_level, &compressoptions, rawbufbase+dataoffset-contextsize, NULL, g_scratchmemory, g_scratchmemsize);
-    Shared Function GetUncompressedOodleBytes(SentBytes As Byte())
+    Shared Function GetUncompressedOodle_6Bytes(SentBytes As Byte())
         Dim CompressedLength As Long = BitConverter.ToUInt32(SentBytes, &H14)
         If Not CompressedLength = SentBytes.Length - &H18 Then
             If My.Settings.BypassOODLWarn Then
@@ -423,7 +426,7 @@ Public Class PackUnpack
         Dim UncompressedLength As Long = BitConverter.ToUInt32(SentBytes, &H10)
         Dim UncompressedBytes As Byte() = New Byte(UncompressedLength - 1) {}
         Try
-            OodleLZ_Decompress(CompressedBytes, CompressedLength, UncompressedBytes, UncompressedLength,
+            OODL6.OodleLZ_Decompress(CompressedBytes, CompressedLength, UncompressedBytes, UncompressedLength,
                                0, 0, 0, 0, 0, 0, 0, 0, 0, 3)
         Catch ex As Exception
             Return Nothing
@@ -431,11 +434,11 @@ Public Class PackUnpack
         Return UncompressedBytes
     End Function
 
-    Shared Function GetCompressedOodleBytes(SentBytes As Byte())
+    Shared Function GetCompressedOodle_6Bytes(SentBytes As Byte())
         Dim CompressedBuffer As Byte() = New Byte(SentBytes.LongLength - 1) {}
         Dim CompressedLength As Long = 0
         Try
-            CompressedLength = OodleLZ_Compress(OodleFormat.Kraken, SentBytes, SentBytes.LongLength, CompressedBuffer, My.Settings.OODLCompressionLevel, 0, 0, 0, 0, 3)
+            CompressedLength = OODL6.OodleLZ_Compress(OodleFormat.Kraken, SentBytes, SentBytes.LongLength, CompressedBuffer, My.Settings.OODLCompressionLevel, 0, 0, 0, 0, 3)
         Catch ex As Exception
             MessageBox.Show(ex.Message)
             Return Nothing
@@ -449,7 +452,7 @@ Public Class PackUnpack
         Return OodleFileBytes
     End Function
 
-    Shared Function CompressOODLToFile(FiletoRead As String, Optional FiletoWrite As String = "")
+    Shared Function CompressOODL_6ToFile(FiletoRead As String, Optional FiletoWrite As String = "")
         If File.Exists(FiletoRead) Then
             Dim FileBytes As Byte() = File.ReadAllBytes(FiletoRead)
             Dim ExistingFileType As PackageType = PackageInformation.CheckHeaderType(0, FileBytes, FiletoRead)
@@ -481,7 +484,7 @@ Public Class PackUnpack
                     BytesToCompress = FileBytes
                 End If
                 Dim CompressedBytes As Byte() = Nothing
-                CompressedBytes = GetCompressedOodleBytes(BytesToCompress)
+                CompressedBytes = GetCompressedOodle_6Bytes(BytesToCompress)
                 If IsNothing(CompressedBytes) Then
                     MessageBox.Show("Failure to get compressed bytes for " & Path.GetFileName(FiletoRead))
                     Return False
@@ -509,4 +512,119 @@ Public Class PackUnpack
 
 #End Region
 
-End Class
+#Region "Oodle 7 Compression"
+    Public Class OODL7
+        'Version 7
+        Public Declare Function OodleLZ_Decompress Lib "oo2core_7_win64" (InputBuffer As Byte(), bufferSize As Long, OutputBuffer As Byte(), outputBufferSize As Long,
+            a As UInt32, b As UInt32, c As ULong, d As UInt32, e As UInt32, f As UInt32, g As UInt32, h As UInt32, i As UInt32, threadModule As UInt32) As Integer
+        Public Declare Function OodleLZ_Compress Lib "oo2core_7_win64" (format As OodleFormat, buffer As Byte(), bufferSize As Long, outputBuffer As Byte(), level As OodleCompressionLevel, a As UInt32, b As UInt32, b As UInt32, d As ULong, threadModule As UInt32) As Integer
+    End Class
+    Shared Function CheckOodle7(Optional FromOptions As Boolean = False) As Boolean
+        If Not File.Exists(Application.StartupPath & Path.DirectorySeparatorChar & "oo2core_7_win64.dll") Then
+            Dim TestLocation As String = Path.GetDirectoryName(My.Settings.ExeLocation) & Path.DirectorySeparatorChar & "oo2core_7_win64.dll"
+            If File.Exists(TestLocation) Then
+                File.Copy(TestLocation,
+                      Path.GetDirectoryName(Application.ExecutablePath) & Path.DirectorySeparatorChar & "oo2core_7_win64.dll", True)
+                Return True
+            Else
+                If Not FromOptions Then
+                    MessageBox.Show("Oodle 7 Dll Not loaded")
+                    Return False
+                Else
+                    Dim OodleOpenDialog As New OpenFileDialog With {.FileName = "oo2core_7_win64.dll", .Title = "oo2core_7_win64.dll"}
+                    If OodleOpenDialog.ShowDialog = DialogResult.OK Then
+                        If Path.GetFileName(OodleOpenDialog.FileName) = "oo2core_7_win64.dll" Then
+                            File.Copy(OodleOpenDialog.FileName, Application.StartupPath &
+                                      Path.DirectorySeparatorChar & "oo2core_7_win64.dll")
+                            Return True
+                        Else
+                            MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                            Return False
+                        End If
+                    Else
+                        Return False
+                    End If
+                End If
+            End If
+        Else
+            Return True
+            End If
+        End Function
+
+    Shared Function GetUncompressedOodle_7Bytes(SentBytes As Byte())
+        Dim CompressedLength As Long = BitConverter.ToUInt32(SentBytes, &HC)
+        If Not CompressedLength = SentBytes.Length - &H18 Then
+            If My.Settings.BypassOODLWarn Then
+                CompressedLength = SentBytes.Length - &H18
+            Else
+                Dim result = MessageBox.Show("OODL Compression Length Mis-Match" & vbNewLine &
+                              "Auto-detect compressed length?", "OODL Header Issue", MessageBoxButtons.YesNoCancel)
+                If result = DialogResult.Cancel Then
+                    Return Nothing
+                ElseIf result = DialogResult.Yes Then
+                    CompressedLength = SentBytes.Length - &H18
+                End If
+            End If
+        End If
+        Dim CompressedBytes As Byte() = New Byte(CompressedLength - 1) {}
+        Dim LengthDiff As Int32 = SentBytes.Length - CompressedBytes.Length
+        Array.Copy(SentBytes, LengthDiff, CompressedBytes, 0, CInt(CompressedBytes.Length))
+        Dim UncompressedLength As Long = BitConverter.ToUInt32(SentBytes, &H14)
+        Dim UncompressedBytes As Byte() = New Byte(UncompressedLength - 1) {}
+        'MessageBox.Show("Oodl 7 Extract Attempt" & vbNewLine &
+        '                "Compressed Length " & Hex(CompressedLength) & vbNewLine &
+        '                "Uncompressed Length " & Hex(UncompressedLength) & vbNewLine)
+        Try
+            OODL7.OodleLZ_Decompress(CompressedBytes, CompressedLength, UncompressedBytes, UncompressedLength,
+                               0, 0, 0, 0, 0, 0, 0, 0, 0, 3)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+        Return UncompressedBytes
+    End Function
+
+#End Region
+
+#Region "BakedCAk Files"
+    Shared Function GetBakedCakFileList(FileName As String) As List(Of String)
+            Dim ReturnedList As List(Of String) = New List(Of String)
+            Try
+                Using BakedFile As CakFile = CakFile.LoadFromFile(FileName)
+                    ReturnedList.AddRange(BakedFile.Files)
+                End Using
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+            End Try
+            If My.Settings.CreateCAkDefFiles Then
+                Dim DefFileName As String = Path.GetDirectoryName(FileName) & Path.DirectorySeparatorChar & Path.GetFileNameWithoutExtension(FileName) & ".def"
+                If GeneralTools.CheckFileWriteable(DefFileName, False) Then
+                    File.WriteAllLines(DefFileName, ReturnedList)
+                End If
+            End If
+            Return ReturnedList
+        End Function
+
+        Shared Function GetUnCompressedCakBytes(FileName As String, RequestedFile As String)
+            Dim ReturnedBytes As Byte() = New Byte() {}
+            Try
+                Using BakedFile As CakFile = CakFile.LoadFromFile(FileName)
+                If BakedFile.Files.Contains(RequestedFile) Then
+                    Dim UnbakedStream As Stream = BakedFile.GetStream(RequestedFile)
+                    Using UnbakedReader As BinaryReader = New BinaryReader(UnbakedStream)
+                        ReturnedBytes = UnbakedReader.ReadBytes(UnbakedStream.Length)
+                    End Using
+                    'If My.Settings.AutoDecompressCakUnbakes Then
+                    '    ReturnedBytes = GetUncompressedOodle_7Bytes(ReturnedBytes)
+                    'End If
+                Else
+                    MessageBox.Show("File Not Found")
+                    End If
+                End Using
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+            End Try
+            Return ReturnedBytes
+        End Function
+#End Region
+
+    End Class

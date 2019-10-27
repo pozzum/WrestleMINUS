@@ -448,6 +448,30 @@ Namespace My
                 Me("SuppressHSPCFooters") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property CreateCAkDefFiles() As Boolean
+            Get
+                Return CType(Me("CreateCAkDefFiles"),Boolean)
+            End Get
+            Set
+                Me("CreateCAkDefFiles") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property AutoDecompressCakUnbakes() As Boolean
+            Get
+                Return CType(Me("AutoDecompressCakUnbakes"),Boolean)
+            End Get
+            Set
+                Me("AutoDecompressCakUnbakes") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

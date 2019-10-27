@@ -35,6 +35,7 @@
     WeaponPosition
     LSD
     LSD_BIN
+    Arc
 
     'here are additional ufc type files that we will have no handling for.  However we want to properly cover them for adding in future.
     UFC_MAP
@@ -44,6 +45,23 @@
     UFC_TXT
     UFC_CVX
     UFC_BIN
+
+    'EA UFC files
+    big
+
+    '2K20
+    Cak
+    CakFolder
+    CakBaked
+    CAkUnBaked
+    OODL7
+    tex
+    mskinfo
+    mtls
+    mdl
+    jsfb
+    ywa
+    sdb
 
     'Day of Reckoning GV File Types added as needed
     TPL
