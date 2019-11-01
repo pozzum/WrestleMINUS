@@ -17,6 +17,9 @@ Public Class SettingsHandlers
         If My.Settings.TexConvPath = "" Then 'Locate the texture conversion exe
             GetTexConvExe()
         End If
+        If My.Settings.CrunchEXELocation = "" Then 'Locate the texture crunch exe
+            GetTexCrunchExe()
+        End If
         If My.Settings.RADVideoToolPath = "" Then
             GetRadVideo()
         End If
@@ -271,6 +274,64 @@ Public Class SettingsHandlers
             End If
         Else
             Return True
+        End If
+    End Function
+
+    Shared Function GetTexCrunchExe(Optional FromOptions As Boolean = False)
+        If File.Exists(My.Settings.CrunchEXELocation) Then Return True
+
+        Dim convertpath As String = Path.GetDirectoryName(Application.ExecutablePath) &
+                     Path.DirectorySeparatorChar & "crunch_x64.exe"
+        Dim appDataPath As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
+        GeneralTools.FolderCheck(appDataPath)
+        appDataPath += Path.DirectorySeparatorChar & "crunch_x64.exe"
+        If FromOptions Then
+            Dim TexCrunchExeOpenDialog As New OpenFileDialog With {.FileName = "crunch_x64.exe", .Title = "Select crunch_x64.exe"}
+            If My.Settings.CrunchEXELocation = "" Then
+                TexCrunchExeOpenDialog.InitialDirectory = Application.StartupPath
+            Else
+                Path.GetDirectoryName(My.Settings.CrunchEXELocation)
+            End If
+            If TexCrunchExeOpenDialog.ShowDialog = DialogResult.OK Then
+                If Path.GetFileName(TexCrunchExeOpenDialog.FileName) = "crunch_x64.exe" Then
+                    My.Settings.CrunchEXELocation = TexCrunchExeOpenDialog.FileName
+                    Return True
+                Else
+                    MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                    Return False
+                End If
+            End If
+        Else
+            If File.Exists(convertpath) Then
+                If MessageBox.Show("Would you like to move the texture compression exe to Appdata?" & vbNewLine & "(Recommended)", "Move tool to appdata?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    File.Move(convertpath, appDataPath)
+                    My.Settings.CrunchEXELocation = appDataPath
+                    Return True
+                Else
+                    My.Settings.CrunchEXELocation = convertpath
+                    Return True
+                End If
+            ElseIf File.Exists(appDataPath) Then
+                My.Settings.CrunchEXELocation = appDataPath
+                Return True
+            Else
+                If MessageBox.Show("crunch_x64.exe not found!" & vbNewLine &
+                                "Would you like to navigate to ""crunch_x64.exe"" ", "Find crunch_x64.exe", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    Dim TexConvToolOpenDialog As New OpenFileDialog With {.FileName = "crunch_x64.exe", .Title = "Select crunch_x64.exe"}
+                    If TexConvToolOpenDialog.ShowDialog = DialogResult.OK Then
+                        If Path.GetFileName(TexConvToolOpenDialog.FileName) = "crunch_x64.exe" Then
+                            My.Settings.CrunchEXELocation = TexConvToolOpenDialog.FileName
+                            Return True
+                        Else
+                            MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                            Return False
+                        End If
+                    End If
+                Else
+                    MessageBox.Show("Crunched textures will not open.")
+                    Return False
+                End If
+            End If
         End If
     End Function
 

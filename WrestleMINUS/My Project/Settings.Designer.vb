@@ -463,13 +463,25 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
-        Public Property AutoDecompressCakUnbakes() As Boolean
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property ShowCAkIntermediates() As Boolean
             Get
-                Return CType(Me("AutoDecompressCakUnbakes"),Boolean)
+                Return CType(Me("ShowCAkIntermediates"),Boolean)
             End Get
             Set
-                Me("AutoDecompressCakUnbakes") = value
+                Me("ShowCAkIntermediates") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property CrunchEXELocation() As String
+            Get
+                Return CType(Me("CrunchEXELocation"),String)
+            End Get
+            Set
+                Me("CrunchEXELocation") = value
             End Set
         End Property
     End Class

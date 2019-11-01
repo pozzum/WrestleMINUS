@@ -33,7 +33,48 @@ Public Class PackageInformation
             TestType = PackageType.TextureLibrary OrElse
             TestType = PackageType.YANMPack OrElse
             TestType = PackageType.big OrElse
-            TestType = PackageType.Cak Then
+            TestType = PackageType.Cak OrElse
+            TestType = PackageType.tex OrElse
+            TestType = PackageType.Crn Then
+            Return True
+        End If
+        Return False
+    End Function
+
+    Shared Function CheckDeleteable(TestType As PackageType) As Boolean
+        If TestType = PackageType.Unchecked OrElse
+            TestType = PackageType.Folder OrElse
+            TestType = PackageType.HSPC OrElse
+            TestType = PackageType.EPK8 OrElse
+            TestType = PackageType.EPAC OrElse
+            TestType = PackageType.SHDC OrElse
+            TestType = PackageType.PACH OrElse
+            TestType = PackageType.BPE OrElse
+            TestType = PackageType.ZLIB OrElse
+            TestType = PackageType.OODL OrElse
+            TestType = PackageType.PachDirectory_4 OrElse
+            TestType = PackageType.PachDirectory_8 OrElse
+            TestType = PackageType.TextureLibrary OrElse
+            TestType = PackageType.YANMPack Then
+            Return True
+        End If
+        Return False
+    End Function
+    Shared Function CheckRenameable(TestType As PackageType) As Boolean
+        If TestType = PackageType.Unchecked OrElse
+            TestType = PackageType.Folder OrElse
+            TestType = PackageType.HSPC OrElse
+            TestType = PackageType.EPK8 OrElse
+            TestType = PackageType.EPAC OrElse
+            TestType = PackageType.SHDC OrElse
+            TestType = PackageType.PACH OrElse
+            TestType = PackageType.BPE OrElse
+            TestType = PackageType.ZLIB OrElse
+            TestType = PackageType.OODL OrElse
+            TestType = PackageType.PachDirectory_4 OrElse
+            TestType = PackageType.PachDirectory_8 OrElse
+            TestType = PackageType.TextureLibrary OrElse
+            TestType = PackageType.YANMPack Then
             Return True
         End If
         Return False
@@ -77,6 +118,8 @@ Public Class PackageInformation
                 Return 10
             Case PackageType.TPL
                 Return 10
+            Case PackageType.TronFile
+                Return 10
             Case PackageType.Arc
                 Return 11
             Case PackageType.YANMPack
@@ -84,6 +127,12 @@ Public Class PackageInformation
             Case PackageType.YANM
                 Return 11
             Case PackageType.OFOP
+                Return 11
+            Case PackageType.acts
+                Return 11
+            Case PackageType.evd
+                Return 11
+            Case PackageType.mprms
                 Return 11
             Case PackageType.YOBJ
                 Return 12
@@ -112,6 +161,8 @@ Public Class PackageInformation
             Case PackageType.CostumeFile
                 Return 19
             Case PackageType.Cak
+                Return 19
+            Case PackageType.Crn
                 Return 19
             Case PackageType.MuscleFile
                 Return 20
@@ -284,15 +335,12 @@ Public Class PackageInformation
                         'if we do not have a header text to guide us we have some additional text checks that are consistent.
                         'We want to Check for 2K20 Files that have the Header Type at byte 8
                         'First we want to check for oodl 7 at byte &H10
-
-
                         'THIS IS PRODUCING ERRORS WITH SOME PROJECT FILES
                         If ByteArray.Length > &H20 + Index Then
                             Dim OODL7Check As String = Encoding.Default.GetChars(ByteArray, Index + &H10, 4)
                             If OODL7Check = "OODL" Then
                                 Return PackageType.OODL7
                             End If
-
                             Dim ShortNumberCheck As UInt32 = BitConverter.ToUInt16(ByteArray, Index + 0)
                             If ShortNumberCheck > 0 Then
                                 If New String(Encoding.Default.GetChars(ByteArray, Index + 4, &HC)) = "¾ï¾ï¾ï¾ï¾ï¾ï" Then
@@ -347,6 +395,73 @@ Public Class PackageInformation
                 Return PackageType.bin
         End Select
     End Function
+
+    Shared Function CheckCakContainerForFileType(Index As Long, ByVal ByteArray As Byte()) As PackageType
+        If ByteArray.Length > &H10 + Index Then
+            Dim FileExtention As String = Encoding.Default.GetChars(ByteArray, Index + &H8, 4)
+            Select Case FileExtention
+                Case "JSFB"
+                    Return PackageType.jsfb
+                Case "TEX!"
+                    Return PackageType.tex
+                Case "MDL!"
+                    Return PackageType.mdl
+                Case "MSKI"
+                    Return PackageType.mskinfo
+                Case "MTLs"
+                    Return PackageType.mtls
+                Case "MKRS"
+                    Return PackageType.other_ywa
+                Case "ACTS"
+                    Return PackageType.acts
+                Case "MPRM"
+                    Return PackageType.mprms
+                Case "EVD!"
+                    Return PackageType.evd
+                Case Else
+                    Return PackageType.bin
+            End Select
+        Else
+            Return PackageType.bin
+        End If
+    End Function
+
+    Shared Function ChecktexForCRN(Index As Long, ByVal ByteArray As Byte()) As PackageType
+        If ByteArray.Length > &H30 + Index Then
+            'GeneralTools.EndianReverse(
+            If Not BitConverter.ToUInt32(ByteArray, Index + 4) = 9 Then
+                MessageBox.Show("Potential Tex Header Issue")
+            End If
+            Dim FileExtention As String = Encoding.Default.GetChars(ByteArray, Index + &H28, 4)
+            Select Case FileExtention
+                Case "CRN!"
+                    Return PackageType.Crn
+                Case Else
+                    Return PackageType.bin
+            End Select
+        Else
+            Return PackageType.bin
+        End If
+    End Function
+
+
+    Shared Function CheckjsfbForFileType(Index As Long, ByVal ByteArray As Byte(), Optional FileNamePath As String = "") As PackageType
+        If ByteArray.Length > &H10 + Index Then
+            Dim HeaderText As String = Encoding.Default.GetChars(ByteArray, Index + &H8, 4)
+            Select Case HeaderText
+                Case "Supe"
+                    Return PackageType.TronFile
+                Case "Entr"
+                    Return PackageType.EntrData
+                Case Else
+                    Return PackageType.bin
+            End Select
+        Else
+            Return PackageType.bin
+        End If
+
+    End Function
+
 
     'Function can be split to an unchecked and a function returning a list of file information
     Shared Sub GetFileParts(ByRef ParentFileProperties As ExtendedFileProperties,
@@ -404,60 +519,6 @@ Public Class PackageInformation
                 ParentFileProperties.FileType = CheckHeaderType(0, FileBytes, ParentFileProperties.FullFilePath)
                 ParentFileProperties.StoredData = New Byte() {}
                 GetFileParts(ParentFileProperties, Crawl)
-                Exit Sub 'Skips the crawler at the bottom and duping the host node update
-            Case PackageType.CakBaked
-                If CheckHeaderType(0, FileBytes, ParentFileProperties.FullFilePath) = PackageType.OODL7 Then
-                    ParentFileProperties.FileType = PackageType.OODL7
-                    If IsNothing(ParentFileProperties.SubFiles) Then
-                        ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
-                    End If
-                    Dim UncompressedBytes As Byte() = Nothing
-                    If PackUnpack.CheckOodle7() Then
-                        UncompressedBytes = PackUnpack.GetUncompressedOodle_7Bytes(FileBytes)
-                    End If
-                    If IsNothing(UncompressedBytes) Then
-                        Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
-                            .Name = ParentFileProperties.Name & " UNCOMPRESS",
-                            .FullFilePath = ParentFileProperties.FullFilePath,
-                            .VirtualFilePath = ParentFileProperties.VirtualFilePath,
-                            .Index = 0,
-                            .length = 0,
-                            .StoredData = UncompressedBytes,
-                            .FileType = PackageType.bin,
-                            .Parent = ParentFileProperties}
-                        ParentFileProperties.SubFiles.Add(ContainedFileProperties)
-                        Exit Sub
-                    Else
-                        Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
-                            .Name = ParentFileProperties.Name & " UNCOMPRESS",
-                            .FullFilePath = ParentFileProperties.FullFilePath,
-                            .VirtualFilePath = ParentFileProperties.VirtualFilePath,
-                            .Index = 0,
-                            .length = UncompressedBytes.Length,
-                            .StoredData = UncompressedBytes,
-                            .FileType = CheckHeaderType(.Index, UncompressedBytes, ParentFileProperties.VirtualFilePath),
-                            .Parent = ParentFileProperties}
-                        ParentFileProperties.SubFiles.Add(ContainedFileProperties)
-                    End If
-                Else
-                    If IsNothing(ParentFileProperties.SubFiles) Then
-                        ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
-                    End If
-                    ParentFileProperties.FileType = PackageType.CAkUnBaked
-                    Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
-                           .Name = ParentFileProperties.Name & " EXTRACT",
-                           .FullFilePath = ParentFileProperties.FullFilePath,
-                            .VirtualFilePath = ParentFileProperties.VirtualFilePath,
-                           .Index = &H18,
-                           .length = FileBytes.Length - &H18,
-                           .StoredData = FileBytes,
-                           .FileType = CheckHeaderType(.Index, .StoredData, ParentFileProperties.VirtualFilePath),
-                           .Parent = ParentFileProperties}
-                    ParentFileProperties.SubFiles.Add(ContainedFileProperties)
-                End If
-                'ParentFileProperties.FileType = CheckHeaderType(0, FileBytes, ParentFileProperties.FullFilePath)
-                'ParentFileProperties.StoredData = FileBytes
-                'GetFileParts(ParentFileProperties, Crawl)
                 Exit Sub 'Skips the crawler at the bottom and duping the host node update
 #Region "Primary Container Types {PAC}"
             Case PackageType.HSPC
@@ -725,6 +786,7 @@ Public Class PackageInformation
                         .FileType = PackageType.bin,
                         .Parent = ParentFileProperties}
                     ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                    'here we exit the sub so an empty file isn't crawled if the tree is being crawled
                     Exit Sub
                 Else
                     Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
@@ -759,6 +821,7 @@ Public Class PackageInformation
                         .FileType = PackageType.bin,
                         .Parent = ParentFileProperties}
                     ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                    'here we exit the sub so an empty file isn't crawled if the tree is being crawled
                     Exit Sub
                 Else
                     Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
@@ -792,6 +855,7 @@ Public Class PackageInformation
                         .FileType = PackageType.bin,
                         .Parent = ParentFileProperties}
                     ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                    'here we exit the sub so an empty file isn't crawled if the tree is being crawled
                     Exit Sub
                 Else
                     Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
@@ -945,6 +1009,7 @@ Public Class PackageInformation
 #End Region
 
 #Region "2K20 Cak Files"
+
             Case PackageType.Cak
                 Dim ListOfFiles As List(Of String) = PackUnpack.GetBakedCakFileList(ParentFileProperties.FullFilePath)
                 If ListOfFiles.Count > 0 Then
@@ -955,8 +1020,199 @@ Public Class PackageInformation
                 For i As Integer = 0 To ListOfFiles.Count - 1
                     ParentFileProperties = BuildCakSubNodes(ParentFileProperties, ListOfFiles(i))
                 Next
-#End Region
 
+            Case PackageType.CakBaked
+                If IsNothing(ParentFileProperties.SubFiles) Then
+                    ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                End If
+                If CheckHeaderType(0, FileBytes, ParentFileProperties.FullFilePath) = PackageType.OODL7 Then
+                    ParentFileProperties.FileType = PackageType.OODL7
+                    Dim UncompressedBytes As Byte() = Nothing
+                    If PackUnpack.CheckOodle7() Then
+                        UncompressedBytes = PackUnpack.GetUncompressedOodle_7Bytes(FileBytes)
+                    End If
+                    If IsNothing(UncompressedBytes) Then
+                        If My.Settings.ShowCAkIntermediates Then
+                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                            .Name = ParentFileProperties.Name & " UNCOMPRESS",
+                            .FullFilePath = ParentFileProperties.FullFilePath,
+                            .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                            .Index = 0,
+                            .length = 0,
+                            .StoredData = UncompressedBytes,
+                            .FileType = PackageType.bin,
+                            .Parent = ParentFileProperties}
+                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                        Else
+                            ParentFileProperties.FileType = PackageType.bin
+                        End If
+                        'here we exit the sub so an empty file isn't crawled if the tree is being crawled
+                        Exit Sub
+                    Else
+                        If My.Settings.ShowCAkIntermediates Then
+                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                                .Name = ParentFileProperties.Name & " UNCOMPRESS",
+                                .FullFilePath = ParentFileProperties.FullFilePath,
+                                .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                                .Index = 0,
+                                .length = UncompressedBytes.Length,
+                                .StoredData = UncompressedBytes,
+                                .FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes),
+                                .Parent = ParentFileProperties}
+                            If ContainedFileProperties.FileType = PackageType.jsfb Then
+                                ContainedFileProperties.FileType = CheckjsfbForFileType(0, UncompressedBytes, ParentFileProperties.VirtualFilePath)
+                            End If
+                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                        Else
+                            'Instead of making a new node we want to update the parent
+                            'ParentFileProperties.Name
+                            'ParentFileProperties.FullFilePath
+                            'ParentFileProperties.VirtualFilePath
+                            ParentFileProperties.FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes)
+                            ParentFileProperties.Index = 0
+                            ParentFileProperties.length = UncompressedBytes.Length
+                            ParentFileProperties.StoredData = UncompressedBytes
+                            'ParentFileProperties.Parent
+                            GetFileParts(ParentFileProperties, Crawl)
+                            Exit Sub
+                        End If
+                    End If
+                Else
+                    If My.Settings.ShowCAkIntermediates Then
+                        Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                               .Name = ParentFileProperties.Name & " EXTRACT",
+                               .FullFilePath = ParentFileProperties.FullFilePath,
+                               .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                               .Index = &H18,
+                               .length = FileBytes.Length - &H18,
+                               .StoredData = FileBytes,
+                               .FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes),
+                               .Parent = ParentFileProperties}
+                        ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                    Else
+                        ParentFileProperties.FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes)
+                        ParentFileProperties.Index = &H18
+                        ParentFileProperties.length = FileBytes.Length - &H18
+                        ParentFileProperties.StoredData = FileBytes
+                        'ParentFileProperties.Parent
+                        GetFileParts(ParentFileProperties, Crawl, TriggerProgress)
+                        Exit Sub
+                    End If
+                End If
+            Case PackageType.tex
+                If ChecktexForCRN(0, FileBytes) = PackageType.Crn Then
+                    If My.Settings.ShowCAkIntermediates Then
+                        If IsNothing(ParentFileProperties.SubFiles) Then
+                            ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                        End If
+                        Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                               .Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".crn",
+                               .FullFilePath = ParentFileProperties.FullFilePath,
+                               .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                               .Index = &H2C,
+                               .length = BitConverter.ToUInt32(FileBytes, 0 + &H24),
+                               .StoredData = FileBytes,
+                               .FileType = PackageType.Crn,
+                               .Parent = ParentFileProperties}
+                        ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                    Else
+                        'Instead of making a new node we want to update the parent
+                        ParentFileProperties.Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".crn"
+                        'ParentFileProperties.FullFilePath
+                        'ParentFileProperties.VirtualFilePath
+                        ParentFileProperties.FileType = PackageType.Crn
+                        ParentFileProperties.Index = &H2C
+                        ParentFileProperties.length = BitConverter.ToUInt32(FileBytes, 0 + &H24)
+                        ParentFileProperties.StoredData = FileBytes
+                        'ParentFileProperties.Parent
+                        GetFileParts(ParentFileProperties, Crawl, TriggerProgress)
+                        Exit Sub
+                    End If
+                Else
+                    ParentFileProperties.FileType = PackageType.bin
+                End If
+            Case PackageType.Crn
+                Dim UncrunchedBytes As Byte() = Nothing
+                If SettingsHandlers.GetTexCrunchExe() Then
+                    'GeneralTools.BreakFunction()
+                    'Try
+                    Dim TempName As String = Path.GetTempFileName
+                    FileSystem.Rename(TempName, TempName + ".crn")
+                    TempName += ".crn"
+                    File.WriteAllBytes(TempName, FileBytes)
+
+                    Process.Start(My.Settings.CrunchEXELocation, TempName).WaitForExit()
+                    Dim TempCRN As String = Path.GetDirectoryName(My.Settings.CrunchEXELocation) &
+                                                Path.DirectorySeparatorChar &
+                                                Path.GetFileNameWithoutExtension(TempName) & ".dds"
+                    'Dim TempDDSLocal As String = Application.StartupPath & Path.DirectorySeparatorChar &
+                    '                            Path.GetFileNameWithoutExtension(TempName) & ".dds"
+                    'If File.Exists(TempDDSLocal) Then
+                    '        File.Copy(TempDDSLocal, TempDDS, True)
+                    '        File.Delete(TempDDSLocal)
+                    '    End If
+                    MainForm.CreatedImages.Add(TempCRN)
+                    File.Delete(TempName)
+                    UncrunchedBytes = File.ReadAllBytes(TempCRN)
+                    'Catch ex As Exception
+                    '    MessageBox.Show("Error Un-crunching Texture" & vbNewLine & ex.Message)
+                    'End Try
+                    If IsNothing(UncrunchedBytes) Then
+                        If My.Settings.ShowCAkIntermediates Then
+                            If IsNothing(ParentFileProperties.SubFiles) Then
+                                ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                            End If
+                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                            .Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds",
+                            .FullFilePath = ParentFileProperties.FullFilePath,
+                            .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                            .Index = 0,
+                            .length = 0,
+                            .StoredData = UncrunchedBytes,
+                            .FileType = PackageType.DDS,
+                            .Parent = ParentFileProperties}
+                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                        Else
+                            ParentFileProperties.FileType = PackageType.bin
+                        End If
+                        'here we exit the sub so an empty file isn't crawled if the tree is being crawled
+                        Exit Sub
+                    Else
+                        If My.Settings.ShowCAkIntermediates Then
+                            If IsNothing(ParentFileProperties.SubFiles) Then
+                                ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                            End If
+                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                                   .Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds",
+                                   .FullFilePath = ParentFileProperties.FullFilePath,
+                                   .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                                   .Index = 0,
+                                   .length = UncrunchedBytes.Length,
+                                   .StoredData = UncrunchedBytes,
+                                   .FileType = PackageType.DDS,
+                                   .Parent = ParentFileProperties}
+                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                        Else
+                            'Instead of making a new node we want to update the parent
+                            ParentFileProperties.Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds"
+                            'ParentFileProperties.FullFilePath
+                            'ParentFileProperties.VirtualFilePath
+                            ParentFileProperties.FileType = PackageType.DDS
+                            ParentFileProperties.Index = 0
+                            ParentFileProperties.length = UncrunchedBytes.Length
+                            ParentFileProperties.StoredData = UncrunchedBytes
+                            'ParentFileProperties.Parent
+                        End If
+                    End If
+                Else
+                    ParentFileProperties.FileType = PackageType.bin
+                End If
+#End Region
+            Case Else
+                'This is a control measure to help against infinite select try to expand loops.
+                If CheckExpandable(ParentFileProperties.FileType) Then
+                    ParentFileProperties.FileType = PackageType.bin
+                End If
 #End Region
         End Select
 
@@ -1009,8 +1265,8 @@ Public Class PackageInformation
                 .Name = RemainingPath,
                 .FullFilePath = ParentFile.FullFilePath,
                 .VirtualFilePath = FullVirtualPath,'Here we need to Retain the Full Path so it can be extracted with the tool
-                .length = 100,
-                .Index = 100,
+                .length = 0,
+                .Index = 0,
                 .StoredData = ParentFile.StoredData,
                 .FileType = PackageType.CakBaked,
                 .Parent = ParentFile}

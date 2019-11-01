@@ -810,10 +810,15 @@ Public Class MainForm
                     'We are working with a actual file part
                     InjectToolStripMenuItem.Tag = True
                     InjectUncompressedToolStripMenuItem.Tag = True
-                    RenamePartToolStripMenuItem.Tag = True
-                    If Not IsNothing(ParentNodeTag) Then
-                        If TreeView1.SelectedNode.Parent.Nodes.Count > 1 Then
-                            DeletePartToolStripMenuItem.Tag = True
+                    If PackageInformation.CheckRenameable(ParentNodeTag.FileType) Then
+                        RenamePartToolStripMenuItem.Tag = True
+                    End If
+
+                    If PackageInformation.CheckDeleteable(ParentNodeTag.FileType) Then
+                        If Not IsNothing(ParentNodeTag) Then
+                            If TreeView1.SelectedNode.Parent.Nodes.Count > 1 Then
+                                DeletePartToolStripMenuItem.Tag = True
+                            End If
                         End If
                     End If
                     If PackUnpack.CheckBPEExe() Then
@@ -832,7 +837,7 @@ Public Class MainForm
                         InjectOODLToolStripMenuItem.Visible = False
                     End If
                 End If
-            Else
+                    Else
                 'We are working on a File, not a file part
                 RenameFileToolStripMenuItem.Tag = True
                 DeleteFileToolStripMenuItem.Tag = True
@@ -2376,7 +2381,7 @@ Public Class MainForm
 
 #Region "Picture View Controls"
 
-    Dim CreatedImages As List(Of String)
+    Public CreatedImages As List(Of String)
 
     Sub FillPictureView(SelectedData As TreeNode)
         Dim PictureBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
@@ -2391,9 +2396,11 @@ Public Class MainForm
                                 Path.GetFileNameWithoutExtension(TempName) & ".BMP"
         Dim TempBMPLocal As String = Application.StartupPath & Path.DirectorySeparatorChar &
                                 Path.GetFileNameWithoutExtension(TempName) & ".BMP"
-        If File.Exists(TempBMPLocal) Then
-            File.Copy(TempBMPLocal, TempBMP, True)
-            File.Delete(TempBMPLocal)
+        If Not TempBMP.ToLower = TempBMPLocal.ToLower Then
+            If File.Exists(TempBMPLocal) Then
+                File.Copy(TempBMPLocal, TempBMP, True)
+                File.Delete(TempBMPLocal)
+            End If
         End If
         If File.Exists(TempBMP) Then
             Dim tempimage As Image

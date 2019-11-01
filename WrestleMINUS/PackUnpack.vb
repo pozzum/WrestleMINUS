@@ -587,27 +587,27 @@ Public Class PackUnpack
 
 #Region "BakedCAk Files"
     Shared Function GetBakedCakFileList(FileName As String) As List(Of String)
-            Dim ReturnedList As List(Of String) = New List(Of String)
-            Try
-                Using BakedFile As CakFile = CakFile.LoadFromFile(FileName)
-                    ReturnedList.AddRange(BakedFile.Files)
-                End Using
-            Catch ex As Exception
-                MessageBox.Show(ex.Message)
-            End Try
-            If My.Settings.CreateCAkDefFiles Then
-                Dim DefFileName As String = Path.GetDirectoryName(FileName) & Path.DirectorySeparatorChar & Path.GetFileNameWithoutExtension(FileName) & ".def"
-                If GeneralTools.CheckFileWriteable(DefFileName, False) Then
-                    File.WriteAllLines(DefFileName, ReturnedList)
-                End If
+        Dim ReturnedList As List(Of String) = New List(Of String)
+        Try
+            Using BakedFile As CakFile = CakFile.LoadFromFile(FileName)
+                ReturnedList.AddRange(BakedFile.Files)
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+        If My.Settings.CreateCAkDefFiles Then
+            Dim DefFileName As String = Path.GetDirectoryName(FileName) & Path.DirectorySeparatorChar & Path.GetFileNameWithoutExtension(FileName) & ".def"
+            If GeneralTools.CheckFileWriteable(DefFileName, False) Then
+                File.WriteAllLines(DefFileName, ReturnedList)
             End If
-            Return ReturnedList
-        End Function
+        End If
+        Return ReturnedList
+    End Function
 
-        Shared Function GetUnCompressedCakBytes(FileName As String, RequestedFile As String)
-            Dim ReturnedBytes As Byte() = New Byte() {}
-            Try
-                Using BakedFile As CakFile = CakFile.LoadFromFile(FileName)
+    Shared Function GetUnCompressedCakBytes(FileName As String, RequestedFile As String)
+        Dim ReturnedBytes As Byte() = New Byte() {}
+        Try
+            Using BakedFile As CakFile = CakFile.LoadFromFile(FileName)
                 If BakedFile.Files.Contains(RequestedFile) Then
                     Dim UnbakedStream As Stream = BakedFile.GetStream(RequestedFile)
                     Using UnbakedReader As BinaryReader = New BinaryReader(UnbakedStream)
@@ -618,13 +618,39 @@ Public Class PackUnpack
                     'End If
                 Else
                     MessageBox.Show("File Not Found")
-                    End If
-                End Using
-            Catch ex As Exception
-                MessageBox.Show(ex.Message)
-            End Try
-            Return ReturnedBytes
+                End If
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+        Return ReturnedBytes
         End Function
 #End Region
 
-    End Class
+#Region "Crunch Files"
+
+    Shared Function GetUnCrunchedTexture(FileName As String, RequestedFile As String)
+        Dim ReturnedBytes As Byte() = New Byte() {}
+        Try
+            Using BakedFile As CakFile = CakFile.LoadFromFile(FileName)
+                If BakedFile.Files.Contains(RequestedFile) Then
+                    Dim UnbakedStream As Stream = BakedFile.GetStream(RequestedFile)
+                    Using UnbakedReader As BinaryReader = New BinaryReader(UnbakedStream)
+                        ReturnedBytes = UnbakedReader.ReadBytes(UnbakedStream.Length)
+                    End Using
+                    'If My.Settings.AutoDecompressCakUnbakes Then
+                    '    ReturnedBytes = GetUncompressedOodle_7Bytes(ReturnedBytes)
+                    'End If
+                Else
+                    MessageBox.Show("File Not Found")
+                End If
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+        Return ReturnedBytes
+    End Function
+
+#End Region
+
+End Class

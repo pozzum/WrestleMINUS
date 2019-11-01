@@ -16,9 +16,11 @@ End Class
 Public Class FilePartHandlers
 
     Shared Function GetFilePartBytes(ByRef RequestedFileProperties As ExtendedFileProperties, Optional MaxLength As Int32 = -1) As Byte()
-        If RequestedFileProperties.FileType = PackageType.CakBaked OrElse RequestedFileProperties.FileType = PackageType.CAkUnBaked Then
+        If RequestedFileProperties.FileType = PackageType.CakBaked Then
             If RequestedFileProperties.StoredData.Length < 1 Then
                 RequestedFileProperties.StoredData = PackUnpack.GetUnCompressedCakBytes(RequestedFileProperties.FullFilePath, RequestedFileProperties.VirtualFilePath)
+                RequestedFileProperties.Index = 0
+                RequestedFileProperties.length = RequestedFileProperties.StoredData.Length
             End If
             Return RequestedFileProperties.StoredData
         End If

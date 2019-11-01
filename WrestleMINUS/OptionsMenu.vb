@@ -31,6 +31,12 @@ Public Class OptionsMenu
         Else
             LabelTexConv.ForeColor = Color.Black
         End If
+        TextBoxCrunchExe.Text = My.Settings.CrunchEXELocation
+        If Not File.Exists(My.Settings.CrunchEXELocation) Then
+            LabelCrunchExe.ForeColor = Color.Red
+        Else
+            LabelCrunchExe.ForeColor = Color.Black
+        End If
         TextBoxRadVideo.Text = My.Settings.RADVideoToolPath
         If Not File.Exists(My.Settings.RADVideoToolPath) Then
             LabelRadVideo.ForeColor = Color.Red
@@ -96,6 +102,11 @@ Public Class OptionsMenu
 
     Private Sub ButtonSelectTexConv_Click(sender As Object, e As EventArgs) Handles ButtonSelectTexConv.Click
         SettingsHandlers.GetTexConvExe(True)
+        LoadSettings()
+    End Sub
+
+    Private Sub ButtonSelectCrunchExe_Click(sender As Object, e As EventArgs) Handles ButtonSelectCrunchExe.Click
+        SettingsHandlers.GetTexCrunchExe(True)
         LoadSettings()
     End Sub
 
@@ -231,7 +242,7 @@ Public Class OptionsMenu
         CheckBoxShowSelectedNode.Checked = My.Settings.ShowSelectedNode
         CheckBoxSuppresHSPCFooters.Checked = My.Settings.SuppressHSPCFooters
         CheckBoxCreateCAkDef.Checked = My.Settings.CreateCAkDefFiles
-        CheckBoxAutoDecompressCakFiles.Checked = My.Settings.AutoDecompressCakUnbakes
+        CheckBoxShowCAkIntermediates.Checked = My.Settings.ShowCAkIntermediates
         CheckBoxAppendDef.Checked = My.Settings.AppendDefFileRebuild
         CheckDisableModPref.Checked = My.Settings.DisableModPref
         CheckRelocateMods.Checked = My.Settings.RelocateModFolderMods
@@ -264,8 +275,8 @@ Public Class OptionsMenu
         My.Settings.CreateCAkDefFiles = CheckBoxCreateCAkDef.Checked
     End Sub
 
-    Private Sub CheckBoxAutoDecompressCakFiles_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxAutoDecompressCakFiles.CheckedChanged
-        My.Settings.AutoDecompressCakUnbakes = CheckBoxAutoDecompressCakFiles.Checked
+    Private Sub CheckBoxAutoDecompressCakFiles_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxShowCAkIntermediates.CheckedChanged
+        My.Settings.ShowCAkIntermediates = CheckBoxShowCAkIntermediates.Checked
     End Sub
 
     Private Sub CheckBoxAppendDef_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxAppendDef.CheckedChanged
@@ -338,6 +349,7 @@ Public Class OptionsMenu
         MainForm.PacNumbers = New Integer(1024) {}
         MainForm.PacNumbers(0) = -1
     End Sub
+
 #End Region
 
 End Class
