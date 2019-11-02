@@ -89,6 +89,8 @@ Partial Class OptionsMenu
         Me.Label2 = New System.Windows.Forms.Label()
         Me.CheckRelocateMods = New System.Windows.Forms.CheckBox()
         Me.CheckDisableModPref = New System.Windows.Forms.CheckBox()
+        Me.ButtonFrostyYukesSelect = New System.Windows.Forms.Button()
+        Me.LabelFrosty = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -435,12 +437,14 @@ Partial Class OptionsMenu
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(284, 461)
+        Me.TabControl1.Size = New System.Drawing.Size(284, 481)
         Me.TabControl1.TabIndex = 46
         '
         'TabPage1
         '
         Me.TabPage1.BackColor = System.Drawing.SystemColors.Control
+        Me.TabPage1.Controls.Add(Me.LabelFrosty)
+        Me.TabPage1.Controls.Add(Me.ButtonFrostyYukesSelect)
         Me.TabPage1.Controls.Add(Me.ButtonSelectCrunchExe)
         Me.TabPage1.Controls.Add(Me.TextBoxCrunchExe)
         Me.TabPage1.Controls.Add(Me.LabelCrunchExe)
@@ -479,7 +483,7 @@ Partial Class OptionsMenu
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(276, 435)
+        Me.TabPage1.Size = New System.Drawing.Size(276, 455)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "File Select"
         '
@@ -531,7 +535,7 @@ Partial Class OptionsMenu
         'LabelSkipVersion
         '
         Me.LabelSkipVersion.AutoSize = True
-        Me.LabelSkipVersion.Location = New System.Drawing.Point(8, 394)
+        Me.LabelSkipVersion.Location = New System.Drawing.Point(8, 422)
         Me.LabelSkipVersion.Name = "LabelSkipVersion"
         Me.LabelSkipVersion.Size = New System.Drawing.Size(71, 13)
         Me.LabelSkipVersion.TabIndex = 53
@@ -539,7 +543,7 @@ Partial Class OptionsMenu
         '
         'ButtonCheckUpdate
         '
-        Me.ButtonCheckUpdate.Location = New System.Drawing.Point(143, 389)
+        Me.ButtonCheckUpdate.Location = New System.Drawing.Point(143, 417)
         Me.ButtonCheckUpdate.Margin = New System.Windows.Forms.Padding(0)
         Me.ButtonCheckUpdate.Name = "ButtonCheckUpdate"
         Me.ButtonCheckUpdate.Size = New System.Drawing.Size(125, 23)
@@ -561,7 +565,7 @@ Partial Class OptionsMenu
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(276, 435)
+        Me.TabPage2.Size = New System.Drawing.Size(276, 455)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "Options"
         '
@@ -588,7 +592,7 @@ Partial Class OptionsMenu
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(276, 435)
+        Me.TabPage3.Size = New System.Drawing.Size(276, 455)
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "Advanced"
         '
@@ -758,12 +762,31 @@ Partial Class OptionsMenu
         Me.CheckDisableModPref.Text = "Disable Mod Folder Preference"
         Me.CheckDisableModPref.UseVisualStyleBackColor = True
         '
+        'ButtonFrostyYukesSelect
+        '
+        Me.ButtonFrostyYukesSelect.Location = New System.Drawing.Point(143, 391)
+        Me.ButtonFrostyYukesSelect.Name = "ButtonFrostyYukesSelect"
+        Me.ButtonFrostyYukesSelect.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonFrostyYukesSelect.TabIndex = 59
+        Me.ButtonFrostyYukesSelect.Text = "Locate FrostyYukes"
+        Me.ButtonFrostyYukesSelect.UseVisualStyleBackColor = True
+        Me.ButtonFrostyYukesSelect.Visible = False
+        '
+        'LabelFrosty
+        '
+        Me.LabelFrosty.AutoSize = True
+        Me.LabelFrosty.Location = New System.Drawing.Point(8, 396)
+        Me.LabelFrosty.Name = "LabelFrosty"
+        Me.LabelFrosty.Size = New System.Drawing.Size(132, 13)
+        Me.LabelFrosty.TabIndex = 60
+        Me.LabelFrosty.Text = "FrustyYukes Loaded: True"
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
-        Me.ClientSize = New System.Drawing.Size(284, 461)
+        Me.ClientSize = New System.Drawing.Size(284, 481)
         Me.Controls.Add(Me.TabControl1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -849,4 +872,6 @@ Partial Class OptionsMenu
     Friend WithEvents ButtonSelectCrunchExe As Button
     Friend WithEvents TextBoxCrunchExe As TextBox
     Friend WithEvents LabelCrunchExe As Label
+    Friend WithEvents LabelFrosty As Label
+    Friend WithEvents ButtonFrostyYukesSelect As Button
 End Class

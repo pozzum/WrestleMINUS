@@ -277,6 +277,38 @@ Public Class SettingsHandlers
         End If
     End Function
 
+    Shared Function CheckFrosty(Optional FromOptions As Boolean = False) As Boolean
+        If Not File.Exists(Application.StartupPath & Path.DirectorySeparatorChar & "FontAwesome.Sharp.dll") Then
+            Dim TestLocation As String = Path.GetDirectoryName(My.Settings.ExeLocation) & Path.DirectorySeparatorChar & "FontAwesome.Sharp.dll"
+            If File.Exists(TestLocation) Then
+                File.Copy(TestLocation,
+                      Path.GetDirectoryName(Application.ExecutablePath) & Path.DirectorySeparatorChar & "FontAwesome.Sharp.dll", True)
+                Return True
+            Else
+                If Not FromOptions Then
+                    MessageBox.Show("FontAwesome Dll Not loaded")
+                    Return False
+                Else
+                    Dim FontAwesomeOpenDialog As New OpenFileDialog With {.FileName = "FontAwesome.Sharp.dll", .Title = "FontAwesome.Sharp.dll"}
+                    If FontAwesomeOpenDialog.ShowDialog = DialogResult.OK Then
+                        If Path.GetFileName(FontAwesomeOpenDialog.FileName) = "FontAwesome.Sharp.dll" Then
+                            File.Copy(FontAwesomeOpenDialog.FileName, Application.StartupPath &
+                                      Path.DirectorySeparatorChar & "FontAwesome.Sharp.dll")
+                            Return True
+                        Else
+                            MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
+                            Return False
+                        End If
+                    Else
+                        Return False
+                    End If
+                End If
+            End If
+        Else
+            Return True
+        End If
+    End Function
+
     Shared Function GetTexCrunchExe(Optional FromOptions As Boolean = False)
         If File.Exists(My.Settings.CrunchEXELocation) Then Return True
 

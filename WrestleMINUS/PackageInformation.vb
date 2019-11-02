@@ -320,7 +320,8 @@ Public Class PackageInformation
                         Return PackageType.YOBJArray
                     Case FirstFour.Contains(" ¯0")
                         Return PackageType.TPL
-                    Case FirstFour.Substring(0, 1).Contains("g")
+                    Case FirstFour.Substring(0, 1).Contains("g") AndAlso
+                            ByteArray(Index + 1) = 0
                         Return PackageType.SoundReference
                     Case FirstFour.Contains("WP") AndAlso
                         (FirstFour.Contains("AR") OrElse
@@ -1140,8 +1141,10 @@ Public Class PackageInformation
                     FileSystem.Rename(TempName, TempName + ".crn")
                     TempName += ".crn"
                     File.WriteAllBytes(TempName, FileBytes)
-
-                    Process.Start(My.Settings.CrunchEXELocation, TempName).WaitForExit()
+                    Dim CrunchExeProcess As New ProcessStartInfo(My.Settings.CrunchEXELocation) With
+                        {.Arguments = TempName,
+                        .WindowStyle = ProcessWindowStyle.Hidden}
+                    Process.Start(CrunchExeProcess).WaitForExit()
                     Dim TempCRN As String = Path.GetDirectoryName(My.Settings.CrunchEXELocation) &
                                                 Path.DirectorySeparatorChar &
                                                 Path.GetFileNameWithoutExtension(TempName) & ".dds"

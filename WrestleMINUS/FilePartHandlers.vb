@@ -62,7 +62,8 @@ Public Class FilePartHandlers
     Shared Sub GetAllSubItems(ByRef RequestedHostFile As ExtendedFileProperties)
         Dim filepath As String = RequestedHostFile.FullFilePath
         'TO DO Add Progress Reporting
-        If Not IsNothing(RequestedHostFile.SubFiles) Then
+        If Not IsNothing(RequestedHostFile.SubFiles) OrElse
+            RequestedHostFile.SubFiles.Count = 0 Then
             For Each TestedSubItem As ExtendedFileProperties In RequestedHostFile.SubFiles
                 If PackageInformation.CheckExpandable(TestedSubItem.FileType) Then
                     PackageInformation.GetFileParts(TestedSubItem, True)

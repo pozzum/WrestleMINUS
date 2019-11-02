@@ -3,7 +3,10 @@ Imports System.Threading 'Multithreading
 
 Public Class OnlineVersion
 
-    Shared Sub CheckUpdate()
+    Shared AnnounceInternetVersion As Boolean = False
+
+    Shared Sub CheckUpdate(Optional FromOptions As Boolean = False)
+        AnnounceInternetVersion = FromOptions
         Dim checkUpdateThread = New Thread(AddressOf CheckInternetVersion)
         checkUpdateThread.SetApartmentState(ApartmentState.STA)
         checkUpdateThread.Start()
@@ -26,6 +29,10 @@ Public Class OnlineVersion
             Dim Response = GetResponse(PageAddress)
             If String.IsNullOrWhiteSpace(Response) Then
                 'do nothing
+                If AnnounceInternetVersion Then
+                    MessageBox.Show("Site Not Found")
+                End If
+                Exit Sub
             End If
             'MessageBox.Show("Response Get")
             Const pattern As String = "Current Version: (?<version>\d.\d.\d.\d)"
@@ -77,6 +84,10 @@ Public Class OnlineVersion
                             End If
                         End If
                     Else
+
+                        If AnnounceInternetVersion Then
+                            MessageBox.Show("No new update." & vbNewLine & "Online version: " & CurrentVersion)
+                        End If
                         'No new update
                     End If
                 Else
@@ -110,6 +121,9 @@ Public Class OnlineVersion
                             End If
                         End If
                     Else
+                        If AnnounceInternetVersion Then
+                            MessageBox.Show("Update Already Skipped." & vbNewLine & CurrentVersion)
+                        End If
                         'Update already Skipped
                     End If
                 End If

@@ -586,6 +586,7 @@ Public Class PackUnpack
 #End Region
 
 #Region "BakedCAk Files"
+
     Shared Function GetBakedCakFileList(FileName As String) As List(Of String)
         Dim ReturnedList As List(Of String) = New List(Of String)
         Try
@@ -624,7 +625,8 @@ Public Class PackUnpack
             MessageBox.Show(ex.Message)
         End Try
         Return ReturnedBytes
-        End Function
+    End Function
+
 #End Region
 
 #Region "Crunch Files"

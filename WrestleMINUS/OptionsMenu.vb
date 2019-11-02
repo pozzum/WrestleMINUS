@@ -68,13 +68,16 @@ Public Class OptionsMenu
         Else
             LabelFontAwesome.Text = "FontAwesome Loaded: True"
             LabelFontAwesome.ForeColor = Color.Black
+            ButtonSelectFontAwesome.Visible = False
         End If
         If Not PackUnpack.CheckIconicZlib() Then
             LabelZlib.Text = "Zlib DLL Loaded: False"
             LabelZlib.ForeColor = Color.Red
             ButtonSelectZlib.Visible = True
         Else
+            LabelZlib.Text = "Zlib DLL Loaded: True"
             LabelZlib.ForeColor = Color.Black
+            ButtonSelectZlib.Visible = False
         End If
         If Not PackUnpack.CheckOodle6() Then
             LabelOodle_6.Text = "Oodle DLL Loaded: False"
@@ -92,6 +95,16 @@ Public Class OptionsMenu
         Else
             LabelOodle_7.ForeColor = Color.Black
         End If
+        If Not SettingsHandlers.CheckFrosty() Then
+            LabelFrosty.Text = "FrustyYukes. Loaded: False"
+            LabelFrosty.ForeColor = Color.Red
+            ButtonFrostyYukesSelect.Visible = True
+        Else
+            LabelFrosty.Text = "FrustyYukes Loaded: True"
+            LabelFrosty.ForeColor = Color.Black
+            ButtonFrostyYukesSelect.Visible = False
+        End If
+
         LabelSkipVersion.Text = "Skipped Ver.: " & My.Settings.SkippedVersion.ToString
     End Sub
 
@@ -167,9 +180,9 @@ Public Class OptionsMenu
         LoadSettings()
     End Sub
 
-    Private Sub ButtonCheckUpdate_Click(sender As Object, e As EventArgs)
+    Private Sub ButtonCheckUpdate_Click(sender As Object, e As EventArgs) Handles ButtonCheckUpdate.Click
         My.Settings.SkippedVersion = My.Application.Info.Version
-        OnlineVersion.CheckUpdate()
+        OnlineVersion.CheckUpdate(True)
         LoadSettings()
     End Sub
 
@@ -349,7 +362,6 @@ Public Class OptionsMenu
         MainForm.PacNumbers = New Integer(1024) {}
         MainForm.PacNumbers(0) = -1
     End Sub
-
 #End Region
 
 End Class
