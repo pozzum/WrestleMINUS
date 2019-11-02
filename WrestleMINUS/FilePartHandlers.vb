@@ -276,7 +276,7 @@ Public Class FilePartHandlers
         Else
             ParentFileInformation = FileRequested.Parent
         End If
-        'Here we want to check if the parent is a compressed file type.. 
+        'Here we want to check if the parent is a compressed file type..
         'If it Is we Then want To Get the compressed bytes Of that file type And make that the compressed bytes and move the parent & FileRequested up one file
         If ParentFileInformation.FileType = PackageType.OODL OrElse
          ParentFileInformation.FileType = PackageType.ZLIB OrElse

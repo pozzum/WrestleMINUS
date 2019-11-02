@@ -79,6 +79,7 @@ Public Class PackageInformation
         End If
         Return False
     End Function
+
     Shared Function CheckRenameable(TestType As PackageType) As Boolean
         If TestType = PackageType.Unchecked OrElse
             TestType = PackageType.Folder OrElse
@@ -445,7 +446,6 @@ Public Class PackageInformation
         End If
     End Function
 
-
     Shared Function CheckjsfbForFileType(Index As Long, ByVal ByteArray As Byte(), Optional FileNamePath As String = "") As PackageType
         If ByteArray.Length > &H10 + Index Then
             Dim HeaderText As String = Encoding.Default.GetChars(ByteArray, Index + &H8, 4)
@@ -462,7 +462,6 @@ Public Class PackageInformation
         End If
 
     End Function
-
 
     'Function can be split to an unchecked and a function returning a list of file information
     Shared Sub GetFileParts(ByRef ParentFileProperties As ExtendedFileProperties,
@@ -521,7 +520,9 @@ Public Class PackageInformation
                 ParentFileProperties.StoredData = New Byte() {}
                 GetFileParts(ParentFileProperties, Crawl)
                 Exit Sub 'Skips the crawler at the bottom and duping the host node update
+
 #Region "Primary Container Types {PAC}"
+
             Case PackageType.HSPC
                 Dim FileCount As Integer = BitConverter.ToUInt32(FileBytes, &H38)
                 Dim FileNameLength As Integer = BitConverter.ToUInt32(FileBytes, &H18)
@@ -740,7 +741,7 @@ Public Class PackageInformation
                     ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
                 End If
                 Dim UncompressedBytes As Byte() = Nothing
-                If PackUnpack.CheckIconicZlib() Then
+                If ApplicationHandlers.CheckIconicZlib() Then
                     UncompressedBytes = PackUnpack.GetUncompressedZlibBytes(FileBytes)
                 End If
                 If IsNothing(UncompressedBytes) Then
@@ -774,7 +775,7 @@ Public Class PackageInformation
                     ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
                 End If
                 Dim UncompressedBytes As Byte() = Nothing
-                If PackUnpack.CheckUnrrbpe() Then
+                If ApplicationHandlers.CheckUnrrbpe() Then
                     UncompressedBytes = PackUnpack.GetUncompressedBPEBytes(FileBytes)
                 End If
                 If IsNothing(UncompressedBytes) Then
@@ -809,7 +810,7 @@ Public Class PackageInformation
                     ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
                 End If
                 Dim UncompressedBytes As Byte() = Nothing
-                If PackUnpack.CheckOodle6() Then
+                If ApplicationHandlers.CheckOodle6() Then
                     UncompressedBytes = PackUnpack.GetUncompressedOodle_6Bytes(FileBytes)
                 End If
                 If IsNothing(UncompressedBytes) Then
@@ -843,7 +844,7 @@ Public Class PackageInformation
                     ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
                 End If
                 Dim UncompressedBytes As Byte() = Nothing
-                If PackUnpack.CheckOodle7() Then
+                If ApplicationHandlers.CheckOodle7() Then
                     UncompressedBytes = PackUnpack.GetUncompressedOodle_7Bytes(FileBytes)
                 End If
                 If IsNothing(UncompressedBytes) Then
@@ -869,6 +870,7 @@ Public Class PackageInformation
                         .Parent = ParentFileProperties}
                     ParentFileProperties.SubFiles.Add(ContainedFileProperties)
                 End If
+
 #End Region
 
 #Region "Library Types"
@@ -979,6 +981,7 @@ Public Class PackageInformation
                 End If
 
 #Region "To be Built"
+
             Case PackageType.YOBJ
 
             Case PackageType.big
@@ -1007,6 +1010,7 @@ Public Class PackageInformation
                         .Parent = ParentFileProperties}
                     ParentFileProperties.SubFiles.Add(ContainedFileProperties)
                 Next
+
 #End Region
 
 #Region "2K20 Cak Files"
@@ -1029,7 +1033,7 @@ Public Class PackageInformation
                 If CheckHeaderType(0, FileBytes, ParentFileProperties.FullFilePath) = PackageType.OODL7 Then
                     ParentFileProperties.FileType = PackageType.OODL7
                     Dim UncompressedBytes As Byte() = Nothing
-                    If PackUnpack.CheckOodle7() Then
+                    If ApplicationHandlers.CheckOodle7() Then
                         UncompressedBytes = PackUnpack.GetUncompressedOodle_7Bytes(FileBytes)
                     End If
                     If IsNothing(UncompressedBytes) Then
@@ -1134,7 +1138,7 @@ Public Class PackageInformation
                 End If
             Case PackageType.Crn
                 Dim UncrunchedBytes As Byte() = Nothing
-                If SettingsHandlers.GetTexCrunchExe() Then
+                If ApplicationHandlers.CheckTexCrunchExe() Then
                     'GeneralTools.BreakFunction()
                     'Try
                     Dim TempName As String = Path.GetTempFileName
@@ -1210,13 +1214,17 @@ Public Class PackageInformation
                 Else
                     ParentFileProperties.FileType = PackageType.bin
                 End If
+
 #End Region
+
             Case Else
                 'This is a control measure to help against infinite select try to expand loops.
                 If CheckExpandable(ParentFileProperties.FileType) Then
                     ParentFileProperties.FileType = PackageType.bin
                 End If
+
 #End Region
+
         End Select
 
         If Crawl Then
@@ -1277,6 +1285,7 @@ Public Class PackageInformation
             Return ParentFile
         End If
     End Function
+
 #End Region
 
 End Class

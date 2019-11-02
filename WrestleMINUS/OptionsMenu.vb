@@ -61,65 +61,21 @@ Public Class OptionsMenu
         Else
             LabelDSSExe.ForeColor = Color.Black
         End If
-        If Not SettingsHandlers.CheckFontAwesome() Then
-            LabelFontAwesome.Text = "FontAwe. Loaded: False"
-            LabelFontAwesome.ForeColor = Color.Red
-            ButtonSelectFontAwesome.Visible = True
-        Else
-            LabelFontAwesome.Text = "FontAwesome Loaded: True"
-            LabelFontAwesome.ForeColor = Color.Black
-            ButtonSelectFontAwesome.Visible = False
-        End If
-        If Not PackUnpack.CheckIconicZlib() Then
-            LabelZlib.Text = "Zlib DLL Loaded: False"
-            LabelZlib.ForeColor = Color.Red
-            ButtonSelectZlib.Visible = True
-        Else
-            LabelZlib.Text = "Zlib DLL Loaded: True"
-            LabelZlib.ForeColor = Color.Black
-            ButtonSelectZlib.Visible = False
-        End If
-        If Not PackUnpack.CheckOodle6() Then
-            LabelOodle_6.Text = "Oodle DLL Loaded: False"
-            LabelOodle_6.ForeColor = Color.Red
-            ButtonOodle6Select.Visible = True
-            ComboBoxOodleCompressionLevel.Enabled = False
-        Else
-            LabelOodle_6.ForeColor = Color.Black
-        End If
-        If Not PackUnpack.CheckOodle7() Then
-            LabelOodle_7.Text = "Oodle DLL Loaded: False"
-            LabelOodle_7.ForeColor = Color.Red
-            ButtonOodle7Select.Visible = True
-            ComboBoxOodleCompressionLevel.Enabled = False
-        Else
-            LabelOodle_7.ForeColor = Color.Black
-        End If
-        If Not SettingsHandlers.CheckFrosty() Then
-            LabelFrosty.Text = "FrustyYukes. Loaded: False"
-            LabelFrosty.ForeColor = Color.Red
-            ButtonFrostyYukesSelect.Visible = True
-        Else
-            LabelFrosty.Text = "FrustyYukes Loaded: True"
-            LabelFrosty.ForeColor = Color.Black
-            ButtonFrostyYukesSelect.Visible = False
-        End If
-
         LabelSkipVersion.Text = "Skipped Ver.: " & My.Settings.SkippedVersion.ToString
     End Sub
 
     Private Sub ButtonSelectHome_Click(sender As Object, e As EventArgs) Handles ButtonSelectHome.Click
-        SettingsHandlers.SelectHomeDirectory()
+        ApplicationHandlers.CheckGameExeFolder(True)
         LoadSettings()
     End Sub
 
     Private Sub ButtonSelectTexConv_Click(sender As Object, e As EventArgs) Handles ButtonSelectTexConv.Click
-        SettingsHandlers.GetTexConvExe(True)
+        ApplicationHandlers.CheckTexConvExe(True)
         LoadSettings()
     End Sub
 
     Private Sub ButtonSelectCrunchExe_Click(sender As Object, e As EventArgs) Handles ButtonSelectCrunchExe.Click
-        SettingsHandlers.GetTexCrunchExe(True)
+        ApplicationHandlers.CheckTexCrunchExe(True)
         LoadSettings()
     End Sub
 
@@ -128,7 +84,7 @@ Public Class OptionsMenu
     End Sub
 
     Private Sub ButtonSelectRadVideo_Click(sender As Object, e As EventArgs) Handles ButtonSelectRadVideo.Click
-        SettingsHandlers.GetRadVideo(True)
+        ApplicationHandlers.CheckRadVideo(True)
         LoadSettings()
     End Sub
 
@@ -138,7 +94,7 @@ Public Class OptionsMenu
     End Sub
 
     Private Sub ButtonSelectBPEExe_Click(sender As Object, e As EventArgs) Handles ButtonSelectBPEExe.Click
-        PackUnpack.CheckBPEExe(True)
+        ApplicationHandlers.CheckBPEExe(True)
         LoadSettings()
     End Sub
 
@@ -151,32 +107,12 @@ Public Class OptionsMenu
     End Sub
 
     Private Sub ButtonSelectUnrrbpe_Click(sender As Object, e As EventArgs) Handles ButtonSelectUnrrbpe.Click
-        PackUnpack.CheckUnrrbpe(True)
+        ApplicationHandlers.CheckUnrrbpe(True)
         LoadSettings()
     End Sub
 
     Private Sub ButtonSelectDDSexe_Click(sender As Object, e As EventArgs) Handles ButtonSelectDDSexe.Click
-        SettingsHandlers.CheckDDSexe(True)
-        LoadSettings()
-    End Sub
-
-    Private Sub ButtonSelectFontAwesome_Click(sender As Object, e As EventArgs) Handles ButtonSelectFontAwesome.Click
-        SettingsHandlers.CheckFontAwesome(True)
-        LoadSettings()
-    End Sub
-
-    Private Sub ButtonSelectZlib_Click(sender As Object, e As EventArgs) Handles ButtonSelectZlib.Click
-        PackUnpack.CheckIconicZlib(True)
-        LoadSettings()
-    End Sub
-
-    Private Sub ButtonOodleSelect_Click(sender As Object, e As EventArgs) Handles ButtonOodle6Select.Click
-        PackUnpack.CheckOodle6(True)
-        LoadSettings()
-    End Sub
-
-    Private Sub ButtonOodle7Select_Click(sender As Object, e As EventArgs) Handles ButtonOodle7Select.Click
-        PackUnpack.CheckOodle7(True)
+        ApplicationHandlers.CheckDDSexe(True)
         LoadSettings()
     End Sub
 
@@ -362,6 +298,87 @@ Public Class OptionsMenu
         MainForm.PacNumbers = New Integer(1024) {}
         MainForm.PacNumbers(0) = -1
     End Sub
+
+#End Region
+
+#Region "DLL Tab"
+
+    Sub LoadDLLTab()
+        If Not ApplicationHandlers.CheckFontAwesome() Then
+            LabelFontAwesome.Text = "FontAwe. Loaded: False"
+            LabelFontAwesome.ForeColor = Color.Red
+            ButtonSelectFontAwesome.Visible = True
+        Else
+            LabelFontAwesome.Text = "FontAwesome Loaded: True"
+            LabelFontAwesome.ForeColor = Color.Black
+            ButtonSelectFontAwesome.Visible = False
+        End If
+        If Not ApplicationHandlers.CheckIconicZlib() Then
+            LabelZlib.Text = "Zlib DLL Loaded: False"
+            LabelZlib.ForeColor = Color.Red
+            ButtonSelectZlib.Visible = True
+        Else
+            LabelZlib.Text = "Zlib DLL Loaded: True"
+            LabelZlib.ForeColor = Color.Black
+            ButtonSelectZlib.Visible = False
+        End If
+        If Not ApplicationHandlers.CheckOodle6() Then
+            LabelOodle_6.Text = "Oodle DLL Loaded: False"
+            LabelOodle_6.ForeColor = Color.Red
+            ButtonOodle6Select.Visible = True
+            ComboBoxOodleCompressionLevel.Enabled = False
+        Else
+            LabelOodle_6.ForeColor = Color.Black
+        End If
+        If Not ApplicationHandlers.CheckOodle7() Then
+            LabelOodle_7.Text = "Oodle DLL Loaded: False"
+            LabelOodle_7.ForeColor = Color.Red
+            ButtonOodle7Select.Visible = True
+            ComboBoxOodleCompressionLevel.Enabled = False
+        Else
+            LabelOodle_7.ForeColor = Color.Black
+        End If
+        If Not ApplicationHandlers.CheckFrosty() Then
+            LabelFrosty.Text = "FrustyYukes. Loaded: False"
+            LabelFrosty.ForeColor = Color.Red
+            ButtonFrostyYukesSelect.Visible = True
+        Else
+            LabelFrosty.Text = "FrustyYukes Loaded: True"
+            LabelFrosty.ForeColor = Color.Black
+            ButtonFrostyYukesSelect.Visible = False
+        End If
+    End Sub
+
+    Private Sub ButtonSelectFontAwesome_Click(sender As Object, e As EventArgs) Handles ButtonSelectFontAwesome.Click
+        ApplicationHandlers.CheckFontAwesome(True)
+        LoadSettings()
+    End Sub
+
+    Private Sub ButtonSelectZlib_Click(sender As Object, e As EventArgs) Handles ButtonSelectZlib.Click
+        ApplicationHandlers.CheckIconicZlib(True)
+        LoadSettings()
+    End Sub
+
+    Private Sub ButtonOodle6Select_Click(sender As Object, e As EventArgs) Handles ButtonOodle6Select.Click
+        ApplicationHandlers.CheckOodle6(True)
+        LoadSettings()
+    End Sub
+
+    Private Sub ButtonOodle7Select_Click(sender As Object, e As EventArgs) Handles ButtonOodle7Select.Click
+        ApplicationHandlers.CheckOodle7(True)
+        LoadSettings()
+    End Sub
+
+    Private Sub ButtonFrostyYukesSelect_Click(sender As Object, e As EventArgs) Handles ButtonFrostyYukesSelect.Click
+        ApplicationHandlers.CheckFrosty(True)
+        LoadSettings()
+    End Sub
+
+    Private Sub ButtonNewtonJsonSelect_Click(sender As Object, e As EventArgs) Handles ButtonNewtonJsonSelect.Click
+        ApplicationHandlers.CheckNewtonsoftJson(True)
+        LoadSettings()
+    End Sub
+
 #End Region
 
 End Class

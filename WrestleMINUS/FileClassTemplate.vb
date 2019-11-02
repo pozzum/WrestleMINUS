@@ -1,11 +1,15 @@
 ﻿Public Class FileClassTemplate
+
 #Region "Package Handling Code"
+
     'Add your item to the PackageType Enum
     'for the template we use DUMMY since DUMY is actually used in the UFC games
     '
     'DUMMY
     '
+
 #Region "PackageInformation Code"
+
     'In order to properly handle the files the code needs at minimum a function added to CheckHeaderType
     'This would preferably a "Magic Number" at the start however that is not always possible
     'Several other checks have been implemented for different file types
@@ -23,8 +27,8 @@
     'Case PackageType.DUMMY
     'Return 14
 
-
     'If the file is self contained ignore the following region
+
 #Region "Handling SubItems of containers"
 
     'First Function we need to add to is CheckExpandable
@@ -35,7 +39,7 @@
 
     'If the file is injectable we also want to spell out how the file names are formatted so we can rename them
     'ValidateTruncation
-    'The following code is for a 4 Character Decimal Name 
+    'The following code is for a 4 Character Decimal Name
     'Case PackageType.DUMMY
     'Return TestedString.PadLeft(Math.Min(4, My.Settings.DecimalNameMinLength), "0").ToUpper
 
@@ -59,22 +63,28 @@
     '                    .Parent = ParentFileProperties}
     '                ParentFileProperties.SubFiles.Add(ContainedFileProperties)
     'Next
-#End Region
-
 
 #End Region
+
+#End Region
+
 #End Region
 
 #Region "MainForm Code"
 
 #Region "Main Form Objects"
+
     Dim WithEvents DataGridDUMMYView As DataGridView
+
     'Make 1 column per information type + add and byte button columns if applicable
     Dim WithEvents SaveChangesDUMMYMenuItem As MenuItem
+
     Dim WithEvents DUMMYView As TabPage
+
 #End Region
 
 #Region "Main Form Code"
+
     'HideTabs needs a shortcut to the byte array
     '    Case PackageType.DUMMY
     '    InjectedByte = BuildDUMMYFile()
@@ -94,9 +104,8 @@
     'SaveFileNoLongerPending()
 
     'SaveChangesDUMMYMenuItem.Visible = False
+
 #End Region
-
-
 
 #Region "DUMMY View"
 
@@ -219,5 +228,7 @@
     End Function
 
 #End Region
+
 #End Region
+
 End Class

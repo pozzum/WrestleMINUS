@@ -18,10 +18,10 @@
       <Value Profile="(Default)">4</Value>
     </Setting>
     <Setting Name="TexConvPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Not Installed</Value>
     </Setting>
     <Setting Name="RADVideoToolPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Not Installed</Value>
     </Setting>
     <Setting Name="StringObject" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -30,7 +30,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="UnrrbpePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Not Installed</Value>
     </Setting>
     <Setting Name="LoadHomeOnLaunch" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -60,7 +60,7 @@
       <Value Profile="(Default)">6</Value>
     </Setting>
     <Setting Name="BPEExePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Not Installed</Value>
     </Setting>
     <Setting Name="DecompresstoFolder" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -108,7 +108,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="CrunchEXELocation" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Not Installed</Value>
     </Setting>
   </Settings>
 </SettingsFile>

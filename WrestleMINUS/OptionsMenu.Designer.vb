@@ -38,10 +38,6 @@ Partial Class OptionsMenu
         Me.ButtonSelectUnrrbpe = New System.Windows.Forms.Button()
         Me.ButtonDownloadUnrrbpe = New System.Windows.Forms.Button()
         Me.ButtonDownloadRadVideo = New System.Windows.Forms.Button()
-        Me.LabelZlib = New System.Windows.Forms.Label()
-        Me.LabelOodle_6 = New System.Windows.Forms.Label()
-        Me.ButtonSelectZlib = New System.Windows.Forms.Button()
-        Me.ButtonOodle6Select = New System.Windows.Forms.Button()
         Me.CheckBoxLoadHome = New System.Windows.Forms.CheckBox()
         Me.CheckBoxBackup = New System.Windows.Forms.CheckBox()
         Me.CheckBoxDeleteTempBMP = New System.Windows.Forms.CheckBox()
@@ -57,17 +53,13 @@ Partial Class OptionsMenu
         Me.TextBoxBPEExe = New System.Windows.Forms.TextBox()
         Me.LabelBPEExe = New System.Windows.Forms.Label()
         Me.CheckBoxExtractAllinPlace = New System.Windows.Forms.CheckBox()
-        Me.LabelFontAwesome = New System.Windows.Forms.Label()
-        Me.ButtonSelectFontAwesome = New System.Windows.Forms.Button()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.CheckBoxRecycleDeletedFiles = New System.Windows.Forms.CheckBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.TabPageExeTools = New System.Windows.Forms.TabPage()
         Me.ButtonSelectCrunchExe = New System.Windows.Forms.Button()
         Me.TextBoxCrunchExe = New System.Windows.Forms.TextBox()
         Me.LabelCrunchExe = New System.Windows.Forms.Label()
-        Me.ButtonOodle7Select = New System.Windows.Forms.Button()
-        Me.LabelOodle_7 = New System.Windows.Forms.Label()
         Me.LabelSkipVersion = New System.Windows.Forms.Label()
         Me.ButtonCheckUpdate = New System.Windows.Forms.Button()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
@@ -89,14 +81,26 @@ Partial Class OptionsMenu
         Me.Label2 = New System.Windows.Forms.Label()
         Me.CheckRelocateMods = New System.Windows.Forms.CheckBox()
         Me.CheckDisableModPref = New System.Windows.Forms.CheckBox()
-        Me.ButtonFrostyYukesSelect = New System.Windows.Forms.Button()
+        Me.TabPageDLLCheck = New System.Windows.Forms.TabPage()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.ButtonNewtonJsonSelect = New System.Windows.Forms.Button()
         Me.LabelFrosty = New System.Windows.Forms.Label()
+        Me.ButtonFrostyYukesSelect = New System.Windows.Forms.Button()
+        Me.ButtonOodle7Select = New System.Windows.Forms.Button()
+        Me.LabelOodle_7 = New System.Windows.Forms.Label()
+        Me.ButtonSelectFontAwesome = New System.Windows.Forms.Button()
+        Me.LabelFontAwesome = New System.Windows.Forms.Label()
+        Me.ButtonOodle6Select = New System.Windows.Forms.Button()
+        Me.ButtonSelectZlib = New System.Windows.Forms.Button()
+        Me.LabelOodle_6 = New System.Windows.Forms.Label()
+        Me.LabelZlib = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
-        Me.TabPage1.SuspendLayout()
+        Me.TabPageExeTools.SuspendLayout()
         Me.TabPage2.SuspendLayout()
         Me.TabPage3.SuspendLayout()
         CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBarDecimalNameLength, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPageDLLCheck.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label1
@@ -220,44 +224,6 @@ Partial Class OptionsMenu
         Me.ButtonDownloadRadVideo.TabIndex = 13
         Me.ButtonDownloadRadVideo.Text = "DL"
         Me.ButtonDownloadRadVideo.UseVisualStyleBackColor = True
-        '
-        'LabelZlib
-        '
-        Me.LabelZlib.AutoSize = True
-        Me.LabelZlib.Location = New System.Drawing.Point(8, 313)
-        Me.LabelZlib.Name = "LabelZlib"
-        Me.LabelZlib.Size = New System.Drawing.Size(114, 13)
-        Me.LabelZlib.TabIndex = 14
-        Me.LabelZlib.Text = "Zlib DLL Loaded: True"
-        '
-        'LabelOodle_6
-        '
-        Me.LabelOodle_6.AutoSize = True
-        Me.LabelOodle_6.Location = New System.Drawing.Point(8, 340)
-        Me.LabelOodle_6.Name = "LabelOodle_6"
-        Me.LabelOodle_6.Size = New System.Drawing.Size(111, 13)
-        Me.LabelOodle_6.TabIndex = 15
-        Me.LabelOodle_6.Text = "Oodle 6 Loaded: True"
-        '
-        'ButtonSelectZlib
-        '
-        Me.ButtonSelectZlib.Location = New System.Drawing.Point(143, 308)
-        Me.ButtonSelectZlib.Name = "ButtonSelectZlib"
-        Me.ButtonSelectZlib.Size = New System.Drawing.Size(125, 23)
-        Me.ButtonSelectZlib.TabIndex = 16
-        Me.ButtonSelectZlib.Text = "Locate Iconic.Zlib"
-        Me.ButtonSelectZlib.UseVisualStyleBackColor = True
-        Me.ButtonSelectZlib.Visible = False
-        '
-        'ButtonOodle6Select
-        '
-        Me.ButtonOodle6Select.Location = New System.Drawing.Point(143, 335)
-        Me.ButtonOodle6Select.Name = "ButtonOodle6Select"
-        Me.ButtonOodle6Select.Size = New System.Drawing.Size(125, 23)
-        Me.ButtonOodle6Select.TabIndex = 17
-        Me.ButtonOodle6Select.Text = "Locate oo2core_6"
-        Me.ButtonOodle6Select.UseVisualStyleBackColor = True
-        Me.ButtonOodle6Select.Visible = False
         '
         'CheckBoxLoadHome
         '
@@ -399,25 +365,6 @@ Partial Class OptionsMenu
         Me.CheckBoxExtractAllinPlace.Text = "Extract All Decompresses to New Folders"
         Me.CheckBoxExtractAllinPlace.UseVisualStyleBackColor = True
         '
-        'LabelFontAwesome
-        '
-        Me.LabelFontAwesome.AutoSize = True
-        Me.LabelFontAwesome.Location = New System.Drawing.Point(8, 286)
-        Me.LabelFontAwesome.Name = "LabelFontAwesome"
-        Me.LabelFontAwesome.Size = New System.Drawing.Size(122, 13)
-        Me.LabelFontAwesome.TabIndex = 43
-        Me.LabelFontAwesome.Text = "FontAwe. Loaded: False"
-        '
-        'ButtonSelectFontAwesome
-        '
-        Me.ButtonSelectFontAwesome.Location = New System.Drawing.Point(143, 281)
-        Me.ButtonSelectFontAwesome.Name = "ButtonSelectFontAwesome"
-        Me.ButtonSelectFontAwesome.Size = New System.Drawing.Size(125, 23)
-        Me.ButtonSelectFontAwesome.TabIndex = 44
-        Me.ButtonSelectFontAwesome.Text = "Locate FontAwesome"
-        Me.ButtonSelectFontAwesome.UseVisualStyleBackColor = True
-        Me.ButtonSelectFontAwesome.Visible = False
-        '
         'CheckBoxRecycleDeletedFiles
         '
         Me.CheckBoxRecycleDeletedFiles.AutoSize = True
@@ -430,62 +377,53 @@ Partial Class OptionsMenu
         '
         'TabControl1
         '
-        Me.TabControl1.Controls.Add(Me.TabPage1)
+        Me.TabControl1.Controls.Add(Me.TabPageExeTools)
         Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Controls.Add(Me.TabPage3)
+        Me.TabControl1.Controls.Add(Me.TabPageDLLCheck)
         Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(284, 481)
+        Me.TabControl1.Size = New System.Drawing.Size(284, 386)
         Me.TabControl1.TabIndex = 46
         '
-        'TabPage1
+        'TabPageExeTools
         '
-        Me.TabPage1.BackColor = System.Drawing.SystemColors.Control
-        Me.TabPage1.Controls.Add(Me.LabelFrosty)
-        Me.TabPage1.Controls.Add(Me.ButtonFrostyYukesSelect)
-        Me.TabPage1.Controls.Add(Me.ButtonSelectCrunchExe)
-        Me.TabPage1.Controls.Add(Me.TextBoxCrunchExe)
-        Me.TabPage1.Controls.Add(Me.LabelCrunchExe)
-        Me.TabPage1.Controls.Add(Me.ButtonOodle7Select)
-        Me.TabPage1.Controls.Add(Me.LabelOodle_7)
-        Me.TabPage1.Controls.Add(Me.LabelSkipVersion)
-        Me.TabPage1.Controls.Add(Me.ButtonCheckUpdate)
-        Me.TabPage1.Controls.Add(Me.Label1)
-        Me.TabPage1.Controls.Add(Me.ButtonSelectFontAwesome)
-        Me.TabPage1.Controls.Add(Me.TextBoxHome)
-        Me.TabPage1.Controls.Add(Me.LabelFontAwesome)
-        Me.TabPage1.Controls.Add(Me.ButtonSelectHome)
-        Me.TabPage1.Controls.Add(Me.LabelTexConv)
-        Me.TabPage1.Controls.Add(Me.TextBoxTexConv)
-        Me.TabPage1.Controls.Add(Me.ButtonSelectTexConv)
-        Me.TabPage1.Controls.Add(Me.ButtonDownloadBPEExe)
-        Me.TabPage1.Controls.Add(Me.ButtonOodle6Select)
-        Me.TabPage1.Controls.Add(Me.LabelRadVideo)
-        Me.TabPage1.Controls.Add(Me.ButtonSelectZlib)
-        Me.TabPage1.Controls.Add(Me.ButtonSelectBPEExe)
-        Me.TabPage1.Controls.Add(Me.LabelOodle_6)
-        Me.TabPage1.Controls.Add(Me.TextBoxRadVideo)
-        Me.TabPage1.Controls.Add(Me.LabelZlib)
-        Me.TabPage1.Controls.Add(Me.TextBoxBPEExe)
-        Me.TabPage1.Controls.Add(Me.ButtonSelectRadVideo)
-        Me.TabPage1.Controls.Add(Me.LabelBPEExe)
-        Me.TabPage1.Controls.Add(Me.ButtonDownloadRadVideo)
-        Me.TabPage1.Controls.Add(Me.LabelUnrrbpe)
-        Me.TabPage1.Controls.Add(Me.TextBoxUnrrbpe)
-        Me.TabPage1.Controls.Add(Me.ButtonSelectUnrrbpe)
-        Me.TabPage1.Controls.Add(Me.ButtonDownloadDDSexe)
-        Me.TabPage1.Controls.Add(Me.ButtonDownloadUnrrbpe)
-        Me.TabPage1.Controls.Add(Me.ButtonSelectDDSexe)
-        Me.TabPage1.Controls.Add(Me.LabelDSSExe)
-        Me.TabPage1.Controls.Add(Me.TextBoxDDSExe)
-        Me.TabPage1.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(276, 455)
-        Me.TabPage1.TabIndex = 0
-        Me.TabPage1.Text = "File Select"
+        Me.TabPageExeTools.BackColor = System.Drawing.SystemColors.Control
+        Me.TabPageExeTools.Controls.Add(Me.ButtonSelectCrunchExe)
+        Me.TabPageExeTools.Controls.Add(Me.TextBoxCrunchExe)
+        Me.TabPageExeTools.Controls.Add(Me.LabelCrunchExe)
+        Me.TabPageExeTools.Controls.Add(Me.LabelSkipVersion)
+        Me.TabPageExeTools.Controls.Add(Me.ButtonCheckUpdate)
+        Me.TabPageExeTools.Controls.Add(Me.Label1)
+        Me.TabPageExeTools.Controls.Add(Me.TextBoxHome)
+        Me.TabPageExeTools.Controls.Add(Me.ButtonSelectHome)
+        Me.TabPageExeTools.Controls.Add(Me.LabelTexConv)
+        Me.TabPageExeTools.Controls.Add(Me.TextBoxTexConv)
+        Me.TabPageExeTools.Controls.Add(Me.ButtonSelectTexConv)
+        Me.TabPageExeTools.Controls.Add(Me.ButtonDownloadBPEExe)
+        Me.TabPageExeTools.Controls.Add(Me.LabelRadVideo)
+        Me.TabPageExeTools.Controls.Add(Me.ButtonSelectBPEExe)
+        Me.TabPageExeTools.Controls.Add(Me.TextBoxRadVideo)
+        Me.TabPageExeTools.Controls.Add(Me.TextBoxBPEExe)
+        Me.TabPageExeTools.Controls.Add(Me.ButtonSelectRadVideo)
+        Me.TabPageExeTools.Controls.Add(Me.LabelBPEExe)
+        Me.TabPageExeTools.Controls.Add(Me.ButtonDownloadRadVideo)
+        Me.TabPageExeTools.Controls.Add(Me.LabelUnrrbpe)
+        Me.TabPageExeTools.Controls.Add(Me.TextBoxUnrrbpe)
+        Me.TabPageExeTools.Controls.Add(Me.ButtonSelectUnrrbpe)
+        Me.TabPageExeTools.Controls.Add(Me.ButtonDownloadDDSexe)
+        Me.TabPageExeTools.Controls.Add(Me.ButtonDownloadUnrrbpe)
+        Me.TabPageExeTools.Controls.Add(Me.ButtonSelectDDSexe)
+        Me.TabPageExeTools.Controls.Add(Me.LabelDSSExe)
+        Me.TabPageExeTools.Controls.Add(Me.TextBoxDDSExe)
+        Me.TabPageExeTools.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageExeTools.Name = "TabPageExeTools"
+        Me.TabPageExeTools.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPageExeTools.Size = New System.Drawing.Size(276, 360)
+        Me.TabPageExeTools.TabIndex = 0
+        Me.TabPageExeTools.Text = "File Select"
         '
         'ButtonSelectCrunchExe
         '
@@ -513,29 +451,10 @@ Partial Class OptionsMenu
         Me.LabelCrunchExe.TabIndex = 56
         Me.LabelCrunchExe.Text = "Crunch Exe Location"
         '
-        'ButtonOodle7Select
-        '
-        Me.ButtonOodle7Select.Location = New System.Drawing.Point(143, 362)
-        Me.ButtonOodle7Select.Name = "ButtonOodle7Select"
-        Me.ButtonOodle7Select.Size = New System.Drawing.Size(125, 23)
-        Me.ButtonOodle7Select.TabIndex = 55
-        Me.ButtonOodle7Select.Text = "Locate oo2core_7"
-        Me.ButtonOodle7Select.UseVisualStyleBackColor = True
-        Me.ButtonOodle7Select.Visible = False
-        '
-        'LabelOodle_7
-        '
-        Me.LabelOodle_7.AutoSize = True
-        Me.LabelOodle_7.Location = New System.Drawing.Point(8, 367)
-        Me.LabelOodle_7.Name = "LabelOodle_7"
-        Me.LabelOodle_7.Size = New System.Drawing.Size(111, 13)
-        Me.LabelOodle_7.TabIndex = 54
-        Me.LabelOodle_7.Text = "Oodle 7 Loaded: True"
-        '
         'LabelSkipVersion
         '
         Me.LabelSkipVersion.AutoSize = True
-        Me.LabelSkipVersion.Location = New System.Drawing.Point(8, 422)
+        Me.LabelSkipVersion.Location = New System.Drawing.Point(8, 285)
         Me.LabelSkipVersion.Name = "LabelSkipVersion"
         Me.LabelSkipVersion.Size = New System.Drawing.Size(71, 13)
         Me.LabelSkipVersion.TabIndex = 53
@@ -543,7 +462,7 @@ Partial Class OptionsMenu
         '
         'ButtonCheckUpdate
         '
-        Me.ButtonCheckUpdate.Location = New System.Drawing.Point(143, 417)
+        Me.ButtonCheckUpdate.Location = New System.Drawing.Point(143, 280)
         Me.ButtonCheckUpdate.Margin = New System.Windows.Forms.Padding(0)
         Me.ButtonCheckUpdate.Name = "ButtonCheckUpdate"
         Me.ButtonCheckUpdate.Size = New System.Drawing.Size(125, 23)
@@ -565,7 +484,7 @@ Partial Class OptionsMenu
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(276, 455)
+        Me.TabPage2.Size = New System.Drawing.Size(276, 360)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "Options"
         '
@@ -592,7 +511,7 @@ Partial Class OptionsMenu
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(276, 455)
+        Me.TabPage3.Size = New System.Drawing.Size(276, 360)
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "Advanced"
         '
@@ -762,31 +681,148 @@ Partial Class OptionsMenu
         Me.CheckDisableModPref.Text = "Disable Mod Folder Preference"
         Me.CheckDisableModPref.UseVisualStyleBackColor = True
         '
-        'ButtonFrostyYukesSelect
+        'TabPageDLLCheck
         '
-        Me.ButtonFrostyYukesSelect.Location = New System.Drawing.Point(143, 391)
-        Me.ButtonFrostyYukesSelect.Name = "ButtonFrostyYukesSelect"
-        Me.ButtonFrostyYukesSelect.Size = New System.Drawing.Size(125, 23)
-        Me.ButtonFrostyYukesSelect.TabIndex = 59
-        Me.ButtonFrostyYukesSelect.Text = "Locate FrostyYukes"
-        Me.ButtonFrostyYukesSelect.UseVisualStyleBackColor = True
-        Me.ButtonFrostyYukesSelect.Visible = False
+        Me.TabPageDLLCheck.BackColor = System.Drawing.SystemColors.Control
+        Me.TabPageDLLCheck.Controls.Add(Me.Label3)
+        Me.TabPageDLLCheck.Controls.Add(Me.ButtonNewtonJsonSelect)
+        Me.TabPageDLLCheck.Controls.Add(Me.LabelFrosty)
+        Me.TabPageDLLCheck.Controls.Add(Me.ButtonFrostyYukesSelect)
+        Me.TabPageDLLCheck.Controls.Add(Me.ButtonOodle7Select)
+        Me.TabPageDLLCheck.Controls.Add(Me.LabelOodle_7)
+        Me.TabPageDLLCheck.Controls.Add(Me.ButtonSelectFontAwesome)
+        Me.TabPageDLLCheck.Controls.Add(Me.LabelFontAwesome)
+        Me.TabPageDLLCheck.Controls.Add(Me.ButtonOodle6Select)
+        Me.TabPageDLLCheck.Controls.Add(Me.ButtonSelectZlib)
+        Me.TabPageDLLCheck.Controls.Add(Me.LabelOodle_6)
+        Me.TabPageDLLCheck.Controls.Add(Me.LabelZlib)
+        Me.TabPageDLLCheck.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageDLLCheck.Name = "TabPageDLLCheck"
+        Me.TabPageDLLCheck.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPageDLLCheck.Size = New System.Drawing.Size(276, 360)
+        Me.TabPageDLLCheck.TabIndex = 3
+        Me.TabPageDLLCheck.Text = "DLL"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(8, 136)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(127, 13)
+        Me.Label3.TabIndex = 72
+        Me.Label3.Text = "Newt..Json Loaded: True"
+        '
+        'ButtonNewtonJsonSelect
+        '
+        Me.ButtonNewtonJsonSelect.Location = New System.Drawing.Point(143, 131)
+        Me.ButtonNewtonJsonSelect.Name = "ButtonNewtonJsonSelect"
+        Me.ButtonNewtonJsonSelect.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonNewtonJsonSelect.TabIndex = 71
+        Me.ButtonNewtonJsonSelect.Text = "Locate Json.dll"
+        Me.ButtonNewtonJsonSelect.UseVisualStyleBackColor = True
+        Me.ButtonNewtonJsonSelect.Visible = False
         '
         'LabelFrosty
         '
         Me.LabelFrosty.AutoSize = True
-        Me.LabelFrosty.Location = New System.Drawing.Point(8, 396)
+        Me.LabelFrosty.Location = New System.Drawing.Point(8, 111)
         Me.LabelFrosty.Name = "LabelFrosty"
         Me.LabelFrosty.Size = New System.Drawing.Size(132, 13)
-        Me.LabelFrosty.TabIndex = 60
-        Me.LabelFrosty.Text = "FrustyYukes Loaded: True"
+        Me.LabelFrosty.TabIndex = 70
+        Me.LabelFrosty.Text = "FrostyYukes Loaded: True"
+        '
+        'ButtonFrostyYukesSelect
+        '
+        Me.ButtonFrostyYukesSelect.Location = New System.Drawing.Point(143, 106)
+        Me.ButtonFrostyYukesSelect.Name = "ButtonFrostyYukesSelect"
+        Me.ButtonFrostyYukesSelect.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonFrostyYukesSelect.TabIndex = 69
+        Me.ButtonFrostyYukesSelect.Text = "Locate FrostyYukes"
+        Me.ButtonFrostyYukesSelect.UseVisualStyleBackColor = True
+        Me.ButtonFrostyYukesSelect.Visible = False
+        '
+        'ButtonOodle7Select
+        '
+        Me.ButtonOodle7Select.Location = New System.Drawing.Point(143, 81)
+        Me.ButtonOodle7Select.Name = "ButtonOodle7Select"
+        Me.ButtonOodle7Select.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonOodle7Select.TabIndex = 68
+        Me.ButtonOodle7Select.Text = "Locate oo2core_7"
+        Me.ButtonOodle7Select.UseVisualStyleBackColor = True
+        Me.ButtonOodle7Select.Visible = False
+        '
+        'LabelOodle_7
+        '
+        Me.LabelOodle_7.AutoSize = True
+        Me.LabelOodle_7.Location = New System.Drawing.Point(8, 86)
+        Me.LabelOodle_7.Name = "LabelOodle_7"
+        Me.LabelOodle_7.Size = New System.Drawing.Size(111, 13)
+        Me.LabelOodle_7.TabIndex = 67
+        Me.LabelOodle_7.Text = "Oodle 7 Loaded: True"
+        '
+        'ButtonSelectFontAwesome
+        '
+        Me.ButtonSelectFontAwesome.Location = New System.Drawing.Point(143, 6)
+        Me.ButtonSelectFontAwesome.Name = "ButtonSelectFontAwesome"
+        Me.ButtonSelectFontAwesome.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonSelectFontAwesome.TabIndex = 66
+        Me.ButtonSelectFontAwesome.Text = "Locate FontAwesome"
+        Me.ButtonSelectFontAwesome.UseVisualStyleBackColor = True
+        Me.ButtonSelectFontAwesome.Visible = False
+        '
+        'LabelFontAwesome
+        '
+        Me.LabelFontAwesome.AutoSize = True
+        Me.LabelFontAwesome.Location = New System.Drawing.Point(8, 11)
+        Me.LabelFontAwesome.Name = "LabelFontAwesome"
+        Me.LabelFontAwesome.Size = New System.Drawing.Size(122, 13)
+        Me.LabelFontAwesome.TabIndex = 65
+        Me.LabelFontAwesome.Text = "FontAwe. Loaded: False"
+        '
+        'ButtonOodle6Select
+        '
+        Me.ButtonOodle6Select.Location = New System.Drawing.Point(143, 56)
+        Me.ButtonOodle6Select.Name = "ButtonOodle6Select"
+        Me.ButtonOodle6Select.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonOodle6Select.TabIndex = 64
+        Me.ButtonOodle6Select.Text = "Locate oo2core_6"
+        Me.ButtonOodle6Select.UseVisualStyleBackColor = True
+        Me.ButtonOodle6Select.Visible = False
+        '
+        'ButtonSelectZlib
+        '
+        Me.ButtonSelectZlib.Location = New System.Drawing.Point(143, 31)
+        Me.ButtonSelectZlib.Name = "ButtonSelectZlib"
+        Me.ButtonSelectZlib.Size = New System.Drawing.Size(125, 23)
+        Me.ButtonSelectZlib.TabIndex = 63
+        Me.ButtonSelectZlib.Text = "Locate Iconic.Zlib"
+        Me.ButtonSelectZlib.UseVisualStyleBackColor = True
+        Me.ButtonSelectZlib.Visible = False
+        '
+        'LabelOodle_6
+        '
+        Me.LabelOodle_6.AutoSize = True
+        Me.LabelOodle_6.Location = New System.Drawing.Point(8, 61)
+        Me.LabelOodle_6.Name = "LabelOodle_6"
+        Me.LabelOodle_6.Size = New System.Drawing.Size(111, 13)
+        Me.LabelOodle_6.TabIndex = 62
+        Me.LabelOodle_6.Text = "Oodle 6 Loaded: True"
+        '
+        'LabelZlib
+        '
+        Me.LabelZlib.AutoSize = True
+        Me.LabelZlib.Location = New System.Drawing.Point(8, 36)
+        Me.LabelZlib.Name = "LabelZlib"
+        Me.LabelZlib.Size = New System.Drawing.Size(114, 13)
+        Me.LabelZlib.TabIndex = 61
+        Me.LabelZlib.Text = "Zlib DLL Loaded: True"
         '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
-        Me.ClientSize = New System.Drawing.Size(284, 481)
+        Me.ClientSize = New System.Drawing.Size(284, 386)
         Me.Controls.Add(Me.TabControl1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -795,14 +831,16 @@ Partial Class OptionsMenu
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Options Menu"
         Me.TabControl1.ResumeLayout(False)
-        Me.TabPage1.ResumeLayout(False)
-        Me.TabPage1.PerformLayout()
+        Me.TabPageExeTools.ResumeLayout(False)
+        Me.TabPageExeTools.PerformLayout()
         Me.TabPage2.ResumeLayout(False)
         Me.TabPage2.PerformLayout()
         Me.TabPage3.ResumeLayout(False)
         Me.TabPage3.PerformLayout()
         CType(Me.TrackBarHexLength, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TrackBarDecimalNameLength, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPageDLLCheck.ResumeLayout(False)
+        Me.TabPageDLLCheck.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -821,10 +859,6 @@ Partial Class OptionsMenu
     Friend WithEvents ButtonSelectUnrrbpe As Button
     Friend WithEvents ButtonDownloadUnrrbpe As Button
     Friend WithEvents ButtonDownloadRadVideo As Button
-    Friend WithEvents LabelZlib As Label
-    Friend WithEvents LabelOodle_6 As Label
-    Friend WithEvents ButtonSelectZlib As Button
-    Friend WithEvents ButtonOodle6Select As Button
     Friend WithEvents CheckBoxLoadHome As CheckBox
     Friend WithEvents CheckBoxBackup As CheckBox
     Friend WithEvents CheckBoxDeleteTempBMP As CheckBox
@@ -840,12 +874,10 @@ Partial Class OptionsMenu
     Friend WithEvents TextBoxBPEExe As TextBox
     Friend WithEvents LabelBPEExe As Label
     Friend WithEvents CheckBoxExtractAllinPlace As CheckBox
-    Friend WithEvents LabelFontAwesome As Label
-    Friend WithEvents ButtonSelectFontAwesome As Button
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents CheckBoxRecycleDeletedFiles As CheckBox
     Friend WithEvents TabControl1 As TabControl
-    Friend WithEvents TabPage1 As TabPage
+    Friend WithEvents TabPageExeTools As TabPage
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents TabPage3 As TabPage
     Friend WithEvents CheckBoxAppendDef As CheckBox
@@ -867,11 +899,20 @@ Partial Class OptionsMenu
     Friend WithEvents CheckBoxSuppresHSPCFooters As CheckBox
     Friend WithEvents CheckBoxCreateCAkDef As CheckBox
     Friend WithEvents CheckBoxShowCAkIntermediates As CheckBox
-    Friend WithEvents ButtonOodle7Select As Button
-    Friend WithEvents LabelOodle_7 As Label
     Friend WithEvents ButtonSelectCrunchExe As Button
     Friend WithEvents TextBoxCrunchExe As TextBox
     Friend WithEvents LabelCrunchExe As Label
+    Friend WithEvents TabPageDLLCheck As TabPage
+    Friend WithEvents Label3 As Label
+    Friend WithEvents ButtonNewtonJsonSelect As Button
     Friend WithEvents LabelFrosty As Label
     Friend WithEvents ButtonFrostyYukesSelect As Button
+    Friend WithEvents ButtonOodle7Select As Button
+    Friend WithEvents LabelOodle_7 As Label
+    Friend WithEvents ButtonSelectFontAwesome As Button
+    Friend WithEvents LabelFontAwesome As Label
+    Friend WithEvents ButtonOodle6Select As Button
+    Friend WithEvents ButtonSelectZlib As Button
+    Friend WithEvents LabelOodle_6 As Label
+    Friend WithEvents LabelZlib As Label
 End Class

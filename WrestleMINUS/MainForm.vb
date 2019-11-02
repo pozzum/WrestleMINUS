@@ -166,7 +166,7 @@ Public Class MainForm
     End Function
 
     Sub LoadFontAwesomeIcons()
-        If SettingsHandlers.CheckFontAwesome() Then
+        If ApplicationHandlers.CheckFontAwesome() Then
             LoadHomeToolStripMenuItem.Image = IconChar.Home.ToBitmap(16, Color.Black)
             OpenToolStripMenuItem.Image = IconChar.FolderOpen.ToBitmap(16, Color.Black)
             ExitToolStripMenuItem.Image = IconChar.WindowClose.ToBitmap(16, Color.Black)
@@ -188,17 +188,17 @@ Public Class MainForm
 
     Sub FillCompressionMenu()
         'Tool Menu Compress in place
-        If PackUnpack.CheckBPEExe() Then
+        If ApplicationHandlers.CheckBPEExe() Then
             BPECompressionToolStripMenuItem.Visible = True
         Else
             BPECompressionToolStripMenuItem.Visible = False
         End If
-        If PackUnpack.CheckIconicZlib() Then
+        If ApplicationHandlers.CheckIconicZlib() Then
             ZLIBCompressionToolStripMenuItem.Visible = True
         Else
             ZLIBCompressionToolStripMenuItem.Visible = False
         End If
-        If PackUnpack.CheckOodle6() OrElse PackUnpack.CheckOodle7() Then
+        If ApplicationHandlers.CheckOodle6() OrElse ApplicationHandlers.CheckOodle7() Then
             OODLCompressionToolStripMenuItem.Visible = True
         Else
             OODLCompressionToolStripMenuItem.Visible = False
@@ -269,7 +269,7 @@ Public Class MainForm
     End Sub
 
     Private Sub SelectNewHomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SelectNewHomeToolStripMenuItem.Click
-        SettingsHandlers.SelectHomeDirectory()
+        ApplicationHandlers.CheckGameExeFolder(True)
     End Sub
 
     Private Sub OpenToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenToolStripMenuItem.Click
@@ -606,7 +606,7 @@ Public Class MainForm
         Else
             If MessageBox.Show("No Home Directory Selected." & vbNewLine &
                              "Select Home Now?", "Select Home?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
-                SettingsHandlers.SelectHomeDirectory()
+                ApplicationHandlers.CheckGameExeFolder(True)
             End If
         End If
     End Sub
@@ -797,17 +797,17 @@ Public Class MainForm
                     InjectZLIBToolStripMenuItem.Visible = False
                     InjectOODLToolStripMenuItem.Visible = False
                     If ParentNodeTag.FileType = PackageType.BPE Then
-                        If PackUnpack.CheckBPEExe() Then
+                        If ApplicationHandlers.CheckBPEExe() Then
                             InjectToolStripMenuItem.Tag = True
                             'InjectBPEToolStripMenuItem.Visible = True
                         End If
                     ElseIf ParentNodeTag.FileType = PackageType.ZLIB Then
-                        If PackUnpack.CheckIconicZlib() Then
+                        If ApplicationHandlers.CheckIconicZlib() Then
                             InjectToolStripMenuItem.Tag = True
                             'InjectZLIBToolStripMenuItem.Visible = True
                         End If
                     ElseIf ParentNodeTag.FileType = PackageType.OODL Then
-                        If PackUnpack.CheckOodle6() Then
+                        If ApplicationHandlers.CheckOodle6() Then
                             InjectToolStripMenuItem.Tag = True
                             'InjectOODLToolStripMenuItem.Visible = True
                         End If
@@ -826,17 +826,17 @@ Public Class MainForm
                                 End If
                             End If
                         End If
-                        If PackUnpack.CheckBPEExe() Then
+                        If ApplicationHandlers.CheckBPEExe() Then
                             InjectBPEToolStripMenuItem.Visible = True
                         Else
                             InjectBPEToolStripMenuItem.Visible = False
                         End If
-                        If PackUnpack.CheckIconicZlib() Then
+                        If ApplicationHandlers.CheckIconicZlib() Then
                             InjectZLIBToolStripMenuItem.Visible = True
                         Else
                             InjectZLIBToolStripMenuItem.Visible = False
                         End If
-                        If PackUnpack.CheckOodle6() OrElse PackUnpack.CheckOodle7() Then
+                        If ApplicationHandlers.CheckOodle6() OrElse ApplicationHandlers.CheckOodle7() Then
                             InjectOODLToolStripMenuItem.Visible = True
                         Else
                             InjectOODLToolStripMenuItem.Visible = False
@@ -889,7 +889,7 @@ Public Class MainForm
 
     Private Sub OpenImageWithToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenImageWithToolStripMenuItem.Click
         If My.Settings.DDSexeLocation = "Not Installed" Then
-            SettingsHandlers.CheckDDSexe(True)
+            ApplicationHandlers.CheckDDSexe(True)
         Else
             'Currently Only Designed for DDS Files
             Dim DDSBytes As Byte() = FilePartHandlers.GetFilePartBytes(TreeView1.SelectedNode.Tag)
@@ -1102,6 +1102,7 @@ Public Class MainForm
     Public DefaultCellStyle As DataGridViewCellStyle = New DataGridViewCellStyle With {
         .BackColor = SystemColors.Window,
         .ForeColor = SystemColors.WindowText}
+
 #End Region
 
     'TO DO Request Direct Editing of Hex Edit View
@@ -2453,6 +2454,7 @@ Public Class MainForm
         FillObjectEmoteComboBox()
         FillSubObjectViews(DataGridObjectView.Rows(0).Tag)
     End Sub
+
     'CompleteYobjBytes Header
     '0x0 JBOY / YOBJ
     '0x4 Offset to Pof0 (Yobj Size)
@@ -2485,7 +2487,6 @@ Public Class MainForm
         Public FillerBytes As Byte() = New Byte() {}
         Public FillerString As String = ""
         Public UnknownA As UInt32 = 0
-
 
         Public VertexCount As UInt32 = 0
         Public VertexOffset As UInt32 = 0
@@ -2564,7 +2565,6 @@ Public Class MainForm
     Public Class ObjectFaceReference
         Public Verticies As UInt16() = {1, 2, 3}
     End Class
-
 
 #Region "Header Read"
 
@@ -3073,6 +3073,7 @@ Public Class MainForm
 #End Region
 
 #Region "Emote Selector"
+
     Sub FillObjectEmoteComboBox()
         Dim EmoteNameCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H48, 4), 0)
         Dim EmoteNameStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H4C, 4), 0) + 8
@@ -3098,6 +3099,7 @@ Public Class MainForm
             End If
         End If
     End Sub
+
 #End Region
 
 #End Region
@@ -3114,7 +3116,6 @@ Public Class MainForm
         FillFacesView()
         FillParamsView()
     End Sub
-
 
     Sub FillVertexView()
         'Clearing Previously generated as  weights
@@ -3249,6 +3250,7 @@ Public Class MainForm
 #End Region
 
 #End Region
+
 #Region "Parameters View"
 
     Sub FillParamsView()
@@ -6165,6 +6167,7 @@ Public Class MainForm
 #End Region
 
 #Region "Initial Position File"
+
     'TO DO you can create format for the settings to be a class object once more information is known.
 
     Public Enum WeaponPositionType
@@ -6544,7 +6547,6 @@ Public Class MainForm
         Next
         Return ReturnedInt
     End Function
-
 
 #End Region
 
