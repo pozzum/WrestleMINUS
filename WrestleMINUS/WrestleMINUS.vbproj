@@ -220,6 +220,7 @@
     <Content Include="Assets\W.png" />
     <Content Include="Assets\Y.png" />
     <Content Include="Assets\Z.png" />
+    <Content Include="SubLicenses\Crunch_LICENSE.txt" />
     <Content Include="SubLicenses\DirectXTex_LICENSE.txt" />
     <Content Include="SubLicenses\FontAwesome.Sharp_LICENSE.txt" />
     <Content Include="SubLicenses\Ionic.Zlib_LICENSE.txt" />
