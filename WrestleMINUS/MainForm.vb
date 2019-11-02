@@ -268,6 +268,10 @@ Public Class MainForm
         LoadHome()
     End Sub
 
+    Private Sub SelectNewHomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SelectNewHomeToolStripMenuItem.Click
+        SettingsHandlers.SelectHomeDirectory()
+    End Sub
+
     Private Sub OpenToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenToolStripMenuItem.Click
         Dim OpenFileOrFolderDialog As New OpenFileDialog With {
             .CheckFileExists = False,
@@ -788,61 +792,65 @@ Public Class MainForm
                        NodeTag.StoredData.Length > 0 Then
                 ExtractToolStripMenuItem.Tag = True
                 ExtractPartToToolStripMenuItem.Visible = True
-                InjectBPEToolStripMenuItem.Visible = False
-                InjectZLIBToolStripMenuItem.Visible = False
-                InjectOODLToolStripMenuItem.Visible = False
-                If ParentNodeTag.FileType = PackageType.BPE Then
-                    If PackUnpack.CheckBPEExe() Then
+                If PackageInformation.CheckInjectable(NodeTag.FileType) Then
+                    InjectBPEToolStripMenuItem.Visible = False
+                    InjectZLIBToolStripMenuItem.Visible = False
+                    InjectOODLToolStripMenuItem.Visible = False
+                    If ParentNodeTag.FileType = PackageType.BPE Then
+                        If PackUnpack.CheckBPEExe() Then
+                            InjectToolStripMenuItem.Tag = True
+                            'InjectBPEToolStripMenuItem.Visible = True
+                        End If
+                    ElseIf ParentNodeTag.FileType = PackageType.ZLIB Then
+                        If PackUnpack.CheckIconicZlib() Then
+                            InjectToolStripMenuItem.Tag = True
+                            'InjectZLIBToolStripMenuItem.Visible = True
+                        End If
+                    ElseIf ParentNodeTag.FileType = PackageType.OODL Then
+                        If PackUnpack.CheckOodle6() Then
+                            InjectToolStripMenuItem.Tag = True
+                            'InjectOODLToolStripMenuItem.Visible = True
+                        End If
+                    Else
+                        'We are working with a actual file part
                         InjectToolStripMenuItem.Tag = True
-                        'InjectBPEToolStripMenuItem.Visible = True
-                    End If
-                ElseIf ParentNodeTag.FileType = PackageType.ZLIB Then
-                    If PackUnpack.CheckIconicZlib() Then
-                        InjectToolStripMenuItem.Tag = True
-                        'InjectZLIBToolStripMenuItem.Visible = True
-                    End If
-                ElseIf ParentNodeTag.FileType = PackageType.OODL Then
-                    If PackUnpack.CheckOodle6() Then
-                        InjectToolStripMenuItem.Tag = True
-                        'InjectOODLToolStripMenuItem.Visible = True
-                    End If
-                Else
-                    'We are working with a actual file part
-                    InjectToolStripMenuItem.Tag = True
-                    InjectUncompressedToolStripMenuItem.Tag = True
-                    If PackageInformation.CheckRenameable(ParentNodeTag.FileType) Then
-                        RenamePartToolStripMenuItem.Tag = True
-                    End If
+                        InjectUncompressedToolStripMenuItem.Tag = True
+                        If PackageInformation.CheckRenameable(ParentNodeTag.FileType) Then
+                            RenamePartToolStripMenuItem.Tag = True
+                        End If
 
-                    If PackageInformation.CheckDeleteable(ParentNodeTag.FileType) Then
-                        If Not IsNothing(ParentNodeTag) Then
-                            If TreeView1.SelectedNode.Parent.Nodes.Count > 1 Then
-                                DeletePartToolStripMenuItem.Tag = True
+                        If PackageInformation.CheckDeleteable(ParentNodeTag.FileType) Then
+                            If Not IsNothing(ParentNodeTag) Then
+                                If TreeView1.SelectedNode.Parent.Nodes.Count > 1 Then
+                                    DeletePartToolStripMenuItem.Tag = True
+                                End If
                             End If
                         End If
-                    End If
-                    If PackUnpack.CheckBPEExe() Then
-                        InjectBPEToolStripMenuItem.Visible = True
-                    Else
-                        InjectBPEToolStripMenuItem.Visible = False
-                    End If
-                    If PackUnpack.CheckIconicZlib() Then
-                        InjectZLIBToolStripMenuItem.Visible = True
-                    Else
-                        InjectZLIBToolStripMenuItem.Visible = False
-                    End If
-                    If PackUnpack.CheckOodle6() OrElse PackUnpack.CheckOodle7() Then
-                        InjectOODLToolStripMenuItem.Visible = True
-                    Else
-                        InjectOODLToolStripMenuItem.Visible = False
+                        If PackUnpack.CheckBPEExe() Then
+                            InjectBPEToolStripMenuItem.Visible = True
+                        Else
+                            InjectBPEToolStripMenuItem.Visible = False
+                        End If
+                        If PackUnpack.CheckIconicZlib() Then
+                            InjectZLIBToolStripMenuItem.Visible = True
+                        Else
+                            InjectZLIBToolStripMenuItem.Visible = False
+                        End If
+                        If PackUnpack.CheckOodle6() OrElse PackUnpack.CheckOodle7() Then
+                            InjectOODLToolStripMenuItem.Visible = True
+                        Else
+                            InjectOODLToolStripMenuItem.Visible = False
+                        End If
                     End If
                 End If
-                    Else
-                'We are working on a File, not a file part
-                RenameFileToolStripMenuItem.Tag = True
-                DeleteFileToolStripMenuItem.Tag = True
-                OpenFileLocationToolStripMenuItem.Tag = True
-                OpenFileLocationToolStripMenuItem.Text = "Open file location"
+            Else
+                If Not NodeTag.FileType = PackageType.CakFolder Then
+                    'We are working on a File, not a file part
+                    RenameFileToolStripMenuItem.Tag = True
+                    DeleteFileToolStripMenuItem.Tag = True
+                    OpenFileLocationToolStripMenuItem.Tag = True
+                    OpenFileLocationToolStripMenuItem.Text = "Open file location"
+                End If
             End If
             'TO DO more add Open With Items Somehow
             'Hex Editor
@@ -6536,7 +6544,6 @@ Public Class MainForm
         Next
         Return ReturnedInt
     End Function
-
 
 
 #End Region

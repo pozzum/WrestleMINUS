@@ -129,9 +129,15 @@ Public Class SettingsHandlers
     Shared Sub SelectHomeDirectory()
         Dim TempFileDialog As OpenFileDialog = New OpenFileDialog With {
             .FileName = "WWE2KXX.exe",
-            .Title = "Select WWE exe directory"}
-        If Directory.Exists("C:\Steam\steamapps\common\") Then
-            TempFileDialog.InitialDirectory = "C:\Steam\steamapps\common\"
+            .Title = "Select WWE exe directory",
+            .Filter = "Executable|*.exe|All files (*.*)|*.*"}
+        If File.Exists(My.Settings.ExeLocation) Then
+            TempFileDialog.InitialDirectory = Path.GetDirectoryName(My.Settings.ExeLocation)
+            TempFileDialog.FileName = Path.GetFileName(My.Settings.ExeLocation)
+        Else
+            If Directory.Exists("C:\Steam\steamapps\common\") Then
+                TempFileDialog.InitialDirectory = "C:\Steam\steamapps\common\"
+            End If
         End If
         TempFileDialog.ShowDialog()
         If File.Exists(TempFileDialog.FileName) AndAlso

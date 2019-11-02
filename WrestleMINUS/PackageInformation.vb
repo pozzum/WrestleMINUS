@@ -41,6 +41,25 @@ Public Class PackageInformation
         Return False
     End Function
 
+    Shared Function CheckInjectable(TestType As PackageType) As Boolean
+        'Hopefully this can expand to all
+        If TestType = PackageType.HSPC OrElse
+           TestType = PackageType.EPK8 OrElse
+           TestType = PackageType.EPAC OrElse
+           TestType = PackageType.SHDC OrElse
+           TestType = PackageType.PACH OrElse
+           TestType = PackageType.PachDirectory_4 OrElse
+           TestType = PackageType.PachDirectory_8 OrElse
+           TestType = PackageType.TextureLibrary OrElse
+           TestType = PackageType.ZLIB OrElse
+           TestType = PackageType.OODL OrElse
+           TestType = PackageType.BPE OrElse
+           TestType = PackageType.YANMPack Then
+            Return True
+        End If
+        Return False
+    End Function
+
     Shared Function CheckDeleteable(TestType As PackageType) As Boolean
         If TestType = PackageType.Unchecked OrElse
             TestType = PackageType.Folder OrElse
@@ -199,25 +218,6 @@ Public Class PackageInformation
             Case Else
                 Return 0
         End Select
-    End Function
-
-    Shared Function CheckInjectable(TestType As PackageType) As Boolean
-        'Hopefully this can expand to all
-        If TestType = PackageType.HSPC OrElse
-           TestType = PackageType.EPK8 OrElse
-           TestType = PackageType.EPAC OrElse
-           TestType = PackageType.SHDC OrElse
-           TestType = PackageType.PACH OrElse
-           TestType = PackageType.PachDirectory_4 OrElse
-           TestType = PackageType.PachDirectory_8 OrElse
-           TestType = PackageType.TextureLibrary OrElse
-           TestType = PackageType.ZLIB OrElse
-           TestType = PackageType.OODL OrElse
-           TestType = PackageType.BPE OrElse
-           TestType = PackageType.YANMPack Then
-            Return True
-        End If
-        Return False
     End Function
 
     Shared Function ValidateTruncation(TestedString As String, ContainerType As PackageType) As String

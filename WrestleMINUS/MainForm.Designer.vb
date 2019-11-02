@@ -81,6 +81,7 @@ Partial Class MainForm
         Me.ToolStripTextBoxSearch = New System.Windows.Forms.ToolStripTextBox()
         Me.SaveChangesStringMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SortStringsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportStringArrayToCSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MiscView = New System.Windows.Forms.TabPage()
         Me.DataGridMiscView = New System.Windows.Forms.DataGridView()
         Me.Col_ArenaNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -608,7 +609,7 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ExportStringArrayToCSVToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SelectNewHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripMainForm.SuspendLayout()
         CType(Me.SplitFileMenuContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitFileMenuContainer.Panel1.SuspendLayout()
@@ -717,6 +718,7 @@ Partial Class MainForm
         '
         'LoadHomeToolStripMenuItem
         '
+        Me.LoadHomeToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SelectNewHomeToolStripMenuItem})
         Me.LoadHomeToolStripMenuItem.Image = CType(resources.GetObject("LoadHomeToolStripMenuItem.Image"), System.Drawing.Image)
         Me.LoadHomeToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.LoadHomeToolStripMenuItem.Name = "LoadHomeToolStripMenuItem"
@@ -1172,6 +1174,12 @@ Partial Class MainForm
         Me.SortStringsToolStripMenuItem.Size = New System.Drawing.Size(79, 23)
         Me.SortStringsToolStripMenuItem.Text = "Sort Strings"
         Me.SortStringsToolStripMenuItem.Visible = False
+        '
+        'ExportStringArrayToCSVToolStripMenuItem
+        '
+        Me.ExportStringArrayToCSVToolStripMenuItem.Name = "ExportStringArrayToCSVToolStripMenuItem"
+        Me.ExportStringArrayToCSVToolStripMenuItem.Size = New System.Drawing.Size(91, 23)
+        Me.ExportStringArrayToCSVToolStripMenuItem.Text = "Export to CSV"
         '
         'MiscView
         '
@@ -5056,11 +5064,11 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn35.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn35.Width = 41
         '
-        'ExportStringArrayToCSVToolStripMenuItem
+        'SelectNewHomeToolStripMenuItem
         '
-        Me.ExportStringArrayToCSVToolStripMenuItem.Name = "ExportStringArrayToCSVToolStripMenuItem"
-        Me.ExportStringArrayToCSVToolStripMenuItem.Size = New System.Drawing.Size(91, 23)
-        Me.ExportStringArrayToCSVToolStripMenuItem.Text = "Export to CSV"
+        Me.SelectNewHomeToolStripMenuItem.Name = "SelectNewHomeToolStripMenuItem"
+        Me.SelectNewHomeToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.SelectNewHomeToolStripMenuItem.Text = "Select New Home"
         '
         'MainForm
         '
@@ -5791,4 +5799,5 @@ Partial Class MainForm
     Friend WithEvents ObjectTriStripVerts As DataGridViewTextBoxColumn
     Friend WithEvents ObjectTriStripVertCount As DataGridViewTextBoxColumn
     Friend WithEvents ExportStringArrayToCSVToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SelectNewHomeToolStripMenuItem As ToolStripMenuItem
 End Class
