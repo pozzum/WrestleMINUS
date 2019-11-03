@@ -71,8 +71,7 @@ Module ApplicationHandlers
                 Return True
             Else
                 'Attempt to auto-locate the exe
-                Dim ApplicationPath As String = Path.GetDirectoryName(Application.ExecutablePath) &
-                         Path.DirectorySeparatorChar & "bpe.exe"
+                Dim ApplicationPath As String = Application.StartupPath & Path.DirectorySeparatorChar & "bpe.exe"
                 Dim appDataPath As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
                 GeneralTools.FolderCheck(appDataPath)
                 appDataPath += Path.DirectorySeparatorChar & "bpe.exe"
@@ -116,8 +115,7 @@ Module ApplicationHandlers
                 Return True
             Else
                 'Attempt to auto-locate the exe
-                Dim ApplicationPath As String = Path.GetDirectoryName(Application.ExecutablePath) &
-                         Path.DirectorySeparatorChar & "unrrbpe.exe"
+                Dim ApplicationPath As String = Application.StartupPath & Path.DirectorySeparatorChar & "unrrbpe.exe"
                 Dim appDataPath As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
                 GeneralTools.FolderCheck(appDataPath)
                 appDataPath += Path.DirectorySeparatorChar & "unrrbpe.exe"
@@ -258,8 +256,7 @@ Module ApplicationHandlers
                 Return True
             Else
                 'Attempt to auto-locate the exe
-                Dim ApplicationPath As String = Path.GetDirectoryName(Application.ExecutablePath) &
-                         Path.DirectorySeparatorChar & "texconv.exe"
+                Dim ApplicationPath As String = Application.StartupPath & Path.DirectorySeparatorChar & "texconv.exe"
                 Dim appDataPath As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
                 GeneralTools.FolderCheck(appDataPath)
                 appDataPath += Path.DirectorySeparatorChar & "texconv.exe"
@@ -303,8 +300,7 @@ Module ApplicationHandlers
                 Return True
             Else
                 'Attempt to auto-locate the exe
-                Dim ApplicationPath As String = Path.GetDirectoryName(Application.ExecutablePath) &
-                         Path.DirectorySeparatorChar & "crunch_x64.exe"
+                Dim ApplicationPath As String = Application.StartupPath & Path.DirectorySeparatorChar & "crunch_x64.exe"
                 Dim appDataPath As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
                 GeneralTools.FolderCheck(appDataPath)
                 appDataPath += Path.DirectorySeparatorChar & "crunch_x64.exe"

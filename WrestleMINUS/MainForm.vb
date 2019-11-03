@@ -2407,8 +2407,10 @@ Public Class MainForm
                                 Path.GetFileNameWithoutExtension(TempName) & ".BMP"
         If Not TempBMP.ToLower = TempBMPLocal.ToLower Then
             If File.Exists(TempBMPLocal) Then
-                File.Copy(TempBMPLocal, TempBMP, True)
-                File.Delete(TempBMPLocal)
+                If GeneralTools.WaitForFile(TempBMPLocal) Then
+                    File.Copy(TempBMPLocal, TempBMP, True)
+                    File.Delete(TempBMPLocal)
+                End If
             End If
         End If
         If File.Exists(TempBMP) Then

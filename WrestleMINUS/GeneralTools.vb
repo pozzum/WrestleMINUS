@@ -92,6 +92,26 @@ Public Class GeneralTools
         Return attributes And Not attributesToRemove
     End Function
 
+    'https://stackoverflow.com/questions/50744/wait-until-file-is-unlocked-in-net
+    Shared Function WaitForFile(FullFilePath As String) As Boolean
+        Dim NumberofTries As Integer = 0
+        Do While NumberofTries < 10
+            Try
+                Using TestStream As FileStream = New FileStream(FullFilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None, 100)
+                    TestStream.ReadByte()
+                    Return True
+                End Using
+
+            Catch ex As Exception
+
+                NumberofTries += 1
+                Threading.Thread.Sleep(500)
+            End Try
+        Loop
+        MessageBox.Show(FullFilePath & vbNewLine & "Cannot be read after " & NumberofTries & " attempts.")
+        Return False
+    End Function
+
 #End Region
 
 #Region "Hex or Byte Based General Tools"

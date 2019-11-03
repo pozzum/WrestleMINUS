@@ -1145,19 +1145,31 @@ Public Class PackageInformation
                     FileSystem.Rename(TempName, TempName + ".crn")
                     TempName += ".crn"
                     File.WriteAllBytes(TempName, FileBytes)
-                    Dim CrunchExeProcess As New ProcessStartInfo(My.Settings.CrunchEXELocation) With
+                    Using CrunchProcess As Process = New Process With {
+                        .StartInfo = New ProcessStartInfo(My.Settings.CrunchEXELocation) With
                         {.Arguments = TempName,
                         .WindowStyle = ProcessWindowStyle.Hidden}
-                    Process.Start(CrunchExeProcess).WaitForExit()
+                        }
+                        CrunchProcess.Start()
+                        CrunchProcess.WaitForExit()
+                    End Using
+                    'Dim CrunchExeProcess As New ProcessStartInfo(My.Settings.CrunchEXELocation) With
+                    '    {.Arguments = TempName,
+                    '    .WindowStyle = ProcessWindowStyle.Hidden}
+                    'Process.Start(CrunchExeProcess).WaitForExit()
                     Dim TempCRN As String = Path.GetDirectoryName(My.Settings.CrunchEXELocation) &
                                                 Path.DirectorySeparatorChar &
                                                 Path.GetFileNameWithoutExtension(TempName) & ".dds"
-                    'Dim TempDDSLocal As String = Application.StartupPath & Path.DirectorySeparatorChar &
-                    '                            Path.GetFileNameWithoutExtension(TempName) & ".dds"
-                    'If File.Exists(TempDDSLocal) Then
-                    '        File.Copy(TempDDSLocal, TempDDS, True)
-                    '        File.Delete(TempDDSLocal)
-                    '    End If
+                    Dim TempCRNLocal As String = Application.StartupPath & Path.DirectorySeparatorChar &
+                                                Path.GetFileNameWithoutExtension(TempName) & ".dds"
+                    If Not TempCRNLocal.ToLower = TempCRN.ToLower Then
+                        If File.Exists(TempCRNLocal) Then
+                            If GeneralTools.WaitForFile(TempCRNLocal) Then
+                                File.Copy(TempCRNLocal, TempCRN)
+                                File.Delete(TempCRNLocal)
+                            End If
+                        End If
+                    End If
                     MainForm.CreatedImages.Add(TempCRN)
                     File.Delete(TempName)
                     UncrunchedBytes = File.ReadAllBytes(TempCRN)
@@ -1165,11 +1177,11 @@ Public Class PackageInformation
                     '    MessageBox.Show("Error Un-crunching Texture" & vbNewLine & ex.Message)
                     'End Try
                     If IsNothing(UncrunchedBytes) Then
-                        If My.Settings.ShowCAkIntermediates Then
-                            If IsNothing(ParentFileProperties.SubFiles) Then
-                                ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
-                            End If
-                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                            If My.Settings.ShowCAkIntermediates Then
+                                If IsNothing(ParentFileProperties.SubFiles) Then
+                                    ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                                End If
+                                Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
                             .Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds",
                             .FullFilePath = ParentFileProperties.FullFilePath,
                             .VirtualFilePath = ParentFileProperties.VirtualFilePath,
@@ -1178,18 +1190,18 @@ Public Class PackageInformation
                             .StoredData = UncrunchedBytes,
                             .FileType = PackageType.DDS,
                             .Parent = ParentFileProperties}
-                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
-                        Else
-                            ParentFileProperties.FileType = PackageType.bin
-                        End If
-                        'here we exit the sub so an empty file isn't crawled if the tree is being crawled
-                        Exit Sub
-                    Else
-                        If My.Settings.ShowCAkIntermediates Then
-                            If IsNothing(ParentFileProperties.SubFiles) Then
-                                ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                                ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                            Else
+                                ParentFileProperties.FileType = PackageType.bin
                             End If
-                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                            'here we exit the sub so an empty file isn't crawled if the tree is being crawled
+                            Exit Sub
+                        Else
+                            If My.Settings.ShowCAkIntermediates Then
+                                If IsNothing(ParentFileProperties.SubFiles) Then
+                                    ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                                End If
+                                Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
                                    .Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds",
                                    .FullFilePath = ParentFileProperties.FullFilePath,
                                    .VirtualFilePath = ParentFileProperties.VirtualFilePath,
@@ -1198,21 +1210,21 @@ Public Class PackageInformation
                                    .StoredData = UncrunchedBytes,
                                    .FileType = PackageType.DDS,
                                    .Parent = ParentFileProperties}
-                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
-                        Else
-                            'Instead of making a new node we want to update the parent
-                            ParentFileProperties.Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds"
-                            'ParentFileProperties.FullFilePath
-                            'ParentFileProperties.VirtualFilePath
-                            ParentFileProperties.FileType = PackageType.DDS
-                            ParentFileProperties.Index = 0
-                            ParentFileProperties.length = UncrunchedBytes.Length
-                            ParentFileProperties.StoredData = UncrunchedBytes
-                            'ParentFileProperties.Parent
+                                ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                            Else
+                                'Instead of making a new node we want to update the parent
+                                ParentFileProperties.Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds"
+                                'ParentFileProperties.FullFilePath
+                                'ParentFileProperties.VirtualFilePath
+                                ParentFileProperties.FileType = PackageType.DDS
+                                ParentFileProperties.Index = 0
+                                ParentFileProperties.length = UncrunchedBytes.Length
+                                ParentFileProperties.StoredData = UncrunchedBytes
+                                'ParentFileProperties.Parent
+                            End If
                         End If
-                    End If
-                Else
-                    ParentFileProperties.FileType = PackageType.bin
+                    Else
+                        ParentFileProperties.FileType = PackageType.bin
                 End If
 
 #End Region
