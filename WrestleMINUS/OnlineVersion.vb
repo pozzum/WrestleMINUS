@@ -1,5 +1,5 @@
 ﻿Imports System.Text.RegularExpressions
-Imports System.Threading 'Multithreading
+Imports System.Threading 'Multi-threading
 
 Public Class OnlineVersion
 

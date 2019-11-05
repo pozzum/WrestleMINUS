@@ -1,6 +1,6 @@
 ﻿Imports System.IO   'Files
 
-Public Class GeneralTools
+Partial Public Class GeneralTools
 
 #Region "Other Object Based General Tools"
 

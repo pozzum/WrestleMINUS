@@ -24,7 +24,7 @@ Partial Class OptionsMenu
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(OptionsMenu))
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.LabelHomeDirectory = New System.Windows.Forms.Label()
         Me.TextBoxHome = New System.Windows.Forms.TextBox()
         Me.ButtonSelectHome = New System.Windows.Forms.Button()
         Me.LabelTexConv = New System.Windows.Forms.Label()
@@ -103,14 +103,14 @@ Partial Class OptionsMenu
         Me.TabPageDLLCheck.SuspendLayout()
         Me.SuspendLayout()
         '
-        'Label1
+        'LabelHomeDirectory
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(8, 6)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(80, 13)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Home Directory"
+        Me.LabelHomeDirectory.AutoSize = True
+        Me.LabelHomeDirectory.Location = New System.Drawing.Point(8, 6)
+        Me.LabelHomeDirectory.Name = "LabelHomeDirectory"
+        Me.LabelHomeDirectory.Size = New System.Drawing.Size(80, 13)
+        Me.LabelHomeDirectory.TabIndex = 0
+        Me.LabelHomeDirectory.Text = "Home Directory"
         '
         'TextBoxHome
         '
@@ -396,7 +396,7 @@ Partial Class OptionsMenu
         Me.TabPageExeTools.Controls.Add(Me.LabelCrunchExe)
         Me.TabPageExeTools.Controls.Add(Me.LabelSkipVersion)
         Me.TabPageExeTools.Controls.Add(Me.ButtonCheckUpdate)
-        Me.TabPageExeTools.Controls.Add(Me.Label1)
+        Me.TabPageExeTools.Controls.Add(Me.LabelHomeDirectory)
         Me.TabPageExeTools.Controls.Add(Me.TextBoxHome)
         Me.TabPageExeTools.Controls.Add(Me.ButtonSelectHome)
         Me.TabPageExeTools.Controls.Add(Me.LabelTexConv)
@@ -845,7 +845,7 @@ Partial Class OptionsMenu
 
     End Sub
 
-    Friend WithEvents Label1 As Label
+    Friend WithEvents LabelHomeDirectory As Label
     Friend WithEvents TextBoxHome As TextBox
     Friend WithEvents ButtonSelectHome As Button
     Friend WithEvents LabelTexConv As Label

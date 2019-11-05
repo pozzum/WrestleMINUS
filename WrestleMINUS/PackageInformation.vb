@@ -1177,54 +1177,54 @@ Public Class PackageInformation
                     '    MessageBox.Show("Error Un-crunching Texture" & vbNewLine & ex.Message)
                     'End Try
                     If IsNothing(UncrunchedBytes) Then
-                            If My.Settings.ShowCAkIntermediates Then
-                                If IsNothing(ParentFileProperties.SubFiles) Then
-                                    ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
-                                End If
-                                Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
-                            .Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds",
-                            .FullFilePath = ParentFileProperties.FullFilePath,
-                            .VirtualFilePath = ParentFileProperties.VirtualFilePath,
-                            .Index = 0,
-                            .length = 0,
-                            .StoredData = UncrunchedBytes,
-                            .FileType = PackageType.DDS,
-                            .Parent = ParentFileProperties}
-                                ParentFileProperties.SubFiles.Add(ContainedFileProperties)
-                            Else
-                                ParentFileProperties.FileType = PackageType.bin
+                        If My.Settings.ShowCAkIntermediates Then
+                            If IsNothing(ParentFileProperties.SubFiles) Then
+                                ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
                             End If
-                            'here we exit the sub so an empty file isn't crawled if the tree is being crawled
-                            Exit Sub
+                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                        .Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds",
+                        .FullFilePath = ParentFileProperties.FullFilePath,
+                        .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                        .Index = 0,
+                        .length = 0,
+                        .StoredData = UncrunchedBytes,
+                        .FileType = PackageType.DDS,
+                        .Parent = ParentFileProperties}
+                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
                         Else
-                            If My.Settings.ShowCAkIntermediates Then
-                                If IsNothing(ParentFileProperties.SubFiles) Then
-                                    ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
-                                End If
-                                Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
-                                   .Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds",
-                                   .FullFilePath = ParentFileProperties.FullFilePath,
-                                   .VirtualFilePath = ParentFileProperties.VirtualFilePath,
-                                   .Index = 0,
-                                   .length = UncrunchedBytes.Length,
-                                   .StoredData = UncrunchedBytes,
-                                   .FileType = PackageType.DDS,
-                                   .Parent = ParentFileProperties}
-                                ParentFileProperties.SubFiles.Add(ContainedFileProperties)
-                            Else
-                                'Instead of making a new node we want to update the parent
-                                ParentFileProperties.Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds"
-                                'ParentFileProperties.FullFilePath
-                                'ParentFileProperties.VirtualFilePath
-                                ParentFileProperties.FileType = PackageType.DDS
-                                ParentFileProperties.Index = 0
-                                ParentFileProperties.length = UncrunchedBytes.Length
-                                ParentFileProperties.StoredData = UncrunchedBytes
-                                'ParentFileProperties.Parent
-                            End If
+                            ParentFileProperties.FileType = PackageType.bin
                         End If
+                        'here we exit the sub so an empty file isn't crawled if the tree is being crawled
+                        Exit Sub
                     Else
-                        ParentFileProperties.FileType = PackageType.bin
+                        If My.Settings.ShowCAkIntermediates Then
+                            If IsNothing(ParentFileProperties.SubFiles) Then
+                                ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                            End If
+                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                               .Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds",
+                               .FullFilePath = ParentFileProperties.FullFilePath,
+                               .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                               .Index = 0,
+                               .length = UncrunchedBytes.Length,
+                               .StoredData = UncrunchedBytes,
+                               .FileType = PackageType.DDS,
+                               .Parent = ParentFileProperties}
+                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                        Else
+                            'Instead of making a new node we want to update the parent
+                            ParentFileProperties.Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds"
+                            'ParentFileProperties.FullFilePath
+                            'ParentFileProperties.VirtualFilePath
+                            ParentFileProperties.FileType = PackageType.DDS
+                            ParentFileProperties.Index = 0
+                            ParentFileProperties.length = UncrunchedBytes.Length
+                            ParentFileProperties.StoredData = UncrunchedBytes
+                            'ParentFileProperties.Parent
+                        End If
+                    End If
+                Else
+                    ParentFileProperties.FileType = PackageType.bin
                 End If
 
 #End Region
