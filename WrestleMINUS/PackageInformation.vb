@@ -430,7 +430,7 @@ Public Class PackageInformation
 
     Shared Function ChecktexForCRN(Index As Long, ByVal ByteArray As Byte()) As PackageType
         If ByteArray.Length > &H30 + Index Then
-            'GeneralTools.EndianReverse(
+            'HexaDecimalHandlers.EndianReverse(
             If Not BitConverter.ToUInt32(ByteArray, Index + 4) = 9 Then
                 MessageBox.Show("Potential Tex Header Issue")
             End If
@@ -710,7 +710,7 @@ Public Class PackageInformation
                     ParentFileProperties.SubFiles.Add(ContainedFileProperties)
                 Next
             Case PackageType.DUMY
-                Dim HeaderLength As Integer = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, 4), 0)
+                Dim HeaderLength As Integer = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(FileBytes, 4), 0)
                 If HeaderLength > 0 Then
                     If IsNothing(ParentFileProperties.SubFiles) Then
                         ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
@@ -922,8 +922,8 @@ Public Class PackageInformation
                     Dim CurrentItemLength As UInt32 = 0
                     Dim CurrentItemIndex As UInt32 = 0
                     If BytesRevesed Then
-                        CurrentItemLength = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, i * &H20 + &H10 + &H14, 4), 0)
-                        CurrentItemIndex = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, i * &H20 + &H10 + &H18, 4), 0) + ParentFileProperties.Index
+                        CurrentItemLength = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(FileBytes, i * &H20 + &H10 + &H14, 4), 0)
+                        CurrentItemIndex = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(FileBytes, i * &H20 + &H10 + &H18, 4), 0) + ParentFileProperties.Index
                     Else
                         CurrentItemLength = BitConverter.ToUInt32(FileBytes, i * &H20 + &H10 + &H14)
                         CurrentItemIndex = BitConverter.ToUInt64(FileBytes, i * &H20 + &H10 + &H18) + ParentFileProperties.Index
@@ -940,8 +940,8 @@ Public Class PackageInformation
                 Next
             Case PackageType.YANMPack
                 If FileBytes.Length > &H10 Then
-                    Dim HeaderLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, &HC), 0)
-                    Dim YANMLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, 4), 0)
+                    Dim HeaderLength As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(FileBytes, &HC), 0)
+                    Dim YANMLength As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(FileBytes, 4), 0)
                     Dim HeadIndex As Integer = 0
                     Dim partcount As Integer = 0
                     If HeaderLength > 0 Then
@@ -958,8 +958,8 @@ Public Class PackageInformation
                             Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
                                 .Name = Encoding.ASCII.GetString(FileBytes, HeadIndex + 4, 8),
                                 .FullFilePath = ParentFileProperties.FullFilePath,
-                                .Index = (BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, HeadIndex + &H24), 0)) + HeaderLength + ParentFileProperties.Index,
-                                .length = BitConverter.ToUInt16(GeneralTools.EndianReverse(FileBytes, HeadIndex + 2, 2), 0) * &H20,
+                                .Index = (BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(FileBytes, HeadIndex + &H24), 0)) + HeaderLength + ParentFileProperties.Index,
+                                .length = BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(FileBytes, HeadIndex + 2, 2), 0) * &H20,
                                 .FileType = PackageType.YANM,
                                 .StoredData = ParentFileProperties.StoredData,
                                 .Parent = ParentFileProperties}
@@ -985,8 +985,8 @@ Public Class PackageInformation
             Case PackageType.YOBJ
 
             Case PackageType.big
-                Dim FileCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, 4, 4), 0)
-                Dim OffsetHeaderLength As UInt64 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, &HC, 4), 0)
+                Dim FileCount As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(FileBytes, 4, 4), 0)
+                Dim OffsetHeaderLength As UInt64 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(FileBytes, &HC, 4), 0)
                 MessageBox.Show(OffsetHeaderLength.ToString)
                 If FileCount > 0 Then
                     If IsNothing(ParentFileProperties.SubFiles) Then
@@ -994,8 +994,8 @@ Public Class PackageInformation
                     End If
                 End If
                 For i As Integer = 0 To FileCount - 1
-                    Dim CurrentItemIndex As UInt64 = BitConverter.ToUInt32(GeneralTools.EndianReverse(FileBytes, i * &H10 + &H30, 4), 0) * &H10
-                    Dim CurrentItemLength As UInt64 = BitConverter.ToUInt64(GeneralTools.EndianReverse(FileBytes, i * &H10 + &H30 + 4, 8), 0)
+                    Dim CurrentItemIndex As UInt64 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(FileBytes, i * &H10 + &H30, 4), 0) * &H10
+                    Dim CurrentItemLength As UInt64 = BitConverter.ToUInt64(HexaDecimalHandlers.EndianReverse(FileBytes, i * &H10 + &H30 + 4, 8), 0)
                     Dim ImageNameLength As UInt16 = FileBytes(&H14)
                     Dim ImageName As String = Encoding.Default.GetChars(FileBytes, OffsetHeaderLength + i * ImageNameLength + 2, ImageNameLength)
                     ImageName = ImageName.TrimEnd(Chr(0))

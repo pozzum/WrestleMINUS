@@ -1,7 +1,6 @@
 ﻿Imports System.IO   'Files
-Module File_FolderHandlers
 
-#Region "File Based General Tools"
+Module File_FolderHandlers
 
     'Here are App-separate commands use as required.
     Sub FolderMake(FolderPath As String)
@@ -100,7 +99,6 @@ Module File_FolderHandlers
                     TestStream.ReadByte()
                     Return True
                 End Using
-
             Catch ex As Exception
 
                 NumberofTries += 1
@@ -110,7 +108,5 @@ Module File_FolderHandlers
         MessageBox.Show(FullFilePath & vbNewLine & "Cannot be read after " & NumberofTries & " attempts.")
         Return False
     End Function
-
-#End Region
 
 End Module

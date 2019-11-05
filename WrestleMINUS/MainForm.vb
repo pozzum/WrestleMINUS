@@ -1377,7 +1377,7 @@ Public Class MainForm
     Private Sub DataGridStringView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridStringView.CellEndEdit
         Dim MyCell As DataGridViewCell = DataGridStringView.Rows(e.RowIndex).Cells(e.ColumnIndex)
         If e.ColumnIndex = DataGridStringView.Columns.IndexOf(StringHexRefColumn) Then 'Hex value
-            If Not GeneralTools.HexCheck(MyCell.Value) Then
+            If Not HexaDecimalHandlers.HexCheck(MyCell.Value) Then
                 MyCell.Value = OldValue
             Else
                 SortStringsToolStripMenuItem.Visible = True
@@ -2178,7 +2178,7 @@ Public Class MainForm
 
             Case Else 'Hex Text Required
                 '0, 6, 7, 8, 34, 36, 37
-                If Not GeneralTools.HexCheck(MyCell.Value) Then
+                If Not HexaDecimalHandlers.HexCheck(MyCell.Value) Then
                     MyCell.Value = OldValue
                 Else
                     If e.ColumnIndex = 24 Then 'Filter
@@ -2264,7 +2264,7 @@ Public Class MainForm
             ReturnedBytes(&HC + i * ShowLength + 41) = CByte(DataGridShowView.Rows(i).Cells(21).Value) 'D4
             ReturnedBytes(&HC + i * ShowLength + 43) = CByte(DataGridShowView.Rows(i).Cells(22).Value) 'D5
             ReturnedBytes(&HC + i * ShowLength + 44) = CByte(DataGridShowView.Rows(i).Cells(23).Value) 'REF '24
-            Array.Copy(GeneralTools.HexStringToByte(DataGridShowView.Rows(i).Cells(24).Value), 0, ReturnedBytes, &HC + i * ShowLength + 45, 6) 'Filter
+            Array.Copy(HexaDecimalHandlers.HexStringToByte(DataGridShowView.Rows(i).Cells(24).Value), 0, ReturnedBytes, &HC + i * ShowLength + 45, 6) 'Filter
             ReturnedBytes(&HC + i * ShowLength + 51) = &HFF '3 Bytes FF
             ReturnedBytes(&HC + i * ShowLength + 52) = &HFF
             ReturnedBytes(&HC + i * ShowLength + 53) = &HFF
@@ -2277,7 +2277,7 @@ Public Class MainForm
             ReturnedBytes(&HC + i * ShowLength + 70) = CByte(DataGridShowView.Rows(i).Cells(31).Value) 'H3
             ReturnedBytes(&HC + i * ShowLength + 71) = CByte(DataGridShowView.Rows(i).Cells(32).Value) 'H4
             ReturnedBytes(&HC + i * ShowLength + 73) = CByte(DataGridShowView.Rows(i).Cells(33).Value) 'Bar
-            Array.Copy(GeneralTools.HexStringToByte(DataGridShowView.Rows(i).Cells(34).Value), 0, ReturnedBytes, &HC + i * ShowLength + 74, 34) 'Unkown
+            Array.Copy(HexaDecimalHandlers.HexStringToByte(DataGridShowView.Rows(i).Cells(34).Value), 0, ReturnedBytes, &HC + i * ShowLength + 74, 34) 'Unkown
             ReturnedBytes(&HC + i * ShowLength + 108) = &H70 '3 byte 70
             ReturnedBytes(&HC + i * ShowLength + 109) = &H70
             ReturnedBytes(&HC + i * ShowLength + 110) = &H70
@@ -2350,7 +2350,7 @@ Public Class MainForm
 
     Private Sub DataGridNIBJView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridNIBJView.CellEndEdit
         Dim MyCell As DataGridViewCell = DataGridNIBJView.Rows(e.RowIndex).Cells(e.ColumnIndex)
-        If Not GeneralTools.HexCheck(MyCell.Value) OrElse
+        If Not HexaDecimalHandlers.HexCheck(MyCell.Value) OrElse
             MyCell.Value.ToString.Length > 8 Then
             MyCell.Value = OldValue
         Else
@@ -2578,36 +2578,36 @@ Public Class MainForm
         Dim TempShaderBytes As Byte() = New Byte(&H10 - 1) {}
         Array.Copy(TestedByteArray, &H7C, TempShaderBytes, 0, &H10)
         Dim ReturnedObjectHeaderInfo As ObjectHeaderInformation = New ObjectHeaderInformation With {
-           .VertexCount = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, 0, 4), 0),
+           .VertexCount = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, 0, 4), 0),
            .Rendered = BitConverter.ToBoolean(TestedByteArray, 4 + 3),
            .FillerBytes = TempFillerBytes,
            .FillerString = BitConverter.ToString(TempFillerBytes, 0).Replace("-", " "),
-           .WeightCount = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H5C, 4), 0),
-           .UnknownA = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H60, 4), 0),
-           .VertexHeadCount = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H64, 4), 0),
-           .VertexOffset = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H68, 4), 0),
-           .WeightOffset = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H6C, 4), 0),
-           .TextureCordOffset = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H70, 4), 0),
-           .NormalsOffset = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H74, 4), 0),
-           .UnknownB = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H78, 4), 0),
+           .WeightCount = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H5C, 4), 0),
+           .UnknownA = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H60, 4), 0),
+           .VertexHeadCount = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H64, 4), 0),
+           .VertexOffset = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H68, 4), 0),
+           .WeightOffset = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H6C, 4), 0),
+           .TextureCordOffset = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H70, 4), 0),
+           .NormalsOffset = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H74, 4), 0),
+           .UnknownB = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H78, 4), 0),
            .ShaderBytes = TempShaderBytes,
            .ShaderString = Encoding.Default.GetString(TempShaderBytes).TrimEnd(Chr(0)),
-           .UnknownC = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H8C, 4), 0),
-           .MaterialIndex = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H90, 4), 0),
-           .ParameterCount = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H94, 4), 0),
-           .ParameterOffset = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H98, 4), 0),
-           .FacesOffset = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H9C, 4), 0),
-           .TextureCordCount = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HA0, 4), 0),
-           .UnknownD = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HA4, 4), 0),
+           .UnknownC = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H8C, 4), 0),
+           .MaterialIndex = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H90, 4), 0),
+           .ParameterCount = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H94, 4), 0),
+           .ParameterOffset = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H98, 4), 0),
+           .FacesOffset = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H9C, 4), 0),
+           .TextureCordCount = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &HA0, 4), 0),
+           .UnknownD = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &HA4, 4), 0),
            .UnknownE = BitConverter.ToUInt32(TestedByteArray, &HA8),
-           .UnknownF = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HAC, 4), 0),
-           .UnknownG = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HB0, 4), 0),
-           .UnknownH = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HB4, 4), 0)
+           .UnknownF = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &HAC, 4), 0),
+           .UnknownG = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &HB0, 4), 0),
+           .UnknownH = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &HB4, 4), 0)
            }
 
         ReturnedObjectHeaderInfo.VertexHeadList = New List(Of List(Of ObjectVertex))
         For I As Integer = 0 To ReturnedObjectHeaderInfo.VertexHeadCount - 1
-            Dim FirstObjectVertexIndex As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, ReturnedObjectHeaderInfo.VertexOffset + 8 + I * 4, 4), 0) + 8
+            Dim FirstObjectVertexIndex As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, ReturnedObjectHeaderInfo.VertexOffset + 8 + I * 4, 4), 0) + 8
             ReturnedObjectHeaderInfo.VertexHeadList.Add(ParseBytesToVertexInformation(CompleteYobjBytes, FirstObjectVertexIndex, ReturnedObjectHeaderInfo.VertexCount))
         Next
         ReturnedObjectHeaderInfo.WeightCollection = ParseBytesToWeightsList(CompleteYobjBytes, ReturnedObjectHeaderInfo.WeightOffset + 8, ReturnedObjectHeaderInfo.VertexCount, ReturnedObjectHeaderInfo.WeightCount)
@@ -2630,13 +2630,13 @@ Public Class MainForm
         For i As UInt32 = 0 To VertexCount - 1
             Dim ReturnedVertexInfo As ObjectVertex = New ObjectVertex With {
                 .IndexCount = i + 1,
-                .X = BitConverter.ToSingle(GeneralTools.EndianReverse(ByteContainer, VertexStart + i * &H1C + 0, 4), 0),
-                .Z = -BitConverter.ToSingle(GeneralTools.EndianReverse(ByteContainer, VertexStart + i * &H1C + 4, 4), 0),
-                .Y = BitConverter.ToSingle(GeneralTools.EndianReverse(ByteContainer, VertexStart + i * &H1C + 8, 4), 0),
-                .RX = BitConverter.ToSingle(GeneralTools.EndianReverse(ByteContainer, VertexStart + i * &H1C + &HC, 4), 0),
-                .RZ = BitConverter.ToSingle(GeneralTools.EndianReverse(ByteContainer, VertexStart + i * &H1C + &H10, 4), 0),
-                .RY = BitConverter.ToSingle(GeneralTools.EndianReverse(ByteContainer, VertexStart + i * &H1C + &H14, 4), 0),
-                .Weight = BitConverter.ToSingle(GeneralTools.EndianReverse(ByteContainer, VertexStart + i * &H1C + &H18, 4), 0)}
+                .X = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(ByteContainer, VertexStart + i * &H1C + 0, 4), 0),
+                .Z = -BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(ByteContainer, VertexStart + i * &H1C + 4, 4), 0),
+                .Y = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(ByteContainer, VertexStart + i * &H1C + 8, 4), 0),
+                .RX = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(ByteContainer, VertexStart + i * &H1C + &HC, 4), 0),
+                .RZ = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(ByteContainer, VertexStart + i * &H1C + &H10, 4), 0),
+                .RY = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(ByteContainer, VertexStart + i * &H1C + &H14, 4), 0),
+                .Weight = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(ByteContainer, VertexStart + i * &H1C + &H18, 4), 0)}
             ReturnedVertList.Add(ReturnedVertexInfo)
         Next
         Return ReturnedVertList
@@ -2651,8 +2651,8 @@ Public Class MainForm
         For iCurrentVert As UInt32 = 0 To VertexCount - 1
             For jCurrentWeight As Integer = 0 To WeightsCount - 1
                 Dim ReturnedVertexWeights As ObjectVertexWeight = New ObjectVertexWeight With {
-                    .Num = BitConverter.ToUInt32(GeneralTools.EndianReverse(ByteContainer, WeightsOffset + (iCurrentVert * 8 * WeightsCount) + (jCurrentWeight * 8), 4), 0),
-                .Weight = BitConverter.ToSingle(GeneralTools.EndianReverse(ByteContainer, WeightsOffset + (iCurrentVert * 8 * WeightsCount) + (jCurrentWeight * 8) + 4, 4), 0)}
+                    .Num = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ByteContainer, WeightsOffset + (iCurrentVert * 8 * WeightsCount) + (jCurrentWeight * 8), 4), 0),
+                .Weight = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(ByteContainer, WeightsOffset + (iCurrentVert * 8 * WeightsCount) + (jCurrentWeight * 8) + 4, 4), 0)}
                 ReturnedCompleteList(jCurrentWeight).Add(ReturnedVertexWeights)
             Next
         Next
@@ -2664,9 +2664,9 @@ Public Class MainForm
         For i As UInt32 = 0 To VertexCount - 1
             Dim TempNormalInfo As ObjectVertexNormals = New ObjectVertexNormals With {
                 .VertNumber = i + 1,
-                .X = BitConverter.ToSingle(GeneralTools.EndianReverse(ByteContainer, NormalsOffset + i * &HC + 0, 4), 0),
-                .Z = -BitConverter.ToSingle(GeneralTools.EndianReverse(ByteContainer, NormalsOffset + i * &HC + 4, 4), 0),
-                .Y = BitConverter.ToSingle(GeneralTools.EndianReverse(ByteContainer, NormalsOffset + i * &HC + 8, 4), 0)}
+                .X = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(ByteContainer, NormalsOffset + i * &HC + 0, 4), 0),
+                .Z = -BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(ByteContainer, NormalsOffset + i * &HC + 4, 4), 0),
+                .Y = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(ByteContainer, NormalsOffset + i * &HC + 8, 4), 0)}
             ReturnedNormalList.Add(TempNormalInfo)
         Next
         Return ReturnedNormalList
@@ -2677,8 +2677,8 @@ Public Class MainForm
         For i As UInt32 = 0 To TextureCordCount - 1
             Dim TempTextureCordInfo As ObjectTextureCoords = New ObjectTextureCoords With {
                 .VertNumber = i + 1,
-                .U = BitConverter.ToSingle(GeneralTools.EndianReverse(ByteContainer, TextureCordOffset + i * 8 + 0, 4), 0),
-                .V = -BitConverter.ToSingle(GeneralTools.EndianReverse(ByteContainer, TextureCordOffset + i * 8 + 4, 4), 0),
+                .U = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(ByteContainer, TextureCordOffset + i * 8 + 0, 4), 0),
+                .V = -BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(ByteContainer, TextureCordOffset + i * 8 + 4, 4), 0),
                 .Weight = 0}
             ReturnedTextureCordList.Add(TempTextureCordInfo)
         Next
@@ -2686,14 +2686,14 @@ Public Class MainForm
     End Function
 
     Function ParseBytesToTriStripList(ByVal ByteContainer As Byte(), ByVal FaceListOffset As UInt32) As List(Of List(Of UInt16))
-        Dim FaceCount As Int32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(ByteContainer, FaceListOffset + 4, 4), 0)
+        Dim FaceCount As Int32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ByteContainer, FaceListOffset + 4, 4), 0)
         Dim ReturnedFaceList As List(Of List(Of UInt16)) = New List(Of List(Of UInt16))
         Dim FaceIndex As UInt16 = 0
         Do While FaceIndex < FaceCount - 3
             Dim TempObjectFaceRef As List(Of UInt16) = New List(Of UInt16)
             Dim BufferFace As Boolean = False
             Do While FaceIndex < FaceCount - 4
-                Dim TestedVertex As UInt16 = BitConverter.ToUInt16(GeneralTools.EndianReverse(ByteContainer, FaceListOffset + 12 + FaceIndex * 2 + 0, 2), 0) + 1
+                Dim TestedVertex As UInt16 = BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(ByteContainer, FaceListOffset + 12 + FaceIndex * 2 + 0, 2), 0) + 1
                 Select Case TempObjectFaceRef.Count
                     Case 0
                         If BufferFace Then
@@ -2738,7 +2738,7 @@ Public Class MainForm
                 End Select
             Loop
             If FaceIndex = FaceCount - 4 Then
-                Dim TestedVertex As UInt16 = BitConverter.ToUInt16(GeneralTools.EndianReverse(ByteContainer, FaceListOffset + 12 + FaceIndex * 2 + 0, 2), 0) + 1
+                Dim TestedVertex As UInt16 = BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(ByteContainer, FaceListOffset + 12 + FaceIndex * 2 + 0, 2), 0) + 1
                 TempObjectFaceRef.Add(TestedVertex)
                 ReturnedFaceList.Add(TempObjectFaceRef)
                 FaceIndex += 1
@@ -2748,15 +2748,15 @@ Public Class MainForm
     End Function
 
     Function ParseBytesToFaceList(ByVal ByteContainer As Byte(), ByVal FaceListOffset As UInt32) As List(Of ObjectFaceReference)
-        Dim FaceCount As Int32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(ByteContainer, FaceListOffset + 4, 4), 0)
+        Dim FaceCount As Int32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ByteContainer, FaceListOffset + 4, 4), 0)
         Dim ReturnedFaceList As List(Of ObjectFaceReference) = New List(Of ObjectFaceReference)
         For i As UInt32 = 0 To FaceCount - 3
             'note that we add 0 area faces.  I want to test if objs accept them as well
             Dim TempObjectFaceRef As ObjectFaceReference = New ObjectFaceReference With {
                 .Verticies = New UInt16(2) {
-                 BitConverter.ToUInt16(GeneralTools.EndianReverse(ByteContainer, FaceListOffset + 12 + i * 2 + 0, 2), 0) + 1,
-                BitConverter.ToUInt16(GeneralTools.EndianReverse(ByteContainer, FaceListOffset + 12 + i * 2 + 2, 2), 0) + 1,
-                BitConverter.ToUInt16(GeneralTools.EndianReverse(ByteContainer, FaceListOffset + 12 + i * 2 + 4, 2), 0) + 1}}
+                 BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(ByteContainer, FaceListOffset + 12 + i * 2 + 0, 2), 0) + 1,
+                BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(ByteContainer, FaceListOffset + 12 + i * 2 + 2, 2), 0) + 1,
+                BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(ByteContainer, FaceListOffset + 12 + i * 2 + 4, 2), 0) + 1}}
             If TempObjectFaceRef.Verticies(0) = TempObjectFaceRef.Verticies(1) OrElse
                TempObjectFaceRef.Verticies(0) = TempObjectFaceRef.Verticies(2) OrElse
                TempObjectFaceRef.Verticies(1) = TempObjectFaceRef.Verticies(2) Then
@@ -2857,8 +2857,8 @@ Public Class MainForm
 
     Sub FillObjectHeaderView()
         'We need to show what type of position file it is
-        Dim SubItemCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H18, 4), 0)
-        Dim HeaderStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H1C, 4), 0) + 8
+        Dim SubItemCount As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, &H18, 4), 0)
+        Dim HeaderStartOffset As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, &H1C, 4), 0) + 8
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridObjectView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
         ProgressBar1.Maximum = SubItemCount - 1
@@ -2949,8 +2949,8 @@ Public Class MainForm
     End Class
 
     Sub FillObjectBoneView()
-        Dim BoneCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H20, 4), 0)
-        Dim BonesStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H28, 4), 0) + 8
+        Dim BoneCount As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, &H20, 4), 0)
+        Dim BonesStartOffset As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, &H28, 4), 0) + 8
         'Bones List
         Dim ClonedBoneRow As DataGridViewRow = ClearandGetClone(DataGridObjectBoneView)
         Dim WorkingBoneCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
@@ -2986,14 +2986,14 @@ Public Class MainForm
             ProgressBar1.Value = i
         Next
         DataGridObjectBoneView.Rows.AddRange(WorkingBoneCollection.ToArray())
-        Dim BoneStructureCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H50, 4), 0)
-        Dim BoneStructureStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H54, 4), 0) + 8
+        Dim BoneStructureCount As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, &H50, 4), 0)
+        Dim BoneStructureStartOffset As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, &H54, 4), 0) + 8
         'Bone int List
-        Dim RevisedBoneStructureCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, BoneStructureStartOffset, 4), 0)
+        Dim RevisedBoneStructureCount As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, BoneStructureStartOffset, 4), 0)
         ProgressBar1.Maximum = RevisedBoneStructureCount - 1
         ProgressBar1.Value = 0
         For i As Integer = 0 To RevisedBoneStructureCount - 1
-            Dim TemporaryBoneNumber As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, BoneStructureStartOffset + 8 + i * 4, 4), 0)
+            Dim TemporaryBoneNumber As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, BoneStructureStartOffset + 8 + i * 4, 4), 0)
             DataGridObjectBoneView.Rows(TemporaryBoneNumber).Cells(DataGridObjectBoneView.Columns.IndexOf(ObjectBoneOrder)).Value = i + 1
             DataGridObjectBoneView.Rows(TemporaryBoneNumber).Tag.StructureOrder = i + 1
         Next
@@ -3005,22 +3005,22 @@ Public Class MainForm
         Dim ReturnedBoneInfo As ObjectBoneInformation = New ObjectBoneInformation With {
             .NameBytes = TempBoneName,
             .Name = Encoding.Default.GetString(TempBoneName).TrimEnd(Chr(0)),
-            .UnknownA = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H10, 4), 0),
-            .UnknownB = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H14, 4), 0),
-            .UnknownC = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H18, 4), 0),
-            .UnknownD = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H1C, 4), 0),
-            .UnknownE = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H20, 4), 0),
-            .UnknownF = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H24, 4), 0),
-            .UnknownG = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H28, 4), 0),
-            .UnknownH = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H2C, 4), 0),
-            .UnknownI = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H30, 4), 0),
-            .UnknownJ = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H34, 4), 0),
-            .UnknownK = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H38, 4), 0),
-            .UnknownL = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H3C, 4), 0),
+            .UnknownA = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H10, 4), 0),
+            .UnknownB = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H14, 4), 0),
+            .UnknownC = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H18, 4), 0),
+            .UnknownD = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H1C, 4), 0),
+            .UnknownE = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H20, 4), 0),
+            .UnknownF = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H24, 4), 0),
+            .UnknownG = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H28, 4), 0),
+            .UnknownH = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H2C, 4), 0),
+            .UnknownI = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H30, 4), 0),
+            .UnknownJ = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H34, 4), 0),
+            .UnknownK = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H38, 4), 0),
+            .UnknownL = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H3C, 4), 0),
             .UnknownM = BitConverter.ToUInt32(TestedByteArray, &H40),
-            .UnknownN = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, &H44, 4), 0),
-            .UnknownO = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, &H48, 4), 0),
-            .UnknownP = BitConverter.ToSingle(GeneralTools.EndianReverse(TestedByteArray, &H4C, 4), 0)}
+            .UnknownN = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H44, 4), 0),
+            .UnknownO = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H48, 4), 0),
+            .UnknownP = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H4C, 4), 0)}
         Return ReturnedBoneInfo
     End Function
 
@@ -3029,8 +3029,8 @@ Public Class MainForm
 #Region "Texture & Shader Info"
 
     Sub FillObjectTextureView()
-        Dim TextureCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H24, 4), 0)
-        Dim TextureStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H2C, 4), 0) + 8
+        Dim TextureCount As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, &H24, 4), 0)
+        Dim TextureStartOffset As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, &H2C, 4), 0) + 8
         'Texture List
         Dim ClonedTextureRow As DataGridViewRow = ClearandGetClone(DataGridObjectTextureView)
         Dim WorkingTextureCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
@@ -3050,8 +3050,8 @@ Public Class MainForm
     End Sub
 
     Sub FillObjectShaderView()
-        Dim ShaderCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H34, 4), 0)
-        Dim ShaderStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H30, 4), 0) + 8
+        Dim ShaderCount As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, &H34, 4), 0)
+        Dim ShaderStartOffset As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, &H30, 4), 0) + 8
         'Shader List
         Dim ClonedShaderRow As DataGridViewRow = ClearandGetClone(DataGridObjectShaderView)
         Dim WorkingShaderCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
@@ -3064,8 +3064,8 @@ Public Class MainForm
             TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderCount)).Value = i
             TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderCount)).Style = ReadOnlyCellStyle
             TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderCol)).Value = Encoding.Default.GetString(TempObjectShaderBytes, 0, &H10).TrimEnd(Chr(0))
-            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderType)).Value = BitConverter.ToUInt32(GeneralTools.EndianReverse(TempObjectShaderBytes, &H10, 4), 0)
-            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderB)).Value = BitConverter.ToUInt32(GeneralTools.EndianReverse(TempObjectShaderBytes, &H18, 4), 0)
+            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderType)).Value = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TempObjectShaderBytes, &H10, 4), 0)
+            TempShaderGridRow.Cells(DataGridObjectShaderView.Columns.IndexOf(ObjectShaderB)).Value = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TempObjectShaderBytes, &H18, 4), 0)
             WorkingShaderCollection.Add(TempShaderGridRow)
             ProgressBar1.Value = i
         Next
@@ -3077,8 +3077,8 @@ Public Class MainForm
 #Region "Emote Selector"
 
     Sub FillObjectEmoteComboBox()
-        Dim EmoteNameCount As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H48, 4), 0)
-        Dim EmoteNameStartOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, &H4C, 4), 0) + 8
+        Dim EmoteNameCount As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, &H48, 4), 0)
+        Dim EmoteNameStartOffset As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, &H4C, 4), 0) + 8
         ObjectEmoteListComboBox.Items.Clear()
         If EmoteNameCount > 0 Then
             Dim EmoteList As List(Of String) = New List(Of String) From {
@@ -3262,14 +3262,14 @@ Public Class MainForm
         ProgressBar1.Maximum = SelectedObjHeader.ParameterCount - 1
         ProgressBar1.Value = 0
         For i As Integer = 0 To SelectedObjHeader.ParameterCount - 1
-            Dim CurrentParamOffset As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(CompleteYobjBytes, SelectedObjHeader.ParameterOffset + 8 + i * 4, 4), 0)
+            Dim CurrentParamOffset As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, SelectedObjHeader.ParameterOffset + 8 + i * 4, 4), 0)
             Dim TempGridRow As DataGridViewRow = ClonedRow.Clone()
             TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamCountCol)).Value = i
             TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamCountCol)).Style = ReadOnlyCellStyle
             TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamName)).Value = Encoding.Default.GetString(CompleteYobjBytes, CurrentParamOffset + 8, &H10)
-            TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamInt1)).Value = BitConverter.ToUInt16(GeneralTools.EndianReverse(CompleteYobjBytes, CurrentParamOffset + 8 + &H10, 2), 0)
-            TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamInt2)).Value = BitConverter.ToUInt16(GeneralTools.EndianReverse(CompleteYobjBytes, CurrentParamOffset + 8 + &H12, 2), 0)
-            TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamSingle)).Value = BitConverter.ToSingle(GeneralTools.EndianReverse(CompleteYobjBytes, CurrentParamOffset + 8 + &H14, 4), 0)
+            TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamInt1)).Value = BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, CurrentParamOffset + 8 + &H10, 2), 0)
+            TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamInt2)).Value = BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, CurrentParamOffset + 8 + &H12, 2), 0)
+            TempGridRow.Cells(DataGridObjectParamView.Columns.IndexOf(ObjectParamSingle)).Value = BitConverter.ToSingle(HexaDecimalHandlers.EndianReverse(CompleteYobjBytes, CurrentParamOffset + 8 + &H14, 4), 0)
             WorkingCollection.Add(TempGridRow)
             ProgressBar1.Value = i
         Next
@@ -3416,7 +3416,7 @@ Public Class MainForm
                 MyCell.Value = OldValue
             End If
         ElseIf ((e.ColumnIndex - 2) Mod 5) = 0 Then 'Attire Name
-            If Not GeneralTools.HexCheck(MyCell.Value) Then
+            If Not HexaDecimalHandlers.HexCheck(MyCell.Value) Then
                 MyCell.Value = OldValue
             ElseIf StringReferences(CUInt("&H" & MyCell.Value)) > UInt32.MaxValue Then
                 MyCell.Value = OldValue
@@ -4938,7 +4938,7 @@ Public Class MainForm
             End If
         ElseIf e.ColumnIndex < 9 Then
             'String Reference Information
-            If Not GeneralTools.HexCheck(MyCell.Value) Then
+            If Not HexaDecimalHandlers.HexCheck(MyCell.Value) Then
                 MyCell.Value = OldValue
             ElseIf CUInt("&H" & MyCell.Value) > UInt32.MaxValue Then
                 MyCell.Value = OldValue
@@ -5124,7 +5124,7 @@ Public Class MainForm
                 Else MyCell.Value = CInt(MyCell.Value)
                 End If
             Case 2 'must be Hex String
-                If Not GeneralTools.HexCheck(MyCell.Value) Then
+                If Not HexaDecimalHandlers.HexCheck(MyCell.Value) Then
                     MyCell.Value = OldValue
                 End If
         End Select
@@ -5228,7 +5228,7 @@ Public Class MainForm
             If Not DataGridSoundView.Rows(i).Cells(1).Value.ToString = "" Then
                 If Not DataGridSoundView.Rows(i).Cells(2).Value.ToString = "" Then
                     Array.Copy(BitConverter.GetBytes(CUInt(DataGridSoundView.Rows(i).Cells(1).Value)), 0, ReturnedBytes, CUInt("&H" & DataGridSoundView.Rows(i).Cells(3).Value.ToString), 4)
-                    Array.Copy(GeneralTools.HexStringToByte(DataGridSoundView.Rows(i).Cells(2).Value.ToString.PadLeft(8, "0"), True), 0, ReturnedBytes, CUInt("&H" & DataGridSoundView.Rows(i).Cells(3).Value.ToString) + 4, 4)
+                    Array.Copy(HexaDecimalHandlers.HexStringToByte(DataGridSoundView.Rows(i).Cells(2).Value.ToString.PadLeft(8, "0"), True), 0, ReturnedBytes, CUInt("&H" & DataGridSoundView.Rows(i).Cells(3).Value.ToString) + 4, 4)
                 End If
             End If
         Next
@@ -5512,7 +5512,7 @@ Public Class MainForm
                 Else MyCell.Value = CInt(MyCell.Value)
                 End If
             Case 1 'must be Hex String
-                If Not GeneralTools.HexCheck(MyCell.Value) Then
+                If Not HexaDecimalHandlers.HexCheck(MyCell.Value) Then
                     MyCell.Value = OldValue
                 Else
                     If StringRead Then
@@ -5773,7 +5773,7 @@ Public Class MainForm
 
     Sub FillAnimationView(SelectedData As TreeNode)
         Dim AnimationBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
-        Dim AnimationBoneCount As UInt16 = BitConverter.ToUInt16(GeneralTools.EndianReverse(AnimationBytes, &HA, 2), 0)
+        Dim AnimationBoneCount As UInt16 = BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(AnimationBytes, &HA, 2), 0)
         'getting a generic row so we can create one for the collection
         Dim CloneRow As DataGridViewRow = ClearandGetClone(DataGridAnimationView)
         Dim WorkingCollection As List(Of DataGridViewRow) = New List(Of DataGridViewRow)
@@ -5781,7 +5781,7 @@ Public Class MainForm
         ProgressBar1.Value = 0
         Dim RollingIndex As UInt32 = &H10
         For i As Integer = 0 To AnimationBoneCount - 2
-            Dim TempPartLength As UInt16 = BitConverter.ToUInt16(GeneralTools.EndianReverse(AnimationBytes, RollingIndex + 2, 2), 0)
+            Dim TempPartLength As UInt16 = BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(AnimationBytes, RollingIndex + 2, 2), 0)
             Dim TempAnimationBytes As Byte() = New Byte(TempPartLength - 1) {}
             Array.Copy(AnimationBytes, RollingIndex, TempAnimationBytes, 0, TempPartLength)
             RollingIndex += TempPartLength
@@ -5844,13 +5844,13 @@ Public Class MainForm
 
     Function ParseBytesToAnimationHeaderInformation(TestedByteArray As Byte()) As AnimationHeaderInformation
         Dim ReturnedAnimationInfo As AnimationHeaderInformation = New AnimationHeaderInformation With {
-           .StartingID = BitConverter.ToUInt16(GeneralTools.EndianReverse(TestedByteArray, 0, 2), 0),
-           .HeaderLength = BitConverter.ToUInt16(GeneralTools.EndianReverse(TestedByteArray, 2, 2), 0),
-           .BoneType = BitConverter.ToInt32(GeneralTools.EndianReverse(TestedByteArray, 4), 0),
-           .AnimationPartAIndex = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, 8), 0),
-           .AnimationPartALength = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &HC), 0),
-           .AnimationPartBIndex = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H10), 0),
-           .AnimationPartBLength = BitConverter.ToUInt32(GeneralTools.EndianReverse(TestedByteArray, &H14), 0)}
+           .StartingID = BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(TestedByteArray, 0, 2), 0),
+           .HeaderLength = BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(TestedByteArray, 2, 2), 0),
+           .BoneType = BitConverter.ToInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, 4), 0),
+           .AnimationPartAIndex = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, 8), 0),
+           .AnimationPartALength = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &HC), 0),
+           .AnimationPartBIndex = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H10), 0),
+           .AnimationPartBLength = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(TestedByteArray, &H14), 0)}
         If TestedByteArray.Length > &H18 Then
             ReturnedAnimationInfo.RemainingBytes = New Byte(&H18 - 1) {}
             Array.Copy(TestedByteArray, &H18, ReturnedAnimationInfo.RemainingBytes, 0, &H18)
@@ -5920,12 +5920,12 @@ Public Class MainForm
             Else
                 MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartABytes, 12)))
             End If
-            PartialAnimationInformation.FrameCount = BitConverter.ToUInt16(GeneralTools.EndianReverse(PartialAnimationInformation.AnimationPartABytes, 14, 2), 0)
+            PartialAnimationInformation.FrameCount = BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(PartialAnimationInformation.AnimationPartABytes, 14, 2), 0)
             PartialAnimationInformation.FinalAnimationString = PartialAnimationInformation.AnimationPartBString
             If PartialAnimationInformation.StartingID = 772 Then
                 'Dim TestSubFrames As Integer = 0
                 For i As Integer = 0 To PartialAnimationInformation.AnimationPartBLength Step 8
-                    'PartialAnimationInformation.FinalAnimationParsed += BitConverter.ToDouble(GeneralTools.EndianReverse(PartialAnimationInformation.AnimationPartBBytes, i, 8), 0).ToString() & ", "
+                    'PartialAnimationInformation.FinalAnimationParsed += BitConverter.ToDouble(HexaDecimalHandlers.EndianReverse(PartialAnimationInformation.AnimationPartBBytes, i, 8), 0).ToString() & ", "
                     'TestSubFrames += PartialAnimationInformation.AnimationPartBBytes(i + 7)
                     For j As Integer = 0 To 5
                         If PartialAnimationInformation.AnimationPartBBytes(i + j) > 128 Then
@@ -5940,7 +5940,7 @@ Public Class MainForm
             ElseIf PartialAnimationInformation.StartingID = 516 Then
                 Dim TestedFrames As Integer = 0
                 For i As Integer = 16 To PartialAnimationInformation.AnimationPartBLength Step 20
-                    TestedFrames += BitConverter.ToInt16(GeneralTools.EndianReverse(PartialAnimationInformation.AnimationPartBBytes, i + 4, 2), 0)
+                    TestedFrames += BitConverter.ToInt16(HexaDecimalHandlers.EndianReverse(PartialAnimationInformation.AnimationPartBBytes, i + 4, 2), 0)
                 Next
                 PartialAnimationInformation.FinalAnimationParsed = TestedFrames
             End If
@@ -5995,12 +5995,12 @@ Public Class MainForm
             Else
                 MessageBox.Show(Hex(BitConverter.ToUInt16(PartialAnimationInformation.AnimationPartBBytes, 12)))
             End If
-            PartialAnimationInformation.FrameCount = BitConverter.ToUInt16(GeneralTools.EndianReverse(PartialAnimationInformation.AnimationPartBBytes, 14, 2), 0)
+            PartialAnimationInformation.FrameCount = BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(PartialAnimationInformation.AnimationPartBBytes, 14, 2), 0)
             PartialAnimationInformation.FinalAnimationString = PartialAnimationInformation.AnimationPartAString
             If PartialAnimationInformation.StartingID = 772 Then
                 'Dim TestSubFrames As Integer = 0
                 For i As Integer = 0 To PartialAnimationInformation.AnimationPartALength Step 8
-                    'PartialAnimationInformation.FinalAnimationParsed += BitConverter.ToDouble(GeneralTools.EndianReverse(PartialAnimationInformation.AnimationPartABytes, i, 8), 0).ToString() & ", "
+                    'PartialAnimationInformation.FinalAnimationParsed += BitConverter.ToDouble(HexaDecimalHandlers.EndianReverse(PartialAnimationInformation.AnimationPartABytes, i, 8), 0).ToString() & ", "
                     'TestSubFrames += PartialAnimationInformation.AnimationPartABytes(i + 7)
                     For j As Integer = 0 To 5
                         If PartialAnimationInformation.AnimationPartABytes(i + j) > 128 Then
@@ -6015,7 +6015,7 @@ Public Class MainForm
             ElseIf PartialAnimationInformation.StartingID = 516 Then
                 Dim TestedFrames As Integer = 0
                 For i As Integer = 16 To PartialAnimationInformation.AnimationPartALength Step 20
-                    TestedFrames += BitConverter.ToInt16(GeneralTools.EndianReverse(PartialAnimationInformation.AnimationPartABytes, i + 4, 2), 0)
+                    TestedFrames += BitConverter.ToInt16(HexaDecimalHandlers.EndianReverse(PartialAnimationInformation.AnimationPartABytes, i + 4, 2), 0)
                 Next
                 PartialAnimationInformation.FinalAnimationParsed = TestedFrames
             End If
@@ -6093,8 +6093,8 @@ Public Class MainForm
     Sub FillPof0View(SelectedData As TreeNode)
         Dim ParentFileBytes As Byte() = FilePartHandlers.GetFilePartBytes(SelectedData.Tag)
         'After the Parent File we want the Pof0 array
-        Dim Pof0Index As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentFileBytes, 4, 4), 0) + 8
-        Dim Pof0Length As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentFileBytes, Pof0Index + 4, 4), 0)
+        Dim Pof0Index As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ParentFileBytes, 4, 4), 0) + 8
+        Dim Pof0Length As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ParentFileBytes, Pof0Index + 4, 4), 0)
         Dim Pof0Bytes As Byte() = New Byte(Pof0Length - 1) {}
         Array.Copy(ParentFileBytes, Pof0Index + 8, Pof0Bytes, 0, Pof0Length)
         'getting a generic row so we can create one for the collection
@@ -6111,28 +6111,28 @@ Public Class MainForm
             TempGridRow.Cells(0).Style = ReadOnlyCellStyle
             If Pof0Bytes(Pof0CurrentRead) >= &HC0 Then
                 '4 Byte ref
-                TempGridRow.Cells(1).Value = Hex(BitConverter.ToUInt32(GeneralTools.EndianReverse(Pof0Bytes, Pof0CurrentRead, 4), 0))
+                TempGridRow.Cells(1).Value = Hex(BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(Pof0Bytes, Pof0CurrentRead, 4), 0))
                 Dim TranslatedLength As UInt32 = 0
-                TranslatedLength = (BitConverter.ToUInt32(GeneralTools.EndianReverse(Pof0Bytes, Pof0CurrentRead, 4), 0) - BitConverter.ToUInt32({0, 0, 0, &HC0}, 0)) * 4
+                TranslatedLength = (BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(Pof0Bytes, Pof0CurrentRead, 4), 0) - BitConverter.ToUInt32({0, 0, 0, &HC0}, 0)) * 4
                 TempGridRow.Cells(2).Value = TranslatedLength
                 TempGridRow.Cells(3).Value = Hex(TranslatedLength)
                 ParentFileCurrentOffset += TranslatedLength
                 TempGridRow.Cells(4).Value = ParentFileCurrentOffset
                 TempGridRow.Cells(5).Value = Hex(ParentFileCurrentOffset)
-                TempGridRow.Cells(6).Value = Hex(BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentFileBytes, ParentFileCurrentOffset, 4), 0))
+                TempGridRow.Cells(6).Value = Hex(BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ParentFileBytes, ParentFileCurrentOffset, 4), 0))
                 TempGridRow.Cells(6).Style = ReadOnlyCellStyle
                 Pof0CurrentRead += 3
             ElseIf Pof0Bytes(Pof0CurrentRead) >= &H80 Then
                 '2 Byte ref
-                TempGridRow.Cells(1).Value = Hex(BitConverter.ToUInt16(GeneralTools.EndianReverse(Pof0Bytes, Pof0CurrentRead, 2), 0))
+                TempGridRow.Cells(1).Value = Hex(BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(Pof0Bytes, Pof0CurrentRead, 2), 0))
                 Dim TranslatedLength As UInt32 = 0
-                TranslatedLength = (BitConverter.ToUInt16(GeneralTools.EndianReverse(Pof0Bytes, Pof0CurrentRead, 2), 0) - &H8000) * 4
+                TranslatedLength = (BitConverter.ToUInt16(HexaDecimalHandlers.EndianReverse(Pof0Bytes, Pof0CurrentRead, 2), 0) - &H8000) * 4
                 TempGridRow.Cells(2).Value = TranslatedLength
                 TempGridRow.Cells(3).Value = Hex(TranslatedLength)
                 ParentFileCurrentOffset += TranslatedLength
                 TempGridRow.Cells(4).Value = ParentFileCurrentOffset
                 TempGridRow.Cells(5).Value = Hex(ParentFileCurrentOffset)
-                TempGridRow.Cells(6).Value = Hex(BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentFileBytes, ParentFileCurrentOffset, 4), 0))
+                TempGridRow.Cells(6).Value = Hex(BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ParentFileBytes, ParentFileCurrentOffset, 4), 0))
                 TempGridRow.Cells(6).Style = ReadOnlyCellStyle
                 Pof0CurrentRead += 1
             ElseIf Pof0Bytes(Pof0CurrentRead) >= &H40 Then
@@ -6144,7 +6144,7 @@ Public Class MainForm
                 ParentFileCurrentOffset += TranslatedLength
                 TempGridRow.Cells(4).Value = ParentFileCurrentOffset
                 TempGridRow.Cells(5).Value = Hex(ParentFileCurrentOffset)
-                TempGridRow.Cells(6).Value = Hex(BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentFileBytes, ParentFileCurrentOffset, 4), 0))
+                TempGridRow.Cells(6).Value = Hex(BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ParentFileBytes, ParentFileCurrentOffset, 4), 0))
                 TempGridRow.Cells(6).Style = ReadOnlyCellStyle
             ElseIf Pof0Bytes(Pof0CurrentRead) = 0 Then
                 'there is no added offset so we shouldn't add a line
@@ -6264,7 +6264,7 @@ Public Class MainForm
                     Case WeaponPositionType.Equipment
                         TempGridRow.Cells(DataGridWeaponPositionView.Columns.IndexOf(WeaponPositionInt1)).Value = BitConverter.ToUInt32(WeaponPositionBytes, &H10 + i * WeaponLineLength)
                         TempGridRow.Cells(DataGridWeaponPositionView.Columns.IndexOf(WeaponPositionInt2)).Value = BitConverter.ToUInt32(WeaponPositionBytes, &H10 + i * WeaponLineLength + 4)
-                        TempGridRow.Cells(DataGridWeaponPositionView.Columns.IndexOf(WeaponPositionInt3)).Value = BitConverter.ToUInt32(GeneralTools.EndianReverse(WeaponPositionBytes, &H10 + i * WeaponLineLength + 8), 0)
+                        TempGridRow.Cells(DataGridWeaponPositionView.Columns.IndexOf(WeaponPositionInt3)).Value = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(WeaponPositionBytes, &H10 + i * WeaponLineLength + 8), 0)
                 End Select
                 WorkingCollection.Add(TempGridRow)
                 ProgressBar1.Value = i
@@ -6522,7 +6522,7 @@ Public Class MainForm
                 For i As Integer = 0 To DataGridWeaponPositionView.RowCount - 1
                     Array.Copy(BitConverter.GetBytes(CUInt(DataGridWeaponPositionView.Rows(i).Cells(DataGridWeaponPositionView.Columns.IndexOf(WeaponPositionInt1)).Value)), 0, ReturnedBytes, &H10 + i * &HC + 0, 4)
                     Array.Copy(BitConverter.GetBytes(CUInt(DataGridWeaponPositionView.Rows(i).Cells(DataGridWeaponPositionView.Columns.IndexOf(WeaponPositionInt2)).Value)), 0, ReturnedBytes, &H10 + i * &HC + 4, 4)
-                    Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(DataGridWeaponPositionView.Rows(i).Cells(DataGridWeaponPositionView.Columns.IndexOf(WeaponPositionInt3)).Value))), 0, ReturnedBytes, &H10 + i * &HC + 8, 4)
+                    Array.Copy(HexaDecimalHandlers.EndianReverse(BitConverter.GetBytes(CUInt(DataGridWeaponPositionView.Rows(i).Cells(DataGridWeaponPositionView.Columns.IndexOf(WeaponPositionInt3)).Value))), 0, ReturnedBytes, &H10 + i * &HC + 8, 4)
                 Next
         End Select
         Return ReturnedBytes

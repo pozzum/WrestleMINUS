@@ -458,15 +458,15 @@ Public Class FilePartHandlers
                     ElseIf i = SubFileLocation Then
                         'Index Stays the same
                         If BytesRevesed Then
-                            Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(SentBytes.Length))), 0, WrittenFileArray, i * &H20 + &H10 + &H14, 4)
+                            Array.Copy(HexaDecimalHandlers.EndianReverse(BitConverter.GetBytes(CUInt(SentBytes.Length))), 0, WrittenFileArray, i * &H20 + &H10 + &H14, 4)
                         Else
                             Array.Copy(BitConverter.GetBytes(CUInt(SentBytes.Length)), 0, WrittenFileArray, i * &H20 + &H10 + &H14, 4)
                         End If
                     Else 'size stays but index changes
                         If BytesRevesed Then
-                            Dim OldIndex As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(WrittenFileArray, i * &H20 + &H10 + &H18, 4), 0)
+                            Dim OldIndex As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(WrittenFileArray, i * &H20 + &H10 + &H18, 4), 0)
                             Dim TempIndex As UInt64 = OldIndex + SizeDifference
-                            Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(TempIndex))), 0, WrittenFileArray, i * &H20 + &H10 + &H18, 4)
+                            Array.Copy(HexaDecimalHandlers.EndianReverse(BitConverter.GetBytes(CUInt(TempIndex))), 0, WrittenFileArray, i * &H20 + &H10 + &H18, 4)
                         Else
                             Dim OldIndex As UInt32 = BitConverter.ToUInt64(WrittenFileArray, i * &H20 + &H10 + &H18)
                             Dim TempIndex As UInt64 = OldIndex + SizeDifference
@@ -475,9 +475,9 @@ Public Class FilePartHandlers
                     End If
                 Next
             Case PackageType.YANMPack
-                Dim HeaderLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(WrittenFileArray), 0) + &H20
+                Dim HeaderLength As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(WrittenFileArray), 0) + &H20
                 'Yanm length has to be adjusted for the new length
-                Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(WrittenFileArray.Length))), 0, WrittenFileArray, 4, 4)
+                Array.Copy(HexaDecimalHandlers.EndianReverse(BitConverter.GetBytes(CUInt(WrittenFileArray.Length))), 0, WrittenFileArray, 4, 4)
                 Dim HeadIndex As Integer = 0
                 Dim partcount As Integer = 0
                 If HeaderLength > 0 Then
@@ -490,7 +490,7 @@ Public Class FilePartHandlers
                             'no change needed because there is no length indicator
                         Else
                             'so now we will need to update some file index information
-                            Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(ParentFileInformation.SubFiles(partcount).Index + SizeDifference - HeaderLength))), 0, WrittenFileArray, HeadIndex + &H24, 4)
+                            Array.Copy(HexaDecimalHandlers.EndianReverse(BitConverter.GetBytes(CUInt(ParentFileInformation.SubFiles(partcount).Index + SizeDifference - HeaderLength))), 0, WrittenFileArray, HeadIndex + &H24, 4)
                         End If
                         partcount = partcount + 1
                         HeadIndex = HeadIndex + &H28
@@ -664,7 +664,7 @@ Public Class FilePartHandlers
             Case PackageType.HSPC
                 'Likely only the 1 SHDC unlikely needs to be sorted
                 Dim StringBytes As Byte() = New Byte(7) {}
-                Dim HexBytes As Byte() = GeneralTools.HexStringToByte(NewFilePartName)
+                Dim HexBytes As Byte() = HexaDecimalHandlers.HexStringToByte(NewFilePartName)
                 'making the new string
                 Array.Copy(HexBytes, 0, StringBytes, 0, HexBytes.Length)
                 'copy the string to the file.
@@ -672,9 +672,9 @@ Public Class FilePartHandlers
             Case PackageType.SHDC
                 '8 char possible endian reverse
                 Dim StringBytes As Byte() = New Byte(3) {}
-                Dim HexBytes As Byte() = GeneralTools.HexStringToByte(NewFilePartName)
+                Dim HexBytes As Byte() = HexaDecimalHandlers.HexStringToByte(NewFilePartName)
                 'making the new string
-                Array.Copy(GeneralTools.EndianReverse(HexBytes), 0, StringBytes, 0, HexBytes.Length)
+                Array.Copy(HexaDecimalHandlers.EndianReverse(HexBytes), 0, StringBytes, 0, HexBytes.Length)
                 Dim TempHeaderCheck As Integer = BitConverter.ToUInt32(WrittenFileArray, &H18)
                 Dim TempHeaderStart As Integer = BitConverter.ToUInt32(WrittenFileArray, &H1C)
                 Dim TempHeaderLength As Integer = BitConverter.ToUInt32(WrittenFileArray, &H20)
@@ -797,7 +797,7 @@ Public Class FilePartHandlers
                 'copy the string to the file.
                 Array.Copy(StringBytes, 0, WrittenFileArray, &H10 + FilePartLocation * &H20, 16)
             Case PackageType.YANMPack
-                Dim HeaderLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(WrittenFileArray), 0) + &H20
+                Dim HeaderLength As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(WrittenFileArray), 0) + &H20
                 Dim HeadIndex As Integer = 0
                 Dim partcount As Integer = 0
                 'getting the part name
@@ -929,7 +929,7 @@ Public Class FilePartHandlers
                 ' we need trim &h20.
                 HeaderAdjustment = -&H20
             Case PackageType.YANMPack
-                HeaderLength = BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentBytes), 0) + &H20
+                HeaderLength = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ParentBytes), 0) + &H20
                 ' We need to check if the length has a floating 8 bytes, if so we trim &h30 otherwise we only trim &h20
                 If HeaderLength Mod &H10 = 0 Then
                     HeaderLength = HeaderLength
@@ -1347,8 +1347,8 @@ Public Class FilePartHandlers
                         'we need to take &h20 off the index because of the header change
                         Buffer.BlockCopy(ParentBytes, &H10 + i * &H20, WrittenFileArray, &H10 + i * &H20, &H20)
                         If BytesRevesed Then
-                            Dim TempItemIndex As Integer = BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentBytes, &H10 + i * &H20 + &H18), 0)
-                            Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(TempItemIndex - &H20))), 0, WrittenFileArray, i * &H20 + &H10 + &H18, 4)
+                            Dim TempItemIndex As Integer = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ParentBytes, &H10 + i * &H20 + &H18), 0)
+                            Array.Copy(HexaDecimalHandlers.EndianReverse(BitConverter.GetBytes(CUInt(TempItemIndex - &H20))), 0, WrittenFileArray, i * &H20 + &H10 + &H18, 4)
                         Else
                             Dim TempItemIndex As Integer = BitConverter.ToUInt32(ParentBytes, &H10 + i * &H20 + &H18)
                             Array.Copy(BitConverter.GetBytes(CUInt(TempItemIndex - &H20)), 0, WrittenFileArray, i * &H20 + &H10 + &H18, 4)
@@ -1358,9 +1358,9 @@ Public Class FilePartHandlers
                     Else 'size stays but index changes
                         Buffer.BlockCopy(ParentBytes, &H10 + i * &H20, WrittenFileArray, &H10 + (i - 1) * &H20, &H20)
                         If BytesRevesed Then
-                            Dim OldIndex As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentBytes, i * &H20 + &H10 + &H18, 4), 0)
+                            Dim OldIndex As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ParentBytes, i * &H20 + &H10 + &H18, 4), 0)
                             Dim TempIndex As UInt64 = OldIndex + SizeDifference - &H20
-                            Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(TempIndex))), 0, WrittenFileArray, (i - 1) * &H20 + &H10 + &H18, 4)
+                            Array.Copy(HexaDecimalHandlers.EndianReverse(BitConverter.GetBytes(CUInt(TempIndex))), 0, WrittenFileArray, (i - 1) * &H20 + &H10 + &H18, 4)
                         Else
                             Dim OldIndex As UInt32 = BitConverter.ToUInt64(ParentBytes, i * &H20 + &H10 + &H18)
                             Dim TempIndex As UInt64 = OldIndex + SizeDifference - &H20
@@ -1377,18 +1377,18 @@ Public Class FilePartHandlers
                 'Copy the start header, we will overwrite some of these bytes
                 Buffer.BlockCopy(ParentBytes, 0, WrittenFileArray, 0, &H70)
                 'First we need to reduce the Header Length by &h28 -
-                Dim SubHeaderLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentBytes, 0), 0)
-                Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(SubHeaderLength - &H28))), 0, WrittenFileArray, 0, 4)
+                Dim SubHeaderLength As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ParentBytes, 0), 0)
+                Array.Copy(HexaDecimalHandlers.EndianReverse(BitConverter.GetBytes(CUInt(SubHeaderLength - &H28))), 0, WrittenFileArray, 0, 4)
                 'Next bytes are the full file length sans header
-                Dim YANMLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentBytes, 4), 0)
-                Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(YANMLength + SizeDifference))), 0, WrittenFileArray, 4, 4)
+                Dim YANMLength As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ParentBytes, 4), 0)
+                Array.Copy(HexaDecimalHandlers.EndianReverse(BitConverter.GetBytes(CUInt(YANMLength + SizeDifference))), 0, WrittenFileArray, 4, 4)
                 'Next is the header length which should be alway &h20 so we don't need to edit that.
                 'After that is the full combined header length
-                Dim CombinedHeaderLength As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentBytes, &HC), 0)
-                Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(CombinedHeaderLength + HeaderAdjustment))), 0, WrittenFileArray, &HC, 4)
+                Dim CombinedHeaderLength As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ParentBytes, &HC), 0)
+                Array.Copy(HexaDecimalHandlers.EndianReverse(BitConverter.GetBytes(CUInt(CombinedHeaderLength + HeaderAdjustment))), 0, WrittenFileArray, &HC, 4)
                 'we have a lot of static bytes for the rest of the bytes of the header only changing byte is the contained bytes.
-                Dim ContainedParts As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentBytes, &H48), 0)
-                Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(ContainedParts - 1))), 0, WrittenFileArray, &H48, 4)
+                Dim ContainedParts As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ParentBytes, &H48), 0)
+                Array.Copy(HexaDecimalHandlers.EndianReverse(BitConverter.GetBytes(CUInt(ContainedParts - 1))), 0, WrittenFileArray, &H48, 4)
                 For i As Integer = 0 To ContainedParts - 1
                     If i < NodeLocation Then
                         'We want to copy the bytes no adjustment needed
@@ -1399,8 +1399,8 @@ Public Class FilePartHandlers
                         'first we want to copy the bytes over to the right location.
                         Buffer.BlockCopy(ParentBytes, &H70 + i * &H28, WrittenFileArray, &H70 + (i - 1) * &H28, &H28)
                         'so now we will need to update some file index information
-                        Dim TempIndex As UInt32 = BitConverter.ToUInt32(GeneralTools.EndianReverse(ParentBytes, &H70 + i * &H28 + &H24), 0)
-                        Array.Copy(GeneralTools.EndianReverse(BitConverter.GetBytes(CUInt(TempIndex + SizeDifference))), 0, WrittenFileArray, &H70 + i * &H28 + &H24, 4)
+                        Dim TempIndex As UInt32 = BitConverter.ToUInt32(HexaDecimalHandlers.EndianReverse(ParentBytes, &H70 + i * &H28 + &H24), 0)
+                        Array.Copy(HexaDecimalHandlers.EndianReverse(BitConverter.GetBytes(CUInt(TempIndex + SizeDifference))), 0, WrittenFileArray, &H70 + i * &H28 + &H24, 4)
                     End If
                 Next
         End Select
