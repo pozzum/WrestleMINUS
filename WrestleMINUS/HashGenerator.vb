@@ -1,9 +1,23 @@
 ﻿Imports System.Security.Cryptography 'MD5
 Imports System.Text 'Text Encoding
 
-Public Class HashGenerator
+Module HashGenerator
 
-    Shared Function GetMd5Hash(ByVal HashedString As String, Optional PartialHash As Boolean = False) As String
+    Function GetFNVH1aHash(StringtoBeHashed As String) As UInteger
+
+        Const fnv_offset As ULong = &HCBF29CE484222325UL
+        Const fnv_prime As UInteger = &H1000193UI
+        Dim hash As ULong = fnv_offset
+
+        For i As Integer = 0 To StringtoBeHashed.Length - 1
+            hash = hash Xor CByte(AscW(StringtoBeHashed(i)))
+            hash = (hash * fnv_prime) And UInteger.MaxValue
+        Next
+
+        Return hash
+    End Function
+
+    Function GetMd5Hash(ByVal HashedString As String, Optional PartialHash As Boolean = False) As String
         ' Initializes a hash object : md5
         Dim Hash = MD5.Create
         ' We declare a variable that will be an array of bytes (bytes)
@@ -23,7 +37,7 @@ Public Class HashGenerator
     End Function
 
     ' One parses the array Of bytes (bytes) And converts Each Byte (Byte) To hexadecimal
-    Public Shared Function PrintHashArray(ByVal Array() As Byte, Optional PartialHash As Boolean = False) As String
+    Function PrintHashArray(ByVal Array() As Byte, Optional PartialHash As Boolean = False) As String
         Dim HexValue As String = ""
         ' The Byte array (bytes)
         Dim i As Integer
@@ -42,4 +56,4 @@ Public Class HashGenerator
         Return HexValue.ToUpper
     End Function
 
-End Class
+End Module

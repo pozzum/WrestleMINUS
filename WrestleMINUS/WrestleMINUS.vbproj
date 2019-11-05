@@ -29,6 +29,8 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -229,19 +231,13 @@
     <Content Include="SubLicenses\Ionic.Zlib_LICENSE.txt" />
     <Content Include="SubLicenses\Newtonsoft.Json_LICENSE.txt" />
     <Content Include="SubLicenses\FrostyYukes_LICENSE.txt" />
-    <Content Include="crunch_x64.exe">
+    <Content Include="Tools\crunch_x64.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="FontAwesome.Sharp.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FrostyYukes.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Newtonsoft.Json.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="texconv.exe">
+    <Content Include="Tools\FontAwesome.Sharp.dll" />
+    <Content Include="Tools\FrostyYukes.dll" />
+    <Content Include="Tools\Newtonsoft.Json.dll" />
+    <Content Include="Tools\texconv.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="W-.ico" />
@@ -261,7 +257,19 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PostBuildEvent>del /F "$(TargetDir)$(TargetName).exe.config"
+move "$(TargetDir)Tools\*" "$(TargetDir)"
+RD /S /Q "$(TargetDir)Tools"
 if $(ConfigurationName) == Release (powershell Compress-Archive -Path '$(TargetDir)' -DestinationPath '$(TargettDir)$(TargetName).zip' -Force)</PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
+  </Target>
+  <PropertyGroup>
+    <PreBuildEvent>del /F "$(TargetDir)$(TargetName).zip"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
