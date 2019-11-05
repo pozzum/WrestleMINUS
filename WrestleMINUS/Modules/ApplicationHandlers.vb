@@ -73,7 +73,7 @@ Module ApplicationHandlers
                 'Attempt to auto-locate the exe
                 Dim ApplicationPath As String = Application.StartupPath & Path.DirectorySeparatorChar & "bpe.exe"
                 Dim appDataPath As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
-                GeneralTools.FolderCheck(appDataPath)
+                File_FolderHandlers.FolderMake(appDataPath)
                 appDataPath += Path.DirectorySeparatorChar & "bpe.exe"
                 If File.Exists(ApplicationPath) Then
                     My.Settings.BPEExePath = ApplicationPath
@@ -117,7 +117,7 @@ Module ApplicationHandlers
                 'Attempt to auto-locate the exe
                 Dim ApplicationPath As String = Application.StartupPath & Path.DirectorySeparatorChar & "unrrbpe.exe"
                 Dim appDataPath As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
-                GeneralTools.FolderCheck(appDataPath)
+                File_FolderHandlers.FolderMake(appDataPath)
                 appDataPath += Path.DirectorySeparatorChar & "unrrbpe.exe"
                 If File.Exists(ApplicationPath) Then
                     My.Settings.UnrrbpePath = ApplicationPath
@@ -258,7 +258,7 @@ Module ApplicationHandlers
                 'Attempt to auto-locate the exe
                 Dim ApplicationPath As String = Application.StartupPath & Path.DirectorySeparatorChar & "texconv.exe"
                 Dim appDataPath As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
-                GeneralTools.FolderCheck(appDataPath)
+                File_FolderHandlers.FolderMake(appDataPath)
                 appDataPath += Path.DirectorySeparatorChar & "texconv.exe"
                 If File.Exists(ApplicationPath) Then
                     My.Settings.TexConvPath = ApplicationPath
@@ -302,7 +302,7 @@ Module ApplicationHandlers
                 'Attempt to auto-locate the exe
                 Dim ApplicationPath As String = Application.StartupPath & Path.DirectorySeparatorChar & "crunch_x64.exe"
                 Dim appDataPath As String = GetFolderPath(SpecialFolder.ApplicationData) & "\Pozzum\WrestleMINUS"
-                GeneralTools.FolderCheck(appDataPath)
+                File_FolderHandlers.FolderMake(appDataPath)
                 appDataPath += Path.DirectorySeparatorChar & "crunch_x64.exe"
                 If File.Exists(ApplicationPath) Then
                     My.Settings.CrunchEXELocation = ApplicationPath

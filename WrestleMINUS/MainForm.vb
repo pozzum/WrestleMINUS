@@ -995,7 +995,7 @@ Public Class MainForm
         If NodeTag.FileType = PackageType.Folder Then
             If Directory.Exists(filepath) Then
                 If MessageBox.Show("Would you like to delete folder " & filepath & " ?", "Delete Folder?", MessageBoxButtons.OKCancel) = DialogResult.OK Then
-                    If GeneralTools.DeleteAllItems(filepath) Then SelectedNode.Remove()
+                    If File_FolderHandlers.DeleteAllItems(filepath) Then SelectedNode.Remove()
                 End If
             Else
                 MessageBox.Show("Folder " & filepath & " Not Found")
@@ -1003,7 +1003,7 @@ Public Class MainForm
         Else 'it should be a file
             If File.Exists(filepath) Then
                 If MessageBox.Show("Would you like to delete file " & Path.GetFileName(filepath) & " ?", "Delete File?", MessageBoxButtons.OKCancel) = DialogResult.OK Then
-                    If GeneralTools.DeleteSafely(filepath) Then SelectedNode.Remove()
+                    If File_FolderHandlers.DeleteSafely(filepath) Then SelectedNode.Remove()
                 End If
             Else
                 MessageBox.Show("File " & Path.GetFileName(filepath) & " Not Found")
@@ -2407,7 +2407,7 @@ Public Class MainForm
                                 Path.GetFileNameWithoutExtension(TempName) & ".BMP"
         If Not TempBMP.ToLower = TempBMPLocal.ToLower Then
             If File.Exists(TempBMPLocal) Then
-                If GeneralTools.WaitForFile(TempBMPLocal) Then
+                If File_FolderHandlers.WaitForFile(TempBMPLocal) Then
                     File.Copy(TempBMPLocal, TempBMP, True)
                     File.Delete(TempBMPLocal)
                 End If
@@ -2806,7 +2806,7 @@ Public Class MainForm
 #Region "Export to Wave Obj"
 
     Sub WriteYobjtoWafeformat(SelectedObject As List(Of ObjectHeaderInformation), SaveFileToPath As String)
-        If GeneralTools.CheckFileWriteable(SaveFileToPath, False) Then
+        If File_FolderHandlers.CheckFileWriteable(SaveFileToPath, False) Then
             Dim ReturnedFileText As List(Of String) = New List(Of String)
             For i As Integer = 0 To SelectedObject.Count - 1
                 'Write Geo Verts

@@ -117,11 +117,12 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationHandlers.vb" />
+    <Compile Include="Modules\ApplicationHandlers.vb" />
     <Compile Include="DefBuilder.vb" />
     <Compile Include="FileClassTemplate.vb" />
     <Compile Include="GeneralTools.vb" />
-    <Compile Include="HashGenerator.vb" />
+    <Compile Include="Modules\File_FolderHandlers.vb" />
+    <Compile Include="Modules\HashGenerator.vb" />
     <Compile Include="MainForm.vb">
       <SubType>Form</SubType>
     </Compile>

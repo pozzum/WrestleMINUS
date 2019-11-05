@@ -409,7 +409,7 @@ Public Class PackUnpack
         End Try
         If My.Settings.CreateCAkDefFiles Then
             Dim DefFileName As String = Path.GetDirectoryName(FileName) & Path.DirectorySeparatorChar & Path.GetFileNameWithoutExtension(FileName) & ".def"
-            If GeneralTools.CheckFileWriteable(DefFileName, False) Then
+            If File_FolderHandlers.CheckFileWriteable(DefFileName, False) Then
                 File.WriteAllLines(DefFileName, ReturnedList)
             End If
         End If

@@ -1164,7 +1164,7 @@ Public Class PackageInformation
                                                 Path.GetFileNameWithoutExtension(TempName) & ".dds"
                     If Not TempCRNLocal.ToLower = TempCRN.ToLower Then
                         If File.Exists(TempCRNLocal) Then
-                            If GeneralTools.WaitForFile(TempCRNLocal) Then
+                            If File_FolderHandlers.WaitForFile(TempCRNLocal) Then
                                 File.Copy(TempCRNLocal, TempCRN)
                                 File.Delete(TempCRNLocal)
                             End If

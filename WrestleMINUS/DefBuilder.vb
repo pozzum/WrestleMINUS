@@ -8,7 +8,7 @@ Public Class DefBuilder
                                Optional DisableModFolderPreference As Boolean = False,
                                Optional RelocateModFolderFiles As Boolean = False)
         Dim DefFileLocation As String = Path.GetDirectoryName(GameExeLocation) & "\Chunk0.def"
-        If GeneralTools.CheckFileWriteable(DefFileLocation, True) Then
+        If File_FolderHandlers.CheckFileWriteable(DefFileLocation, True) Then
             If AppendtoFile Then
                 AnnounceFinish = True
                 'TO DO This Code path needs to add settings handlers for the mod folder options

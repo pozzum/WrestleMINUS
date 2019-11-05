@@ -125,7 +125,7 @@ Public Class FilePartHandlers
             End If
         End If
         'Folder Check will make sure the folder exists
-        GeneralTools.FolderCheck(BaseFolder & AdditonalFolders)
+        File_FolderHandlers.FolderMake(BaseFolder & AdditonalFolders)
         For Each TemporarySubItem As ExtendedFileProperties In RequestedSeedFile.SubFiles
             'Folders aren't extractable but make new folders
             If Not TemporarySubItem.FileType = PackageType.Folder Then
@@ -147,7 +147,7 @@ Public Class FilePartHandlers
                                 Result = False
                             End If
                         Else
-                            Dim FinalFilePath As String = GeneralTools.GenerateFoldersFromVirtualPath(BaseFolder & AdditonalFolders & TemporarySubItem.Name & FileExtention)
+                            Dim FinalFilePath As String = File_FolderHandlers.FolderMakeFromVirtualPath(BaseFolder & AdditonalFolders & TemporarySubItem.Name & FileExtention)
                             If Not ExtractFilePart(TemporarySubItem, FinalFilePath) Then
                                 'we've had a failure somewhere in the chain
                                 Result = False
@@ -253,7 +253,7 @@ Public Class FilePartHandlers
     'I think I need to add checking oodle parents and making sure it's injected properly..
     Shared Function InjectBytesIntoFile(FileRequested As ExtendedFileProperties, SentBytes As Byte()) As Boolean
         'Adding in a check if file is read only and if the file is missing
-        If Not GeneralTools.CheckFileWriteable(FileRequested.FullFilePath) Then
+        If Not File_FolderHandlers.CheckFileWriteable(FileRequested.FullFilePath) Then
             Return False
         End If
         If IsNothing(SentBytes) Then 'exits the function if no bytes are sent
@@ -294,7 +294,7 @@ Public Class FilePartHandlers
             If ParentFileInformation.Index = 0 AndAlso ParentFileInformation.StoredData.Length = 0 Then
                 'File to be Written
                 Dim WrittenFile As String = FileRequested.FullFilePath
-                If My.Settings.BackupInjections AndAlso GeneralTools.CheckFileWriteable(WrittenFile & ".bak", False) Then
+                If My.Settings.BackupInjections AndAlso File_FolderHandlers.CheckFileWriteable(WrittenFile & ".bak", False) Then
                     File.Copy(WrittenFile, WrittenFile & ".bak", True)
                 End If
                 File.WriteAllBytes(WrittenFile, CompressedByteArray)
@@ -501,7 +501,7 @@ Public Class FilePartHandlers
             ParentFileInformation.StoredData.Length = 0 Then
             'File to be Written
             Dim WrittenFile As String = FileRequested.FullFilePath
-            If My.Settings.BackupInjections AndAlso GeneralTools.CheckFileWriteable(WrittenFile & ".bak", False) Then
+            If My.Settings.BackupInjections AndAlso File_FolderHandlers.CheckFileWriteable(WrittenFile & ".bak", False) Then
                 File.Copy(WrittenFile, WrittenFile & ".bak", True)
             End If
             File.WriteAllBytes(WrittenFile, WrittenFileArray)
@@ -538,7 +538,7 @@ Public Class FilePartHandlers
                         'here we have to check if the folder already exists
                         Dim NameMatched As Boolean = Directory.Exists(NewFolderName)
                         If Not NameMatched Then
-                            GeneralTools.MoveAllItems(FileRequested.FullFilePath, NewFolderName)
+                            File_FolderHandlers.MoveAllItems(FileRequested.FullFilePath, NewFolderName)
                             Dim TempDI As DirectoryInfo = New DirectoryInfo(NewFolderName)
                             'we want to edit the file Requested with the new data
                             FileRequested = New ExtendedFileProperties With {
@@ -565,7 +565,7 @@ Public Class FilePartHandlers
         ElseIf FileRequested.Index = 0 AndAlso
             FileRequested.StoredData.Length = 0 Then
             'it should be a file
-            If GeneralTools.CheckFileWriteable(FileRequested.FullFilePath) Then
+            If File_FolderHandlers.CheckFileWriteable(FileRequested.FullFilePath) Then
                 Dim TextDialogInstance As New TextDialogPrompt With {
                     .OldFileName = FileRequested.Name,
                     .EditedFileName = .OldFileName,
@@ -601,7 +601,7 @@ Public Class FilePartHandlers
             Return ReturnedResult
         End If
         'Adding in a check if file is read only and if the file is missing
-        If Not GeneralTools.CheckFileWriteable(FileRequested.FullFilePath) Then
+        If Not File_FolderHandlers.CheckFileWriteable(FileRequested.FullFilePath) Then
             Return False
         End If
         'We have passed where we could be renaming an actual file and gotten to the point of so we need the parent file properties
@@ -826,7 +826,7 @@ Public Class FilePartHandlers
             ParentFileProperties.StoredData.Length = 0 Then
             'File to be Written
             Dim WrittenFile As String = FileRequested.FullFilePath
-            If My.Settings.BackupInjections AndAlso GeneralTools.CheckFileWriteable(WrittenFile & ".bak", False) Then
+            If My.Settings.BackupInjections AndAlso File_FolderHandlers.CheckFileWriteable(WrittenFile & ".bak", False) Then
                 File.Copy(WrittenFile, WrittenFile & ".bak", True)
             End If
             File.WriteAllBytes(WrittenFile, WrittenFileArray)
@@ -842,7 +842,7 @@ Public Class FilePartHandlers
 #Region "Delete Functions"
 
     Shared Function DeleteFilesFromParent(FileRequested As ExtendedFileProperties) As Boolean
-        If Not GeneralTools.CheckFileWriteable(FileRequested.FullFilePath) Then
+        If Not File_FolderHandlers.CheckFileWriteable(FileRequested.FullFilePath) Then
             Return False
         End If
         'negative for shorter, this will have to be modified by if the header is shorter for the particular container type
@@ -1415,7 +1415,7 @@ Public Class FilePartHandlers
             'File to be Written
             'TO DO Sent this Written File code to a function as it is copied several times..
             Dim WrittenFile As String = FileRequested.FullFilePath
-            If My.Settings.BackupInjections AndAlso GeneralTools.CheckFileWriteable(WrittenFile & ".bak", False) Then
+            If My.Settings.BackupInjections AndAlso File_FolderHandlers.CheckFileWriteable(WrittenFile & ".bak", False) Then
                 File.Copy(WrittenFile, WrittenFile & ".bak", True)
             End If
             File.WriteAllBytes(WrittenFile, WrittenFileArray)
@@ -1435,7 +1435,7 @@ Public Class FilePartHandlers
     Shared Function SortFileContainer(ByRef FileRequested As ExtendedFileProperties) As Boolean
         Dim ReturnedResult As Boolean = False
         'Adding in a check if file is read only and if the file is missing
-        If Not GeneralTools.CheckFileWriteable(CType(FileRequested.FullFilePath, String)) Then
+        If Not File_FolderHandlers.CheckFileWriteable(CType(FileRequested.FullFilePath, String)) Then
             Return False
         End If
         'File Requested is the Parent Container and we need to sort the sub files
@@ -1483,7 +1483,7 @@ Public Class FilePartHandlers
             FileRequested.StoredData.Length = 0 Then
             'File to be Written
             Dim WrittenFile As String = FileRequested.FullFilePath
-            If My.Settings.BackupInjections AndAlso GeneralTools.CheckFileWriteable(WrittenFile & ".bak", False) Then
+            If My.Settings.BackupInjections AndAlso File_FolderHandlers.CheckFileWriteable(WrittenFile & ".bak", False) Then
                 File.Copy(WrittenFile, WrittenFile & ".bak", True)
             End If
             File.WriteAllBytes(WrittenFile, WrittenFileArray)
