@@ -67,7 +67,7 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>W-.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\W-.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
@@ -120,7 +120,7 @@
     <Compile Include="Modules-Handlers\ApplicationHandlers.vb" />
     <Compile Include="DefBuilder.vb" />
     <Compile Include="FileClassTemplate.vb" />
-    <Compile Include="GeneralTools.vb" />
+    <Compile Include="General Code\GeneralTools.vb" />
     <Compile Include="Modules-Handlers\File_FolderHandlers.vb" />
     <Compile Include="Modules-Handlers\HashGenerator.vb" />
     <Compile Include="MainForm.vb">
@@ -147,7 +147,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="FilePartHandlers.vb" />
-    <Compile Include="OnlineVersion.vb" />
+    <Compile Include="General Code\OnlineVersion.vb" />
     <Compile Include="Options Menu\Options.Advanced.vb" />
     <Compile Include="Options Menu\Options.DLL.vb" />
     <Compile Include="Options Menu\Options.FileSelect.vb" />
@@ -158,10 +158,11 @@
     <Compile Include="Options Menu\OptionsMenu.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PackageHandlers\CakFileHandler.vb" />
     <Compile Include="PackageInformation.vb" />
     <Compile Include="PackageType.vb" />
     <Compile Include="PackUnpack.vb" />
-    <Compile Include="SettingsHandlers.vb" />
+    <Compile Include="Modules-Handlers\SettingsHandlers.vb" />
     <Compile Include="TextDialogPrompt.Designer.vb">
       <DependentUpon>TextDialogPrompt.vb</DependentUpon>
     </Compile>
@@ -246,7 +247,7 @@
     <Content Include="Tools\texconv.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="W-.ico" />
+    <Content Include="Assets\W-.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

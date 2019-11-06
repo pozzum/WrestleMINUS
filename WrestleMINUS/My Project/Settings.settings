@@ -23,10 +23,10 @@
     <Setting Name="RADVideoToolPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">Not Installed</Value>
     </Setting>
-    <Setting Name="StringObject" Type="System.String" Scope="User">
+    <Setting Name="StringObjectLocation" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="PacNumObject" Type="System.String" Scope="User">
+    <Setting Name="PacNumObjectLocation" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="UnrrbpePath" Type="System.String" Scope="User">
@@ -65,11 +65,8 @@
     <Setting Name="DecompresstoFolder" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="TruncateDecimalNames" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="DecimalNameMinLength" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">8</Value>
     </Setting>
     <Setting Name="RecycleDeletedFiles" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

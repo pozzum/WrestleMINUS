@@ -141,24 +141,24 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property StringObject() As String
+        Public Property StringObjectLocation() As String
             Get
-                Return CType(Me("StringObject"),String)
+                Return CType(Me("StringObjectLocation"),String)
             End Get
             Set
-                Me("StringObject") = value
+                Me("StringObjectLocation") = value
             End Set
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property PacNumObject() As String
+        Public Property PacNumObjectLocation() As String
             Get
-                Return CType(Me("PacNumObject"),String)
+                Return CType(Me("PacNumObjectLocation"),String)
             End Get
             Set
-                Me("PacNumObject") = value
+                Me("PacNumObjectLocation") = value
             End Set
         End Property
         
@@ -308,19 +308,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
-        Public Property TruncateDecimalNames() As Boolean
-            Get
-                Return CType(Me("TruncateDecimalNames"),Boolean)
-            End Get
-            Set
-                Me("TruncateDecimalNames") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("8")>  _
         Public Property DecimalNameMinLength() As Integer
             Get
                 Return CType(Me("DecimalNameMinLength"),Integer)

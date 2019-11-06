@@ -38,39 +38,26 @@ Public Class OnlineVersion
             Const pattern As String = "Current Version: (?<version>\d.\d.\d.\d)"
             Dim TempMatch As Match = Regex.Match(Response, pattern)
             If TempMatch.Success Then
-                Dim CurrentVersion As String = TempMatch.Groups("version").Value
-                Dim CurrentVersionTemp() As String = Split(CurrentVersion, ".")
-                Dim CurrentVersionInt(3) As Integer
-                Dim LocalVersion As String = My.Application.Info.Version.ToString
-                Dim LocalVersionTemp() As String = Split(LocalVersion, ".")
-                Dim LocalVersionInt(3) As Integer
-                Dim SkippedVersion As String = My.Settings.SkippedVersion.ToString
-                Dim SkippedVersionTemp() As String = Split(SkippedVersion, ".")
-                Dim SkippedVersionInt(3) As Integer
-                For s As Integer = 0 To 3
-                    CurrentVersionInt(s) = CInt(CurrentVersionTemp(s))
-                    LocalVersionInt(s) = CInt(LocalVersionTemp(s))
-                    SkippedVersionInt(s) = CInt(SkippedVersionTemp(s))
-                Next
+                Dim CurrentVersionString As String = TempMatch.Groups("version").Value
+                Dim CurrentVer As Integer() = GeneralTools.NumberArrayFromVersionString(CurrentVersionString)
+                Dim LocalVersionString As String = My.Application.Info.Version.ToString
+                Dim LocalVer As Integer() = GeneralTools.NumberArrayFromVersionString(LocalVersionString)
+                Dim SkippedVersionString As String = My.Settings.SkippedVersion.ToString
+                Dim SkippedVer As Integer() = GeneralTools.NumberArrayFromVersionString(SkippedVersionString)
                 'First compare the Skipped version Local
-                Dim ChangeType As UpdateType = GetUpdateType(SkippedVersionInt, LocalVersionInt)
+                Dim ChangeType As UpdateType = GetUpdateType(SkippedVer, LocalVer)
                 If Not ChangeType = UpdateType.None Then
                     'Local Version is the same as skipped
-                    ChangeType = GetUpdateType(CurrentVersionInt, LocalVersionInt)
+                    ChangeType = GetUpdateType(CurrentVer, LocalVer)
                     If Not ChangeType = UpdateType.None Then
-                        Dim result As Integer = MessageBox.Show("You have version " & LocalVersion &
+                        Dim result As Integer = MessageBox.Show("You have version " & LocalVersionString &
                                                             " and there is a new " & GetUpdateString(ChangeType) &
-                                                            " version " & CurrentVersion &
+                                                            " version " & CurrentVersionString &
                                                             vbNewLine & "Would you like to update?",
                                                             "Version Update",
                                                             MessageBoxButtons.YesNo)
                         If result = DialogResult.Yes Then
-                            Dim Adresult As Integer = MessageBox.Show("Would you be willing to view an ad?", "ads help support development", MessageBoxButtons.YesNo)
-                            If Adresult = DialogResult.Yes Then
-                                Process.Start("http://metastead.com/12819869/wrestleminus")
-                            Else
-                                Process.Start(PageAddress)
-                            End If
+                            OfferDownloadAd()
                         Else
                             'Ask if they want to skip this update
                             Dim SkipResult As Integer = MessageBox.Show("Would you like to skip this update in future?",
@@ -78,7 +65,7 @@ Public Class OnlineVersion
                                                             MessageBoxButtons.YesNo)
                             If SkipResult = DialogResult.Yes Then
                                 Dim TempVersion As Version = Nothing
-                                If Version.TryParse(CurrentVersion, TempVersion) Then
+                                If Version.TryParse(CurrentVersionString, TempVersion) Then
                                     My.Settings.SkippedVersion = TempVersion
                                 End If
                             End If
@@ -86,28 +73,23 @@ Public Class OnlineVersion
                     Else
 
                         If AnnounceInternetVersion Then
-                            MessageBox.Show("No new update." & vbNewLine & "Online version: " & CurrentVersion)
+                            MessageBox.Show("No new update." & vbNewLine & "Online version: " & CurrentVersionString)
                         End If
                         'No new update
                     End If
                 Else
                     'Skip is newer
                     'We want to compare the skipped version to online version
-                    ChangeType = GetUpdateType(CurrentVersionInt, LocalVersionInt)
+                    ChangeType = GetUpdateType(CurrentVer, SkippedVer)
                     If Not ChangeType = UpdateType.None Then
-                        Dim result As Integer = MessageBox.Show("You have skipped version " & SkippedVersion &
+                        Dim result As Integer = MessageBox.Show("You have skipped version " & SkippedVersionString &
                                                             " and there is a new " & GetUpdateString(ChangeType) &
-                                                            " version " & CurrentVersion &
+                                                            " version " & CurrentVersionString &
                                                             vbNewLine & "Would you like to update?",
                                                             "Version Update",
                                                             MessageBoxButtons.YesNo)
                         If result = DialogResult.Yes Then
-                            Dim Adresult As Integer = MessageBox.Show("Would you be willing to view an ad?", "ads help support development", MessageBoxButtons.YesNo)
-                            If Adresult = DialogResult.Yes Then
-                                Process.Start("http://metastead.com/12819869/wrestleminus")
-                            Else
-                                Process.Start(PageAddress)
-                            End If
+                            OfferDownloadAd()
                         Else
                             'Ask if they want to skip this update
                             Dim SkipResult As Integer = MessageBox.Show("Would you like to skip this update in future?",
@@ -115,22 +97,33 @@ Public Class OnlineVersion
                                                             MessageBoxButtons.YesNo)
                             If SkipResult = DialogResult.Yes Then
                                 Dim TempVersion As Version = Nothing
-                                If Version.TryParse(CurrentVersion, TempVersion) Then
+                                If Version.TryParse(CurrentVersionString, TempVersion) Then
                                     My.Settings.SkippedVersion = TempVersion
                                 End If
                             End If
                         End If
                     Else
                         If AnnounceInternetVersion Then
-                            MessageBox.Show("Update Already Skipped." & vbNewLine & CurrentVersion)
+                            MessageBox.Show("Update Already Skipped." & vbNewLine & CurrentVersionString)
                         End If
                         'Update already Skipped
                     End If
                 End If
             End If
         Catch ex As NullReferenceException
-            'MessageBox.Show(ex.Message)
+            If AnnounceInternetVersion Then
+                MessageBox.Show(ex.Message)
+            End If
         End Try
+    End Sub
+
+    Shared Sub OfferDownloadAd()
+        Dim Adresult As Integer = MessageBox.Show("Would you be willing to view an ad?", "ads help support development", MessageBoxButtons.YesNo)
+        If Adresult = DialogResult.Yes Then
+            Process.Start("http://metastead.com/12819869/wrestleminus")
+        Else
+            Process.Start(PageAddress)
+        End If
     End Sub
 
     Shared Function GetResponse(Address As String)
@@ -147,25 +140,23 @@ Public Class OnlineVersion
         Return TempBrowser.Document.Body.InnerHtml
     End Function
 
-    Shared Function GetUpdateType(CheckedVersion, LocalVersion) As UpdateType
+    Shared Function GetUpdateType(CheckedVersion As Integer(), LocalVersion As Integer()) As UpdateType
         If CheckedVersion(0) > LocalVersion(0) Then
             Return UpdateType.MajorUpdate
-        ElseIf CheckedVersion(0) < LocalVersion(0) Then
-            Return UpdateType.None
-        ElseIf CheckedVersion(1) > LocalVersion(1) Then
-            Return UpdateType.MinorUpdate
-        ElseIf CheckedVersion(1) < LocalVersion(1) Then
-            Return UpdateType.None
-        ElseIf CheckedVersion(2) > LocalVersion(2) Then
-            Return UpdateType.MajorBugFix
-        ElseIf CheckedVersion(2) < LocalVersion(2) Then
-            Return UpdateType.None
-        ElseIf CheckedVersion(3) > LocalVersion(3) Then
-            Return UpdateType.MinorBugFix
-        Else
-            Return UpdateType.None
+        ElseIf CheckedVersion(0) = LocalVersion(0) Then
+            If CheckedVersion(1) > LocalVersion(1) Then
+                Return UpdateType.MinorUpdate
+            ElseIf CheckedVersion(1) = LocalVersion(1) Then
+                If CheckedVersion(2) > LocalVersion(2) Then
+                    Return UpdateType.MajorBugFix
+                ElseIf CheckedVersion(2) = LocalVersion(2) Then
+                    If CheckedVersion(3) > LocalVersion(3) Then
+                        Return UpdateType.MinorBugFix
+                    End If
+                End If
+            End If
         End If
-
+        Return UpdateType.None
     End Function
 
     Shared Function GetUpdateString(ChangeType As UpdateType)

@@ -100,10 +100,8 @@ Partial Class OptionsMenu
         End Sub
 
         Private Sub ButtonResetStrings_Click(sender As Object, e As EventArgs) Handles ButtonResetStrings.Click
-            MainForm.StringReferences = New Dictionary(Of UInt32, String) From {
-            {0, "String Not Read"}
-        }
-        End Sub
+        SettingsHandlers.ResetStringReferences()
+    End Sub
 
         Private Sub ButtonResetFormSize_Click(sender As Object, e As EventArgs) Handles ButtonResetFormSize.Click
             My.Settings.SavedSplitterDistance = 253
@@ -112,9 +110,8 @@ Partial Class OptionsMenu
         End Sub
 
         Private Sub ButtonResetPacs_Click(sender As Object, e As EventArgs) Handles ButtonResetPacs.Click
-            MainForm.PacNumbers = New Integer(1024) {}
-            MainForm.PacNumbers(0) = -1
-        End Sub
+        SettingsHandlers.ResetPacNumbers()
+    End Sub
 
 
 End Class

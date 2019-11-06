@@ -3,10 +3,10 @@ Imports System.Text 'Text Encoding
 
 Module HashGenerator
 
-    Function GetFNVH1aHash(StringtoBeHashed As String) As UInteger
+    Function GetFNVH1aHash(StringtoBeHashed As String) As ULong
 
         Const fnv_offset As ULong = &HCBF29CE484222325UL
-        Const fnv_prime As UInteger = &H1000193UI
+        Const fnv_prime As ULong = &H100000001B3UL
         Dim hash As ULong = fnv_offset
 
         For i As Integer = 0 To StringtoBeHashed.Length - 1

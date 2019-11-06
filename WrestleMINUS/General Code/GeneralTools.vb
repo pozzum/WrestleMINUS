@@ -1,6 +1,4 @@
-﻿Imports System.IO   'Files
-
-Partial Public Class GeneralTools
+﻿Partial Public Class GeneralTools
 
 #Region "Other Object Based General Tools"
 
@@ -24,6 +22,15 @@ Partial Public Class GeneralTools
 #End Region
 
 #Region "String General Tools"
+
+    Shared Function NumberArrayFromVersionString(SentVersionString As String) As Integer()
+        Dim SplitVersionString() As String = Split(SentVersionString, ".")
+        Dim ReturnedArray As Integer() = New Integer(3) {}
+        For s As Integer = 0 To 3
+            ReturnedArray(s) = CInt(SplitVersionString(s))
+        Next
+        Return ReturnedArray
+    End Function
 
     Shared Function CountCharOccuranceInString(TestedString As String, SearchedCharacter As Char) As Integer
         Dim Count As Integer = 0
