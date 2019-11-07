@@ -1,4 +1,5 @@
 ﻿Imports System.IO   'Files
+Imports System.Text 'Text Encoding
 
 Namespace PackageHandlers
 
@@ -23,7 +24,7 @@ Namespace PackageHandlers
                 Return Code(0)
             End Function
 
-            Public Function FolderFoldersCountsCount() As UInteger
+            Public Function FoldersCount() As UInteger
                 Return Code(1)
             End Function
 
@@ -170,10 +171,23 @@ Namespace PackageHandlers
 
         Dim FileName As String
         Dim FileNameHash As UInteger
+
         Dim Folders As List(Of PackFolderEntry) = New List(Of PackFolderEntry)
         Dim Files As List(Of PackFileEntry) = New List(Of PackFileEntry)
+        Dim FileMapping As Dictionary(Of ULong, Integer) = New Dictionary(Of ULong, Integer)
+
         Dim PackFileHeader As BakedFileHeader
         Dim FileStream As Stream
+
+        Function GetFileList() As List(Of String)
+            Dim ReturnedList As List(Of String) = New List(Of String)
+            If Not IsNothing(Files) AndAlso Files.Count > 0 Then
+                For i As Integer = 0 To Files.Count - 1
+                    ReturnedList.Add(Files(i).Name)
+                Next
+            End If
+            Return ReturnedList
+        End Function
 
         Sub CakFile(IncomingStream As Stream, IncomingFileName As String)
             FileName = IncomingFileName
@@ -213,20 +227,95 @@ Namespace PackageHandlers
                     FilesBlock = DeobfuscateBlock(FilesBlock, FileNameHash)
                 End If
 
-                'Files
+                'Strings
                 ActiveReader.BaseStream.Position = PackFileHeader.StringsOffset
                 Dim StringBlock As Byte() = ActiveReader.ReadBytes(PackFileHeader.StringsSize)
                 If PackFileHeader.CheckFlags(PackFlags.Obfuscated) Then
                     StringBlock = DeobfuscateBlock(StringBlock, FileNameHash)
                 End If
+
+                Using FolderReader As BinaryReader = New BinaryReader(New MemoryStream(FoldersBlock))
+                    For i As Integer = 0 To PackFileHeader.FoldersCount
+                        Dim CurrentEntry As PackFolderEntry = New PackFolderEntry With {
+                            .FileIndices = New List(Of Integer),
+                            .FolderIndices = New List(Of Integer),
+                            .Unk = FolderReader.ReadUInt64()}
+                        Dim StringOffset As UInteger = FolderReader.ReadUInt32()
+                        Dim FolderCount As UInteger = FolderReader.ReadUInt32()
+                        Dim FileCount As UInteger = FolderReader.ReadUInt32()
+                        For j As Integer = 0 To FolderCount - 1
+                            CurrentEntry.FolderIndices.Add(FolderReader.ReadInt32)
+                        Next
+                        For j As Integer = 0 To FileCount - 1
+                            CurrentEntry.FileIndices.Add(FolderReader.ReadInt32)
+                        Next
+                        Dim TempName As String = ""
+                        TempName = Encoding.Default.GetChars(StringBlock, StringOffset, 255)
+                        CurrentEntry.Name = TempName
+                        Folders.Add(CurrentEntry)
+                    Next
+                End Using
+
+                Using FolderHashReader As BinaryReader = New BinaryReader(New MemoryStream(FolderHashesBlock))
+                    For i As Integer = 0 To PackFileHeader.FoldersCount
+                        Dim NameHash As ULong = FolderHashReader.ReadUInt64()
+                        Dim Index As Integer = FolderHashReader.ReadInt32()
+                        Folders(Index).Hash = NameHash
+                    Next
+                End Using
+
+                Using FilesReader As BinaryReader = New BinaryReader(New MemoryStream(FilesBlock))
+                    For i As Integer = 0 To PackFileHeader.FilesCount
+                        Dim StringOffset As UInteger = FilesReader.ReadUInt32()
+                        Dim CurrentEntry As PackFileEntry = New PackFileEntry With {
+                           .Unk1 = FilesReader.ReadUInt32(),
+                           .Crc = FilesReader.ReadUInt32(),
+                           .Size = FilesReader.ReadUInt32(),
+                           .Offset = FilesReader.ReadInt64()}
+                        CurrentEntry.Type = Encoding.Default.GetChars(FilesReader.ReadBytes(4))
+                        Dim TempName As String = ""
+                        TempName = Encoding.Default.GetChars(StringBlock, StringOffset, 255)
+                        CurrentEntry.Name = TempName
+                        Files.Add(CurrentEntry)
+                    Next
+                End Using
+
+                Using FileHashesReader As BinaryReader = New BinaryReader(New MemoryStream(FilesHashesBlock))
+                    For i As Integer = 0 To PackFileHeader.FilesCount
+                        Dim NameHash As ULong = FileHashesReader.ReadUInt64()
+                        Dim Index As Integer = FileHashesReader.ReadInt32()
+                        Folders(Index).Hash = NameHash
+                        FileMapping.Add(NameHash, Index)
+                    Next
+                End Using
             End Using
         End Sub
 
         Function DeobfuscateBlock(IncomingBlock As Byte(), Hash As UInteger) As Byte()
             Dim OutgoingBlock As Byte() = New Byte(IncomingBlock.Length - 1) {}
-            Dim Length As UInteger = IncomingBlock.Length
-            Dim HashValue As UInteger = Hash
-
+            Dim ActiveOffset As UInteger = 0
+            Dim ActiveHash As UInteger = Hash
+            If (IncomingBlock.Length / 8) > 0 Then
+                For i As Integer = 0 To (IncomingBlock.Length / 8)
+                    Dim FirstUint As UInteger = BitConverter.ToUInt32(IncomingBlock, 0 + i * 8)
+                    FirstUint = FirstUint Xor ActiveHash
+                    Dim SecondUint As UInteger = BitConverter.ToUInt32(IncomingBlock, 4 + i * 8)
+                    SecondUint = SecondUint Xor FirstUint
+                    ActiveHash = SecondUint
+                    Array.Copy(BitConverter.GetBytes(FirstUint), 0, OutgoingBlock, 0 + i * 8, 4)
+                    Array.Copy(BitConverter.GetBytes(SecondUint), 0, OutgoingBlock, 4 + i * 8, 8)
+                    ActiveOffset += 8
+                Next
+            End If
+            If (IncomingBlock.Length Mod 8) > 0 Then
+                ActiveOffset = IncomingBlock.Length - (IncomingBlock.Length Mod 8)
+                For i As Integer = 0 To (IncomingBlock.Length Mod 8)
+                    Dim TempByte As Byte = IncomingBlock(ActiveOffset + i)
+                    TempByte = TempByte Xor ActiveHash
+                    ActiveHash = TempByte
+                    OutgoingBlock(ActiveOffset + i) = TempByte
+                Next
+            End If
             Return OutgoingBlock
         End Function
 

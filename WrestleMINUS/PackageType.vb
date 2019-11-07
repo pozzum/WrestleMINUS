@@ -23,6 +23,7 @@
     FileRefBin
     NIBJ
     bk2
+    bk2_Broken
     CostumeFile
     MuscleFile
     MaskFile

@@ -387,6 +387,9 @@ Public Class PackageInformation
                                     Else
                                         Return PackageType.bin
                                     End If
+                                Case FileNamePath.ToLower.Contains(".bk2")
+                                    Return PackageType.bk2_Broken
+
                                 Case Else
                                     Return PackageType.bin
                             End Select
@@ -1030,9 +1033,10 @@ Public Class PackageInformation
                 If IsNothing(ParentFileProperties.SubFiles) Then
                     ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
                 End If
-                If CheckHeaderType(0, FileBytes, ParentFileProperties.FullFilePath) = PackageType.OODL7 Then
-                    ParentFileProperties.FileType = PackageType.OODL7
-                    Dim UncompressedBytes As Byte() = Nothing
+                ParentFileProperties.FileType = CheckHeaderType(0, FileBytes, ParentFileProperties.VirtualFilePath)
+                Select Case ParentFileProperties.FileType
+                    Case PackageType.OODL7
+                        Dim UncompressedBytes As Byte() = Nothing
                     If ApplicationHandlers.CheckOodle7() Then
                         UncompressedBytes = PackUnpack.GetUncompressedOodle_7Bytes(FileBytes)
                     End If
@@ -1082,28 +1086,34 @@ Public Class PackageInformation
                             Exit Sub
                         End If
                     End If
-                Else
-                    If My.Settings.ShowCAkIntermediates Then
-                        Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
-                               .Name = ParentFileProperties.Name & " EXTRACT",
-                               .FullFilePath = ParentFileProperties.FullFilePath,
-                               .VirtualFilePath = ParentFileProperties.VirtualFilePath,
-                               .Index = &H18,
-                               .length = FileBytes.Length - &H18,
-                               .StoredData = FileBytes,
-                               .FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes),
-                               .Parent = ParentFileProperties}
-                        ParentFileProperties.SubFiles.Add(ContainedFileProperties)
-                    Else
-                        ParentFileProperties.FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes)
-                        ParentFileProperties.Index = &H18
-                        ParentFileProperties.length = FileBytes.Length - &H18
+                    Case PackageType.bin
+                        If My.Settings.ShowCAkIntermediates Then
+                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                                   .Name = ParentFileProperties.Name & " EXTRACT",
+                                   .FullFilePath = ParentFileProperties.FullFilePath,
+                                   .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                                   .Index = &H18,
+                                   .length = FileBytes.Length - &H18,
+                                   .StoredData = FileBytes,
+                                   .FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes),
+                                   .Parent = ParentFileProperties}
+                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                        Else
+                            ParentFileProperties.FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes)
+                            ParentFileProperties.Index = &H18
+                            ParentFileProperties.length = FileBytes.Length - &H18
+                            ParentFileProperties.StoredData = FileBytes
+                            'ParentFileProperties.Parent
+                            GetFileParts(ParentFileProperties, Crawl, TriggerProgress)
+                            Exit Sub
+                        End If
+                    Case PackageType.bk2_Broken
+                        ParentFileProperties.FileType = PackageType.bk2
                         ParentFileProperties.StoredData = FileBytes
-                        'ParentFileProperties.Parent
-                        GetFileParts(ParentFileProperties, Crawl, TriggerProgress)
-                        Exit Sub
-                    End If
-                End If
+                        Array.Copy(New Byte() {&H4B, &H42, &H32, &H6A}, ParentFileProperties.StoredData, 4)
+                    Case Else
+                        MessageBox.Show(ParentFileProperties.FileType.ToString)
+                End Select
             Case PackageType.tex
                 If ChecktexForCRN(0, FileBytes) = PackageType.Crn Then
                     If My.Settings.ShowCAkIntermediates Then
