@@ -18,7 +18,8 @@ Public Class FilePartHandlers
     Shared Function GetFilePartBytes(ByRef RequestedFileProperties As ExtendedFileProperties, Optional MaxLength As Int32 = -1) As Byte()
         If RequestedFileProperties.FileType = PackageType.CakBaked Then
             If RequestedFileProperties.StoredData.Length < 1 Then
-                RequestedFileProperties.StoredData = PackUnpack.GetUnCompressedCakBytes(RequestedFileProperties.FullFilePath, RequestedFileProperties.VirtualFilePath)
+                Dim TempCakFile As PackageHandlers.CakFileHandler = New PackageHandlers.CakFileHandler
+                RequestedFileProperties.StoredData = TempCakFile.GetIndividualFile(RequestedFileProperties.FullFilePath, RequestedFileProperties.VirtualFilePath)
                 RequestedFileProperties.Index = 0
                 RequestedFileProperties.length = RequestedFileProperties.StoredData.Length
             End If
@@ -48,10 +49,16 @@ Public Class FilePartHandlers
                 Return New Byte() {}
             End If
             Try
-                Dim ActiveReader As BinaryReader = New BinaryReader(File.Open(RequestedFileProperties.FullFilePath, FileMode.Open, FileAccess.Read))
-                ActiveReader.BaseStream.Seek(RequestedFileProperties.Index, SeekOrigin.Begin)
-                FileBytes = ActiveReader.ReadBytes(ExtractedLength)
-                ActiveReader.Dispose()
+                Dim ActiveFileStream As FileStream = New FileStream(RequestedFileProperties.FullFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+                Dim FileStreamReader As BinaryReader = New BinaryReader(ActiveFileStream)
+                FileStreamReader.BaseStream.Seek(RequestedFileProperties.Index, SeekOrigin.Begin)
+                FileBytes = FileStreamReader.ReadBytes(ExtractedLength)
+
+                'Dim ActiveReader As BinaryReader = New BinaryReader(File.Open(RequestedFileProperties.FullFilePath, FileMode.Open, FileAccess.Read))
+                'ActiveReader.BaseStream.Seek(RequestedFileProperties.Index, SeekOrigin.Begin)
+                'FileBytes = ActiveReader.ReadBytes(ExtractedLength)
+                ActiveFileStream.Dispose()
+                FileStreamReader.Dispose()
             Catch ex As Exception
                 MessageBox.Show(ex.Message)
             End Try

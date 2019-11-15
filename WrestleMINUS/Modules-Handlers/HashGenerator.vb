@@ -1,5 +1,6 @@
 ﻿Imports System.Security.Cryptography 'MD5
 Imports System.Text 'Text Encoding
+Imports System.Numerics
 
 Module HashGenerator
 
@@ -8,10 +9,12 @@ Module HashGenerator
         Const fnv_offset As ULong = &HCBF29CE484222325UL
         Const fnv_prime As ULong = &H100000001B3UL
         Dim hash As ULong = fnv_offset
-
         For i As Integer = 0 To StringtoBeHashed.Length - 1
-            hash = hash Xor CByte(AscW(StringtoBeHashed(i)))
-            hash = (hash * fnv_prime) And UInteger.MaxValue
+            Dim CurrentByte As Byte = CByte(AscW(StringtoBeHashed(i)))
+            hash = hash Xor CurrentByte
+            Dim BigHash As BigInteger = (New BigInteger(hash) * New BigInteger(fnv_prime))
+            Dim BigArray As Byte() = BigHash.ToByteArray() 'big endian array
+            hash = BitConverter.ToUInt64(BigArray, 0)
         Next
 
         Return hash

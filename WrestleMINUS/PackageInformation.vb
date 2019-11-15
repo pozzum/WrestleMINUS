@@ -1016,19 +1016,48 @@ Public Class PackageInformation
 
 #End Region
 
+#End Region
+
 #Region "2K20 Cak Files"
 
             Case PackageType.Cak
-                Dim ListOfFiles As List(Of String) = PackUnpack.GetBakedCakFileList(ParentFileProperties.FullFilePath)
-                If ListOfFiles.Count > 0 Then
-                    If IsNothing(ParentFileProperties.SubFiles) Then
-                        ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                Dim ReadCakFile As PackageHandlers.CakFileHandler = New PackageHandlers.CakFileHandler
+                ReadCakFile = ReadCakFile.LoadFromFile(ParentFileProperties.FullFilePath)
+                If My.Settings.RebuildCakFiles Then
+                    'Always Make a Backup
+                    If File_FolderHandlers.CheckFileWriteable(ParentFileProperties.FullFilePath & ".tmp", False) Then
+                        File.Move(ParentFileProperties.FullFilePath, ParentFileProperties.FullFilePath & ".tmp")
+                    End If
+                    'here is the file rewrite
+                    If Not ReadCakFile.BuildPlainFromHandler(ParentFileProperties.FullFilePath, ReadCakFile, ParentFileProperties.FullFilePath & ".tmp") Then
+                        MessageBox.Show("Rebuild Error")
+                        File.Delete(ParentFileProperties.FullFilePath)
+                        If File.Exists(ParentFileProperties.FullFilePath & ".tmp") Then
+                            File.Move(ParentFileProperties.FullFilePath & ".tmp", ParentFileProperties.FullFilePath)
+                        End If
+                        'bakup file is not touched
+                    Else
+                        'File Built Right Backup can be deleted if they do not have the backup option
+                        If My.Settings.BackupInjections Then
+                            If File_FolderHandlers.CheckFileWriteable(ParentFileProperties.FullFilePath & ".bak", False) Then
+                                File.Move(ParentFileProperties.FullFilePath & ".tmp", ParentFileProperties.FullFilePath & ".bak")
+                            End If
+                        Else
+                            File.Delete(ParentFileProperties.FullFilePath & ".tmp")
+                        End If
                     End If
                 End If
-                For i As Integer = 0 To ListOfFiles.Count - 1
-                    ParentFileProperties = BuildCakSubNodes(ParentFileProperties, ListOfFiles(i))
-                Next
-
+                ParentFileProperties = BuildCakFileNode(ParentFileProperties, ReadCakFile)
+                'Dim ListOfFiles As List(Of String) = ReadCakFile.GetFileStringList()
+                'Dim ListOfFiles As List(Of String) = PackUnpack.GetBakedCakFileList(ParentFileProperties.FullFilePath)
+                'If ListOfFiles.Count > 0 Then
+                '    If IsNothing(ParentFileProperties.SubFiles) Then
+                '        ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                '    End If
+                'End If
+                'For i As Integer = 0 To ListOfFiles.Count - 1
+                '    ParentFileProperties = BuildCakSubNodes(ParentFileProperties, ListOfFiles(i))
+                'Next
             Case PackageType.CakBaked
                 If IsNothing(ParentFileProperties.SubFiles) Then
                     ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
@@ -1037,12 +1066,12 @@ Public Class PackageInformation
                 Select Case ParentFileProperties.FileType
                     Case PackageType.OODL7
                         Dim UncompressedBytes As Byte() = Nothing
-                    If ApplicationHandlers.CheckOodle7() Then
-                        UncompressedBytes = PackUnpack.GetUncompressedOodle_7Bytes(FileBytes)
-                    End If
-                    If IsNothing(UncompressedBytes) Then
-                        If My.Settings.ShowCAkIntermediates Then
-                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                        If ApplicationHandlers.CheckOodle7() Then
+                            UncompressedBytes = PackUnpack.GetUncompressedOodle_7Bytes(FileBytes)
+                        End If
+                        If IsNothing(UncompressedBytes) Then
+                            If My.Settings.ShowCAkIntermediates Then
+                                Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
                             .Name = ParentFileProperties.Name & " UNCOMPRESS",
                             .FullFilePath = ParentFileProperties.FullFilePath,
                             .VirtualFilePath = ParentFileProperties.VirtualFilePath,
@@ -1051,15 +1080,15 @@ Public Class PackageInformation
                             .StoredData = UncompressedBytes,
                             .FileType = PackageType.bin,
                             .Parent = ParentFileProperties}
-                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                                ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                            Else
+                                ParentFileProperties.FileType = PackageType.bin
+                            End If
+                            'here we exit the sub so an empty file isn't crawled if the tree is being crawled
+                            Exit Sub
                         Else
-                            ParentFileProperties.FileType = PackageType.bin
-                        End If
-                        'here we exit the sub so an empty file isn't crawled if the tree is being crawled
-                        Exit Sub
-                    Else
-                        If My.Settings.ShowCAkIntermediates Then
-                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                            If My.Settings.ShowCAkIntermediates Then
+                                Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
                                 .Name = ParentFileProperties.Name & " UNCOMPRESS",
                                 .FullFilePath = ParentFileProperties.FullFilePath,
                                 .VirtualFilePath = ParentFileProperties.VirtualFilePath,
@@ -1068,24 +1097,24 @@ Public Class PackageInformation
                                 .StoredData = UncompressedBytes,
                                 .FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes),
                                 .Parent = ParentFileProperties}
-                            If ContainedFileProperties.FileType = PackageType.jsfb Then
-                                ContainedFileProperties.FileType = CheckjsfbForFileType(0, UncompressedBytes, ParentFileProperties.VirtualFilePath)
+                                If ContainedFileProperties.FileType = PackageType.jsfb Then
+                                    ContainedFileProperties.FileType = CheckjsfbForFileType(0, UncompressedBytes, ParentFileProperties.VirtualFilePath)
+                                End If
+                                ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                            Else
+                                'Instead of making a new node we want to update the parent
+                                'ParentFileProperties.Name
+                                'ParentFileProperties.FullFilePath
+                                'ParentFileProperties.VirtualFilePath
+                                ParentFileProperties.FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes)
+                                ParentFileProperties.Index = 0
+                                ParentFileProperties.length = UncompressedBytes.Length
+                                ParentFileProperties.StoredData = UncompressedBytes
+                                'ParentFileProperties.Parent
+                                GetFileParts(ParentFileProperties, Crawl)
+                                Exit Sub
                             End If
-                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
-                        Else
-                            'Instead of making a new node we want to update the parent
-                            'ParentFileProperties.Name
-                            'ParentFileProperties.FullFilePath
-                            'ParentFileProperties.VirtualFilePath
-                            ParentFileProperties.FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes)
-                            ParentFileProperties.Index = 0
-                            ParentFileProperties.length = UncompressedBytes.Length
-                            ParentFileProperties.StoredData = UncompressedBytes
-                            'ParentFileProperties.Parent
-                            GetFileParts(ParentFileProperties, Crawl)
-                            Exit Sub
                         End If
-                    End If
                     Case PackageType.bin
                         If My.Settings.ShowCAkIntermediates Then
                             Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
@@ -1149,7 +1178,6 @@ Public Class PackageInformation
             Case PackageType.Crn
                 Dim UncrunchedBytes As Byte() = Nothing
                 If ApplicationHandlers.CheckTexCrunchExe() Then
-                    'GeneralTools.BreakFunction()
                     'Try
                     Dim TempName As String = Path.GetTempFileName
                     If Not File.Exists(TempName + ".crn") Then
@@ -1183,63 +1211,62 @@ Public Class PackageInformation
                         End If
                     End If
                     MainForm.CreatedImages.Add(TempCRN)
-                        File.Delete(TempName)
-                        UncrunchedBytes = File.ReadAllBytes(TempCRN)
-                        'Catch ex As Exception
-                        '    MessageBox.Show("Error Un-crunching Texture" & vbNewLine & ex.Message)
-                        'End Try
-                        If IsNothing(UncrunchedBytes) Then
-                            If My.Settings.ShowCAkIntermediates Then
-                                If IsNothing(ParentFileProperties.SubFiles) Then
-                                    ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
-                                End If
-                                Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
-                        .Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds",
-                        .FullFilePath = ParentFileProperties.FullFilePath,
-                        .VirtualFilePath = ParentFileProperties.VirtualFilePath,
-                        .Index = 0,
-                        .length = 0,
-                        .StoredData = UncrunchedBytes,
-                        .FileType = PackageType.DDS,
-                        .Parent = ParentFileProperties}
-                                ParentFileProperties.SubFiles.Add(ContainedFileProperties)
-                            Else
-                                ParentFileProperties.FileType = PackageType.bin
+                    File.Delete(TempName)
+                    UncrunchedBytes = File.ReadAllBytes(TempCRN)
+                    'Catch ex As Exception
+                    '    MessageBox.Show("Error Un-crunching Texture" & vbNewLine & ex.Message)
+                    'End Try
+                    If IsNothing(UncrunchedBytes) Then
+                        If My.Settings.ShowCAkIntermediates Then
+                            If IsNothing(ParentFileProperties.SubFiles) Then
+                                ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
                             End If
-                            'here we exit the sub so an empty file isn't crawled if the tree is being crawled
-                            Exit Sub
+                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                    .Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds",
+                    .FullFilePath = ParentFileProperties.FullFilePath,
+                    .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                    .Index = 0,
+                    .length = 0,
+                    .StoredData = UncrunchedBytes,
+                    .FileType = PackageType.DDS,
+                    .Parent = ParentFileProperties}
+                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
                         Else
-                            If My.Settings.ShowCAkIntermediates Then
-                                If IsNothing(ParentFileProperties.SubFiles) Then
-                                    ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
-                                End If
-                                Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
-                               .Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds",
-                               .FullFilePath = ParentFileProperties.FullFilePath,
-                               .VirtualFilePath = ParentFileProperties.VirtualFilePath,
-                               .Index = 0,
-                               .length = UncrunchedBytes.Length,
-                               .StoredData = UncrunchedBytes,
-                               .FileType = PackageType.DDS,
-                               .Parent = ParentFileProperties}
-                                ParentFileProperties.SubFiles.Add(ContainedFileProperties)
-                            Else
-                                'Instead of making a new node we want to update the parent
-                                ParentFileProperties.Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds"
-                                'ParentFileProperties.FullFilePath
-                                'ParentFileProperties.VirtualFilePath
-                                ParentFileProperties.FileType = PackageType.DDS
-                                ParentFileProperties.Index = 0
-                                ParentFileProperties.length = UncrunchedBytes.Length
-                                ParentFileProperties.StoredData = UncrunchedBytes
-                                'ParentFileProperties.Parent
-                            End If
+                            ParentFileProperties.FileType = PackageType.bin
                         End If
+                        'here we exit the sub so an empty file isn't crawled if the tree is being crawled
+                        Exit Sub
                     Else
-                        ParentFileProperties.FileType = PackageType.bin
+                        If My.Settings.ShowCAkIntermediates Then
+                            If IsNothing(ParentFileProperties.SubFiles) Then
+                                ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                            End If
+                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                           .Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds",
+                           .FullFilePath = ParentFileProperties.FullFilePath,
+                           .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                           .Index = 0,
+                           .length = UncrunchedBytes.Length,
+                           .StoredData = UncrunchedBytes,
+                           .FileType = PackageType.DDS,
+                           .Parent = ParentFileProperties}
+                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                        Else
+                            'Instead of making a new node we want to update the parent
+                            ParentFileProperties.Name = Path.GetFileNameWithoutExtension(ParentFileProperties.Name) & ".dds"
+                            'ParentFileProperties.FullFilePath
+                            'ParentFileProperties.VirtualFilePath
+                            ParentFileProperties.FileType = PackageType.DDS
+                            ParentFileProperties.Index = 0
+                            ParentFileProperties.length = UncrunchedBytes.Length
+                            ParentFileProperties.StoredData = UncrunchedBytes
+                            'ParentFileProperties.Parent
+                        End If
+                    End If
+                Else
+                    ParentFileProperties.FileType = PackageType.bin
                 End If
 
-#End Region
 
             Case Else
                 'This is a control measure to help against infinite select try to expand loops.
@@ -1264,51 +1291,101 @@ Public Class PackageInformation
         End If
     End Sub
 
-    Shared Function BuildCakSubNodes(ParentFile As ExtendedFileProperties, FullVirtualPath As String, Optional RemainingPath As String = "") As ExtendedFileProperties
-        If RemainingPath = "" Then
-            RemainingPath = FullVirtualPath
-        End If
-        'MessageBox.Show(RemainingPath)
-        If IsNothing(ParentFile.SubFiles) Then
-            ParentFile.SubFiles = New List(Of ExtendedFileProperties)
-        End If
-        If RemainingPath.Contains("/") Then
-            Dim ActiveFolder As String = RemainingPath.Substring(0, RemainingPath.IndexOf("/"))
-            If Not ParentFile.SubFiles.Count = 0 Then
-                For i As Integer = 0 To ParentFile.SubFiles.Count - 1
-                    If ParentFile.SubFiles(i).Name = ActiveFolder Then
-                        ParentFile.SubFiles(i) = BuildCakSubNodes(ParentFile.SubFiles(i), FullVirtualPath, RemainingPath.Substring(RemainingPath.IndexOf("/") + 1))
-                        Return ParentFile
-                    End If
-                Next
-            End If
-            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+    Shared Function BuildCakFileNode(ParentFile As ExtendedFileProperties, CompleteFile As PackageHandlers.CakFileHandler) As ExtendedFileProperties
+        Dim ActiveList As List(Of PackageHandlers.CakFileHandler.PackFileEntry) = CompleteFile.GetFileEntryList()
+        For i As Integer = 0 To ActiveList.Count - 1
+            Dim WorkingString As String = ActiveList(i).Name
+            Dim ActiveLoopFileProperties As ExtendedFileProperties = ParentFile
+            Do While WorkingString.Contains("/")
+                Dim ActiveFolder As String = WorkingString.Substring(0, WorkingString.IndexOf("/"))
+                If IsNothing(ActiveLoopFileProperties.SubFiles) Then
+                    ActiveLoopFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+                End If
+                If Not ActiveLoopFileProperties.SubFiles.Count = 0 Then
+                    For J As Integer = 0 To ActiveLoopFileProperties.SubFiles.Count - 1
+                        If ActiveLoopFileProperties.SubFiles(J).Name = ActiveFolder Then
+                            ActiveLoopFileProperties = ActiveLoopFileProperties.SubFiles(J)
+                            WorkingString = WorkingString.Substring(WorkingString.IndexOf("/") + 1)
+                            Continue Do
+                        End If
+                    Next
+                End If
+                'if the folder doesn't already exist.
+                Dim ContainedFolderProperties As ExtendedFileProperties = New ExtendedFileProperties With {
                 .Name = ActiveFolder,
                 .FullFilePath = ParentFile.FullFilePath,
-                .VirtualFilePath = FullVirtualPath,'Here we need to Retain the Full Path so it can be extracted with the tool
+                .VirtualFilePath = ActiveList(i).Name,'Here we need to Retain the Full Path so it can be extracted with the tool
                 .length = 0,
                 .Index = 0,
                 .StoredData = ParentFile.StoredData,
                 .FileType = PackageType.CakFolder,
                 .Parent = ParentFile}
-            'MessageBox.Show(ContainedFileProperties.Name)
-            ContainedFileProperties = BuildCakSubNodes(ContainedFileProperties, FullVirtualPath, RemainingPath.Substring(RemainingPath.IndexOf("/") + 1))
-            ParentFile.SubFiles.Add(ContainedFileProperties)
-            Return ParentFile
-        Else
+                ActiveLoopFileProperties.SubFiles.Add(ContainedFolderProperties)
+                ActiveLoopFileProperties = ContainedFolderProperties
+                WorkingString = WorkingString.Substring(WorkingString.IndexOf("/") + 1)
+            Loop
+            If IsNothing(ActiveLoopFileProperties.SubFiles) Then
+                ActiveLoopFileProperties.SubFiles = New List(Of ExtendedFileProperties)
+            End If
             Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
-                .Name = RemainingPath,
+                .Name = WorkingString,
                 .FullFilePath = ParentFile.FullFilePath,
-                .VirtualFilePath = FullVirtualPath,'Here we need to Retain the Full Path so it can be extracted with the tool
-                .length = 0,
-                .Index = 0,
+                .VirtualFilePath = ActiveList(i).Name,'Here we need to Retain the Full Path so it can be extracted with the tool
+                .length = ActiveList(i).Size,
+                .Index = ActiveList(i).Offset,
                 .StoredData = ParentFile.StoredData,
                 .FileType = PackageType.CakBaked,
                 .Parent = ParentFile}
-            ParentFile.SubFiles.Add(ContainedFileProperties)
-            Return ParentFile
-        End If
+            ActiveLoopFileProperties.SubFiles.Add(ContainedFileProperties)
+        Next
+        Return ParentFile
     End Function
+
+    'Shared Function BuildCakSubNodes(ParentFile As ExtendedFileProperties, FullVirtualPath As String, Optional RemainingPath As String = "") As ExtendedFileProperties
+    '    If RemainingPath = "" Then
+    '        RemainingPath = FullVirtualPath
+    '    End If
+    '    'MessageBox.Show(RemainingPath)
+    '    If IsNothing(ParentFile.SubFiles) Then
+    '        ParentFile.SubFiles = New List(Of ExtendedFileProperties)
+    '    End If
+    '    If RemainingPath.Contains("/") Then
+    '        Dim ActiveFolder As String = RemainingPath.Substring(0, RemainingPath.IndexOf("/"))
+    '        If Not ParentFile.SubFiles.Count = 0 Then
+    '            For i As Integer = 0 To ParentFile.SubFiles.Count - 1
+    '                If ParentFile.SubFiles(i).Name = ActiveFolder Then
+    '                    ParentFile.SubFiles(i) = BuildCakSubNodes(ParentFile.SubFiles(i), FullVirtualPath, RemainingPath.Substring(RemainingPath.IndexOf("/") + 1))
+    '                    Return ParentFile
+    '                End If
+    '            Next
+    '        End If
+    '        Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+    '            .Name = ActiveFolder,
+    '            .FullFilePath = ParentFile.FullFilePath,
+    '            .VirtualFilePath = FullVirtualPath,'Here we need to Retain the Full Path so it can be extracted with the tool
+    '            .length = 0,
+    '            .Index = 0,
+    '            .StoredData = ParentFile.StoredData,
+    '            .FileType = PackageType.CakFolder,
+    '            .Parent = ParentFile}
+    '        'MessageBox.Show(ContainedFileProperties.Name)
+    '        ContainedFileProperties = BuildCakSubNodes(ContainedFileProperties, FullVirtualPath, RemainingPath.Substring(RemainingPath.IndexOf("/") + 1))
+    '        ParentFile.SubFiles.Add(ContainedFileProperties)
+    '        Return ParentFile
+    '    Else
+    '        Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+    '            .Name = RemainingPath,
+    '            .FullFilePath = ParentFile.FullFilePath,
+    '            .VirtualFilePath = FullVirtualPath,'Here we need to Retain the Full Path so it can be extracted with the tool
+    '            .length = 0,
+    '            .Index = 0,
+    '            .StoredData = ParentFile.StoredData,
+    '            .FileType = PackageType.CakBaked,
+    '            .Parent = ParentFile}
+    '        ParentFile.SubFiles.Add(ContainedFileProperties)
+    '        Return ParentFile
+    '    End If
+    'End Function
 
 #End Region
 

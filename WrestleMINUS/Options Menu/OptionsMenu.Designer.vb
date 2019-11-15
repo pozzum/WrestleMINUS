@@ -94,6 +94,7 @@ Partial Class OptionsMenu
         Me.ButtonSelectZlib = New System.Windows.Forms.Button()
         Me.LabelOodle_6 = New System.Windows.Forms.Label()
         Me.LabelZlib = New System.Windows.Forms.Label()
+        Me.CheckBoxRebuildCak = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.TabPageExeTools.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -473,6 +474,7 @@ Partial Class OptionsMenu
         'TabPage2
         '
         Me.TabPage2.BackColor = System.Drawing.SystemColors.Control
+        Me.TabPage2.Controls.Add(Me.CheckBoxRebuildCak)
         Me.TabPage2.Controls.Add(Me.CheckBoxRecycleDeletedFiles)
         Me.TabPage2.Controls.Add(Me.CheckBoxLoadHome)
         Me.TabPage2.Controls.Add(Me.CheckBoxBackup)
@@ -817,6 +819,16 @@ Partial Class OptionsMenu
         Me.LabelZlib.TabIndex = 61
         Me.LabelZlib.Text = "Zlib DLL Loaded: True"
         '
+        'CheckBoxRebuildCak
+        '
+        Me.CheckBoxRebuildCak.AutoSize = True
+        Me.CheckBoxRebuildCak.Location = New System.Drawing.Point(8, 190)
+        Me.CheckBoxRebuildCak.Name = "CheckBoxRebuildCak"
+        Me.CheckBoxRebuildCak.Size = New System.Drawing.Size(109, 17)
+        Me.CheckBoxRebuildCak.TabIndex = 46
+        Me.CheckBoxRebuildCak.Text = "Rebuild CAk Files"
+        Me.CheckBoxRebuildCak.UseVisualStyleBackColor = True
+        '
         'OptionsMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -915,4 +927,5 @@ Partial Class OptionsMenu
     Friend WithEvents ButtonSelectZlib As Button
     Friend WithEvents LabelOodle_6 As Label
     Friend WithEvents LabelZlib As Label
+    Friend WithEvents CheckBoxRebuildCak As CheckBox
 End Class
