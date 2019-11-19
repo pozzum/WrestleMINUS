@@ -5,7 +5,9 @@ Namespace PackageHandlers
 
     Public Class CakFileHandler : Implements IDisposable
 
-        Enum PackFlags
+#Region "Specifying Classes"
+
+        Enum CakPackFlags
             Unknown = 0
             NonObfuscated = &H4000US
         End Enum
@@ -13,12 +15,8 @@ Namespace PackageHandlers
         Public Class BakedFileHeader
             Public Magic As UInteger
             Public Version As UShort
-            Public Flags As PackFlags
+            Public Flags As CakPackFlags
             Public Code As UInteger()
-
-            'Public Function CheckFlags(SentFlag As PackFlags) As Boolean
-            '    Return Not ((Flags And SentFlag) = 0)
-            'End Function
 
             Public Function FilesCount() As UInteger
                 Return Code(0)
@@ -97,15 +95,17 @@ Namespace PackageHandlers
             Sub Serialize(FileReader As BinaryReader, Hash As UInteger)
                 Magic = FileReader.ReadUInt32()
                 Version = FileReader.ReadUInt16()
-                Flags = CType(FileReader.ReadUInt16(), PackFlags)
+                Flags = CType(FileReader.ReadUInt16(), CakPackFlags)
                 Code = New UInteger(19) {}
                 For i As Integer = 0 To 19
                     Code(i) = FileReader.ReadUInt32()
                 Next
-                If Not Flags = PackFlags.NonObfuscated Then
+                If Not Flags = CakPackFlags.NonObfuscated Then
                     DeobfuscateHeader(Hash)
                 End If
             End Sub
+
+            'This can technically just get sent to deobfuscate block first....
 
             Sub DeobfuscateHeader(Hash As UInteger)
                 Code(0) = Code(0) Xor Hash
@@ -169,6 +169,8 @@ Namespace PackageHandlers
             Public Hash As ULong
         End Class
 
+#End Region
+
         Dim FileName As String
         Dim FileNameHash As UInteger
 
@@ -199,7 +201,7 @@ Namespace PackageHandlers
                 'Folder Hashes
                 ActiveReader.BaseStream.Position = PackFileHeader.FolderHashesOffset
                 FolderHashesBlock = ActiveReader.ReadBytes(PackFileHeader.FolderHashesSize)
-                If Not PackFileHeader.Flags = PackFlags.NonObfuscated Then
+                If Not PackFileHeader.Flags = CakPackFlags.NonObfuscated Then
                     'Making a temp Value allows inspection of the transition.
                     FolderHashesBlock = DeobfuscateBlock(FolderHashesBlock, FileNameHash)
                 End If
@@ -207,28 +209,28 @@ Namespace PackageHandlers
                 'Files Hashes
                 ActiveReader.BaseStream.Position = PackFileHeader.FileHashesOffset
                 FilesHashesBlock = ActiveReader.ReadBytes(PackFileHeader.FileHashesSize)
-                If Not PackFileHeader.Flags = PackFlags.NonObfuscated Then
+                If Not PackFileHeader.Flags = CakPackFlags.NonObfuscated Then
                     FilesHashesBlock = DeobfuscateBlock(FilesHashesBlock, FileNameHash)
                 End If
 
                 'Folders
                 ActiveReader.BaseStream.Position = PackFileHeader.FoldersOffset
                 FoldersBlock = ActiveReader.ReadBytes(PackFileHeader.FoldersSize)
-                If Not PackFileHeader.Flags = PackFlags.NonObfuscated Then
+                If Not PackFileHeader.Flags = CakPackFlags.NonObfuscated Then
                     FoldersBlock = DeobfuscateBlock(FoldersBlock, FileNameHash)
                 End If
 
                 'Files
                 ActiveReader.BaseStream.Position = PackFileHeader.FilesOffset
                 FilesBlock = ActiveReader.ReadBytes(PackFileHeader.FilesSize)
-                If Not PackFileHeader.Flags = PackFlags.NonObfuscated Then
+                If Not PackFileHeader.Flags = CakPackFlags.NonObfuscated Then
                     FilesBlock = DeobfuscateBlock(FilesBlock, FileNameHash)
                 End If
 
                 'Strings
                 ActiveReader.BaseStream.Position = PackFileHeader.StringsOffset
                 StringBlock = ActiveReader.ReadBytes(PackFileHeader.StringsSize)
-                If Not PackFileHeader.Flags = PackFlags.NonObfuscated Then
+                If Not PackFileHeader.Flags = CakPackFlags.NonObfuscated Then
                     StringBlock = DeobfuscateBlock(StringBlock, FileNameHash)
                 End If
 
@@ -299,6 +301,8 @@ Namespace PackageHandlers
             End Using
         End Sub
 
+#Region "Block Manipulation"
+
         Function DeobfuscateBlock(IncomingBlock As Byte(), Hash As UInteger) As Byte()
             Dim OutgoingBlock As Byte() = New Byte(IncomingBlock.Length - 1) {}
             Dim ActiveOffset As UInteger = 0
@@ -330,6 +334,40 @@ Namespace PackageHandlers
             End If
             Return OutgoingBlock
         End Function
+
+        Function ObfuscateBlock(IncomingBlock As Byte(), Hash As UInteger) As Byte()
+            Dim OutgoingBlock As Byte() = New Byte(IncomingBlock.Length - 1) {}
+            Dim ActiveOffset As UInteger = 0
+            Dim ActiveHash As UInteger = Hash
+            If Math.Floor(IncomingBlock.Length / 8) > 0 Then
+                For i As Integer = 0 To Math.Floor(IncomingBlock.Length / 8) - 1
+                    Dim FirstUint As UInteger = BitConverter.ToUInt32(IncomingBlock, i * 8)
+                    FirstUint = FirstUint Xor ActiveHash
+                    ActiveHash = FirstUint Xor ActiveHash
+                    Array.Copy(BitConverter.GetBytes(FirstUint), 0, OutgoingBlock, i * 8, 4)
+                    ActiveOffset += 4
+                    'duplicating
+                    Dim SecondUint As UInteger = BitConverter.ToUInt32(IncomingBlock, i * 8 + 4)
+                    SecondUint = SecondUint Xor ActiveHash
+                    ActiveHash = SecondUint Xor ActiveHash
+                    Array.Copy(BitConverter.GetBytes(SecondUint), 0, OutgoingBlock, i * 8 + 4, 4)
+                    ActiveOffset += 4
+                Next
+            End If
+            If Math.Floor(IncomingBlock.Length Mod 8) > 0 Then
+                'GeneralTools.BreakFunction()
+                'ActiveOffset = IncomingBlock.Length - ((IncomingBlock.Length Mod 8) * 8)
+                For i As Integer = 0 To (IncomingBlock.Length Mod 8) - 1
+                    Dim TempByte As Byte = IncomingBlock(ActiveOffset + i)
+                    TempByte = BitConverter.GetBytes(CULng(TempByte Xor ActiveHash))(0)
+                    ActiveHash = BitConverter.GetBytes(CULng(TempByte Xor ActiveHash))(0)
+                    OutgoingBlock(ActiveOffset + i) = TempByte
+                Next
+            End If
+            Return OutgoingBlock
+        End Function
+
+#End Region
 
 #Region "External Commands"
 
@@ -386,7 +424,7 @@ Namespace PackageHandlers
             Using ActiveReader As BinaryReader = New BinaryReader(IndividualFileStream, Encoding.Default, False)
                 ActiveReader.BaseStream.Position = RequestedFileEntry.Offset
                 Dim BufferBlock As Byte() = ActiveReader.ReadBytes(CInt(RequestedFileEntry.Size))
-                If Not CompleteFileHandle.PackFileHeader.Flags = PackFlags.NonObfuscated Then
+                If Not CompleteFileHandle.PackFileHeader.Flags = CakPackFlags.NonObfuscated Then
                     BufferBlock = DeobfuscateBlock(BufferBlock, CompleteFileHandle.FileNameHash)
                 End If
                 ReturnedBytes = BufferBlock
@@ -400,7 +438,65 @@ Namespace PackageHandlers
             Using CleanWriter As BinaryWriter = New BinaryWriter(FileWritten.OpenWrite())
                 CleanWriter.Write(CompleteHandler.PackFileHeader.Magic)
                 CleanWriter.Write(CompleteHandler.PackFileHeader.Version)
-                CleanWriter.Write(CUShort(PackFlags.NonObfuscated))
+                CleanWriter.Write(CUShort(CakPackFlags.NonObfuscated))
+                For i As Integer = 0 To (CompleteHandler.PackFileHeader.Code.Length - 1)
+                    CleanWriter.Write(CompleteHandler.PackFileHeader.Code(i))
+                Next
+                If CleanWriter.BaseStream.Length() >= CompleteHandler.PackFileHeader.FolderHashesOffset Then
+                    CleanWriter.BaseStream.Position = CompleteHandler.PackFileHeader.FolderHashesOffset
+                    CleanWriter.Write(CompleteHandler.FolderHashesBlock)
+                    'Else
+                    '    Return False
+                End If
+                If CleanWriter.BaseStream.Length() >= CompleteHandler.PackFileHeader.FileHashesOffset Then
+                    CleanWriter.BaseStream.Position = CompleteHandler.PackFileHeader.FileHashesOffset
+                    CleanWriter.Write(CompleteHandler.FilesHashesBlock)
+                    'Else
+                    '    Return False
+                End If
+                If CleanWriter.BaseStream.Length() >= CompleteHandler.PackFileHeader.FilesOffset Then
+                    CleanWriter.BaseStream.Position = CompleteHandler.PackFileHeader.FilesOffset
+                    CleanWriter.Write(CompleteHandler.FilesBlock)
+                    'Else
+                    '    Return False
+                End If
+                If CleanWriter.BaseStream.Length() >= CompleteHandler.PackFileHeader.FoldersOffset Then
+                    CleanWriter.BaseStream.Position = CompleteHandler.PackFileHeader.FoldersOffset
+                    CleanWriter.Write(CompleteHandler.FoldersBlock)
+                    'Else
+                    '    Return False
+                End If
+                If CleanWriter.BaseStream.Length() >= CompleteHandler.PackFileHeader.StringsOffset Then
+                    CleanWriter.BaseStream.Position = CompleteHandler.PackFileHeader.StringsOffset
+                    CleanWriter.Write(CompleteHandler.StringBlock)
+                    'Else
+                    '    Return False
+                End If
+                'Header Write Complete.. Now to write Files
+
+                For i As Integer = 0 To Files.Count - 1
+                    If Files(i).Offset > CleanWriter.BaseStream.Length Then
+                        CleanWriter.Seek(0, SeekOrigin.End)
+                        For J As Integer = 0 To Files(i).Offset - CleanWriter.BaseStream.Length
+                            CleanWriter.Write(New Byte() {0})
+                        Next
+                    Else
+                        CleanWriter.BaseStream.Position = Files(i).Offset
+                        CleanWriter.Write(GetFileEntryBytes(CompleteHandler, Files(i), New FileStream(File.FullName, FileMode.Open, FileAccess.Read)))
+                    End If
+                Next
+
+            End Using
+            Return True
+        End Function
+
+        Function BuildCodedFromHandler(SaveLocation As String, CompleteHandler As CakFileHandler, ReadFromLocation As String) As Boolean
+            Dim File As FileInfo = New FileInfo(ReadFromLocation)
+            Dim FileWritten As FileInfo = New FileInfo(SaveLocation)
+            Using CleanWriter As BinaryWriter = New BinaryWriter(FileWritten.OpenWrite())
+                CleanWriter.Write(CompleteHandler.PackFileHeader.Magic)
+                CleanWriter.Write(CompleteHandler.PackFileHeader.Version)
+                CleanWriter.Write(CUShort(CakPackFlags.NonObfuscated))
                 For i As Integer = 0 To (CompleteHandler.PackFileHeader.Code.Length - 1)
                     CleanWriter.Write(CompleteHandler.PackFileHeader.Code(i))
                 Next

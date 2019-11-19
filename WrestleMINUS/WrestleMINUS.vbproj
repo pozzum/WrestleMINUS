@@ -120,7 +120,7 @@
   <ItemGroup>
     <Compile Include="Modules-Handlers\ApplicationHandlers.vb" />
     <Compile Include="DefBuilder.vb" />
-    <Compile Include="FileClassTemplate.vb" />
+    <Compile Include="Assets\FileClassTemplate.vb" />
     <Compile Include="General Code\GeneralTools.vb" />
     <Compile Include="Modules-Handlers\File_FolderHandlers.vb" />
     <Compile Include="Modules-Handlers\HashGenerator.vb" />

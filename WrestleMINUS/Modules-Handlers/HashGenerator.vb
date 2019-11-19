@@ -59,4 +59,33 @@ Module HashGenerator
         Return HexValue.ToUpper
     End Function
 
+    Function GetCrc32Hash(ByVal TestedArray As Byte()) As UInt32
+        Dim crc As UInteger = &HFFFFFFFFUI
+        For i As Integer = 0 To TestedArray.Length - 1
+            Dim index As Byte = CByte(((crc) And &HFF) Xor TestedArray(i))
+            crc = CUInt((crc >> 8) Xor CRC32Table(index))
+        Next
+        Return Not crc
+    End Function
+
+    Dim CRC32Table As UInt32()
+
+    Function SetCrc32Table() As Boolean
+        Dim poly As UInteger = &HEDB88320UI
+        CRC32Table = New UInt32(255) {}
+        Dim Temp As UInt32 = 0
+        For i As UInt32 = 0 To CRC32Table.Length - 1
+            Temp = i
+            For j As Integer = 8 To 1 Step -1
+                If (Temp And 1) = 1 Then
+                    Temp = CUInt((Temp >> 1) Xor poly)
+                Else
+                    Temp >>= 1
+                End If
+            Next
+            CRC32Table(i) = Temp
+        Next
+        Return True
+    End Function
+
 End Module

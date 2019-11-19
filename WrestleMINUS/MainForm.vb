@@ -2089,7 +2089,11 @@ Public Class MainForm
             Dim TempGridRow As DataGridViewRow = CloneRow.Clone()
             Dim StringRef As UInt32 = BitConverter.ToUInt32(ShowBytes, current_poition)
             TempGridRow.Cells(0).Value = Hex(StringRef) ' Dim NameRef As String =
-            TempGridRow.Cells(1).Value = StringReferences(StringRef) 'Name as string =
+            If StringRead Then
+                TempGridRow.Cells(1).Value = StringReferences(StringRef) 'Name as string =
+            Else
+                TempGridRow.Cells(1).Value = "" 'Name as string =
+            End If
             TempGridRow.Cells(2).Value = BitConverter.ToUInt16(ShowBytes, current_poition + 4) 'Dim SelectNum As int16 =
             TempGridRow.Cells(3).Value = BitConverter.ToUInt16(ShowBytes, current_poition + 6) 'Dim SelectNumSecond As int16 =
             TempGridRow.Cells(4).Value = BitConverter.ToUInt16(ShowBytes, current_poition + 8) 'Dim A1 As int16 =
@@ -3338,52 +3342,92 @@ Public Class MainForm
             TempGridRow.Cells(0).Value = WrestlerPacs(i)
             TempGridRow.Cells(1).Value = AttireCount(i)
             TempGridRow.Cells(2).Value = Hex(AttireNames(i * 10 + 0))
-            TempGridRow.Cells(3).Value = StringReferences(AttireNames(i * 10 + 0))
+            If StringRead Then
+                TempGridRow.Cells(3).Value = StringReferences(AttireNames(i * 10 + 0))
+            Else
+                TempGridRow.Cells(3).Value = ""
+            End If
             TempGridRow.Cells(4).Value = AttireEnabled(i * 10 + 0)
             TempGridRow.Cells(5).Value = AttireManager(i * 10 + 0)
             TempGridRow.Cells(6).Value = AttireUnlockNumber(i * 10 + 0)
             TempGridRow.Cells(7).Value = Hex(AttireNames(i * 10 + 1))
-            TempGridRow.Cells(8).Value = StringReferences(AttireNames(i * 10 + 1))
+            If StringRead Then
+                TempGridRow.Cells(8).Value = StringReferences(AttireNames(i * 10 + 1))
+            Else
+                TempGridRow.Cells(8).Value = ""
+            End If
             TempGridRow.Cells(9).Value = AttireEnabled(i * 10 + 1)
             TempGridRow.Cells(10).Value = AttireManager(i * 10 + 1)
             TempGridRow.Cells(11).Value = AttireUnlockNumber(i * 10 + 1)
             TempGridRow.Cells(12).Value = Hex(AttireNames(i * 10 + 2))
-            TempGridRow.Cells(13).Value = StringReferences(AttireNames(i * 10 + 2))
+            If StringRead Then
+                TempGridRow.Cells(13).Value = StringReferences(AttireNames(i * 10 + 2))
+            Else
+                TempGridRow.Cells(8).Value = ""
+            End If
             TempGridRow.Cells(14).Value = AttireEnabled(i * 10 + 2)
             TempGridRow.Cells(15).Value = AttireManager(i * 10 + 2)
             TempGridRow.Cells(16).Value = AttireUnlockNumber(i * 10 + 2)
             TempGridRow.Cells(17).Value = Hex(AttireNames(i * 10 + 3))
-            TempGridRow.Cells(18).Value = StringReferences(AttireNames(i * 10 + 3))
+            If StringRead Then
+                TempGridRow.Cells(18).Value = StringReferences(AttireNames(i * 10 + 3))
+            Else
+                TempGridRow.Cells(8).Value = ""
+            End If
             TempGridRow.Cells(19).Value = AttireEnabled(i * 10 + 3)
             TempGridRow.Cells(20).Value = AttireManager(i * 10 + 3)
             TempGridRow.Cells(21).Value = AttireUnlockNumber(i * 10 + 3)
             TempGridRow.Cells(22).Value = Hex(AttireNames(i * 10 + 4))
-            TempGridRow.Cells(23).Value = StringReferences(AttireNames(i * 10 + 4))
+            If StringRead Then
+                TempGridRow.Cells(23).Value = StringReferences(AttireNames(i * 10 + 4))
+            Else
+                TempGridRow.Cells(8).Value = ""
+            End If
             TempGridRow.Cells(24).Value = AttireEnabled(i * 10 + 4)
             TempGridRow.Cells(25).Value = AttireManager(i * 10 + 4)
             TempGridRow.Cells(26).Value = AttireUnlockNumber(i * 10 + 4)
             TempGridRow.Cells(27).Value = Hex(AttireNames(i * 10 + 5))
-            TempGridRow.Cells(28).Value = StringReferences(AttireNames(i * 10 + 5))
+            If StringRead Then
+                TempGridRow.Cells(28).Value = StringReferences(AttireNames(i * 10 + 5))
+            Else
+                TempGridRow.Cells(8).Value = ""
+            End If
             TempGridRow.Cells(29).Value = AttireEnabled(i * 10 + 5)
             TempGridRow.Cells(30).Value = AttireManager(i * 10 + 5)
             TempGridRow.Cells(31).Value = AttireUnlockNumber(i * 10 + 5)
             TempGridRow.Cells(32).Value = Hex(AttireNames(i * 10 + 6))
-            TempGridRow.Cells(33).Value = StringReferences(AttireNames(i * 10 + 6))
+            If StringRead Then
+                TempGridRow.Cells(33).Value = StringReferences(AttireNames(i * 10 + 6))
+            Else
+                TempGridRow.Cells(8).Value = ""
+            End If
             TempGridRow.Cells(34).Value = AttireEnabled(i * 10 + 6)
             TempGridRow.Cells(35).Value = AttireManager(i * 10 + 6)
             TempGridRow.Cells(36).Value = AttireUnlockNumber(i * 10 + 6)
             TempGridRow.Cells(37).Value = Hex(AttireNames(i * 10 + 7))
-            TempGridRow.Cells(38).Value = StringReferences(AttireNames(i * 10 + 7))
+            If StringRead Then
+                TempGridRow.Cells(38).Value = StringReferences(AttireNames(i * 10 + 7))
+            Else
+                TempGridRow.Cells(8).Value = ""
+            End If
             TempGridRow.Cells(39).Value = AttireEnabled(i * 10 + 7)
             TempGridRow.Cells(40).Value = AttireManager(i * 10 + 7)
             TempGridRow.Cells(41).Value = AttireUnlockNumber(i * 10 + 7)
             TempGridRow.Cells(42).Value = Hex(AttireNames(i * 10 + 8))
-            TempGridRow.Cells(43).Value = StringReferences(AttireNames(i * 10 + 8))
+            If StringRead Then
+                TempGridRow.Cells(43).Value = StringReferences(AttireNames(i * 10 + 8))
+            Else
+                TempGridRow.Cells(8).Value = ""
+            End If
             TempGridRow.Cells(44).Value = AttireEnabled(i * 10 + 8)
             TempGridRow.Cells(45).Value = AttireManager(i * 10 + 8)
             TempGridRow.Cells(46).Value = AttireUnlockNumber(i * 10 + 8)
             TempGridRow.Cells(47).Value = Hex(AttireNames(i * 10 + 9))
-            TempGridRow.Cells(48).Value = StringReferences(AttireNames(i * 10 + 9))
+            If StringRead Then
+                TempGridRow.Cells(48).Value = StringReferences(AttireNames(i * 10 + 9))
+            Else
+                TempGridRow.Cells(8).Value = ""
+            End If
             TempGridRow.Cells(49).Value = AttireEnabled(i * 10 + 9)
             TempGridRow.Cells(50).Value = AttireManager(i * 10 + 9)
             TempGridRow.Cells(51).Value = AttireUnlockNumber(i * 10 + 9)
@@ -3418,12 +3462,16 @@ Public Class MainForm
         ElseIf ((e.ColumnIndex - 2) Mod 5) = 0 Then 'Attire Name
             If Not HexaDecimalHandlers.HexCheck(MyCell.Value) Then
                 MyCell.Value = OldValue
-            ElseIf StringReferences(CUInt("&H" & MyCell.Value)) > UInt32.MaxValue Then
+            ElseIf CUInt("&H" & MyCell.Value) > UInt32.MaxValue Then
                 MyCell.Value = OldValue
             Else
-                DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = StringReferences(CUInt("&H" & MyCell.Value))
+                If StringReferences.ContainsKey(CUInt("&H" & MyCell.Value)) Then
+                    DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = StringReferences(CUInt("&H" & MyCell.Value))
+                Else
+                    DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = ""
+                End If
             End If
-        ElseIf ((e.ColumnIndex - 2) Mod 5) = 1 Then 'Attire String Does Nothing
+                ElseIf ((e.ColumnIndex - 2) Mod 5) = 1 Then 'Attire String Does Nothing
         ElseIf ((e.ColumnIndex - 2) Mod 5) = 2 Then 'Enabled Changed
             If MyCell.Value Then 'if enabled checked
                 DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = False 'unchecks manager
@@ -3446,7 +3494,11 @@ Public Class MainForm
             NewRow.Cells(1).Value = 10
             For i As Integer = 0 To 9
                 NewRow.Cells(2 + i * 5).Value = Hex(&H50A2 + i)
-                NewRow.Cells(2 + i * 5 + 1).Value = StringReferences(&H50A2 + i)
+                If StringRead Then
+                    NewRow.Cells(2 + i * 5 + 1).Value = StringReferences(&H50A2 + i)
+                Else
+                    NewRow.Cells(2 + i * 5 + 1).Value = ""
+                End If
                 NewRow.Cells(2 + i * 5 + 2).Value = True
                 NewRow.Cells(2 + i * 5 + 3).Value = False
                 NewRow.Cells(2 + i * 5 + 4).Value = UInt32.MaxValue
@@ -4943,7 +4995,11 @@ Public Class MainForm
             ElseIf CUInt("&H" & MyCell.Value) > UInt32.MaxValue Then
                 MyCell.Value = OldValue
             Else
-                DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = StringReferences(CUInt("&H" & MyCell.Value))
+                If StringReferences.ContainsKey(CUInt("&H" & MyCell.Value)) Then
+                    DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = StringReferences(CUInt("&H" & MyCell.Value))
+                Else
+                    DataGridTitleView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = ""
+                End If
             End If
         ElseIf e.ColumnIndex > 8 AndAlso e.ColumnIndex < 17 Then
             'Wrestler reference Number Make sure between 0 & 1024 inclusive
