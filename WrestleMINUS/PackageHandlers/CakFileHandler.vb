@@ -161,7 +161,7 @@ Namespace PackageHandlers
 
         Public Class PackFileEntry
             Public Name As String
-            Public Unk1 As UInteger
+            Public FolderIndex As UInteger
             Public Crc As UInteger
             Public Size As UInteger
             Public Offset As ULong
@@ -272,7 +272,7 @@ Namespace PackageHandlers
                     For i As UInteger = 0 To PackFileHeader.FilesCount - 1
                         Dim StringOffset As UInteger = FilesReader.ReadUInt32()
                         Dim CurrentEntry As PackFileEntry = New PackFileEntry With {
-                           .Unk1 = FilesReader.ReadUInt32(),
+                           .FolderIndex = FilesReader.ReadUInt32(),
                            .Crc = FilesReader.ReadUInt32(),
                            .Size = FilesReader.ReadUInt32(),
                            .Offset = FilesReader.ReadInt64()}
@@ -375,24 +375,37 @@ Namespace PackageHandlers
             Dim ReturnedList As List(Of String) = New List(Of String)
             If Not IsNothing(Files) AndAlso Files.Count > 0 Then
                 For i As Integer = 0 To Files.Count - 1
-                    ReturnedList.Add(Files(i).Name)
+                    ReturnedList.Add(Files(i).Name & vbTab & Files(i).Type)
                 Next
             End If
             Return ReturnedList
         End Function
 
-        Function GetFileEntryFromString(TestedString As String) As PackFileEntry
+        Function GetTypeStringList() As List(Of String)
+            Dim ReturnedList As List(Of String) = New List(Of String)
             If Not IsNothing(Files) AndAlso Files.Count > 0 Then
                 For i As Integer = 0 To Files.Count - 1
-                    If Files(i).Name = TestedString Then
-                        Return Files(i)
+                    If Not ReturnedList.Contains(Files(i).Type) Then
+                        ReturnedList.Add(Files(i).Type)
                     End If
                 Next
             End If
-            Return Nothing
+            Return ReturnedList
         End Function
 
         Function GetFileEntryList() As List(Of PackFileEntry)
+            Return Files
+        End Function
+
+        Function GetHeaderInformation() As BakedFileHeader
+            Return PackFileHeader
+        End Function
+
+        Function GetFolderInformation() As List(Of PackFolderEntry)
+            Return Folders
+        End Function
+
+        Function GetFileInformation() As List(Of PackFileEntry)
             Return Files
         End Function
 
@@ -419,17 +432,48 @@ Namespace PackageHandlers
             Return ReturnedBytes
         End Function
 
-        Function GetFileEntryBytes(CompleteFileHandle As CakFileHandler, RequestedFileEntry As PackFileEntry, IndividualFileStream As FileStream) As Byte()
-            Dim ReturnedBytes As Byte() = New Byte() {}
-            Using ActiveReader As BinaryReader = New BinaryReader(IndividualFileStream, Encoding.Default, False)
-                ActiveReader.BaseStream.Position = RequestedFileEntry.Offset
-                Dim BufferBlock As Byte() = ActiveReader.ReadBytes(CInt(RequestedFileEntry.Size))
-                If Not CompleteFileHandle.PackFileHeader.Flags = CakPackFlags.NonObfuscated Then
-                    BufferBlock = DeobfuscateBlock(BufferBlock, CompleteFileHandle.FileNameHash)
-                End If
-                ReturnedBytes = BufferBlock
-            End Using
-            Return ReturnedBytes
+        Function GetFilePackageType(filename As String, VirtualPath As String) As PackageType
+            Dim FileType As String = GetFileEntryTypePlainText(filename, VirtualPath)
+            Select Case FileType
+                Case "ACTS"
+                    Return PackageType.acts
+                Case "DTAB"
+                    Return PackageType.tbl
+                Case "EVD!"
+                    Return PackageType.evd
+                Case "FTPK"
+                    Return PackageType.fntpck
+                Case "INST"
+                    Return PackageType.inst
+                Case "JSFB"
+                    Return PackageType.jsfb
+                Case "LITE"
+                    Return PackageType.lightparam
+                Case "MDL!"
+                    Return PackageType.mdl
+                Case "MKRS"
+                    Return PackageType.MKRS
+                Case "MPRM"
+                    Return PackageType.mprms
+                Case "MSKI"
+                    Return PackageType.mskinfo
+                Case "MTLs"
+                    Return PackageType.mtls
+                Case "PRTL"
+                    Return PackageType.PRTL
+                Case "TEX!"
+                    Return PackageType.tex
+                Case "TEXT"
+                    Return PackageType.txt
+                Case "XLOC"
+                    Return PackageType.sdb
+                Case "YCL!"
+                    Return PackageType.ycl
+                Case "YSH!"
+                    Return PackageType.ysh
+                Case Else
+                    Return PackageType.Unchecked
+            End Select
         End Function
 
         Function BuildPlainFromHandler(SaveLocation As String, CompleteHandler As CakFileHandler, ReadFromLocation As String) As Boolean
@@ -488,6 +532,49 @@ Namespace PackageHandlers
 
             End Using
             Return True
+        End Function
+
+#End Region
+
+#Region "Support Commands"
+
+        Function GetFileEntryFromString(TestedString As String) As PackFileEntry
+            If Not IsNothing(Files) AndAlso Files.Count > 0 Then
+                For i As Integer = 0 To Files.Count - 1
+                    If Files(i).Name = TestedString Then
+                        Return Files(i)
+                    End If
+                Next
+            End If
+            Return Nothing
+        End Function
+
+        Function GetFileEntryTypePlainText(filename As String, VirtualPath As String)
+            Dim FileType As String = Nothing
+            Dim File As FileInfo = New FileInfo(filename)
+            Dim TempFileHandler As CakFileHandler = New CakFileHandler
+            Using TempFileStream As FileStream = New FileStream(File.FullName, FileMode.Open, FileAccess.Read)
+                TempFileHandler.Initialize(TempFileStream, File.Name)
+            End Using
+            Dim TestedPackEntry As PackFileEntry = TempFileHandler.GetFileEntryFromString(VirtualPath)
+            If Not IsNothing(TestedPackEntry) Then
+                FileType = TestedPackEntry.Type
+            End If
+            Return FileType
+        End Function
+
+
+        Function GetFileEntryBytes(CompleteFileHandle As CakFileHandler, RequestedFileEntry As PackFileEntry, IndividualFileStream As FileStream) As Byte()
+            Dim ReturnedBytes As Byte() = New Byte() {}
+            Using ActiveReader As BinaryReader = New BinaryReader(IndividualFileStream, Encoding.Default, False)
+                ActiveReader.BaseStream.Position = RequestedFileEntry.Offset
+                Dim BufferBlock As Byte() = ActiveReader.ReadBytes(CInt(RequestedFileEntry.Size))
+                If Not CompleteFileHandle.PackFileHeader.Flags = CakPackFlags.NonObfuscated Then
+                    BufferBlock = DeobfuscateBlock(BufferBlock, CompleteFileHandle.FileNameHash)
+                End If
+                ReturnedBytes = BufferBlock
+            End Using
+            Return ReturnedBytes
         End Function
 
         Function BuildCodedFromHandler(SaveLocation As String, CompleteHandler As CakFileHandler, ReadFromLocation As String) As Boolean

@@ -24,13 +24,14 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle29 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle30 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle32 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStripMainForm = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SelectNewHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -58,7 +59,7 @@ Partial Class MainForm
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.MenuStripTreeView = New System.Windows.Forms.MenuStrip()
         Me.CurrentViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.MainMenuTabControl = New System.Windows.Forms.TabControl()
         Me.HexView = New System.Windows.Forms.TabPage()
         Me.Hex_Selected = New System.Windows.Forms.RichTextBox()
         Me.MenuStripHexView = New System.Windows.Forms.MenuStrip()
@@ -609,14 +610,41 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SelectNewHomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CakFileView = New System.Windows.Forms.TabPage()
+        Me.MenuStripCAkView = New System.Windows.Forms.MenuStrip()
+        Me.CAkViewTabControl = New System.Windows.Forms.TabControl()
+        Me.CAkHeaderTabPage = New System.Windows.Forms.TabPage()
+        Me.CAkFolderTabPage = New System.Windows.Forms.TabPage()
+        Me.CAkFilesTabPage = New System.Windows.Forms.TabPage()
+        Me.DataGridCAkHeaderView = New System.Windows.Forms.DataGridView()
+        Me.DataGridCAkFolderView = New System.Windows.Forms.DataGridView()
+        Me.DataGridCAkFilesView = New System.Windows.Forms.DataGridView()
+        Me.CAkHeaderPartColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkHeaderOffsetColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkHeaderSizeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkHeaderCRCColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkHeaderCountColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFolderIndexColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFolderNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFolderUnkColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFolderHashColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFolderFolderCountColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFolderFileCountColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFileIndexColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFileNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFileUnkColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFileHashColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFileOffsetColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFileSizeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFileCrcColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CAkFileTypeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStripMainForm.SuspendLayout()
         CType(Me.SplitFileMenuContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitFileMenuContainer.Panel1.SuspendLayout()
         Me.SplitFileMenuContainer.Panel2.SuspendLayout()
         Me.SplitFileMenuContainer.SuspendLayout()
         Me.MenuStripTreeView.SuspendLayout()
-        Me.TabControl1.SuspendLayout()
+        Me.MainMenuTabControl.SuspendLayout()
         Me.HexView.SuspendLayout()
         Me.MenuStripHexView.SuspendLayout()
         Me.TextView.SuspendLayout()
@@ -697,6 +725,14 @@ Partial Class MainForm
         CType(Me.DataGridArcView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStripPictureView.SuspendLayout()
         Me.TreeViewContext.SuspendLayout()
+        Me.CakFileView.SuspendLayout()
+        Me.CAkViewTabControl.SuspendLayout()
+        Me.CAkHeaderTabPage.SuspendLayout()
+        Me.CAkFolderTabPage.SuspendLayout()
+        Me.CAkFilesTabPage.SuspendLayout()
+        CType(Me.DataGridCAkHeaderView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridCAkFolderView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridCAkFilesView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStripMainForm
@@ -725,6 +761,12 @@ Partial Class MainForm
         Me.LoadHomeToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.H), System.Windows.Forms.Keys)
         Me.LoadHomeToolStripMenuItem.Size = New System.Drawing.Size(211, 22)
         Me.LoadHomeToolStripMenuItem.Text = "&Load Home"
+        '
+        'SelectNewHomeToolStripMenuItem
+        '
+        Me.SelectNewHomeToolStripMenuItem.Name = "SelectNewHomeToolStripMenuItem"
+        Me.SelectNewHomeToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.SelectNewHomeToolStripMenuItem.Text = "Select New Home"
         '
         'OpenToolStripMenuItem
         '
@@ -877,7 +919,7 @@ Partial Class MainForm
         '
         'SplitFileMenuContainer.Panel2
         '
-        Me.SplitFileMenuContainer.Panel2.Controls.Add(Me.TabControl1)
+        Me.SplitFileMenuContainer.Panel2.Controls.Add(Me.MainMenuTabControl)
         Me.SplitFileMenuContainer.Size = New System.Drawing.Size(1484, 437)
         Me.SplitFileMenuContainer.SplitterDistance = 253
         Me.SplitFileMenuContainer.TabIndex = 1
@@ -951,34 +993,35 @@ Partial Class MainForm
         Me.CurrentViewToolStripMenuItem.Text = "Current View:"
         Me.CurrentViewToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.TopLeft
         '
-        'TabControl1
+        'MainMenuTabControl
         '
-        Me.TabControl1.Controls.Add(Me.HexView)
-        Me.TabControl1.Controls.Add(Me.TextView)
-        Me.TabControl1.Controls.Add(Me.StringView)
-        Me.TabControl1.Controls.Add(Me.MiscView)
-        Me.TabControl1.Controls.Add(Me.ShowView)
-        Me.TabControl1.Controls.Add(Me.NIBJView)
-        Me.TabControl1.Controls.Add(Me.PictureView)
-        Me.TabControl1.Controls.Add(Me.ObjectView)
-        Me.TabControl1.Controls.Add(Me.AttireView)
-        Me.TabControl1.Controls.Add(Me.MuscleView)
-        Me.TabControl1.Controls.Add(Me.MaskView)
-        Me.TabControl1.Controls.Add(Me.ObjArrayView)
-        Me.TabControl1.Controls.Add(Me.AssetView)
-        Me.TabControl1.Controls.Add(Me.TitleView)
-        Me.TabControl1.Controls.Add(Me.SoundView)
-        Me.TabControl1.Controls.Add(Me.MenuItemView)
-        Me.TabControl1.Controls.Add(Me.AnimationView)
-        Me.TabControl1.Controls.Add(Me.Pof0View)
-        Me.TabControl1.Controls.Add(Me.WeaponPositionView)
-        Me.TabControl1.Controls.Add(Me.ArcView)
-        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TabControl1.Location = New System.Drawing.Point(0, 0)
-        Me.TabControl1.Name = "TabControl1"
-        Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1227, 437)
-        Me.TabControl1.TabIndex = 1
+        Me.MainMenuTabControl.Controls.Add(Me.HexView)
+        Me.MainMenuTabControl.Controls.Add(Me.TextView)
+        Me.MainMenuTabControl.Controls.Add(Me.StringView)
+        Me.MainMenuTabControl.Controls.Add(Me.MiscView)
+        Me.MainMenuTabControl.Controls.Add(Me.ShowView)
+        Me.MainMenuTabControl.Controls.Add(Me.NIBJView)
+        Me.MainMenuTabControl.Controls.Add(Me.PictureView)
+        Me.MainMenuTabControl.Controls.Add(Me.ObjectView)
+        Me.MainMenuTabControl.Controls.Add(Me.AttireView)
+        Me.MainMenuTabControl.Controls.Add(Me.MuscleView)
+        Me.MainMenuTabControl.Controls.Add(Me.MaskView)
+        Me.MainMenuTabControl.Controls.Add(Me.ObjArrayView)
+        Me.MainMenuTabControl.Controls.Add(Me.AssetView)
+        Me.MainMenuTabControl.Controls.Add(Me.TitleView)
+        Me.MainMenuTabControl.Controls.Add(Me.SoundView)
+        Me.MainMenuTabControl.Controls.Add(Me.MenuItemView)
+        Me.MainMenuTabControl.Controls.Add(Me.AnimationView)
+        Me.MainMenuTabControl.Controls.Add(Me.Pof0View)
+        Me.MainMenuTabControl.Controls.Add(Me.WeaponPositionView)
+        Me.MainMenuTabControl.Controls.Add(Me.ArcView)
+        Me.MainMenuTabControl.Controls.Add(Me.CakFileView)
+        Me.MainMenuTabControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.MainMenuTabControl.Location = New System.Drawing.Point(0, 0)
+        Me.MainMenuTabControl.Name = "MainMenuTabControl"
+        Me.MainMenuTabControl.SelectedIndex = 0
+        Me.MainMenuTabControl.Size = New System.Drawing.Size(1227, 437)
+        Me.MainMenuTabControl.TabIndex = 1
         '
         'HexView
         '
@@ -3309,9 +3352,9 @@ Partial Class MainForm
         '
         'YobjArryIndex
         '
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle29.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle29.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.YobjArryIndex.DefaultCellStyle = DataGridViewCellStyle29
         Me.YobjArryIndex.HeaderText = "Index"
         Me.YobjArryIndex.Name = "YobjArryIndex"
         Me.YobjArryIndex.ReadOnly = True
@@ -3319,9 +3362,9 @@ Partial Class MainForm
         '
         'ObjArrayParent
         '
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle30.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle30.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ObjArrayParent.DefaultCellStyle = DataGridViewCellStyle30
         Me.ObjArrayParent.HeaderText = "Parent"
         Me.ObjArrayParent.MinimumWidth = 100
         Me.ObjArrayParent.Name = "ObjArrayParent"
@@ -3392,9 +3435,9 @@ Partial Class MainForm
         '
         'ContainedYobjArray
         '
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle31.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle31.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ContainedYobjArray.DefaultCellStyle = DataGridViewCellStyle31
         Me.ContainedYobjArray.HeaderText = "Objects"
         Me.ContainedYobjArray.Name = "ContainedYobjArray"
         Me.ContainedYobjArray.ReadOnly = True
@@ -3402,9 +3445,9 @@ Partial Class MainForm
         '
         'StartIndexYobjArray
         '
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle32.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle32.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.StartIndexYobjArray.DefaultCellStyle = DataGridViewCellStyle32
         Me.StartIndexYobjArray.HeaderText = "Start Index"
         Me.StartIndexYobjArray.Name = "StartIndexYobjArray"
         Me.StartIndexYobjArray.ReadOnly = True
@@ -5064,11 +5107,205 @@ Partial Class MainForm
         Me.DataGridViewTextBoxColumn35.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn35.Width = 41
         '
-        'SelectNewHomeToolStripMenuItem
+        'CakFileView
         '
-        Me.SelectNewHomeToolStripMenuItem.Name = "SelectNewHomeToolStripMenuItem"
-        Me.SelectNewHomeToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.SelectNewHomeToolStripMenuItem.Text = "Select New Home"
+        Me.CakFileView.Controls.Add(Me.CAkViewTabControl)
+        Me.CakFileView.Controls.Add(Me.MenuStripCAkView)
+        Me.CakFileView.Location = New System.Drawing.Point(4, 22)
+        Me.CakFileView.Name = "CakFileView"
+        Me.CakFileView.Padding = New System.Windows.Forms.Padding(3)
+        Me.CakFileView.Size = New System.Drawing.Size(1219, 411)
+        Me.CakFileView.TabIndex = 21
+        Me.CakFileView.Text = "CAk"
+        Me.CakFileView.UseVisualStyleBackColor = True
+        '
+        'MenuStripCAkView
+        '
+        Me.MenuStripCAkView.Location = New System.Drawing.Point(3, 3)
+        Me.MenuStripCAkView.Name = "MenuStripCAkView"
+        Me.MenuStripCAkView.Size = New System.Drawing.Size(1213, 24)
+        Me.MenuStripCAkView.TabIndex = 0
+        Me.MenuStripCAkView.Text = "MenuStrip1"
+        '
+        'CAkViewTabControl
+        '
+        Me.CAkViewTabControl.Controls.Add(Me.CAkHeaderTabPage)
+        Me.CAkViewTabControl.Controls.Add(Me.CAkFolderTabPage)
+        Me.CAkViewTabControl.Controls.Add(Me.CAkFilesTabPage)
+        Me.CAkViewTabControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.CAkViewTabControl.Location = New System.Drawing.Point(3, 27)
+        Me.CAkViewTabControl.Name = "CAkViewTabControl"
+        Me.CAkViewTabControl.SelectedIndex = 0
+        Me.CAkViewTabControl.Size = New System.Drawing.Size(1213, 381)
+        Me.CAkViewTabControl.TabIndex = 1
+        '
+        'CAkHeaderTabPage
+        '
+        Me.CAkHeaderTabPage.Controls.Add(Me.DataGridCAkHeaderView)
+        Me.CAkHeaderTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.CAkHeaderTabPage.Name = "CAkHeaderTabPage"
+        Me.CAkHeaderTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.CAkHeaderTabPage.Size = New System.Drawing.Size(1205, 355)
+        Me.CAkHeaderTabPage.TabIndex = 0
+        Me.CAkHeaderTabPage.Text = "Header"
+        Me.CAkHeaderTabPage.UseVisualStyleBackColor = True
+        '
+        'CAkFolderTabPage
+        '
+        Me.CAkFolderTabPage.Controls.Add(Me.DataGridCAkFolderView)
+        Me.CAkFolderTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.CAkFolderTabPage.Name = "CAkFolderTabPage"
+        Me.CAkFolderTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.CAkFolderTabPage.Size = New System.Drawing.Size(1205, 355)
+        Me.CAkFolderTabPage.TabIndex = 1
+        Me.CAkFolderTabPage.Text = "Folder"
+        Me.CAkFolderTabPage.UseVisualStyleBackColor = True
+        '
+        'CAkFilesTabPage
+        '
+        Me.CAkFilesTabPage.Controls.Add(Me.DataGridCAkFilesView)
+        Me.CAkFilesTabPage.Location = New System.Drawing.Point(4, 22)
+        Me.CAkFilesTabPage.Name = "CAkFilesTabPage"
+        Me.CAkFilesTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.CAkFilesTabPage.Size = New System.Drawing.Size(1205, 355)
+        Me.CAkFilesTabPage.TabIndex = 2
+        Me.CAkFilesTabPage.Text = "Files"
+        Me.CAkFilesTabPage.UseVisualStyleBackColor = True
+        '
+        'DataGridCAkHeaderView
+        '
+        Me.DataGridCAkHeaderView.AllowUserToAddRows = False
+        Me.DataGridCAkHeaderView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridCAkHeaderView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridCAkHeaderView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.CAkHeaderPartColumn, Me.CAkHeaderOffsetColumn, Me.CAkHeaderSizeColumn, Me.CAkHeaderCRCColumn, Me.CAkHeaderCountColumn})
+        Me.DataGridCAkHeaderView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridCAkHeaderView.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridCAkHeaderView.Name = "DataGridCAkHeaderView"
+        Me.DataGridCAkHeaderView.RowHeadersVisible = False
+        Me.DataGridCAkHeaderView.Size = New System.Drawing.Size(1199, 349)
+        Me.DataGridCAkHeaderView.TabIndex = 0
+        '
+        'DataGridCAkFolderView
+        '
+        Me.DataGridCAkFolderView.AllowUserToAddRows = False
+        Me.DataGridCAkFolderView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridCAkFolderView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridCAkFolderView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.CAkFolderIndexColumn, Me.CAkFolderNameColumn, Me.CAkFolderUnkColumn, Me.CAkFolderHashColumn, Me.CAkFolderFolderCountColumn, Me.CAkFolderFileCountColumn})
+        Me.DataGridCAkFolderView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridCAkFolderView.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridCAkFolderView.Name = "DataGridCAkFolderView"
+        Me.DataGridCAkFolderView.RowHeadersVisible = False
+        Me.DataGridCAkFolderView.Size = New System.Drawing.Size(1199, 349)
+        Me.DataGridCAkFolderView.TabIndex = 0
+        '
+        'DataGridCAkFilesView
+        '
+        Me.DataGridCAkFilesView.AllowUserToAddRows = False
+        Me.DataGridCAkFilesView.AllowUserToDeleteRows = False
+        Me.DataGridCAkFilesView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridCAkFilesView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridCAkFilesView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.CAkFileIndexColumn, Me.CAkFileNameColumn, Me.CAkFileUnkColumn, Me.CAkFileHashColumn, Me.CAkFileOffsetColumn, Me.CAkFileSizeColumn, Me.CAkFileCrcColumn, Me.CAkFileTypeColumn})
+        Me.DataGridCAkFilesView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridCAkFilesView.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridCAkFilesView.Name = "DataGridCAkFilesView"
+        Me.DataGridCAkFilesView.RowHeadersVisible = False
+        Me.DataGridCAkFilesView.Size = New System.Drawing.Size(1199, 349)
+        Me.DataGridCAkFilesView.TabIndex = 0
+        '
+        'CAkHeaderPartColumn
+        '
+        Me.CAkHeaderPartColumn.HeaderText = "Part"
+        Me.CAkHeaderPartColumn.Name = "CAkHeaderPartColumn"
+        '
+        'CAkHeaderOffsetColumn
+        '
+        Me.CAkHeaderOffsetColumn.HeaderText = "Offset"
+        Me.CAkHeaderOffsetColumn.Name = "CAkHeaderOffsetColumn"
+        '
+        'CAkHeaderSizeColumn
+        '
+        Me.CAkHeaderSizeColumn.HeaderText = "Size"
+        Me.CAkHeaderSizeColumn.Name = "CAkHeaderSizeColumn"
+        '
+        'CAkHeaderCRCColumn
+        '
+        Me.CAkHeaderCRCColumn.HeaderText = "CRC"
+        Me.CAkHeaderCRCColumn.Name = "CAkHeaderCRCColumn"
+        '
+        'CAkHeaderCountColumn
+        '
+        Me.CAkHeaderCountColumn.HeaderText = "Count"
+        Me.CAkHeaderCountColumn.Name = "CAkHeaderCountColumn"
+        '
+        'CAkFolderIndexColumn
+        '
+        Me.CAkFolderIndexColumn.HeaderText = "Index"
+        Me.CAkFolderIndexColumn.Name = "CAkFolderIndexColumn"
+        '
+        'CAkFolderNameColumn
+        '
+        Me.CAkFolderNameColumn.HeaderText = "Name"
+        Me.CAkFolderNameColumn.Name = "CAkFolderNameColumn"
+        '
+        'CAkFolderUnkColumn
+        '
+        Me.CAkFolderUnkColumn.HeaderText = "Unk"
+        Me.CAkFolderUnkColumn.Name = "CAkFolderUnkColumn"
+        '
+        'CAkFolderHashColumn
+        '
+        Me.CAkFolderHashColumn.HeaderText = "Hash"
+        Me.CAkFolderHashColumn.Name = "CAkFolderHashColumn"
+        '
+        'CAkFolderFolderCountColumn
+        '
+        Me.CAkFolderFolderCountColumn.HeaderText = "Folder Count"
+        Me.CAkFolderFolderCountColumn.Name = "CAkFolderFolderCountColumn"
+        '
+        'CAkFolderFileCountColumn
+        '
+        Me.CAkFolderFileCountColumn.HeaderText = "File Count"
+        Me.CAkFolderFileCountColumn.Name = "CAkFolderFileCountColumn"
+        '
+        'CAkFileIndexColumn
+        '
+        Me.CAkFileIndexColumn.HeaderText = "Index"
+        Me.CAkFileIndexColumn.Name = "CAkFileIndexColumn"
+        '
+        'CAkFileNameColumn
+        '
+        Me.CAkFileNameColumn.HeaderText = "Name"
+        Me.CAkFileNameColumn.Name = "CAkFileNameColumn"
+        '
+        'CAkFileUnkColumn
+        '
+        Me.CAkFileUnkColumn.HeaderText = "Folder Index"
+        Me.CAkFileUnkColumn.Name = "CAkFileUnkColumn"
+        '
+        'CAkFileHashColumn
+        '
+        Me.CAkFileHashColumn.HeaderText = "Hash"
+        Me.CAkFileHashColumn.Name = "CAkFileHashColumn"
+        '
+        'CAkFileOffsetColumn
+        '
+        Me.CAkFileOffsetColumn.HeaderText = "Offset"
+        Me.CAkFileOffsetColumn.Name = "CAkFileOffsetColumn"
+        '
+        'CAkFileSizeColumn
+        '
+        Me.CAkFileSizeColumn.HeaderText = "Size"
+        Me.CAkFileSizeColumn.Name = "CAkFileSizeColumn"
+        '
+        'CAkFileCrcColumn
+        '
+        Me.CAkFileCrcColumn.HeaderText = "Crc"
+        Me.CAkFileCrcColumn.Name = "CAkFileCrcColumn"
+        '
+        'CAkFileTypeColumn
+        '
+        Me.CAkFileTypeColumn.HeaderText = "Type"
+        Me.CAkFileTypeColumn.Name = "CAkFileTypeColumn"
         '
         'MainForm
         '
@@ -5091,7 +5328,7 @@ Partial Class MainForm
         Me.SplitFileMenuContainer.ResumeLayout(False)
         Me.MenuStripTreeView.ResumeLayout(False)
         Me.MenuStripTreeView.PerformLayout()
-        Me.TabControl1.ResumeLayout(False)
+        Me.MainMenuTabControl.ResumeLayout(False)
         Me.HexView.ResumeLayout(False)
         Me.HexView.PerformLayout()
         Me.MenuStripHexView.ResumeLayout(False)
@@ -5211,6 +5448,15 @@ Partial Class MainForm
         Me.MenuStripPictureView.ResumeLayout(False)
         Me.MenuStripPictureView.PerformLayout()
         Me.TreeViewContext.ResumeLayout(False)
+        Me.CakFileView.ResumeLayout(False)
+        Me.CakFileView.PerformLayout()
+        Me.CAkViewTabControl.ResumeLayout(False)
+        Me.CAkHeaderTabPage.ResumeLayout(False)
+        Me.CAkFolderTabPage.ResumeLayout(False)
+        Me.CAkFilesTabPage.ResumeLayout(False)
+        CType(Me.DataGridCAkHeaderView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridCAkFolderView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridCAkFilesView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -5226,7 +5472,7 @@ Partial Class MainForm
     Friend WithEvents SplitFileMenuContainer As SplitContainer
     Friend WithEvents TreeView1 As TreeView
     Friend WithEvents MenuStripTreeView As MenuStrip
-    Friend WithEvents TabControl1 As TabControl
+    Friend WithEvents MainMenuTabControl As TabControl
     Friend WithEvents HexView As TabPage
     Friend WithEvents TextView As TabPage
     Friend WithEvents CurrentViewToolStripMenuItem As ToolStripMenuItem
@@ -5800,4 +6046,32 @@ Partial Class MainForm
     Friend WithEvents ObjectTriStripVertCount As DataGridViewTextBoxColumn
     Friend WithEvents ExportStringArrayToCSVToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SelectNewHomeToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CakFileView As TabPage
+    Friend WithEvents CAkViewTabControl As TabControl
+    Friend WithEvents CAkHeaderTabPage As TabPage
+    Friend WithEvents CAkFolderTabPage As TabPage
+    Friend WithEvents MenuStripCAkView As MenuStrip
+    Friend WithEvents DataGridCAkHeaderView As DataGridView
+    Friend WithEvents DataGridCAkFolderView As DataGridView
+    Friend WithEvents CAkFilesTabPage As TabPage
+    Friend WithEvents DataGridCAkFilesView As DataGridView
+    Friend WithEvents CAkHeaderPartColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkHeaderOffsetColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkHeaderSizeColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkHeaderCRCColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkHeaderCountColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFolderIndexColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFolderNameColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFolderUnkColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFolderHashColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFolderFolderCountColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFolderFileCountColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFileIndexColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFileNameColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFileUnkColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFileHashColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFileOffsetColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFileSizeColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFileCrcColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CAkFileTypeColumn As DataGridViewTextBoxColumn
 End Class

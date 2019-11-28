@@ -50,26 +50,42 @@
     'EA UFC files
     big
 
-    '2K20
+#Region "2K20 File Types"
+
     Cak
 
     CakFolder 'This is a virtual folder that shouldn't ever have an actual file output.
     CakBaked 'This is a temp state where the file name has been parsed but bytes have not been retrieved.
     OODL7 'These are labeled if the Cak part file has a OODL part
-    tex 'Here is the Main Tex container which will normally have a Crunched Texture inside.
-    Crn 'This is the signal for the file still being crunched.  when bytes are no longer crunched it will be a dds file.
-    mskinfo
-    mtls
-    mdl
-    mprms
-    jsfb
-    other_ywa
-    ywa
-    sdb
+    acts 'ACTS 2K20 Animation
+    tbl 'DTAB Data Table
+    evd 'EVD! Event Data
+    fntpck 'FTPK font pack 2k20
+    inst 'INST Light Layouts
+    jsfb 'JSFB General Data?
+    'jsfb types
     TronFile
     EntrData
-    acts
-    evd
+    'jsfb types
+    lightparam 'LITE Light PArams
+    mdl 'MDL! Model 2K20
+    MKRS 'MKRS Can be ywa or fntpack.. check file
+    other_ywa
+    ywa
+    '
+    mprms 'MPRM Act Parameters
+    mskinfo ' MSKI Mask information
+    mtls 'MTLs materials
+    PRTL 'PRTL Backstage Portal File??
+    tex 'TEX! Here is the Main Tex container which will normally have a Crunched Texture inside.
+    'tex internals
+    Crn 'This is the signal for the file still being crunched.  when bytes are no longer crunched it will be a dds file.
+    '
+    txt 'TEXT 2K20
+    sdb 'XLOC String Files
+    ycl 'YCL!
+    ysh 'YSH!
+#End Region
 
     'Day of Reckoning GV File Types added as needed
     TPL

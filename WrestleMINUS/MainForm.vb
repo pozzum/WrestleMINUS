@@ -96,7 +96,7 @@ Public Class MainForm
         If IsNothing(ExcludedTabs) Then
             ExcludedTabs = New List(Of TabPage)
         End If
-        For Each TempTabPage As TabPage In TabControl1.TabPages
+        For Each TempTabPage As TabPage In MainMenuTabControl.TabPages
             Select Case TempTabPage.Name
                 Case HexView.Name
                     'Never Hide
@@ -105,14 +105,14 @@ Public Class MainForm
                 Case MuscleView.Name
                     'this is not automatically removed except on startup
                     If Not MuscleViewStartupRemoved Then
-                        TabControl1.TabPages.Remove(TempTabPage)
+                        MainMenuTabControl.TabPages.Remove(TempTabPage)
                         MuscleViewStartupRemoved = True
                     End If
                 Case ExcludedTabs.Contains(TempTabPage)
                     'MessageBox.Show(TabControl1.SelectedTab.Text)
                     'MessageBox.Show(ExcludedTab.Text)
                     'Excluded
-                    If TabControl1.SelectedTab.Text = TempTabPage.Text Then
+                    If MainMenuTabControl.SelectedTab.Text = TempTabPage.Text Then
                         'MessageBox.Show("Rebuild Table")
                         'Here we should be able to reset the tab.
                         ReadNode = TreeView1.SelectedNode
@@ -159,7 +159,7 @@ Public Class MainForm
                             SaveFileNoLongerPending()
                         End If
                     End If
-                    TabControl1.TabPages.Remove(TempTabPage)
+                    MainMenuTabControl.TabPages.Remove(TempTabPage)
             End Select
         Next
         Return DialogResult.OK
@@ -645,7 +645,7 @@ Public Class MainForm
 #Region "Tab Controls"
 
     'moving functions from on tree view to on tab select to reduce load times during tree movement on keyboard
-    Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
+    Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles MainMenuTabControl.Selecting
         If e.TabPage.Name = StringView.Name Then
             'separating this out fixes a Load string issue.
             FillStringView(ReadNode)
@@ -693,6 +693,8 @@ Public Class MainForm
                 InformationLoaded = False
             Case WeaponPositionView.Name
                 FillWeaponPositionView(ReadNode)
+            Case CakFileView.Name
+                FillCAkFileView(ReadNode)
         End Select
     End Sub
 
@@ -735,6 +737,8 @@ Public Class MainForm
                 ReturnedList.Add(Pof0View)
             Case PackageType.WeaponPosition
                 ReturnedList.Add(WeaponPositionView)
+            Case PackageType.Cak
+                ReturnedList.Add(CakFileView)
             Case Else
                 'Nothing
         End Select
@@ -743,8 +747,8 @@ Public Class MainForm
 
     Sub LoadTabs(NewTabList As List(Of TabPage))
         For Each TempNewTab As TabPage In NewTabList
-            If Not TabControl1.TabPages.Contains(TempNewTab) Then
-                TabControl1.TabPages.Add(TempNewTab)
+            If Not MainMenuTabControl.TabPages.Contains(TempNewTab) Then
+                MainMenuTabControl.TabPages.Add(TempNewTab)
                 InformationLoaded = False
                 If TempNewTab.Name = MuscleView.Name Then
                     FillMuscleView(ReadNode)
@@ -3471,7 +3475,7 @@ Public Class MainForm
                     DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = ""
                 End If
             End If
-                ElseIf ((e.ColumnIndex - 2) Mod 5) = 1 Then 'Attire String Does Nothing
+        ElseIf ((e.ColumnIndex - 2) Mod 5) = 1 Then 'Attire String Does Nothing
         ElseIf ((e.ColumnIndex - 2) Mod 5) = 2 Then 'Enabled Changed
             If MyCell.Value Then 'if enabled checked
                 DataGridAttireView.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = False 'unchecks manager
@@ -3598,9 +3602,9 @@ Public Class MainForm
     End Function
 
     Private Sub CloseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseToolStripMenuItem.Click
-        If TabControl1.TabPages.Contains(MuscleView) Then
-            TabControl1.SelectedIndex = 0
-            TabControl1.TabPages.Remove(MuscleView)
+        If MainMenuTabControl.TabPages.Contains(MuscleView) Then
+            MainMenuTabControl.SelectedIndex = 0
+            MainMenuTabControl.TabPages.Remove(MuscleView)
         End If
     End Sub
 
@@ -6605,6 +6609,33 @@ Public Class MainForm
         Next
         Return ReturnedInt
     End Function
+
+#End Region
+
+#Region "CAk File View"
+
+    Sub FillCAkFileView(SelectedData As TreeNode)
+        Dim TempCakFile As PackageHandlers.CakFileHandler = New PackageHandlers.CakFileHandler
+        TempCakFile = TempCakFile.LoadFromFile(SelectedData.Tag.FullFilePath)
+        'Now we have read the file we can get the header bytes
+        Dim TempHeader As PackageHandlers.CakFileHandler.BakedFileHeader = TempCakFile.GetHeaderInformation()
+        DataGridCAkHeaderView.Rows.Add("Folder Hashes", TempHeader.FolderHashesOffset, TempHeader.FolderHashesSize, TempHeader.FolderHashesCrc, TempHeader.FoldersCount)
+        DataGridCAkHeaderView.Rows.Add("File Hashes", TempHeader.FileHashesOffset, TempHeader.FileHashesSize, TempHeader.FileHashesCrc, TempHeader.FilesCount)
+        DataGridCAkHeaderView.Rows.Add("Files", TempHeader.FilesOffset, TempHeader.FilesSize, TempHeader.FilesCrc, TempHeader.FilesCount)
+        DataGridCAkHeaderView.Rows.Add("Folders", TempHeader.FoldersOffset, TempHeader.FoldersSize, TempHeader.FoldersCrc, TempHeader.FoldersCount)
+        DataGridCAkHeaderView.Rows.Add("Strings", TempHeader.StringsOffset, TempHeader.StringsSize, TempHeader.StringsCrc, "")
+        'Folder Views
+        'DataGridCAkFolderView
+        Dim ContainedFolderList As List(Of PackageHandlers.CakFileHandler.PackFolderEntry) = TempCakFile.GetFolderInformation()
+        For i As Integer = 0 To ContainedFolderList.Count - 1
+            DataGridCAkFolderView.Rows.Add(i, ContainedFolderList(i).Name, ContainedFolderList(i).Unk, Hex(ContainedFolderList(i).Hash), ContainedFolderList(i).FolderIndices.Count, ContainedFolderList(i).FileIndices.Count)
+        Next
+        'DataGridCAkFilesView
+        Dim ContainedFileList As List(Of PackageHandlers.CakFileHandler.PackFileEntry) = TempCakFile.GetFileInformation()
+        For i As Integer = 0 To ContainedFileList.Count - 1
+            DataGridCAkFilesView.Rows.Add(i, ContainedFileList(i).Name, ContainedFileList(i).FolderIndex, Hex(ContainedFileList(i).Hash), ContainedFileList(i).Offset, ContainedFileList(i).Size, ContainedFileList(i).Crc, ContainedFileList(i).Type)
+        Next
+    End Sub
 
 #End Region
 

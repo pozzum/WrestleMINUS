@@ -1023,46 +1023,57 @@ Public Class PackageInformation
             Case PackageType.Cak
                 Dim ReadCakFile As PackageHandlers.CakFileHandler = New PackageHandlers.CakFileHandler
                 ReadCakFile = ReadCakFile.LoadFromFile(ParentFileProperties.FullFilePath)
-                If My.Settings.RebuildCakFiles Then
-                    'Always Make a Backup
-                    If File_FolderHandlers.CheckFileWriteable(ParentFileProperties.FullFilePath & ".tmp", False) Then
-                        File.Move(ParentFileProperties.FullFilePath, ParentFileProperties.FullFilePath & ".tmp")
+                If My.Settings.CreateCAkDefFiles Then
+                    Dim StringList As List(Of String) = ReadCakFile.GetFileStringList()
+                    'Dim TypeList As List(Of String) = ReadCakFile.GetTypeStringList()
+                    'StringList.AddRange(TypeList)
+                    Dim DefLocation As String = Path.GetDirectoryName(ParentFileProperties.FullFilePath) & Path.DirectorySeparatorChar &
+                                               Path.GetFileNameWithoutExtension(ParentFileProperties.FullFilePath) & ".def"
+                    If StringList.Count > 0 Then
+                        File.WriteAllLines(DefLocation, StringList)
                     End If
-                    'here is the file rewrite
-                    If Not ReadCakFile.BuildPlainFromHandler(ParentFileProperties.FullFilePath, ReadCakFile, ParentFileProperties.FullFilePath & ".tmp") Then
-                        MessageBox.Show("Rebuild Error")
-                        File.Delete(ParentFileProperties.FullFilePath)
-                        If File.Exists(ParentFileProperties.FullFilePath & ".tmp") Then
-                            File.Move(ParentFileProperties.FullFilePath & ".tmp", ParentFileProperties.FullFilePath)
-                        End If
-                        'bakup file is not touched
-                    Else
-                        'File Built Right Backup can be deleted if they do not have the backup option
-                        If My.Settings.BackupInjections Then
-                            If File_FolderHandlers.CheckFileWriteable(ParentFileProperties.FullFilePath & ".bak", False) Then
-                                File.Move(ParentFileProperties.FullFilePath & ".tmp", ParentFileProperties.FullFilePath & ".bak")
+                End If
+                If My.Settings.RebuildCakFiles Then
+                    If MessageBox.Show("Would you like to create a decoded file?" & vbNewLine &
+                                    "This may take a few minutes.", "Make Raw File", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                        ''Always Make a Backup
+                        'If File_FolderHandlers.CheckFileWriteable(ParentFileProperties.FullFilePath & ".tmp", False) Then
+                        '    File.Move(ParentFileProperties.FullFilePath, ParentFileProperties.FullFilePath & ".tmp")
+                        'End If
+                        ''here is the file rewrite
+                        'If Not ReadCakFile.BuildPlainFromHandler(ParentFileProperties.FullFilePath, ReadCakFile, ParentFileProperties.FullFilePath & ".tmp") Then
+                        '    MessageBox.Show("Rebuild Error")
+                        '    File.Delete(ParentFileProperties.FullFilePath)
+                        '    If File.Exists(ParentFileProperties.FullFilePath & ".tmp") Then
+                        '        File.Move(ParentFileProperties.FullFilePath & ".tmp", ParentFileProperties.FullFilePath)
+                        '    End If
+                        '    'bakup file is not touched
+                        'Else
+                        '    'File Built Right Backup can be deleted if they do not have the backup option
+                        '    If My.Settings.BackupInjections Then
+                        '        If File_FolderHandlers.CheckFileWriteable(ParentFileProperties.FullFilePath & ".bak", False) Then
+                        '            File.Move(ParentFileProperties.FullFilePath & ".tmp", ParentFileProperties.FullFilePath & ".bak")
+                        '        End If
+                        '    Else
+                        '        File.Delete(ParentFileProperties.FullFilePath & ".tmp")
+                        '    End If
+                        'End If
+
+                        If Not ReadCakFile.BuildPlainFromHandler(ParentFileProperties.FullFilePath & ".raw", ReadCakFile, ParentFileProperties.FullFilePath) Then
+                            MessageBox.Show("Rebuild Error")
+                            If File.Exists(ParentFileProperties.FullFilePath & ".raw") Then
+                                File.Delete(ParentFileProperties.FullFilePath & ".raw")
                             End If
-                        Else
-                            File.Delete(ParentFileProperties.FullFilePath & ".tmp")
                         End If
                     End If
                 End If
                 ParentFileProperties = BuildCakFileNode(ParentFileProperties, ReadCakFile)
-                'Dim ListOfFiles As List(Of String) = ReadCakFile.GetFileStringList()
-                'Dim ListOfFiles As List(Of String) = PackUnpack.GetBakedCakFileList(ParentFileProperties.FullFilePath)
-                'If ListOfFiles.Count > 0 Then
-                '    If IsNothing(ParentFileProperties.SubFiles) Then
-                '        ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
-                '    End If
-                'End If
-                'For i As Integer = 0 To ListOfFiles.Count - 1
-                '    ParentFileProperties = BuildCakSubNodes(ParentFileProperties, ListOfFiles(i))
-                'Next
             Case PackageType.CakBaked
                 If IsNothing(ParentFileProperties.SubFiles) Then
                     ParentFileProperties.SubFiles = New List(Of ExtendedFileProperties)
                 End If
-                ParentFileProperties.FileType = CheckHeaderType(0, FileBytes, ParentFileProperties.VirtualFilePath)
+                ParentFileProperties.FileType = CheckHeaderType(ParentFileProperties.Index, FileBytes, ParentFileProperties.VirtualFilePath)
+
                 Select Case ParentFileProperties.FileType
                     Case PackageType.OODL7
                         Dim UncompressedBytes As Byte() = Nothing
@@ -1116,25 +1127,31 @@ Public Class PackageInformation
                             End If
                         End If
                     Case PackageType.bin
-                        If My.Settings.ShowCAkIntermediates Then
-                            Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
-                                   .Name = ParentFileProperties.Name & " EXTRACT",
-                                   .FullFilePath = ParentFileProperties.FullFilePath,
-                                   .VirtualFilePath = ParentFileProperties.VirtualFilePath,
-                                   .Index = &H18,
-                                   .length = FileBytes.Length - &H18,
-                                   .StoredData = FileBytes,
-                                   .FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes),
-                                   .Parent = ParentFileProperties}
-                            ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                        Dim ReadCakFile As PackageHandlers.CakFileHandler = New PackageHandlers.CakFileHandler
+                        Dim InternalType As PackageType = ReadCakFile.GetFilePackageType(ParentFileProperties.FullFilePath, ParentFileProperties.VirtualFilePath)
+                        If Not InternalType = PackageType.Unchecked Then
+                            If My.Settings.ShowCAkIntermediates Then
+                                Dim ContainedFileProperties As ExtendedFileProperties = New ExtendedFileProperties With {
+                                       .Name = ParentFileProperties.Name & " EXTRACT",
+                                       .FullFilePath = ParentFileProperties.FullFilePath,
+                                       .VirtualFilePath = ParentFileProperties.VirtualFilePath,
+                                       .Index = &H18,
+                                       .length = FileBytes.Length - &H18,
+                                       .StoredData = FileBytes,
+                                       .FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes),
+                                       .Parent = ParentFileProperties}
+                                ParentFileProperties.SubFiles.Add(ContainedFileProperties)
+                            Else
+                                ParentFileProperties.FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes)
+                                ParentFileProperties.Index = &H18
+                                ParentFileProperties.length = FileBytes.Length - &H18
+                                ParentFileProperties.StoredData = FileBytes
+                                'ParentFileProperties.Parent
+                                GetFileParts(ParentFileProperties, Crawl, TriggerProgress)
+                                Exit Sub
+                            End If
                         Else
-                            ParentFileProperties.FileType = CheckCakContainerForFileType(ParentFileProperties.Index, FileBytes)
-                            ParentFileProperties.Index = &H18
-                            ParentFileProperties.length = FileBytes.Length - &H18
-                            ParentFileProperties.StoredData = FileBytes
-                            'ParentFileProperties.Parent
-                            GetFileParts(ParentFileProperties, Crawl, TriggerProgress)
-                            Exit Sub
+                            ParentFileProperties.FileType = PackageType.bin
                         End If
                     Case PackageType.bk2_Broken
                         ParentFileProperties.FileType = PackageType.bk2
