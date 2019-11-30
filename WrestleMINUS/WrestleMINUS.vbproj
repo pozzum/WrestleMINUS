@@ -76,10 +76,6 @@
     <Reference Include="FontAwesome.Sharp, Version=5.8.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FontAwesome.Sharp.5.8.3\lib\net40\FontAwesome.Sharp.dll</HintPath>
     </Reference>
-    <Reference Include="FrostyYukes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>H:\Working Folders\WWE 2K20 Working\2K20 File Tests\CakDumper\FrostyYukes.dll</HintPath>
-    </Reference>
     <Reference Include="Ionic.Zlib">
       <HintPath>.\Ionic.Zlib.dll</HintPath>
     </Reference>
@@ -118,16 +114,41 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MainForm\Main_ContextStrip.vb" />
+    <Compile Include="MainForm\Main_Tabs.vb" />
+    <Compile Include="MainForm\Main_TreeView.vb" />
+    <Compile Include="MainForm\Tab Views\AnimationView.vb" />
+    <Compile Include="MainForm\Tab Views\AssetView.vb" />
+    <Compile Include="MainForm\Tab Views\AttireInfoView.vb" />
+    <Compile Include="MainForm\Tab Views\CAEMenuView.vb" />
+    <Compile Include="MainForm\Tab Views\CakView.vb" />
+    <Compile Include="MainForm\Tab Views\HexView.vb" />
+    <Compile Include="MainForm\Main_MenuStrip.vb" />
+    <Compile Include="MainForm\Tab Views\MaskView.vb" />
+    <Compile Include="MainForm\Tab Views\MiscArenaView.vb" />
+    <Compile Include="MainForm\Tab Views\MiscShowView.vb" />
+    <Compile Include="MainForm\Tab Views\ModelArrayView.vb" />
+    <Compile Include="MainForm\Tab Views\ModelView.vb" />
+    <Compile Include="MainForm\Tab Views\MuscleView.vb" />
+    <Compile Include="MainForm\Tab Views\NIJBView.vb" />
+    <Compile Include="MainForm\Tab Views\PictureView.vb" />
+    <Compile Include="MainForm\Tab Views\Pof0View.vb" />
+    <Compile Include="MainForm\Tab Views\PropPositionView.vb" />
+    <Compile Include="MainForm\Tab Views\SoundRefView.vb" />
+    <Compile Include="MainForm\Tab Views\StringRefView.vb" />
+    <Compile Include="MainForm\Tab Views\TextView.vb" />
+    <Compile Include="MainForm\Tab Views\TitleView.vb" />
+    <Compile Include="MainForm\Tab Views\_MultiView.vb" />
     <Compile Include="Modules-Handlers\ApplicationHandlers.vb" />
     <Compile Include="DefBuilder.vb" />
     <Compile Include="Assets\FileClassTemplate.vb" />
     <Compile Include="General Code\GeneralTools.vb" />
     <Compile Include="Modules-Handlers\File_FolderHandlers.vb" />
     <Compile Include="Modules-Handlers\HashGenerator.vb" />
-    <Compile Include="MainForm.vb">
+    <Compile Include="MainForm\MainForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.vb">
+    <Compile Include="MainForm\MainForm.Designer.vb">
       <DependentUpon>MainForm.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
@@ -172,7 +193,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="MainForm\MainForm.resx">
       <DependentUpon>MainForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -262,6 +283,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PostBuildEvent>del /F "$(TargetDir)$(TargetName).exe.config"

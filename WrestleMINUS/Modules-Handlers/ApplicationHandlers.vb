@@ -393,39 +393,6 @@ Module ApplicationHandlers
         Return False
     End Function
 
-    Function CheckFrosty(Optional FromOptions As Boolean = False) As Boolean
-        'DLL Location is not Stored in the settings
-        Dim NeededLocation As String = Application.StartupPath & Path.DirectorySeparatorChar & "FrostyYukes.dll"
-        If File.Exists(NeededLocation) Then
-            Return True
-        Else
-            Dim TestLocation As String = Path.GetDirectoryName(My.Settings.ExeLocation) & Path.DirectorySeparatorChar & "FrostyYukes.dll"
-            If File.Exists(TestLocation) Then
-                File.Copy(TestLocation, NeededLocation, True)
-                Return True
-            Else
-                If FromOptions Then
-                    Dim FrostyYukesOpenDialog As New OpenFileDialog With {
-                        .FileName = "FrostyYukes.dll",
-                        .Title = "FrostyYukes.dll",
-                        .Filter = "Dynamic Link Library|*.dll|All files (*.*)|*.*",
-                        .CheckFileExists = True}
-                    If FrostyYukesOpenDialog.ShowDialog = DialogResult.OK Then
-                        If Path.GetFileName(FrostyYukesOpenDialog.FileName).ToLower = "frostyyukes.dll" Then
-                            File.Copy(FrostyYukesOpenDialog.FileName, NeededLocation, True)
-                            Return True
-                        Else
-                            MessageBox.Show("File selected is incorrect, you can reselect in the options menu")
-                        End If
-                    End If
-                Else
-                    MessageBox.Show("FrostyYukes Dll Not loaded")
-                End If
-            End If
-        End If
-        Return False
-    End Function
-
 #End Region
 
 #Region "Optional Improvements"

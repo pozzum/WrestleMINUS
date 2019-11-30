@@ -41,15 +41,6 @@ Partial Class OptionsMenu
         Else
             LabelOodle_7.ForeColor = Color.Black
         End If
-        If Not ApplicationHandlers.CheckFrosty() Then
-            LabelFrosty.Text = "FrustyYukes. Loaded: False"
-            LabelFrosty.ForeColor = Color.Red
-            ButtonFrostyYukesSelect.Visible = True
-        Else
-            LabelFrosty.Text = "FrustyYukes Loaded: True"
-            LabelFrosty.ForeColor = Color.Black
-            ButtonFrostyYukesSelect.Visible = False
-        End If
     End Sub
 
     Private Sub ButtonSelectFontAwesome_Click(sender As Object, e As EventArgs) Handles ButtonSelectFontAwesome.Click
@@ -69,11 +60,6 @@ Partial Class OptionsMenu
 
     Private Sub ButtonOodle7Select_Click(sender As Object, e As EventArgs) Handles ButtonOodle7Select.Click
         ApplicationHandlers.CheckOodle7(True)
-        LoadSettings()
-    End Sub
-
-    Private Sub ButtonFrostyYukesSelect_Click(sender As Object, e As EventArgs) Handles ButtonFrostyYukesSelect.Click
-        ApplicationHandlers.CheckFrosty(True)
         LoadSettings()
     End Sub
 

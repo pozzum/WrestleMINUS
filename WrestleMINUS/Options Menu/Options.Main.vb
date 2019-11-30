@@ -15,7 +15,7 @@ Partial Class OptionsMenu
         CheckBoxDetailedFileNames.Checked = My.Settings.UseDetailedFileNames
         CheckBoxExtractAllinPlace.Checked = My.Settings.DecompresstoFolder
         CheckBoxOODLBypass.Checked = My.Settings.BypassOODLWarn
-        CheckBoxRebuildCak.Checked = My.Settings.RebuildCakFiles
+        CheckBoxCreateCAkDef.Checked = My.Settings.CreateCAkDefFiles
         'extract all can only extract to folders with detailed file names
         If CheckBoxDetailedFileNames.Checked Then
             CheckBoxExtractAllinPlace.Enabled = True
@@ -23,6 +23,10 @@ Partial Class OptionsMenu
             CheckBoxExtractAllinPlace.Checked = True
             CheckBoxExtractAllinPlace.Enabled = False
         End If
+    End Sub
+
+    Private Sub CheckBoxCreateCAkDef_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxCreateCAkDef.CheckedChanged
+        My.Settings.CreateCAkDefFiles = CheckBoxCreateCAkDef.Checked
     End Sub
 
     Private Sub CheckBoxLoadHome_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxLoadHome.CheckedChanged
@@ -64,9 +68,6 @@ Partial Class OptionsMenu
         My.Settings.BypassOODLWarn = CheckBoxOODLBypass.Checked
     End Sub
 
-    Private Sub CheckBoxRebuildCak_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxRebuildCak.CheckedChanged
-        My.Settings.RebuildCakFiles = CheckBoxRebuildCak.Checked
-    End Sub
 #End Region
 
 End Class

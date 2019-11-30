@@ -23,7 +23,6 @@ Module SettingsHandlers
             ApplicationHandlers.CheckIconicZlib()
             ApplicationHandlers.CheckOodle6()
             ApplicationHandlers.CheckOodle7()
-            ApplicationHandlers.CheckFrosty()
             ApplicationHandlers.CheckFontAwesome()
             ApplicationHandlers.CheckNewtonsoftJson()
         End If

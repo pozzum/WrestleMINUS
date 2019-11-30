@@ -63,9 +63,10 @@ Partial Class OptionsMenu
         Me.LabelSkipVersion = New System.Windows.Forms.Label()
         Me.ButtonCheckUpdate = New System.Windows.Forms.Button()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.TabPage3 = New System.Windows.Forms.TabPage()
-        Me.CheckBoxShowCAkIntermediates = New System.Windows.Forms.CheckBox()
         Me.CheckBoxCreateCAkDef = New System.Windows.Forms.CheckBox()
+        Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.CheckBoxRebuildCak = New System.Windows.Forms.CheckBox()
+        Me.CheckBoxShowCAkIntermediates = New System.Windows.Forms.CheckBox()
         Me.CheckBoxSuppresHSPCFooters = New System.Windows.Forms.CheckBox()
         Me.ButtonResetFormSize = New System.Windows.Forms.Button()
         Me.CheckBoxShowSelectedNode = New System.Windows.Forms.CheckBox()
@@ -84,8 +85,6 @@ Partial Class OptionsMenu
         Me.TabPageDLLCheck = New System.Windows.Forms.TabPage()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ButtonNewtonJsonSelect = New System.Windows.Forms.Button()
-        Me.LabelFrosty = New System.Windows.Forms.Label()
-        Me.ButtonFrostyYukesSelect = New System.Windows.Forms.Button()
         Me.ButtonOodle7Select = New System.Windows.Forms.Button()
         Me.LabelOodle_7 = New System.Windows.Forms.Label()
         Me.ButtonSelectFontAwesome = New System.Windows.Forms.Button()
@@ -94,7 +93,6 @@ Partial Class OptionsMenu
         Me.ButtonSelectZlib = New System.Windows.Forms.Button()
         Me.LabelOodle_6 = New System.Windows.Forms.Label()
         Me.LabelZlib = New System.Windows.Forms.Label()
-        Me.CheckBoxRebuildCak = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.TabPageExeTools.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -474,7 +472,7 @@ Partial Class OptionsMenu
         'TabPage2
         '
         Me.TabPage2.BackColor = System.Drawing.SystemColors.Control
-        Me.TabPage2.Controls.Add(Me.CheckBoxRebuildCak)
+        Me.TabPage2.Controls.Add(Me.CheckBoxCreateCAkDef)
         Me.TabPage2.Controls.Add(Me.CheckBoxRecycleDeletedFiles)
         Me.TabPage2.Controls.Add(Me.CheckBoxLoadHome)
         Me.TabPage2.Controls.Add(Me.CheckBoxBackup)
@@ -490,11 +488,21 @@ Partial Class OptionsMenu
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "Options"
         '
+        'CheckBoxCreateCAkDef
+        '
+        Me.CheckBoxCreateCAkDef.AutoSize = True
+        Me.CheckBoxCreateCAkDef.Location = New System.Drawing.Point(8, 190)
+        Me.CheckBoxCreateCAkDef.Name = "CheckBoxCreateCAkDef"
+        Me.CheckBoxCreateCAkDef.Size = New System.Drawing.Size(164, 17)
+        Me.CheckBoxCreateCAkDef.TabIndex = 53
+        Me.CheckBoxCreateCAkDef.Text = "Create CAk def Files on read."
+        Me.CheckBoxCreateCAkDef.UseVisualStyleBackColor = True
+        '
         'TabPage3
         '
         Me.TabPage3.BackColor = System.Drawing.SystemColors.Control
+        Me.TabPage3.Controls.Add(Me.CheckBoxRebuildCak)
         Me.TabPage3.Controls.Add(Me.CheckBoxShowCAkIntermediates)
-        Me.TabPage3.Controls.Add(Me.CheckBoxCreateCAkDef)
         Me.TabPage3.Controls.Add(Me.CheckBoxSuppresHSPCFooters)
         Me.TabPage3.Controls.Add(Me.ButtonResetFormSize)
         Me.TabPage3.Controls.Add(Me.CheckBoxShowSelectedNode)
@@ -517,6 +525,16 @@ Partial Class OptionsMenu
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "Advanced"
         '
+        'CheckBoxRebuildCak
+        '
+        Me.CheckBoxRebuildCak.AutoSize = True
+        Me.CheckBoxRebuildCak.Location = New System.Drawing.Point(6, 52)
+        Me.CheckBoxRebuildCak.Name = "CheckBoxRebuildCak"
+        Me.CheckBoxRebuildCak.Size = New System.Drawing.Size(109, 17)
+        Me.CheckBoxRebuildCak.TabIndex = 54
+        Me.CheckBoxRebuildCak.Text = "Rebuild CAk Files"
+        Me.CheckBoxRebuildCak.UseVisualStyleBackColor = True
+        '
         'CheckBoxShowCAkIntermediates
         '
         Me.CheckBoxShowCAkIntermediates.AutoSize = True
@@ -526,16 +544,6 @@ Partial Class OptionsMenu
         Me.CheckBoxShowCAkIntermediates.TabIndex = 53
         Me.CheckBoxShowCAkIntermediates.Text = "Show Intermediate CAk Parts"
         Me.CheckBoxShowCAkIntermediates.UseVisualStyleBackColor = True
-        '
-        'CheckBoxCreateCAkDef
-        '
-        Me.CheckBoxCreateCAkDef.AutoSize = True
-        Me.CheckBoxCreateCAkDef.Location = New System.Drawing.Point(6, 52)
-        Me.CheckBoxCreateCAkDef.Name = "CheckBoxCreateCAkDef"
-        Me.CheckBoxCreateCAkDef.Size = New System.Drawing.Size(164, 17)
-        Me.CheckBoxCreateCAkDef.TabIndex = 52
-        Me.CheckBoxCreateCAkDef.Text = "Create CAk def Files on read."
-        Me.CheckBoxCreateCAkDef.UseVisualStyleBackColor = True
         '
         'CheckBoxSuppresHSPCFooters
         '
@@ -688,8 +696,6 @@ Partial Class OptionsMenu
         Me.TabPageDLLCheck.BackColor = System.Drawing.SystemColors.Control
         Me.TabPageDLLCheck.Controls.Add(Me.Label3)
         Me.TabPageDLLCheck.Controls.Add(Me.ButtonNewtonJsonSelect)
-        Me.TabPageDLLCheck.Controls.Add(Me.LabelFrosty)
-        Me.TabPageDLLCheck.Controls.Add(Me.ButtonFrostyYukesSelect)
         Me.TabPageDLLCheck.Controls.Add(Me.ButtonOodle7Select)
         Me.TabPageDLLCheck.Controls.Add(Me.LabelOodle_7)
         Me.TabPageDLLCheck.Controls.Add(Me.ButtonSelectFontAwesome)
@@ -708,7 +714,7 @@ Partial Class OptionsMenu
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(8, 136)
+        Me.Label3.Location = New System.Drawing.Point(8, 111)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(127, 13)
         Me.Label3.TabIndex = 72
@@ -716,32 +722,13 @@ Partial Class OptionsMenu
         '
         'ButtonNewtonJsonSelect
         '
-        Me.ButtonNewtonJsonSelect.Location = New System.Drawing.Point(143, 131)
+        Me.ButtonNewtonJsonSelect.Location = New System.Drawing.Point(143, 106)
         Me.ButtonNewtonJsonSelect.Name = "ButtonNewtonJsonSelect"
         Me.ButtonNewtonJsonSelect.Size = New System.Drawing.Size(125, 23)
         Me.ButtonNewtonJsonSelect.TabIndex = 71
         Me.ButtonNewtonJsonSelect.Text = "Locate Json.dll"
         Me.ButtonNewtonJsonSelect.UseVisualStyleBackColor = True
         Me.ButtonNewtonJsonSelect.Visible = False
-        '
-        'LabelFrosty
-        '
-        Me.LabelFrosty.AutoSize = True
-        Me.LabelFrosty.Location = New System.Drawing.Point(8, 111)
-        Me.LabelFrosty.Name = "LabelFrosty"
-        Me.LabelFrosty.Size = New System.Drawing.Size(132, 13)
-        Me.LabelFrosty.TabIndex = 70
-        Me.LabelFrosty.Text = "FrostyYukes Loaded: True"
-        '
-        'ButtonFrostyYukesSelect
-        '
-        Me.ButtonFrostyYukesSelect.Location = New System.Drawing.Point(143, 106)
-        Me.ButtonFrostyYukesSelect.Name = "ButtonFrostyYukesSelect"
-        Me.ButtonFrostyYukesSelect.Size = New System.Drawing.Size(125, 23)
-        Me.ButtonFrostyYukesSelect.TabIndex = 69
-        Me.ButtonFrostyYukesSelect.Text = "Locate FrostyYukes"
-        Me.ButtonFrostyYukesSelect.UseVisualStyleBackColor = True
-        Me.ButtonFrostyYukesSelect.Visible = False
         '
         'ButtonOodle7Select
         '
@@ -818,16 +805,6 @@ Partial Class OptionsMenu
         Me.LabelZlib.Size = New System.Drawing.Size(114, 13)
         Me.LabelZlib.TabIndex = 61
         Me.LabelZlib.Text = "Zlib DLL Loaded: True"
-        '
-        'CheckBoxRebuildCak
-        '
-        Me.CheckBoxRebuildCak.AutoSize = True
-        Me.CheckBoxRebuildCak.Location = New System.Drawing.Point(8, 190)
-        Me.CheckBoxRebuildCak.Name = "CheckBoxRebuildCak"
-        Me.CheckBoxRebuildCak.Size = New System.Drawing.Size(109, 17)
-        Me.CheckBoxRebuildCak.TabIndex = 46
-        Me.CheckBoxRebuildCak.Text = "Rebuild CAk Files"
-        Me.CheckBoxRebuildCak.UseVisualStyleBackColor = True
         '
         'OptionsMenu
         '
@@ -909,7 +886,6 @@ Partial Class OptionsMenu
     Friend WithEvents LabelSkipVersion As Label
     Friend WithEvents ButtonCheckUpdate As Button
     Friend WithEvents CheckBoxSuppresHSPCFooters As CheckBox
-    Friend WithEvents CheckBoxCreateCAkDef As CheckBox
     Friend WithEvents CheckBoxShowCAkIntermediates As CheckBox
     Friend WithEvents ButtonSelectCrunchExe As Button
     Friend WithEvents TextBoxCrunchExe As TextBox
@@ -917,8 +893,6 @@ Partial Class OptionsMenu
     Friend WithEvents TabPageDLLCheck As TabPage
     Friend WithEvents Label3 As Label
     Friend WithEvents ButtonNewtonJsonSelect As Button
-    Friend WithEvents LabelFrosty As Label
-    Friend WithEvents ButtonFrostyYukesSelect As Button
     Friend WithEvents ButtonOodle7Select As Button
     Friend WithEvents LabelOodle_7 As Label
     Friend WithEvents ButtonSelectFontAwesome As Button
@@ -927,5 +901,6 @@ Partial Class OptionsMenu
     Friend WithEvents ButtonSelectZlib As Button
     Friend WithEvents LabelOodle_6 As Label
     Friend WithEvents LabelZlib As Label
+    Friend WithEvents CheckBoxCreateCAkDef As CheckBox
     Friend WithEvents CheckBoxRebuildCak As CheckBox
 End Class
